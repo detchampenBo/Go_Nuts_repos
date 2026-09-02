@@ -1,0 +1,557 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Marvel Link Network — Explorer</title>
+    <link rel="icon" href="data:," />
+    <meta
+      name="description"
+      content="Interactive explorer for the frozen Marvel superhero Wikipedia link network: 303 nodes, 1784 directed links, coloured by Louvain community."
+    />
+    <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+    <style>
+      :root {
+        --ink: #0c0d12; --panel: #15161f; --line: #2a2c3a; --text: #e9e9f0;
+        --muted: #9a9db8; --lime: #c9ec45; --coral: #ff8c73; --cyan: #5cdbeb; --grey: #6a6e8c;
+      }
+      * { box-sizing: border-box; }
+      html, body { height: 100%; }
+      body {
+        margin: 0; color: var(--text); overflow: hidden;
+        background:
+          radial-gradient(circle at 66% 46%, rgba(73, 83, 132, .18), transparent 38%),
+          radial-gradient(circle at 18% 75%, rgba(92, 219, 235, .07), transparent 30%),
+          linear-gradient(145deg, #08090d 0%, #0c0d14 52%, #10101a 100%);
+        font: 14px/1.5 Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+      }
+      body::before {
+        content: ""; position: fixed; inset: 0; pointer-events: none; opacity: .22;
+        background-image: radial-gradient(rgba(255,255,255,.8) .55px, transparent .7px);
+        background-size: 31px 31px; mask-image: linear-gradient(to bottom, black, transparent 82%);
+      }
+      body::after {
+        content: ""; position: fixed; inset: 0; z-index: 1; pointer-events: none;
+        background:
+          linear-gradient(90deg, #08090d 0, #08090d 300px, rgba(8,9,13,.9) 330px, transparent 400px),
+          linear-gradient(180deg, rgba(8,9,13,.9) 0, transparent 105px);
+      }
+      #links-canvas, svg { position: fixed; inset: 0; display: block; width: 100vw; height: 100vh; }
+      #links-canvas { z-index: 0; pointer-events: none; }
+      svg { z-index: 0; cursor: grab; }
+      svg:active { cursor: grabbing; }
+
+      .halo { fill: none; stroke-width: 5; opacity: .16; pointer-events: none; }
+      .focus-ring { fill: none; stroke: #fff; stroke-width: 1.5; opacity: 0; pointer-events: none; }
+      .focus-ring.on { opacity: .85; }
+      .node {
+        cursor: pointer; stroke: rgba(255,255,255,.42); stroke-width: .7;
+      }
+      .node:hover { stroke: white; stroke-width: 1.5; }
+      .node:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+      .label {
+        fill: #f6ce6d; font-weight: 600; pointer-events: none;
+        paint-order: stroke; stroke: var(--ink);
+      }
+      .region-label {
+        fill: #dfe3f1; opacity: .18; font-size: 12px; font-weight: 800;
+        letter-spacing: .16em; text-transform: uppercase; text-anchor: middle;
+        pointer-events: none; paint-order: stroke; stroke: #0c0d12; stroke-width: 5px;
+      }
+      .dim { opacity: 0.035; }
+      .gone { display: none; }
+      .node, .label, .halo, .region-label { transition: opacity .2s ease; }
+
+      .card {
+        position: fixed; z-index: 2;
+        text-shadow: 0 2px 16px #05060a, 0 2px 16px #05060a;
+      }
+      .hud { top: 18px; left: 18px; width: 288px; padding: 16px 18px; }
+      .hud h1 { margin: 0 0 2px; font-size: 15px; letter-spacing: -.01em; }
+      .hud p.sub { margin: 0 0 13px; color: var(--muted); font-size: 12px; }
+      .field { display: flex; gap: 8px; margin-bottom: 12px; }
+      .field input[type="search"] {
+        flex: 1; min-width: 0; padding: 8px 1px; border: 0; border-bottom: 1px solid #55596d;
+        border-radius: 0; background: transparent; color: var(--text); font: inherit;
+      }
+      .field input[type="search"]:focus { border-bottom-color: var(--cyan); }
+      input:focus-visible, button:focus-visible { outline: 1px solid var(--cyan); outline-offset: 3px; }
+      .lbl { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .06em; margin: 12px 0 6px; }
+      .seg { display: flex; gap: 14px; border-bottom: 1px solid #333644; }
+      .seg button {
+        padding: 6px 0 7px; border: 0; border-bottom: 2px solid transparent; margin-bottom: -1px;
+        background: transparent; color: var(--muted); font: inherit; font-size: 12px; cursor: pointer;
+      }
+      .seg button[aria-pressed="true"] { color: var(--text); border-bottom-color: var(--cyan); }
+      .row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
+      button.plain {
+        padding: 7px 1px; border: 0; border-bottom: 1px solid #55596d;
+        border-radius: 0; background: transparent; color: var(--text); font: inherit; cursor: pointer;
+      }
+      button.plain:hover { color: var(--cyan); border-color: var(--cyan); }
+      label.chk { display: flex; align-items: center; gap: 7px; color: var(--muted); font-size: 12px; cursor: pointer; }
+      input[type="range"] { width: 100%; accent-color: var(--cyan); }
+      .slideval { color: var(--text); font-variant-numeric: tabular-nums; }
+
+      .legend { left: 18px; bottom: 18px; padding: 0; font-size: 12px; color: var(--muted); max-width: 260px; }
+      .legend .k { display: flex; align-items: center; gap: 8px; margin: 3px 0; }
+      .legend .dot { width: 10px; height: 10px; border-radius: 50%; flex: none; }
+      .legend .ramp { height: 10px; border-radius: 5px; margin: 6px 0 3px;
+        background: linear-gradient(90deg, #2b3a55, #ff8c42); }
+      .legend .sizes { margin-top: 10px; display: flex; align-items: center; gap: 6px; }
+      .legend .sizes i { display: inline-block; border-radius: 50%; background: #52566f; flex: none; }
+
+      .tip {
+        position: fixed; pointer-events: none; z-index: 5; max-width: 250px;
+        background: #14151d; border: 1px solid var(--line); border-radius: 10px;
+        padding: 10px 12px; font-size: 12.5px; opacity: 0; transform: translateY(4px);
+        transition: opacity .12s ease, transform .12s ease;
+      }
+      .tip.show { opacity: 1; transform: translateY(0); }
+      .tip b { font-size: 13px; }
+      .tip .meta { color: var(--muted); margin-top: 4px; }
+      .tip .go { color: var(--cyan); margin-top: 6px; }
+      .tip .num { color: var(--text); }
+
+      .backlink {
+        position: fixed; z-index: 2; top: 18px; right: 18px; color: var(--muted); text-decoration: none;
+        font-size: 12px; border: 0; border-bottom: 1px solid #55596d; padding: 7px 1px;
+        background: transparent; text-shadow: 0 2px 16px #05060a;
+      }
+      .backlink:hover { color: var(--text); }
+      .ui-toggle {
+        display: none; position: fixed; z-index: 4; top: 16px; left: 18px;
+        padding: 7px 1px; border: 0; border-bottom: 1px solid var(--cyan);
+        border-radius: 0; background: transparent; color: var(--text); font: inherit;
+        font-size: 12px; cursor: pointer;
+      }
+      .masthead {
+        position: fixed; z-index: 2; top: 20px; left: 50%; transform: translateX(-50%);
+        text-align: center; pointer-events: none; text-shadow: 0 2px 18px #05060a;
+      }
+      .masthead strong { display: block; font-size: 11px; letter-spacing: .22em; }
+      .masthead span { color: var(--muted); font-size: 10px; letter-spacing: .08em; }
+      @media (max-width: 700px) {
+        body::after { background: none; }
+        .ui-toggle { display: block; }
+        .hud, .legend { opacity: 0; visibility: hidden; pointer-events: none; }
+        body.controls-open::after { background: rgba(8,9,13,.985); }
+        body.controls-open .hud {
+          opacity: 1; visibility: visible; pointer-events: auto;
+        }
+        body.controls-open .hud { top: 58px; }
+        body.controls-open svg { pointer-events: none; }
+        .hud { width: calc(100vw - 36px); transition: opacity .16s ease; }
+        .legend { transition: opacity .16s ease; }
+      }
+      @media (max-width: 850px) { .masthead { display: none; } }
+    </style>
+  </head>
+  <body>
+    <canvas id="links-canvas" aria-hidden="true"></canvas>
+    <svg id="canvas" role="img" aria-label="Interactive node-link diagram of the Marvel superhero Wikipedia link network"></svg>
+
+    <div class="masthead" aria-hidden="true">
+      <strong>THE MARVEL LINKVERSE</strong>
+      <span>hover to reveal the direction of attention</span>
+    </div>
+
+    <button class="ui-toggle" id="ui-toggle" type="button" aria-expanded="false">Controls</button>
+
+    <div class="card hud">
+      <h1>Marvel link network</h1>
+      <p class="sub">303 nodes · 1&thinsp;784 directed links</p>
+      <div class="field">
+        <input id="search" type="search" placeholder="Find a character  ( / )" autocomplete="off" />
+        <button class="plain" id="clear" aria-label="Clear selection">Clear</button>
+      </div>
+
+      <div class="lbl">Colour by</div>
+      <div class="seg" id="mode" role="group" aria-label="Colour nodes by">
+        <button data-mode="community" aria-pressed="true">Community</button>
+        <button data-mode="component" aria-pressed="false">Component</button>
+        <button data-mode="indeg" aria-pressed="false">In-degree</button>
+      </div>
+
+      <div class="lbl">Minimum degree <span class="slideval" id="minval">0</span></div>
+      <input type="range" id="mindeg" min="0" max="30" value="0" step="1" />
+
+      <div class="row">
+        <label class="chk"><input type="checkbox" id="labels" /> Hub labels</label>
+        <button class="plain" id="fit">Reset view</button>
+      </div>
+    </div>
+
+    <div class="card legend" id="legend"></div>
+
+    <a class="backlink" href="./">← back to the write-up</a>
+    <div class="tip" id="tip"></div>
+
+    <script>
+      const WIKI = "https://en.wikipedia.org/wiki/";
+      const GREY = "#5b5f7e", CORAL = "#ff8c73", LIME = "#c9ec45";
+      const linkCanvas = document.querySelector("#links-canvas");
+      const ctx = linkCanvas.getContext("2d");
+      const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+      function sizeLinkCanvas() {
+        linkCanvas.width = Math.round(window.innerWidth * pixelRatio);
+        linkCanvas.height = Math.round(window.innerHeight * pixelRatio);
+      }
+      sizeLinkCanvas();
+      const uiToggle = document.querySelector("#ui-toggle");
+      uiToggle.addEventListener("click", () => {
+        const open = document.body.classList.toggle("controls-open");
+        uiToggle.textContent = open ? "Close controls" : "Controls";
+        uiToggle.setAttribute("aria-expanded", String(open));
+      });
+      const svg = d3.select("#canvas");
+      const tip = d3.select("#tip");
+      const root = svg.append("g");
+      const gRegions = root.append("g");
+      const gHalos = root.append("g");
+      const gNodes = root.append("g");
+      const gFocus = root.append("g");
+      const gLabels = root.append("g");
+
+      d3.json("../../../data/graph.json").then((graph) => {
+        const nodes = graph.nodes;
+        nodes.forEach((d, i) => { d.index = i; });
+        const comms = graph.communities || [];
+        const commColor = new Map(comms.map((c) => [c.id, c.color]));
+        const maxIn = d3.max(nodes, (d) => d.in);
+        const heat = d3.scaleLinear().domain([0, maxIn]).range(["#2b3a55", "#ff8c42"]);
+
+        let mode = "community";
+        function colorNode(d) {
+          if (mode === "indeg") return heat(d.in);
+          if (mode === "component")
+            return d.grp === "giant" ? LIME : d.grp === "island" ? CORAL : GREY;
+          // community
+          return d.comm >= 0 ? commColor.get(d.comm) || LIME
+               : d.grp === "island" ? CORAL : GREY;
+        }
+
+        // fit the pre-computed layout into the viewport, aspect preserved
+        const W = window.innerWidth, H = window.innerHeight, pad = 72;
+        const xe = d3.extent(nodes, (d) => d.x), ye = d3.extent(nodes, (d) => d.y);
+        const s = Math.min((W - 2 * pad) / (xe[1] - xe[0]), (H - 2 * pad) / (ye[1] - ye[0]));
+        const ox = (W - s * (xe[0] + xe[1])) / 2, oy = (H - s * (ye[0] + ye[1])) / 2;
+        nodes.forEach((d) => { d.px = ox + s * d.x; d.py = oy + s * d.y; });
+
+        const r = (d) => (d.deg === 0 ? 4 : 3 + 2.1 * Math.sqrt(d.deg));
+
+        const outAdj = nodes.map(() => new Set());
+        const inAdj = nodes.map(() => new Set());
+        graph.links.forEach((l) => { outAdj[l.s].add(l.t); inAdj[l.t].add(l.s); });
+
+        const linked = new Set(graph.links.map((l) => `${l.s}|${l.t}`));
+        function edgeGeometry(l) {
+          const a = nodes[l.s], b = nodes[l.t];
+          const dx = b.px - a.px, dy = b.py - a.py, len = Math.hypot(dx, dy) || 1;
+          const k = currentTransform.k;
+          const sx = a.px + dx / len * (r(a) + 1) / k;
+          const sy = a.py + dy / len * (r(a) + 1) / k;
+          const tx = b.px - dx / len * (r(b) + 4) / k;
+          const ty = b.py - dy / len * (r(b) + 4) / k;
+          if (!linked.has(`${l.t}|${l.s}`)) return { sx, sy, tx, ty };
+          const bend = l.s < l.t ? 10 : -10;
+          const cx = (a.px + b.px) / 2 - dy / len * bend;
+          const cy = (a.py + b.py) / 2 + dx / len * bend;
+          return { sx, sy, tx, ty, cx, cy };
+        }
+
+        let hiddenIdx = new Set();
+        let activeNode = null;
+        let suppressEdges = false;
+        let currentTransform = d3.zoomIdentity;
+        let drawQueued = false;
+
+        function traceEdge(g) {
+          ctx.moveTo(g.sx, g.sy);
+          if (g.cx == null) ctx.lineTo(g.tx, g.ty);
+          else ctx.quadraticCurveTo(g.cx, g.cy, g.tx, g.ty);
+        }
+
+        function drawArrow(g, color, k) {
+          const angle = Math.atan2(g.ty - (g.cy ?? g.sy), g.tx - (g.cx ?? g.sx));
+          const size = 5 / k;
+          ctx.beginPath();
+          ctx.moveTo(g.tx, g.ty);
+          ctx.lineTo(g.tx - Math.cos(angle - .52) * size, g.ty - Math.sin(angle - .52) * size);
+          ctx.lineTo(g.tx - Math.cos(angle + .52) * size, g.ty - Math.sin(angle + .52) * size);
+          ctx.closePath();
+          ctx.fillStyle = color;
+          ctx.fill();
+        }
+
+        function drawEdges() {
+          drawQueued = false;
+          const t = currentTransform;
+          ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+          ctx.clearRect(0, 0, linkCanvas.width / pixelRatio, linkCanvas.height / pixelRatio);
+          ctx.save();
+          ctx.translate(t.x, t.y);
+          ctx.scale(t.k, t.k);
+
+          ctx.beginPath();
+          for (const l of graph.links) {
+            if (hiddenIdx.has(l.s) || hiddenIdx.has(l.t)) continue;
+            traceEdge(edgeGeometry(l));
+          }
+          ctx.strokeStyle = "#59607e";
+          ctx.globalAlpha = suppressEdges ? .035 : .22;
+          ctx.lineWidth = .62 / t.k;
+          ctx.stroke();
+
+          if (activeNode != null) {
+            ctx.globalAlpha = .96;
+            for (const l of graph.links) {
+              if ((l.s !== activeNode && l.t !== activeNode) || hiddenIdx.has(l.s) || hiddenIdx.has(l.t)) continue;
+              const color = l.s === activeNode ? "#c9ec45" : "#5cdbeb";
+              const g = edgeGeometry(l);
+              ctx.beginPath(); traceEdge(g);
+              ctx.strokeStyle = color;
+              ctx.lineWidth = 1.7 / t.k;
+              ctx.stroke();
+              drawArrow(g, color, t.k);
+            }
+          }
+          ctx.restore();
+          ctx.globalAlpha = 1;
+        }
+
+        function queueEdgeDraw() {
+          if (drawQueued) return;
+          drawQueued = true;
+          requestAnimationFrame(drawEdges);
+        }
+
+        const halo = gHalos.selectAll("circle")
+          .data(nodes.filter((d) => d.deg >= 20), (d) => d.id).join("circle")
+          .attr("class", "halo")
+          .attr("r", (d) => r(d) + 5).attr("stroke", colorNode)
+          .attr("cx", (d) => d.px).attr("cy", (d) => d.py);
+
+        const focusRing = gFocus.append("circle").attr("class", "focus-ring");
+
+        const node = gNodes.selectAll("circle").data(nodes).join("circle")
+          .attr("class", "node").attr("tabindex", 0)
+          .attr("r", r).attr("fill", colorNode)
+          .attr("cx", (d) => d.px).attr("cy", (d) => d.py)
+          .on("pointerenter", (e, d) => hover(d))
+          .on("pointermove", (e) => moveTip(e))
+          .on("pointerleave", () => { if (pinned == null) { clearHi(); hideTip(); } })
+          .on("click", (e, d) => {
+            e.stopPropagation();
+            if (pinned === d.index) { pinned = null; clearHi(); hideTip(); }
+            else { pinned = d.index; hover(d); }
+          })
+          .on("dblclick", (e, d) => { e.stopPropagation(); window.open(WIKI + d.id, "_blank"); });
+
+        node.call(d3.drag()
+          .on("start", (e) => e.sourceEvent.stopPropagation())
+          .on("drag", (e, d) => {
+            d.px = e.x; d.py = e.y;
+            d3.select(e.sourceEvent.target).attr("cx", d.px).attr("cy", d.py);
+            halo.filter((n) => n.index === d.index).attr("cx", d.px).attr("cy", d.py);
+            if (pinned === d.index) focusRing.attr("cx", d.px).attr("cy", d.py);
+            gLabels.selectAll("text").filter((t) => t === d)
+              .attr("x", d.px).attr("y", d.py - (r(d) + 5) / currentK);
+            queueEdgeDraw();
+          }));
+
+        const communityCentres = d3.groups(nodes.filter((d) => d.comm >= 0), (d) => d.comm)
+          .map(([id, members]) => ({
+            id, label: members[0].commLabel,
+            x: d3.mean(members, (d) => d.px), y: d3.mean(members, (d) => d.py),
+          }));
+        const regionLabel = gRegions.selectAll("text").data(communityCentres).join("text")
+          .attr("class", "region-label").attr("x", (d) => d.x).attr("y", (d) => d.y)
+          .text((d) => d.label);
+
+        // ---- labels -------------------------------------------------------
+        const hubIds = new Set(nodes.slice().sort((a, b) => b.deg - a.deg).slice(0, 14).map((d) => d.id));
+        let showHubs = false, currentK = 1;
+        function renderLabels(focus, centre) {
+          let labelSet = focus;
+          if (focus && focus.size > 14) {
+            const ranked = [...focus].filter((i) => i !== centre)
+              .sort((a, b) => nodes[b].deg - nodes[a].deg);
+            labelSet = new Set(centre == null ? ranked.slice(0, 14) : [centre, ...ranked.slice(0, 12)]);
+          }
+          const show = nodes.filter((d) =>
+            !hiddenIdx.has(d.index) &&
+            ((showHubs && hubIds.has(d.id)) || (labelSet && labelSet.has(d.index))));
+          gLabels.selectAll("text").data(show, (d) => d.id).join("text")
+            .attr("class", "label").attr("text-anchor", "middle")
+            .attr("x", (d) => d.px).attr("y", (d) => d.py - (r(d) + 5) / currentK)
+            .style("font-size", 11 / currentK + "px")
+            .style("stroke-width", 3 / currentK + "px")
+            .text((d) => d.name);
+        }
+
+        // ---- highlight ---------------------------------------------------
+        let pinned = null;
+        function hover(d) {
+          const keep = new Set([d.index, ...outAdj[d.index], ...inAdj[d.index]]);
+          node.classed("dim", (n) => !keep.has(n.index));
+          halo.classed("dim", (n) => !keep.has(n.index));
+          regionLabel.classed("dim", true);
+          activeNode = d.index;
+          suppressEdges = false;
+          queueEdgeDraw();
+          focusRing.attr("cx", d.px).attr("cy", d.py)
+            .attr("r", (r(d) + 6) / currentK).classed("on", true);
+          renderLabels(keep, d.index);
+          showTip(d);
+        }
+        function clearHi() {
+          node.classed("dim", false);
+          halo.classed("dim", false);
+          regionLabel.classed("dim", false);
+          activeNode = null;
+          suppressEdges = false;
+          queueEdgeDraw();
+          focusRing.classed("on", false);
+          renderLabels(null);
+        }
+
+        function showTip(d) {
+          const where = d.comm >= 0 ? d.commLabel
+            : d.grp === "island" ? "Morituri island" : "isolate — no links";
+          tip.html(
+            `<b>${d.name}</b><div class="meta">` +
+            `<span class="num">${d.in}</span> in · <span class="num">${d.out}</span> out · ` +
+            `<span class="num">${d.deg}</span> total<br>${where}</div>` +
+            `<div class="go">double-click → Wikipedia ↗</div>`
+          ).classed("show", true);
+        }
+        function moveTip(e) {
+          tip.style("left", Math.min(e.clientX + 16, window.innerWidth - 264) + "px")
+             .style("top", Math.min(e.clientY + 16, window.innerHeight - 110) + "px");
+        }
+        function hideTip() { tip.classed("show", false); }
+
+        // ---- min-degree filter ----------------------------------------
+        function applyFilter(minDeg) {
+          hiddenIdx = new Set(nodes.filter((d) => d.deg < minDeg).map((d) => d.index));
+          node.classed("gone", (d) => hiddenIdx.has(d.index));
+          halo.classed("gone", (d) => hiddenIdx.has(d.index));
+          queueEdgeDraw();
+          if (pinned != null && hiddenIdx.has(pinned)) { pinned = null; clearHi(); hideTip(); }
+          else renderLabels(pinned != null
+            ? new Set([pinned, ...outAdj[pinned], ...inAdj[pinned]]) : null, pinned);
+        }
+
+        // ---- zoom / pan ---------------------------------------------------
+        const zoom = d3.zoom().scaleExtent([0.3, 8])
+          .filter((e) => !e.button && (e.type !== "mousedown" || e.target.tagName !== "circle"))
+          .on("zoom", (e) => {
+            currentTransform = e.transform;
+            root.attr("transform", e.transform);
+            queueEdgeDraw();
+            if (Math.abs(e.transform.k - currentK) > 0.01) {
+              currentK = e.transform.k;
+              node.attr("r", (d) => r(d) / currentK)
+                .style("stroke-width", .7 / currentK + "px");
+              halo.attr("r", (d) => (r(d) + 5) / currentK)
+                .style("stroke-width", 5 / currentK + "px");
+              regionLabel.style("font-size", 12 / currentK + "px")
+                .style("stroke-width", 5 / currentK + "px");
+              if (activeNode != null) {
+                focusRing.attr("r", (r(nodes[activeNode]) + 6) / currentK)
+                  .style("stroke-width", 1.5 / currentK + "px");
+              }
+              gLabels.selectAll("text")
+                .style("font-size", 11 / currentK + "px")
+                .style("stroke-width", 3 / currentK + "px")
+                .attr("y", (d) => d.py - (r(d) + 5) / currentK);
+            }
+          });
+        svg.call(zoom).on("dblclick.zoom", null)
+          .on("click", () => { pinned = null; clearHi(); hideTip(); });
+        d3.select("#fit").on("click", () =>
+          svg.transition().duration(500).call(zoom.transform, d3.zoomIdentity));
+
+        // ---- legend ----------------------------------------------------
+        const legend = d3.select("#legend");
+        function renderLegend() {
+          let html = "";
+          if (mode === "community") {
+            html = comms.map((c) =>
+              `<div class="k"><span class="dot" style="background:${c.color}"></span>${c.label}</div>`
+            ).join("") +
+              `<div class="k"><span class="dot" style="background:${CORAL}"></span>Morituri island</div>` +
+              `<div class="k"><span class="dot" style="background:${GREY}"></span>isolate</div>`;
+          } else if (mode === "component") {
+            html =
+              `<div class="k"><span class="dot" style="background:${LIME}"></span>giant component · 277</div>` +
+              `<div class="k"><span class="dot" style="background:${CORAL}"></span>Morituri island · 9</div>` +
+              `<div class="k"><span class="dot" style="background:${GREY}"></span>isolate · 17</div>`;
+          } else {
+            html = `<div>in-degree</div><div class="ramp"></div>` +
+              `<div style="display:flex;justify-content:space-between"><span>0</span><span>${maxIn}</span></div>`;
+          }
+          html += `<div class="sizes"><i style="width:5px;height:5px"></i>` +
+            `<i style="width:11px;height:11px"></i><i style="width:18px;height:18px"></i>` +
+            `<span>size = total degree</span></div>`;
+          legend.html(html);
+        }
+
+        // ---- controls ------------------------------------------------
+        d3.selectAll("#mode button").on("click", function () {
+          mode = this.dataset.mode;
+          d3.selectAll("#mode button").attr("aria-pressed", (d, i, n) => n[i] === this);
+          node.transition().duration(250).attr("fill", colorNode);
+          halo.transition().duration(250).attr("stroke", colorNode);
+          regionLabel.transition().duration(200).style("opacity", mode === "community" ? null : 0);
+          renderLegend();
+        });
+        const mindeg = d3.select("#mindeg");
+        mindeg.on("input", function () {
+          d3.select("#minval").text(this.value);
+          applyFilter(+this.value);
+        });
+        d3.select("#labels").on("change", function () {
+          showHubs = this.checked;
+          renderLabels(pinned != null
+            ? new Set([pinned, ...outAdj[pinned], ...inAdj[pinned]]) : null, pinned);
+        });
+        d3.select("#clear").on("click", () => {
+          pinned = null; clearHi(); hideTip(); d3.select("#search").property("value", "");
+        });
+        const search = d3.select("#search");
+        search.on("input", function () {
+          const q = this.value.trim().toLowerCase();
+          if (!q) { clearHi(); return; }
+          const hits = nodes.filter((d) => !hiddenIdx.has(d.index) && d.name.toLowerCase().includes(q));
+          const keep = new Set(hits.map((d) => d.index));
+          node.classed("dim", (n) => !keep.has(n.index));
+          halo.classed("dim", (n) => !keep.has(n.index));
+          regionLabel.classed("dim", true);
+          activeNode = null;
+          suppressEdges = true;
+          queueEdgeDraw();
+          renderLabels(keep);
+          if (hits.length) {
+            const bx = d3.extent(hits, (d) => d.px), by = d3.extent(hits, (d) => d.py);
+            const k = Math.min(6, 0.8 * Math.min(W / (bx[1] - bx[0] + 120), H / (by[1] - by[0] + 120)));
+            svg.transition().duration(450).call(zoom.transform,
+              d3.zoomIdentity.translate(W / 2, H / 2).scale(k)
+                .translate(-(bx[0] + bx[1]) / 2, -(by[0] + by[1]) / 2));
+          }
+        });
+        window.addEventListener("keydown", (e) => {
+          if (e.key === "/" && document.activeElement !== search.node()) {
+            e.preventDefault(); search.node().focus();
+          }
+          if (e.key === "Escape") { pinned = null; clearHi(); hideTip(); search.node().blur(); }
+        });
+
+        window.addEventListener("resize", () => { sizeLinkCanvas(); queueEdgeDraw(); });
+        drawEdges();
+        renderLegend();
+      });
+    </script>
+  </body>
+</html>

@@ -4,7 +4,7 @@ This repository is a small library of visual course work. It is designed so that
 visual can be added each week without changing or breaking earlier ones.
 
 You do not need to be a programmer to understand the roles below. Think of the site as
-a gallery: the front page is the gallery entrance, and each folder in `showcases` is an
+a gallery: the front page is the gallery entrance, and each linked subfolder is an
 individual exhibition.
 
 ## The folder map
@@ -13,12 +13,13 @@ individual exhibition.
 Go_Nuts_repos/
 ├── index.html                         The gallery entrance shown by GitHub Pages
 ├── site-index.css                     The appearance of that entrance page
-├── showcases/                         One folder per visual experiment
+├── showcases/                         Additional visual experiments
 │   ├── README.md                      Short checklist for adding a new showcase
 │   └── week-01-network-questions/     The first showcase
 │       ├── index.html                 The page people see
 │       ├── styles.css                 Its colours, layout, and typography
 │       ├── script.js                  Its interactive behaviour
+│       ├── claude/                    Marvel write-up, explorer, notebook, and figures
 │       ├── data/
 │       │   ├── source-network.json    The editable source information
 │       │   └── graph-data.json        The prepared information used by the page

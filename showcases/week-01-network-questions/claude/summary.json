@@ -1,0 +1,235 @@
+{
+  "n_nodes": 303,
+  "n_edges": 1784,
+  "mean_degree": 11.78,
+  "density": 0.0195,
+  "reciprocity": 0.392,
+  "giant_size": 277,
+  "n_isolates": 17,
+  "island_size": 9,
+  "n_communities": 8,
+  "top_in": [
+    [
+      "Spider-Man",
+      106,
+      9
+    ],
+    [
+      "Hulk",
+      64,
+      10
+    ],
+    [
+      "Wolverine (character)",
+      60,
+      17
+    ],
+    [
+      "Doctor Strange",
+      50,
+      17
+    ],
+    [
+      "Deadpool",
+      33,
+      19
+    ],
+    [
+      "She-Hulk",
+      29,
+      20
+    ],
+    [
+      "Scarlet Witch",
+      28,
+      14
+    ],
+    [
+      "Black Panther (character)",
+      27,
+      11
+    ],
+    [
+      "Cyclops (Marvel Comics)",
+      26,
+      11
+    ],
+    [
+      "Luke Cage",
+      25,
+      9
+    ]
+  ],
+  "top_out": [
+    [
+      "Betsy Braddock",
+      28,
+      7
+    ],
+    [
+      "Cloak and Dagger (characters)",
+      24,
+      11
+    ],
+    [
+      "Adam Warlock",
+      22,
+      8
+    ],
+    [
+      "Venom (character)",
+      21,
+      17
+    ],
+    [
+      "She-Hulk",
+      20,
+      29
+    ],
+    [
+      "U.S. Agent",
+      20,
+      6
+    ],
+    [
+      "Deadpool",
+      19,
+      33
+    ],
+    [
+      "Rachel Summers",
+      19,
+      16
+    ],
+    [
+      "Noh-Varr",
+      18,
+      4
+    ],
+    [
+      "Doctor Strange",
+      17,
+      50
+    ]
+  ],
+  "island_members": [
+    "Backhand (character)",
+    "Blackthorn (character)",
+    "Radian (Morituri)",
+    "Scaredycat",
+    "Scatterbrain (Morituri)",
+    "Shear (character)",
+    "Snapdragon (Morituri)",
+    "Toxyn",
+    "Vyking"
+  ],
+  "isolates": [
+    "Baymax",
+    "Bird-Brain (Marvel Comics)",
+    "Black Fox (Robert Paine)",
+    "Brain Drain (character)",
+    "Breeze Barton",
+    "Captain Midlands",
+    "Charcoal (comics)",
+    "Father Time (Marvel Comics)",
+    "Happy Sam Sawyer",
+    "Hellfire (J. T. Slade)",
+    "Illuminator (Marvel Comics)",
+    "Miracleman (character)",
+    "Ogre (Marvel Comics)",
+    "Sean and Chris",
+    "Solarman",
+    "Super Rabbit",
+    "Yo-Yo Rodriguez"
+  ],
+  "communities": [
+    {
+      "label": "X-Men",
+      "size": 43,
+      "top": [
+        "Wolverine (character)",
+        "Phoenix (Guardians of the Galaxy)",
+        "Emma Frost",
+        "Cyclops (Marvel Comics)",
+        "Storm (Marvel Comics)"
+      ]
+    },
+    {
+      "label": "Cosmic / Guardians",
+      "size": 41,
+      "top": [
+        "Hercules (Marvel Comics)",
+        "Adam Warlock",
+        "Quasar (character)",
+        "Nova (Richard Rider)",
+        "Captain Marvel (Marvel Comics)"
+      ]
+    },
+    {
+      "label": "Hulk & Avengers-adjacent",
+      "size": 38,
+      "top": [
+        "Hulk",
+        "She-Hulk",
+        "Hank Pym",
+        "Robbie Baldwin",
+        "Patsy Walker"
+      ]
+    },
+    {
+      "label": "Spider-family",
+      "size": 37,
+      "top": [
+        "Spider-Man",
+        "Venom (character)",
+        "Black Cat (Marvel Comics)",
+        "Mayday Parker",
+        "Eddie Brock"
+      ]
+    },
+    {
+      "label": "Street-level / espionage",
+      "size": 34,
+      "top": [
+        "Moon Knight",
+        "Cloak and Dagger (characters)",
+        "Black Widow (Natasha Romanova)",
+        "U.S. Agent",
+        "Mockingbird (Marvel Comics)"
+      ]
+    },
+    {
+      "label": "Supernatural / Midnight Sons",
+      "size": 31,
+      "top": [
+        "Doctor Strange",
+        "Deadpool",
+        "Blade (character)",
+        "Ghost Rider",
+        "Man-Thing"
+      ]
+    },
+    {
+      "label": "Classic Avengers / synthezoids",
+      "size": 31,
+      "top": [
+        "Scarlet Witch",
+        "Human Torch (android)",
+        "Black Bolt",
+        "Human Torch",
+        "Quicksilver (Marvel Comics)"
+      ]
+    },
+    {
+      "label": "Heroes for Hire / Defenders",
+      "size": 22,
+      "top": [
+        "Black Panther (character)",
+        "Iron Fist (character)",
+        "Luke Cage",
+        "Misty Knight",
+        "Shang-Chi"
+      ]
+    }
+  ]
+}

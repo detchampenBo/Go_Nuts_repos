@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Week-1 go-nuts post: degree structure, in vs out hubs, and the hidden islands of the frozen Marvel superhero Wikipedia link network."
+    />
+    <title>Marvel Link Network — Degrees &amp; Islands</title>
+    <link rel="icon" href="data:," />
+    <style>
+      :root {
+        --ink: #101926;
+        --muted: #647083;
+        --paper: #f7f8f5;
+        --line: #d5dce1;
+        --blue: #0c5adf;
+        --lime: #c9ec45;
+        --coral: #ff8c73;
+        --radius: 18px;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        color: var(--ink);
+        background: var(--paper);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        line-height: 1.6;
+      }
+      header, main, footer { width: min(940px, calc(100% - 40px)); margin: 0 auto; }
+      header {
+        display: flex; min-height: 88px; align-items: center; justify-content: space-between;
+        border-bottom: 1px solid var(--line);
+      }
+      .brand { display: inline-flex; gap: 10px; align-items: center; color: var(--ink); text-decoration: none; font-size: .8rem; font-weight: 800; letter-spacing: .12em; }
+      .brand span { display: grid; width: 28px; height: 28px; place-items: center; color: white; background: var(--blue); border-radius: 8px; letter-spacing: 0; }
+      header a.back { color: var(--muted); font-size: .88rem; text-decoration: none; }
+      header a.back:hover { color: var(--blue); }
+
+      .intro { padding: 76px 0 40px; }
+      .eyebrow { margin: 0 0 15px; color: var(--blue); font-size: .73rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+      h1, h2, h3, p { margin-top: 0; }
+      h1 { margin-bottom: 20px; font-size: clamp(2.4rem, 6vw, 4rem); line-height: 1; letter-spacing: -.055em; }
+      .lede { max-width: 620px; color: var(--muted); font-size: 1.12rem; }
+
+      section { padding: 34px 0; border-top: 1px solid var(--line); }
+      h2 { font-size: clamp(1.5rem, 3.5vw, 2.1rem); letter-spacing: -.04em; margin-bottom: 6px; }
+      .section-label { margin: 0 0 18px; color: var(--blue); font-size: .73rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+      p { max-width: 680px; }
+      strong { color: var(--ink); }
+      code { background: #e9edee; padding: 1px 5px; border-radius: 4px; font-size: .88em; }
+
+      figure { margin: 24px 0 8px; }
+      figure img { display: block; width: 100%; border-radius: 12px; border: 1px solid var(--line); background: var(--ink); }
+      figcaption { margin-top: 10px; color: var(--muted); font-size: .86rem; max-width: 680px; }
+
+      figure.embed { margin: 24px 0 10px; }
+      figure.embed iframe {
+        display: block; width: 100%; height: min(70vh, 620px); border: 1px solid var(--line);
+        border-radius: 12px; background: var(--ink);
+      }
+
+      .fig-dark { background: var(--ink); padding: 10px; }
+
+      table { border-collapse: collapse; width: 100%; margin: 20px 0 8px; font-size: .92rem; }
+      th, td { text-align: right; padding: 8px 12px; border-bottom: 1px solid var(--line); }
+      th:first-child, td:first-child { text-align: left; }
+      thead th { color: var(--blue); font-size: .74rem; text-transform: uppercase; letter-spacing: .06em; }
+      tbody tr:hover { background: #eef1f2; }
+      .num { font-variant-numeric: tabular-nums; }
+
+      .callout { margin: 22px 0; padding: 22px 24px; background: var(--ink); color: #eef1f4; border-radius: 12px; }
+      .callout strong { color: var(--lime); }
+      .callout p { max-width: none; margin: 0; }
+
+      ul { max-width: 680px; color: var(--muted); }
+      li { margin: 4px 0; }
+
+      footer { padding: 40px 0; color: var(--muted); font-size: .8rem; border-top: 1px solid var(--line); }
+    </style>
+  </head>
+  <body>
+    <header>
+      <a class="brand" href="../../../"><span>G</span> GO NUTS</a>
+      <a class="back" href="../../../">← gallery</a>
+    </header>
+
+    <main>
+      <section class="intro" style="border: 0; padding-top: 76px;">
+        <p class="eyebrow">Week 01 · social graphs · go-nuts post</p>
+        <h1>Who everyone links to,<br />who links to everyone,<br />and the islands in between.</h1>
+        <p class="lede">
+          The course hands us one frozen dataset: 303 Marvel superhero Wikipedia
+          pages and the 1&nbsp;784 directed links between them. I asked what its
+          degree structure looks like, why in- and out-degree crown different
+          characters, and what lives outside the giant component.
+        </p>
+      </section>
+
+      <section>
+        <p class="section-label">What I asked</p>
+        <h2>Three questions</h2>
+        <ul style="list-style: none; padding: 0;">
+          <li><strong>1.</strong>&nbsp; What shape is the degree distribution — and does it look scale-free on a log&ndash;log axis?</li>
+          <li><strong>2.</strong>&nbsp; In-degree vs out-degree: the most linked-<em>to</em> character and the most linked-<em>from</em> character are not the same person. Why?</li>
+          <li><strong>3.</strong>&nbsp; The data page warns there are isolated nodes. Are the isolates the <em>only</em> thing outside the giant component?</li>
+        </ul>
+      </section>
+
+      <section>
+        <p class="section-label">What I did</p>
+        <h2>Load it so the isolates survive</h2>
+        <p>
+          Built the directed graph the way the data page insists on — add every
+          node from <code>week1_nodes.tsv</code> first, then the edges — so the
+          17 characters with no link in either direction do not silently vanish:
+        </p>
+        <pre style="background: var(--ink); color: #eef1f4; padding: 18px 20px; border-radius: 12px; overflow-x: auto; font-size: .86rem; max-width: 680px;">G = nx.DiGraph()
+G.add_nodes_from(n["node_id"] for n in nodes)   # all 303 — isolates included
+G.add_edges_from(edges)                          # 1784 directed A -> B
+# G: 303 nodes, 1784 edges  ✓ matches the release notes</pre>
+        <p>
+          Then: in/out degree per node, the degree distributions (linear and
+          log&ndash;log), weakly-connected components, Louvain communities, a
+          Wikipedia-API cross-check, and the drawings below. The full worked
+          analysis is the notebook <a href="analysis.ipynb">analysis.ipynb</a>
+          (<a href="notebook_src.py">jupytext source</a>); raw data sits in
+          <code>data/week1/</code>.
+        </p>
+      </section>
+
+      <section>
+        <p class="section-label">Explore it</p>
+        <h2>The network, live</h2>
+        <p>
+          Hover any character to light up who it links to (yellow) and who links
+          to it (cyan); the rest fades. Recolour by <strong>community</strong>,
+          <strong>component</strong>, or an <strong>in-degree heat map</strong>;
+          drag the <strong>minimum-degree</strong> slider to peel the network down
+          to its core; search, drag, zoom, double-click a node for its Wikipedia
+          article.
+        </p>
+        <figure class="embed">
+          <iframe src="explorer.html" title="Interactive Marvel link network explorer" loading="lazy"></iframe>
+        </figure>
+        <p><a href="explorer.html">Open the explorer full screen ↗</a></p>
+      </section>
+
+      <section>
+        <p class="section-label">The figure</p>
+        <h2>Eight families, one island, a column of loners</h2>
+        <figure>
+          <img src="assets/communities.png" alt="The 277-node giant component drawn as eight separate coloured lobes arranged in a ring — X-Men, Spider-family, cosmic, supernatural, street-level and more — with faint lines webbing between them and denser lines within each." />
+          <figcaption>
+            The giant component, each <strong>Louvain community</strong> laid out
+            on its own and placed around a ring. Dense lines stay inside a lobe;
+            faint lines cross between them. With no tuning, the link graph
+            reproduces Marvel's editorial "families": X-Men, Spider-family, cosmic
+            / Guardians, supernatural / Midnight Sons, street-level, and so on.
+            Beyond this: the 9-node <em>Morituri</em> island (no path here at all)
+            and 17 isolates.
+          </figcaption>
+        </figure>
+        <figure>
+          <img src="assets/degree-distributions.png" alt="Left: linear histogram of total degree, steeply right-skewed with a lone bar near degree 115. Right: log-log scatter of in-degree and out-degree counts, both roughly linear with in-degree reaching a much longer tail." />
+          <figcaption>
+            Left: total degree is steeply right-skewed — most characters sit
+            under 20, one bar sits alone near 115 (Spider-Man). Right, log&ndash;log:
+            both distributions are broadly heavy-tailed, but <strong>in-degree
+            (coral) runs out to 106 while out-degree (purple) stops at 28</strong>.
+          </figcaption>
+        </figure>
+
+        <table>
+          <thead>
+            <tr><th>Most linked-<em>to</em></th><th class="num">in</th><th class="num">out</th><th>Most linked-<em>from</em></th><th class="num">out</th><th class="num">in</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Spider-Man</td><td class="num">106</td><td class="num">9</td><td>Betsy Braddock</td><td class="num">28</td><td class="num">7</td></tr>
+            <tr><td>Hulk</td><td class="num">64</td><td class="num">10</td><td>Cloak and Dagger</td><td class="num">24</td><td class="num">11</td></tr>
+            <tr><td>Wolverine</td><td class="num">60</td><td class="num">17</td><td>Adam Warlock</td><td class="num">22</td><td class="num">8</td></tr>
+            <tr><td>Doctor Strange</td><td class="num">50</td><td class="num">17</td><td>Venom</td><td class="num">21</td><td class="num">17</td></tr>
+            <tr><td>Deadpool</td><td class="num">33</td><td class="num">19</td><td>She-Hulk</td><td class="num">20</td><td class="num">29</td></tr>
+          </tbody>
+        </table>
+        <figcaption style="color: var(--muted); font-size: .86rem;">
+          Snapshot totals: 303 nodes, 1&nbsp;784 edges, mean degree 11.8, density
+          0.020, reciprocity 0.39. Giant component 277 · one 9-node island · 17 isolates.
+        </figcaption>
+      </section>
+
+      <section>
+        <p class="section-label">Why in ≠ out</p>
+        <h2>Fame is measured in in-degree</h2>
+        <p>
+          <strong>In-degree tracks how famous a character is.</strong> Spider-Man
+          (106 in / 9 out) barely links out at all, but nearly every other
+          article reaches for him as a reference point. Hulk, Wolverine and
+          Doctor Strange work the same way — they are the pages other pages cite.
+        </p>
+        <p>
+          <strong>Out-degree tracks how tangled a character's own backstory is.</strong>
+          Betsy Braddock / Psylocke tops out-degree (28 out / 7 in): a
+          body-swapping, retconned history roped through half the X-Men, so her
+          article name-drops everyone — but she is not a headliner, so few link
+          back. Cloak and Dagger, Adam Warlock, U.S.&nbsp;Agent: same profile,
+          dense ensemble history, modest fame. Reciprocity of only 0.39 says most
+          links are one-way: the small orbit the C-lister into the star,
+          rarely the reverse.
+        </p>
+      </section>
+
+      <section>
+        <p class="section-label">What surprised me</p>
+        <h2>There is a second, hidden island</h2>
+        <div class="callout">
+          <p>
+            The data page told us about the <strong>17 isolates</strong>. It did
+            not mention that the giant component holds only <strong>277</strong>
+            of the 286 non-isolated nodes. The other <strong>9 form a completely
+            separate island</strong> with no path — in either direction — to the
+            rest of the Marvel universe.
+          </p>
+        </div>
+        <p>
+          And the nine are not random: Backhand, Blackthorn, Radian, Scaredycat,
+          Scatterbrain, Shear, Snapdragon, Toxyn, Vyking — the entire cast of
+          <em>Strikeforce: Morituri</em>, an 1986 Marvel series set in its own
+          continuity. Their Wikipedia articles link to each other and to nothing
+          else in the category. A self-contained comic becomes a self-contained
+          graph component, decades later, in the link structure. If you build the
+          graph from edges alone you lose the 17 isolates <em>and</em> silently
+          fold this island's absence into "just a smaller giant component."
+        </p>
+      </section>
+
+      <section>
+        <p class="section-label">Stretch · Wikipedia API</p>
+        <h2>Does the frozen snapshot match live Wikipedia?</h2>
+        <p>
+          For five characters I pulled the current wiki-source from the API
+          (<code>action=parse&amp;prop=wikitext</code>, with a
+          <code>User-Agent</code> header or it 403s), scraped the
+          <code>[[links]]</code>, kept the ones pointing at another of the 303,
+          and compared to the snapshot's out-edges (last section of
+          <a href="analysis.ipynb">the notebook</a>):
+        </p>
+        <table>
+          <thead>
+            <tr><th>character</th><th class="num">snapshot</th><th class="num">live wikitext</th><th class="num">shared</th><th class="num">snapshot-only</th><th class="num">live-only</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>She-Hulk</td><td class="num">20</td><td class="num">20</td><td class="num">20</td><td class="num">0</td><td class="num">0</td></tr>
+            <tr><td>Adam Warlock</td><td class="num">22</td><td class="num">21</td><td class="num">21</td><td class="num">1</td><td class="num">0</td></tr>
+            <tr><td>Doctor Strange</td><td class="num">17</td><td class="num">15</td><td class="num">15</td><td class="num">2</td><td class="num">0</td></tr>
+            <tr><td>Venom</td><td class="num">21</td><td class="num">19</td><td class="num">19</td><td class="num">2</td><td class="num">0</td></tr>
+            <tr><td>Luke Cage</td><td class="num">9</td><td class="num">7</td><td class="num">7</td><td class="num">2</td><td class="num">0</td></tr>
+          </tbody>
+        </table>
+        <p>
+          82 of 89 snapshot edges (92%) fall straight out of a naive regex over
+          raw wiki-source, and <strong>zero live-only edges</strong> — nothing in
+          the current articles that the snapshot missed. The seven misses are all
+          links that live inside infobox/navbox <code>{{templates}}</code>, which
+          a plain <code>[[ ]]</code> scrape skips but the course's harvester
+          (rendered links, redirects resolved) correctly caught. The snapshot is
+          faithful and slightly <em>fuller</em> than a hand-rolled scrape — good
+          to know before I trust my own crawl for the final project.
+        </p>
+      </section>
+
+      <section>
+        <p class="section-label">Reproduce</p>
+        <h2>Run it</h2>
+        <pre style="background: var(--ink); color: #eef1f4; padding: 18px 20px; border-radius: 12px; overflow-x: auto; font-size: .86rem; max-width: 680px;">pip install networkx matplotlib numpy scipy pandas jupyterlab
+jupyter lab showcases/week-01-network-questions/claude/analysis.ipynb   # run all
+# the notebook also (re)writes data/graph.json + assets/*.png used by this page</pre>
+        <p>
+          Data downloaded from
+          <a href="https://sunelehmann.com/socialgraphs2026-web/data/">the course data page</a>
+          (week-1 frozen release, 2026-08-26) into <code>data/week1/</code>.
+          <a href="summary.json">summary.json</a> holds the headline numbers.
+        </p>
+      </section>
+    </main>
+
+    <footer>GO NUTS · Week 01 · Marvel link network</footer>
+  </body>
+</html>
