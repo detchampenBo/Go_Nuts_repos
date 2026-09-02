@@ -2,6 +2,22 @@
 
 This context describes the directed Wikipedia-link snapshot used in the week 01 hero-network showcase and notebook.
 
+## Gallery language
+
+**Weekly showcase**:
+One gallery card representing a week's shared exercise. It introduces the topic and
+groups the parallel solutions for that week.
+_Avoid_: Solution card, week link
+
+**Solution page**:
+One contributor's standalone visual or analysis for a weekly showcase.
+_Avoid_: Showcase, alternative week
+
+**Solution button**:
+The direct link inside a weekly showcase card that opens a specific solution page. Week
+01 has a Codex solution button and a Claude solution button.
+_Avoid_: Card link, subfolder link
+
 ## Language
 
 **Hero article**:

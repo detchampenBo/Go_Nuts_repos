@@ -16,10 +16,8 @@ Go_Nuts_repos/
 ├── showcases/                         Additional visual experiments
 │   ├── README.md                      Short checklist for adding a new showcase
 │   └── week-01-network-questions/     The first showcase
-│       ├── index.html                 The page people see
-│       ├── styles.css                 Its colours, layout, and typography
-│       ├── script.js                  Its interactive behaviour
-│       ├── claude/                    Marvel write-up, explorer, notebook, and figures
+│       ├── _Codex/                    Codex's solution page and supporting files
+│       ├── claude/                    Claude's solution page and supporting files
 │       ├── data/
 │       │   ├── source-network.json    The editable source information
 │       │   └── graph-data.json        The prepared information used by the page
@@ -31,10 +29,11 @@ Go_Nuts_repos/
 ## What happens when someone visits the site
 
 1. GitHub Pages opens the root `index.html` file. This is the course's gallery page.
-2. A person chooses a showcase card, such as **Network questions**.
-3. The showcase page opens its own `index.html` file.
-4. That page uses its `styles.css` file to look the way it does and `script.js` to make
-   the graph interactive.
+2. A person finds a weekly showcase card, such as **Network questions**.
+3. The card offers a button for each solution. Week 01 has **Codex solution** and
+   **Claude solution**.
+4. A solution page opens its own `index.html` file and any supporting files in the same
+   solution folder.
 5. The interactive graph reads `data/graph-data.json`. This is the file that the browser
    understands and displays.
 
@@ -64,10 +63,12 @@ finished files, so no server is required.
 
 1. Create a new folder in `showcases`, using a readable name such as
    `week-02-mobility-patterns`.
-2. Put the page and everything it needs inside that folder. A simple visual can have just
-   an `index.html` file. A richer visual can also have its own `styles.css`, `script.js`,
-   `data`, and Python preparation file.
-3. Add a new card to the root `index.html` so visitors can find it from the gallery.
+2. Create a separate subfolder for each solution inside it. Put the page and everything
+   it needs inside the relevant solution folder. A simple visual can have just an
+   `index.html` file; a richer one can also have its own `styles.css`, `script.js`, data,
+   and Python preparation file.
+3. Add one weekly showcase card to the root `index.html`, with one clear button for each
+   solution, so visitors can compare the approaches.
 4. Open the page locally and check that it looks right before pushing it.
 5. Push the files to the GitHub branch used by Pages. The published gallery will update.
 
