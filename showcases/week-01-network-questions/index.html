@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="A visual working brief for exploring course network questions."
+    />
+    <title>Node Lab — Network Questions</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="#top" aria-label="Node Lab home">
+        <span class="brand-mark" aria-hidden="true">N</span>
+        <span>NODE LAB</span>
+      </a>
+      <nav aria-label="Main navigation">
+        <a href="#questions">Questions</a>
+        <a href="#evidence">Evidence</a>
+        <a href="#workflow">Workflow</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="intro" aria-labelledby="page-title">
+        <p class="eyebrow">Master's course · network &amp; graph structure</p>
+        <h1 id="page-title">Before we model a network,<br />we need to decide what it means.</h1>
+        <p class="lede">
+          A shared visual brief for turning a real-world system into a graph we can
+          inspect, challenge, and eventually feed with data.
+        </p>
+      </section>
+
+      <section class="network-stage" aria-labelledby="network-title">
+        <div class="stage-heading">
+          <div>
+            <p class="section-label">Live model</p>
+            <h2 id="network-title">The questions live in the connections.</h2>
+          </div>
+          <button class="text-button" id="reset-graph" type="button">Reset view</button>
+        </div>
+
+        <div class="graph-layout">
+          <div class="graph-frame">
+            <svg
+              id="network-graph"
+              viewBox="0 0 760 490"
+              role="img"
+              aria-labelledby="graph-title graph-description"
+            >
+              <title id="graph-title">An interactive course network</title>
+              <desc id="graph-description">
+                Select a node to explore its connections and the question it raises.
+              </desc>
+            </svg>
+            <p class="graph-hint">Select a node to trace its relationships.</p>
+          </div>
+
+          <aside class="insight-card" aria-live="polite">
+            <p class="section-label">Focus</p>
+            <p class="insight-index" id="selected-index">01 / 07</p>
+            <h3 id="selected-title">Define the node</h3>
+            <p id="selected-copy">
+              Decide what counts as an actor, object, place, or event before we
+              measure anything else.
+            </p>
+            <dl class="node-meta">
+              <div>
+                <dt>Connected to</dt>
+                <dd id="selected-connections">3 questions</dd>
+              </div>
+              <div>
+                <dt>Data status</dt>
+                <dd id="selected-status">Needs definition</dd>
+              </div>
+            </dl>
+          </aside>
+        </div>
+      </section>
+
+      <section class="question-grid" id="questions" aria-labelledby="questions-title">
+        <div class="section-intro">
+          <p class="section-label">Problem frame</p>
+          <h2 id="questions-title">Four things we need to solve</h2>
+        </div>
+        <article>
+          <span class="card-number">01</span>
+          <h3>Boundary</h3>
+          <p>Where does the network begin and end? What should remain outside the model?</p>
+        </article>
+        <article>
+          <span class="card-number">02</span>
+          <h3>Relation</h3>
+          <p>Which interactions deserve an edge—and are they directed, weighted, or changing?</p>
+        </article>
+        <article>
+          <span class="card-number">03</span>
+          <h3>Time</h3>
+          <p>Is one snapshot enough, or do we need to make sequences and change visible?</p>
+        </article>
+        <article>
+          <span class="card-number">04</span>
+          <h3>Claim</h3>
+          <p>What can the graph support as evidence, and what would still be an assumption?</p>
+        </article>
+      </section>
+
+      <section class="evidence" id="evidence" aria-labelledby="evidence-title">
+        <div>
+          <p class="section-label">Evidence ladder</p>
+          <h2 id="evidence-title">From raw observation to a defensible story.</h2>
+        </div>
+        <ol>
+          <li><span>01</span><strong>Observe</strong><p>Collect a trace of what happened.</p></li>
+          <li><span>02</span><strong>Transform</strong><p>Define nodes, edges, time, and uncertainty.</p></li>
+          <li><span>03</span><strong>Inspect</strong><p>Look for structures worth explaining.</p></li>
+          <li><span>04</span><strong>Interpret</strong><p>State the claim—and its limits—plainly.</p></li>
+        </ol>
+      </section>
+
+      <section class="workflow" id="workflow" aria-labelledby="workflow-title">
+        <div>
+          <p class="section-label">Designed to grow</p>
+          <h2 id="workflow-title">Static site now. Data-driven surface next.</h2>
+        </div>
+        <p>
+          The visual reads a versioned JSON graph. A small Python preparation step can
+          later ingest source data, calculate attributes, and regenerate that file—while
+          GitHub Pages continues to serve the result.
+        </p>
+      </section>
+    </main>
+
+    <footer>
+      <span>NODE LAB</span>
+      <span>Built for asking better network questions.</span>
+    </footer>
+    <script src="script.js"></script>
+  </body>
+</html>

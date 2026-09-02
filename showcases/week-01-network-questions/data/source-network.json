@@ -1,0 +1,22 @@
+{
+  "nodes": [
+    { "id": "node", "label": "Node", "status": "Needs definition", "question": "Decide what counts as an actor, object, place, or event before we measure anything else." },
+    { "id": "edge", "label": "Edge", "status": "Needs definition", "question": "Name the relation. Is it a tie, transfer, collaboration, sequence, or something else?" },
+    { "id": "weight", "label": "Weight", "status": "Optional attribute", "question": "Choose what makes one connection stronger, more frequent, or more consequential than another." },
+    { "id": "boundary", "label": "Boundary", "status": "Needs decision", "question": "Set the system boundary so that the graph has a meaningful scope, not merely a convenient one." },
+    { "id": "time", "label": "Time", "status": "Needs resolution", "question": "Choose the time scale: moment, period, sequence, or a series of snapshots." },
+    { "id": "evidence", "label": "Evidence", "status": "Requires source", "question": "Link each connection back to observable data and record what the data cannot establish." },
+    { "id": "claim", "label": "Claim", "status": "Test after analysis", "question": "Turn a visible pattern into a narrow, testable claim—and state its uncertainty." }
+  ],
+  "edges": [
+    { "source": "node", "target": "edge" },
+    { "source": "edge", "target": "weight" },
+    { "source": "node", "target": "boundary" },
+    { "source": "boundary", "target": "time" },
+    { "source": "edge", "target": "time" },
+    { "source": "weight", "target": "evidence" },
+    { "source": "time", "target": "evidence" },
+    { "source": "time", "target": "claim" },
+    { "source": "evidence", "target": "claim" }
+  ]
+}

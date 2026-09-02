@@ -1,0 +1,112 @@
+{
+  "nodes": [
+    {
+      "id": "node",
+      "label": "Node",
+      "status": "Needs definition",
+      "question": "Decide what counts as an actor, object, place, or event before we measure anything else.",
+      "order": 1,
+      "x": 380,
+      "y": 75,
+      "color": "#c9ec45"
+    },
+    {
+      "id": "edge",
+      "label": "Edge",
+      "status": "Needs definition",
+      "question": "Name the relation. Is it a tie, transfer, collaboration, sequence, or something else?",
+      "order": 2,
+      "x": 575,
+      "y": 139,
+      "color": "#5cdbeb"
+    },
+    {
+      "id": "weight",
+      "label": "Weight",
+      "status": "Optional attribute",
+      "question": "Choose what makes one connection stronger, more frequent, or more consequential than another.",
+      "order": 3,
+      "x": 624,
+      "y": 283,
+      "color": "#ff8c73"
+    },
+    {
+      "id": "boundary",
+      "label": "Boundary",
+      "status": "Needs decision",
+      "question": "Set the system boundary so that the graph has a meaningful scope, not merely a convenient one.",
+      "order": 4,
+      "x": 488,
+      "y": 398,
+      "color": "#a69af4"
+    },
+    {
+      "id": "time",
+      "label": "Time",
+      "status": "Needs resolution",
+      "question": "Choose the time scale: moment, period, sequence, or a series of snapshots.",
+      "order": 5,
+      "x": 272,
+      "y": 398,
+      "color": "#f6ce6d"
+    },
+    {
+      "id": "evidence",
+      "label": "Evidence",
+      "status": "Requires source",
+      "question": "Link each connection back to observable data and record what the data cannot establish.",
+      "order": 6,
+      "x": 136,
+      "y": 283,
+      "color": "#e384cf"
+    },
+    {
+      "id": "claim",
+      "label": "Claim",
+      "status": "Test after analysis",
+      "question": "Turn a visible pattern into a narrow, testable claim\u2014and state its uncertainty.",
+      "order": 7,
+      "x": 185,
+      "y": 139,
+      "color": "#6dc99e"
+    }
+  ],
+  "edges": [
+    {
+      "source": "node",
+      "target": "edge"
+    },
+    {
+      "source": "edge",
+      "target": "weight"
+    },
+    {
+      "source": "node",
+      "target": "boundary"
+    },
+    {
+      "source": "boundary",
+      "target": "time"
+    },
+    {
+      "source": "edge",
+      "target": "time"
+    },
+    {
+      "source": "weight",
+      "target": "evidence"
+    },
+    {
+      "source": "time",
+      "target": "evidence"
+    },
+    {
+      "source": "time",
+      "target": "claim"
+    },
+    {
+      "source": "evidence",
+      "target": "claim"
+    }
+  ]
+}
