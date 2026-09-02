@@ -16,7 +16,7 @@ Go_Nuts_repos/
 ├── showcases/                         Additional visual experiments
 │   ├── README.md                      Short checklist for adding a new showcase
 │   └── week-01-network-questions/     The first showcase
-│       ├── _Codex/                    Codex's solution page and supporting files
+│       ├── codex/                     Codex's solution page and supporting files
 │       ├── claude/                    Claude's solution page and supporting files
 │       ├── data/
 │       │   ├── source-network.json    The editable source information
