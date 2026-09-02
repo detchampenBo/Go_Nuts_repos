@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Codex's week 01 recap of directed degree distributions in the Marvel hero network."
+    />
+    <title>Codex / Network Questions</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="#top" aria-label="Codex network recap home">
+        <span class="brand-mark" aria-hidden="true">C</span>
+        <span>CODEX</span><i></i><small>NETWORK RECAP</small>
+      </a>
+      <nav aria-label="Main navigation">
+        <a href="#explore">Explore</a>
+        <a href="#evidence">Evidence</a>
+        <a href="#reading">Reading</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">WEEK 01 / DIRECTED NETWORKS</p>
+          <h1>Who gets named<br /><em>across the network?</em></h1>
+          <p class="lede">
+            A Codex-made recap of the Marvel hero-link network: 303 Wikipedia articles,
+            1,784 directed links, and two very different ways to matter.
+          </p>
+          <a class="jump-link" href="#explore">Explore inbound references <span>↓</span></a>
+        </div>
+
+        <aside class="ask-card" aria-label="Analysis workflow">
+          <p class="section-label">The prompt, translated</p>
+          <blockquote>
+            “Explore degree distributions, in- versus out-degree—who is linked to most,
+            who links out most, and why are they different?”
+          </blockquote>
+          <div class="workflow-line" aria-label="Codex analysis steps">
+            <span>ASK</span><b>→</b><span>COUNT</span><b>→</b><span>COMPARE</span><b>→</b><span>INTERPRET</span>
+          </div>
+        </aside>
+      </section>
+
+      <section class="spider-frame" id="network" aria-labelledby="spider-frame-title">
+        <div class="section-heading graph-heading">
+          <div>
+            <p class="eyebrow" id="graph-kicker">A DIRECTED OPENING</p>
+            <h2 id="spider-frame-title">Spider-Man's outbound web</h2>
+          </div>
+          <p id="graph-summary">Nine links leave Spider-Man's article. Select the frame to expand into the wider reference constellation.</p>
+        </div>
+
+        <div class="graph-controls" id="graph-controls" hidden>
+          <label class="range-control" for="network-threshold">
+            <span>Minimum inbound links</span>
+            <output id="network-threshold-output" for="network-threshold">12</output>
+            <input id="network-threshold" type="range" min="0" max="106" value="12" />
+          </label>
+          <label class="network-search-control" for="network-search">
+            <span>Search a hero</span>
+            <input id="network-search" type="search" placeholder="Find a hero article" autocomplete="off" />
+            <div class="hero-results" id="hero-results" role="listbox" aria-label="Matching hero articles"></div>
+          </label>
+          <button class="ghost-button" id="ego-lens" type="button" disabled>Open ego lens</button>
+        </div>
+
+        <div class="spider-stage" id="spider-stage">
+          <svg id="spider-network" viewBox="0 0 960 560" role="img" aria-labelledby="spider-network-title spider-network-desc">
+            <title id="spider-network-title">Spider-Man's network</title>
+            <desc id="spider-network-desc">An opening web of Spider-Man's nine outbound links that expands into an interactive hero reference constellation.</desc>
+          </svg>
+          <img class="spider-widget" id="spider-widget" src="Spiderman.jpg" alt="Spider-Man launching a web" />
+          <button class="enter-network" id="enter-network" type="button">Enter the reference constellation <span>→</span></button>
+          <p class="stage-note" id="stage-note">9 outbound links from Spider-Man</p>
+        </div>
+
+        <aside class="graph-detail" id="graph-detail" aria-live="polite">
+          <p class="section-label">Graph guide</p>
+          <h3 id="graph-detail-title">A web of nine</h3>
+          <p id="graph-detail-copy">Each endpoint is an article Spider-Man links out to. The graph will open to the heroes most frequently referenced by the network.</p>
+          <dl>
+            <div><dt>Linked to</dt><dd id="graph-detail-in">106</dd></div>
+            <div><dt>Links out</dt><dd id="graph-detail-out">9</dd></div>
+            <div><dt>Visible</dt><dd id="graph-detail-visible">9</dd></div>
+          </dl>
+        </aside>
+      </section>
+
+      <section class="stat-strip" aria-label="Network summary">
+        <div><strong id="node-count">303</strong><span>hero articles</span></div>
+        <div><strong id="edge-count">1,784</strong><span>directed links</span></div>
+        <div><strong id="isolate-count">17</strong><span>isolates</span></div>
+        <div><strong id="top-in-stat">—</strong><span>most incoming links</span></div>
+      </section>
+
+      <section class="explorer" id="explore" aria-labelledby="explore-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">INTERACTIVE VIEW</p>
+            <h2 id="explore-title">Reference radar</h2>
+          </div>
+          <p>Each bar is a hero article. Longer means more other hero articles link <em>to</em> it.</p>
+        </div>
+
+        <div class="explorer-layout">
+          <div class="plot-panel">
+            <div class="controls" aria-label="Inbound-degree filters">
+              <label class="range-control" for="min-degree">
+                <span>Minimum inbound links</span>
+                <output id="degree-output" for="min-degree">0</output>
+                <input id="min-degree" type="range" min="0" value="0" />
+              </label>
+              <label class="search-control" for="hero-search">
+                <span>Find a hero</span>
+                <input id="hero-search" type="search" placeholder="e.g. Spider-Man" autocomplete="off" />
+              </label>
+              <label class="select-control" for="row-limit">
+                <span>Show</span>
+                <select id="row-limit">
+                  <option value="12">12 heroes</option>
+                  <option value="24" selected>24 heroes</option>
+                  <option value="40">40 heroes</option>
+                </select>
+              </label>
+            </div>
+            <p class="filter-summary" id="filter-summary" aria-live="polite"></p>
+            <div class="chart-scroll">
+              <svg id="inbound-chart" role="img" aria-labelledby="inbound-chart-title inbound-chart-desc">
+                <title id="inbound-chart-title">Heroes ranked by incoming links</title>
+                <desc id="inbound-chart-desc">Use the filters to change the displayed heroes. Select a bar for details.</desc>
+              </svg>
+            </div>
+          </div>
+
+          <aside class="detail-card" aria-live="polite">
+            <p class="section-label">Selected hero</p>
+            <p class="detail-rank" id="detail-rank">INBOUND RANK —</p>
+            <h3 id="detail-name">Choose a bar</h3>
+            <dl>
+              <div><dt>Linked to</dt><dd id="detail-in">—</dd></div>
+              <div><dt>Links out</dt><dd id="detail-out">—</dd></div>
+              <div><dt>Difference</dt><dd id="detail-gap">—</dd></div>
+            </dl>
+            <p id="detail-reading">Select a hero to compare incoming references with outgoing links.</p>
+            <a id="detail-link" class="article-link" href="#" target="_blank" rel="noreferrer" hidden>Open article ↗</a>
+          </aside>
+        </div>
+      </section>
+
+      <section class="evidence" id="evidence" aria-labelledby="evidence-title">
+        <div class="section-heading compact">
+          <div>
+            <p class="eyebrow">THE DISTRIBUTION</p>
+            <h2 id="evidence-title">Most heroes sit low; a few stretch the scale.</h2>
+          </div>
+          <p>Linear views keep the common cases visible. Log–log views make the long tail easier to inspect.</p>
+        </div>
+        <div class="figure-grid">
+          <figure>
+            <figcaption><span>01</span> Degree frequency / linear</figcaption>
+            <svg id="linear-chart" role="img" aria-label="Linear degree distributions"></svg>
+          </figure>
+          <figure>
+            <figcaption><span>02</span> Degree frequency / log–log</figcaption>
+            <svg id="log-chart" role="img" aria-label="Log-log degree distributions"></svg>
+          </figure>
+        </div>
+      </section>
+
+      <section class="rankings" aria-labelledby="rankings-title">
+        <div class="section-heading compact">
+          <div>
+            <p class="eyebrow">TWO RANKINGS</p>
+            <h2 id="rankings-title">Being referenced is not the same as referencing.</h2>
+          </div>
+        </div>
+        <div class="table-grid">
+          <article class="ranking-card inbound-card">
+            <p class="section-label">WHO IS LINKED TO MOST?</p>
+            <h3>Inbound leaders</h3>
+            <table>
+              <thead><tr><th>Hero</th><th>In</th><th>Out</th></tr></thead>
+              <tbody id="inbound-table"></tbody>
+            </table>
+          </article>
+          <article class="ranking-card outbound-card">
+            <p class="section-label">WHO LINKS OUT MOST?</p>
+            <h3>Outbound leaders</h3>
+            <table>
+              <thead><tr><th>Hero</th><th>Out</th><th>In</th></tr></thead>
+              <tbody id="outbound-table"></tbody>
+            </table>
+          </article>
+        </div>
+      </section>
+
+      <section class="reading" id="reading" aria-labelledby="reading-title">
+        <p class="eyebrow">HOW TO READ THE GAP</p>
+        <h2 id="reading-title">Two directions, two kinds of visibility.</h2>
+        <div class="reading-grid">
+          <article><span>IN</span><h3>Referenced by others</h3><p>In-degree counts how often a character is named and linked from other hero articles. It is a form of network visibility.</p></article>
+          <article><span>OUT</span><h3>References others</h3><p>Out-degree counts links made from one hero’s own article. It can reflect dense relationships, article length, or editorial linking habits.</p></article>
+          <article><span>≠</span><h3>Not a popularity score</h3><p>These links are traces of Wikipedia’s article structure in one frozen snapshot—not a direct measure of narrative importance.</p></article>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <span>CODEX / WEEK 01</span>
+      <span>Built from the notebook’s directed-degree analysis.</span>
+    </footer>
+    <script src="script.js"></script>
+  </body>
+</html>
