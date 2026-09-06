@@ -66,7 +66,10 @@
         position: fixed; z-index: 2;
         text-shadow: 0 2px 16px #05060a, 0 2px 16px #05060a;
       }
-      .hud { top: 18px; left: 18px; width: 288px; padding: 16px 18px; }
+      .hud { top: 18px; left: 18px; width: 288px; padding: 16px 18px;
+        max-height: calc(100vh - 36px); overflow-y: auto; overscroll-behavior: contain; }
+      .hud::-webkit-scrollbar { width: 6px; }
+      .hud::-webkit-scrollbar-thumb { background: #333644; border-radius: 3px; }
       .hud h1 { margin: 0 0 2px; font-size: 15px; letter-spacing: -.01em; }
       .hud p.sub { margin: 0 0 13px; color: var(--muted); font-size: 12px; }
       .field { display: flex; gap: 8px; margin-bottom: 12px; }
@@ -93,7 +96,11 @@
       input[type="range"] { width: 100%; accent-color: var(--cyan); }
       .slideval { color: var(--text); font-variant-numeric: tabular-nums; }
 
-      .legend { left: 18px; bottom: 18px; padding: 0; font-size: 12px; color: var(--muted); max-width: 260px; }
+      .legend { right: 18px; bottom: 18px; padding: 0; font-size: 12px; color: var(--muted);
+        max-width: 220px; text-align: right; }
+      .legend .k { justify-content: flex-end; }
+      .legend .sizes { justify-content: flex-end; }
+      @media (max-height: 620px) { .legend { display: none; } }
       .legend .k { display: flex; align-items: center; gap: 8px; margin: 3px 0; }
       .legend .dot { width: 10px; height: 10px; border-radius: 50%; flex: none; }
       .legend .ramp { height: 10px; border-radius: 5px; margin: 6px 0 3px;
@@ -145,6 +152,19 @@
         .legend { transition: opacity .16s ease; }
       }
       @media (max-width: 850px) { .masthead { display: none; } }
+      button.plain[disabled] { opacity: .38; cursor: default; }
+      button.plain[disabled]:hover { color: var(--muted); border-color: #55596d; }
+      #playout { color: var(--cyan); font-size: 11.5px; line-height: 1.45; min-height: 1.1em; margin-top: 8px; }
+      #playout b { color: #fff; }
+      .tip img { width: 100%; height: 132px; object-fit: cover; border-radius: 8px;
+        margin-bottom: 8px; display: block; background: #22232c; }
+      .focus-ring.path-ring { stroke: #ffd166; }
+      #duel { margin-top: 10px; font-size: 11.5px; color: var(--cyan); line-height: 1.55; }
+      #duel b { color: #fff; }
+      #duel-controls:not([hidden]) { display: flex; align-items: center; gap: 8px; margin-top: 7px; }
+      #duel-controls #g-n { min-width: 14px; text-align: center; color: #fff; font-variant-numeric: tabular-nums; }
+      #duel-route { margin-top: 7px; color: #ffd166; word-break: break-word; }
+      #duel-again { margin-top: 8px; }
     </style>
   </head>
   <body>
@@ -178,7 +198,28 @@
 
       <div class="row">
         <label class="chk"><input type="checkbox" id="labels" /> Hub labels</label>
+        <label class="chk" title="fetch thumbnails from Wikipedia on demand"><input type="checkbox" id="faces" /> Faces</label>
         <button class="plain" id="fit">Reset view</button>
+      </div>
+
+      <div class="row" style="margin-top:10px">
+        <button class="plain" id="ripple" disabled>&#9654; Ripple</button>
+        <button class="plain" id="snap">&#10022; Snap</button>
+        <button class="plain" id="path">&#8596; Path</button>
+        <button class="plain" id="restore" hidden>&#8635; Restore</button>
+      </div>
+      <div id="playout"></div>
+      <div id="duel" hidden>
+        <div id="duel-msg"></div>
+        <div id="duel-controls" hidden>
+          <span>your guess</span>
+          <button class="plain" id="g-dn">&minus;</button>
+          <b id="g-n">3</b>
+          <button class="plain" id="g-up">+</button>
+          <button class="plain" id="g-go">Reveal</button>
+        </div>
+        <div id="duel-route"></div>
+        <button class="plain" id="duel-again" hidden>&#8635; New duel</button>
       </div>
     </div>
 
@@ -243,6 +284,7 @@
         const outAdj = nodes.map(() => new Set());
         const inAdj = nodes.map(() => new Set());
         graph.links.forEach((l) => { outAdj[l.s].add(l.t); inAdj[l.t].add(l.s); });
+        const undAdj = nodes.map((_, i) => new Set([...outAdj[i], ...inAdj[i]]));
 
         const linked = new Set(graph.links.map((l) => `${l.s}|${l.t}`));
         function edgeGeometry(l) {
@@ -260,7 +302,17 @@
           return { sx, sy, tx, ty, cx, cy };
         }
 
+        let filterHidden = new Set();
+        let snapHidden = new Set();
         let hiddenIdx = new Set();
+        let rippleReached = null;
+        let rippleTimer = null;
+        let facesOn = false;
+        let tipNode = null;
+        const thumbCache = new Map();
+        let pathMode = 0, pathA = null, pathB = null, guessN = 3;
+        let duelPath = [], duelUndirected = false;
+        const duelEdges = new Set();
         let activeNode = null;
         let suppressEdges = false;
         let currentTransform = d3.zoomIdentity;
@@ -303,6 +355,30 @@
           ctx.lineWidth = .62 / t.k;
           ctx.stroke();
 
+          if (rippleReached) {
+            ctx.globalAlpha = .9; ctx.strokeStyle = "#9fc0ff"; ctx.lineWidth = 1 / t.k;
+            ctx.beginPath();
+            for (const l of graph.links) {
+              if (hiddenIdx.has(l.s) || hiddenIdx.has(l.t)) continue;
+              if (rippleReached.has(l.s) && rippleReached.has(l.t)) traceEdge(edgeGeometry(l));
+            }
+            ctx.stroke();
+          }
+
+          if (duelEdges.size) {
+            ctx.globalAlpha = 1; ctx.strokeStyle = "#ffd166";
+            ctx.lineWidth = 2.6 / t.k; ctx.lineCap = "round";
+            for (const key of duelEdges) {
+              const bar = key.indexOf("|");
+              const a = +key.slice(0, bar), c = +key.slice(bar + 1);
+              const dir = linked.has(a + "|" + c) ? { s: a, t: c } : { s: c, t: a };
+              const g = edgeGeometry(dir);
+              ctx.beginPath(); traceEdge(g); ctx.stroke();
+              drawArrow(g, "#ffd166", t.k);
+            }
+            ctx.lineCap = "butt";
+          }
+
           if (activeNode != null) {
             ctx.globalAlpha = .96;
             for (const l of graph.links) {
@@ -333,6 +409,7 @@
           .attr("cx", (d) => d.px).attr("cy", (d) => d.py);
 
         const focusRing = gFocus.append("circle").attr("class", "focus-ring");
+        const pathRing = gFocus.append("circle").attr("class", "focus-ring path-ring");
 
         const node = gNodes.selectAll("circle").data(nodes).join("circle")
           .attr("class", "node").attr("tabindex", 0)
@@ -343,6 +420,8 @@
           .on("pointerleave", () => { if (pinned == null) { clearHi(); hideTip(); } })
           .on("click", (e, d) => {
             e.stopPropagation();
+            if (pathMode) { pathPick(d); return; }
+            stopRipple();
             if (pinned === d.index) { pinned = null; clearHi(); hideTip(); }
             else { pinned = d.index; hover(d); }
           })
@@ -393,6 +472,10 @@
         // ---- highlight ---------------------------------------------------
         let pinned = null;
         function hover(d) {
+          if (rippleReached || pathMode) {
+            if (pathMode === 1 || pathMode === 2) showTip(d);
+            return;
+          }
           const keep = new Set([d.index, ...outAdj[d.index], ...inAdj[d.index]]);
           node.classed("dim", (n) => !keep.has(n.index));
           halo.classed("dim", (n) => !keep.has(n.index));
@@ -404,6 +487,7 @@
             .attr("r", (r(d) + 6) / currentK).classed("on", true);
           renderLabels(keep, d.index);
           showTip(d);
+          syncRipple();
         }
         function clearHi() {
           node.classed("dim", false);
@@ -414,17 +498,24 @@
           queueEdgeDraw();
           focusRing.classed("on", false);
           renderLabels(null);
+          syncRipple();
         }
 
         function showTip(d) {
+          tipNode = d;
           const where = d.comm >= 0 ? d.commLabel
             : d.grp === "island" ? "Morituri island" : "isolate — no links";
+          const pic = thumbCache.get(d.id);
+          const img = pic ? `<img src="${pic}" alt="" />` : "";
           tip.html(
-            `<b>${d.name}</b><div class="meta">` +
+            img + `<b>${d.name}</b><div class="meta">` +
             `<span class="num">${d.in}</span> in · <span class="num">${d.out}</span> out · ` +
             `<span class="num">${d.deg}</span> total<br>${where}</div>` +
             `<div class="go">double-click → Wikipedia ↗</div>`
           ).classed("show", true);
+          if (pic === undefined) getThumb(d).then((u) => {
+            if (u && tipNode === d && tip.classed("show")) showTip(d);
+          });
         }
         function moveTip(e) {
           tip.style("left", Math.min(e.clientX + 16, window.innerWidth - 264) + "px")
@@ -433,11 +524,16 @@
         function hideTip() { tip.classed("show", false); }
 
         // ---- min-degree filter ----------------------------------------
-        function applyFilter(minDeg) {
-          hiddenIdx = new Set(nodes.filter((d) => d.deg < minDeg).map((d) => d.index));
+        function recomputeHidden() {
+          hiddenIdx = new Set([...filterHidden, ...snapHidden]);
           node.classed("gone", (d) => hiddenIdx.has(d.index));
           halo.classed("gone", (d) => hiddenIdx.has(d.index));
           queueEdgeDraw();
+        }
+        function applyFilter(minDeg) {
+          filterHidden = new Set(nodes.filter((d) => d.deg < minDeg).map((d) => d.index));
+          recomputeHidden();
+          if (facesOn) applyFaces();
           if (pinned != null && hiddenIdx.has(pinned)) { pinned = null; clearHi(); hideTip(); }
           else renderLabels(pinned != null
             ? new Set([pinned, ...outAdj[pinned], ...inAdj[pinned]]) : null, pinned);
@@ -462,6 +558,10 @@
                 focusRing.attr("r", (r(nodes[activeNode]) + 6) / currentK)
                   .style("stroke-width", 1.5 / currentK + "px");
               }
+              if (pathMode === 2 && pathA != null) {
+                pathRing.attr("r", (r(nodes[pathA]) + 7) / currentK)
+                  .style("stroke-width", 1.5 / currentK + "px");
+              }
               gLabels.selectAll("text")
                 .style("font-size", 11 / currentK + "px")
                 .style("stroke-width", 3 / currentK + "px")
@@ -469,7 +569,7 @@
             }
           });
         svg.call(zoom).on("dblclick.zoom", null)
-          .on("click", () => { pinned = null; clearHi(); hideTip(); });
+          .on("click", () => { stopRipple(); if (pathMode && pathMode < 3) resetDuel(); pinned = null; clearHi(); hideTip(); });
         d3.select("#fit").on("click", () =>
           svg.transition().duration(500).call(zoom.transform, d3.zoomIdentity));
 
@@ -498,11 +598,302 @@
           legend.html(html);
         }
 
+        // ---- faces: lazy Wikipedia thumbnails --------------------------
+        const defs = svg.append("defs");
+        const patternMade = new Set();
+        let fetchQ = [], inFlight = 0;
+        function getThumb(d) {
+          if (thumbCache.has(d.id)) return Promise.resolve(thumbCache.get(d.id));
+          return fetch("https://en.wikipedia.org/api/rest_v1/page/summary/" + encodeURIComponent(d.id))
+            .then((r) => (r.ok ? r.json() : null))
+            .then((j) => {
+              const u = (j && j.thumbnail && j.thumbnail.source) || null;
+              thumbCache.set(d.id, u);
+              if (u) ensurePattern(d, u);
+              return u;
+            })
+            .catch(() => { thumbCache.set(d.id, null); return null; });
+        }
+        function ensurePattern(d, url) {
+          if (patternMade.has(d.index)) return;
+          patternMade.add(d.index);
+          const p = defs.append("pattern").attr("id", "face-" + d.index)
+            .attr("width", 1).attr("height", 1).attr("patternContentUnits", "objectBoundingBox");
+          p.append("image").attr("href", url).attr("width", 1).attr("height", 1)
+            .attr("preserveAspectRatio", "xMidYMid slice");
+        }
+        function faceFill(d) {
+          return thumbCache.get(d.id) ? "url(#face-" + d.index + ")" : colorNode(d);
+        }
+        function pumpFaces() {
+          while (inFlight < 6 && fetchQ.length) {
+            const d = fetchQ.shift(); inFlight++;
+            getThumb(d).then((u) => {
+              if (u && facesOn && !hiddenIdx.has(d.index) && !rippleReached)
+                node.filter((nn) => nn.index === d.index).attr("fill", "url(#face-" + d.index + ")");
+            }).finally(() => { inFlight--; pumpFaces(); });
+          }
+        }
+        function applyFaces() {
+          if (!facesOn) { node.attr("fill", colorNode); return; }
+          node.attr("fill", (d) => faceFill(d));
+          fetchQ = nodes.filter((d) => !hiddenIdx.has(d.index) && !thumbCache.has(d.id));
+          pumpFaces();
+        }
+        d3.select("#faces").on("change", function () { facesOn = this.checked; applyFaces(); });
+
+        // ---- ripple: BFS wave from the pinned character --------------
+        const HOPCOL = ["#ffffff", "#c9ec45", "#5cdbeb", "#4e9be6", "#a274e6", "#ff7ac0", "#ff8c73", "#f6ce6d"];
+        const rippleBtn = d3.select("#ripple");
+        const playout = d3.select("#playout");
+        function syncRipple() {
+          const on = pinned != null;
+          rippleBtn.attr("disabled", on ? null : "")
+            .text(on ? "▶ Ripple from " + nodes[pinned].name.split(" (")[0] : "▶ Ripple");
+        }
+        function stopRipple() {
+          if (rippleTimer) { clearInterval(rippleTimer); rippleTimer = null; }
+          if (!rippleReached) return;
+          rippleReached = null;
+          node.classed("dim", false).attr("fill", facesOn ? faceFill : colorNode);
+          halo.classed("dim", false);
+          regionLabel.classed("dim", false);
+          focusRing.classed("on", false);
+          activeNode = null;
+          renderLabels(null);
+          queueEdgeDraw();
+          playout.html("");
+        }
+        function startRipple(src) {
+          stopRipple();
+          suppressEdges = false;
+          hideTip();
+          renderLabels(null);
+          focusRing.classed("on", false);
+          const hop = new Array(nodes.length).fill(-1);
+          hop[src] = 0;
+          let frontier = [src];
+          const layers = [[src]];
+          while (frontier.length) {
+            const next = [];
+            for (const u of frontier)
+              for (const v of undAdj[u])
+                if (hop[v] === -1 && !hiddenIdx.has(v)) { hop[v] = hop[u] + 1; next.push(v); }
+            if (next.length) layers.push(next);
+            frontier = next;
+          }
+          const total = layers.reduce((a, l) => a + l.length, 0);
+          rippleReached = new Set([src]);
+          node.classed("dim", (d) => d.index !== src)
+            .attr("fill", (d) => (d.index === src ? HOPCOL[0] : "#26262f"));
+          halo.classed("dim", true);
+          regionLabel.classed("dim", true);
+          activeNode = null;
+          queueEdgeDraw();
+          playout.html("hop 0 &mdash; 1 / " + total + " reached");
+          let k = 0;
+          rippleTimer = setInterval(() => {
+            k++;
+            if (k >= layers.length) {
+              clearInterval(rippleTimer); rippleTimer = null;
+              playout.html("<b>" + nodes[src].name.split(" (")[0] + "</b> reaches all "
+                + rippleReached.size + " in " + (layers.length - 1) + " hops");
+              return;
+            }
+            layers[k].forEach((i) => rippleReached.add(i));
+            node.classed("dim", (d) => hop[d.index] < 0 || hop[d.index] > k)
+              .attr("fill", (d) => (hop[d.index] >= 0 && hop[d.index] <= k
+                ? HOPCOL[Math.min(hop[d.index], HOPCOL.length - 1)] : "#26262f"));
+            queueEdgeDraw();
+            playout.html("hop " + k + " &mdash; " + rippleReached.size + " / " + total + " reached");
+          }, 640);
+        }
+        rippleBtn.on("click", () => { if (pinned != null) startRipple(pinned); });
+
+        // ---- Thanos snap: a random half turns to dust ---------------
+        const restoreBtn = d3.select("#restore");
+        function giantAmong(alive) {
+          const seen = new Set();
+          let best = 0;
+          for (const start of alive) {
+            if (seen.has(start)) continue;
+            let size = 0;
+            const stack = [start];
+            seen.add(start);
+            while (stack.length) {
+              const u = stack.pop(); size++;
+              for (const v of undAdj[u])
+                if (alive.has(v) && !seen.has(v)) { seen.add(v); stack.push(v); }
+            }
+            if (size > best) best = size;
+          }
+          return best;
+        }
+        d3.select("#snap").on("click", () => {
+          stopRipple(); pinned = null; clearHi(); hideTip();
+          const alive = nodes.filter((d) => !hiddenIdx.has(d.index));
+          const shuffled = alive.slice().sort(() => Math.random() - 0.5);
+          const dust = new Set(shuffled.slice(0, Math.floor(alive.length / 2)).map((d) => d.index));
+          node.filter((d) => dust.has(d.index))
+            .transition().duration(1200).delay(() => Math.random() * 700)
+            .style("opacity", 0)
+            .attr("transform", () => "translate(" + (Math.random() - .5) * 44 + ","
+              + (-26 - Math.random() * 46) + ")")
+            .on("end", function () { d3.select(this).style("opacity", null).attr("transform", null); });
+          setTimeout(() => {
+            snapHidden = dust;
+            recomputeHidden();
+            if (facesOn) applyFaces();
+            const aliveSet = new Set(nodes.filter((d) => !hiddenIdx.has(d.index)).map((d) => d.index));
+            playout.html("snapped <b>" + dust.size + "</b> &middot; " + aliveSet.size
+              + " left &middot; largest surviving cluster <b>" + giantAmong(aliveSet) + "</b>");
+            restoreBtn.attr("hidden", null);
+          }, 2000);
+        });
+        restoreBtn.on("click", () => {
+          const back = snapHidden;
+          snapHidden = new Set();
+          recomputeHidden();
+          if (facesOn) applyFaces();
+          node.filter((d) => back.has(d.index)).style("opacity", 0)
+            .transition().duration(600).style("opacity", null);
+          restoreBtn.attr("hidden", "");
+          playout.html("");
+        });
+
+        // ---- six-degrees path duel ----------------------------------
+        const pathBtn = d3.select("#path");
+        function shortName(i) { return nodes[i].name.split(" (")[0]; }
+        function shortestPath(a, b, adj) {
+          if (a === b) return [a];
+          const prev = new Map([[a, -1]]);
+          const q = [a];
+          for (let h = 0; h < q.length; h++) {
+            const u = q[h];
+            for (const v of adj[u]) {
+              if (hiddenIdx.has(v) || prev.has(v)) continue;
+              prev.set(v, u);
+              if (v === b) {
+                const out = [b];
+                let c = u;
+                while (c !== -1) { out.push(c); c = prev.get(c); }
+                return out.reverse();
+              }
+              q.push(v);
+            }
+          }
+          return null;
+        }
+        function duelClearVisuals() {
+          node.classed("dim", false).attr("fill", facesOn ? faceFill : colorNode);
+          halo.classed("dim", false);
+          regionLabel.classed("dim", false);
+          pathRing.classed("on", false);
+          duelEdges.clear();
+          queueEdgeDraw();
+        }
+        function resetDuel() {
+          if (!pathMode) return;
+          pathMode = 0; pathA = null; pathB = null; duelPath = [];
+          duelClearVisuals();
+          d3.select("#duel").attr("hidden", "");
+          d3.select("#duel-controls").attr("hidden", "");
+          d3.select("#duel-again").attr("hidden", "");
+          pathBtn.text("↔ Path");
+        }
+        function beginPick() {
+          pathA = null; pathB = null; duelPath = []; pathMode = 1;
+          duelClearVisuals();
+          d3.select("#duel").attr("hidden", null);
+          d3.select("#duel-controls").attr("hidden", "");
+          d3.select("#duel-again").attr("hidden", "");
+          d3.select("#duel-route").html("");
+          d3.select("#duel-msg").html("click the <b>start</b> character");
+        }
+        function pathPick(d) {
+          if (pathMode === 1) {
+            pathA = d.index; pathMode = 2;
+            pathRing.attr("cx", d.px).attr("cy", d.py)
+              .attr("r", (r(d) + 7) / currentK)
+              .style("stroke-width", 1.5 / currentK + "px").classed("on", true);
+            d3.select("#duel-msg").html("start <b>" + shortName(pathA)
+              + "</b> &mdash; now click the <b>target</b>");
+            return;
+          }
+          if (pathMode === 2) {
+            if (d.index === pathA) return;
+            pathB = d.index;
+            duelUndirected = false;
+            let p = shortestPath(pathA, pathB, outAdj);
+            if (!p) { p = shortestPath(pathA, pathB, undAdj); duelUndirected = true; }
+            if (!p) {
+              d3.select("#duel-msg").html("<b>" + shortName(pathB) + "</b> is unreachable from <b>"
+                + shortName(pathA) + "</b> &mdash; different components. Pick another target.");
+              return;
+            }
+            duelPath = p; pathMode = 3;
+            d3.select("#duel-msg").html("how many hops from <b>" + shortName(pathA)
+              + "</b> to <b>" + shortName(pathB) + "</b>?");
+            d3.select("#duel-controls").attr("hidden", null);
+            d3.select("#duel-route").html("");
+          }
+        }
+        function runDuel() {
+          if (pathMode !== 3) return;
+          d3.select("#duel-controls").attr("hidden", "");
+          duelEdges.clear();
+          const p = duelPath;
+          const inPath = new Set(p);
+          node.classed("dim", (d) => !inPath.has(d.index))
+            .attr("fill", (d) => (inPath.has(d.index) ? "#3a3d52" : "#24242c"));
+          halo.classed("dim", true);
+          regionLabel.classed("dim", true);
+          activeNode = null;
+          const route = d3.select("#duel-route");
+          route.html("<b>" + shortName(p[0]) + "</b>");
+          node.filter((d) => d.index === p[0]).attr("fill", "#ffd166");
+          queueEdgeDraw();
+          let k = 0;
+          const timer = setInterval(() => {
+            k++;
+            if (k >= p.length) {
+              clearInterval(timer);
+              const actual = p.length - 1;
+              const hit = guessN === actual;
+              const hp = actual + " hop" + (actual === 1 ? "" : "s");
+              d3.select("#duel-msg").html(
+                (hit ? "&#127919; <b>spot on</b> &mdash; " + hp
+                     : "you guessed <b>" + guessN + "</b> &middot; the real chain is <b>" + hp + "</b>")
+                + (duelUndirected ? " <span style='color:var(--muted)'>(links either way)</span>" : ""));
+              d3.select("#duel-again").attr("hidden", null);
+              pathMode = 4;
+              return;
+            }
+            duelEdges.add(p[k - 1] + "|" + p[k]);
+            node.filter((d) => d.index === p[k]).attr("fill", "#ffd166");
+            route.html(route.html() + " &rarr; <b>" + shortName(p[k]) + "</b>");
+            queueEdgeDraw();
+          }, 720);
+        }
+        function setGuess(v) { guessN = Math.max(1, Math.min(8, v)); d3.select("#g-n").text(guessN); }
+        pathBtn.on("click", () => {
+          if (pathMode) { resetDuel(); return; }
+          stopRipple(); pinned = null; clearHi(); hideTip();
+          d3.select("#search").property("value", "");
+          renderLabels(null);
+          pathBtn.text("✕ Cancel");
+          beginPick();
+        });
+        d3.select("#g-dn").on("click", () => setGuess(guessN - 1));
+        d3.select("#g-up").on("click", () => setGuess(guessN + 1));
+        d3.select("#g-go").on("click", runDuel);
+        d3.select("#duel-again").on("click", () => { d3.select("#duel-again").attr("hidden", ""); beginPick(); });
+
         // ---- controls ------------------------------------------------
         d3.selectAll("#mode button").on("click", function () {
           mode = this.dataset.mode;
           d3.selectAll("#mode button").attr("aria-pressed", (d, i, n) => n[i] === this);
-          node.transition().duration(250).attr("fill", colorNode);
+          node.transition().duration(250).attr("fill", facesOn ? faceFill : colorNode);
           halo.transition().duration(250).attr("stroke", colorNode);
           regionLabel.transition().duration(200).style("opacity", mode === "community" ? null : 0);
           renderLegend();
@@ -518,7 +909,7 @@
             ? new Set([pinned, ...outAdj[pinned], ...inAdj[pinned]]) : null, pinned);
         });
         d3.select("#clear").on("click", () => {
-          pinned = null; clearHi(); hideTip(); d3.select("#search").property("value", "");
+          stopRipple(); resetDuel(); pinned = null; clearHi(); hideTip(); d3.select("#search").property("value", "");
         });
         const search = d3.select("#search");
         search.on("input", function () {
@@ -545,12 +936,13 @@
           if (e.key === "/" && document.activeElement !== search.node()) {
             e.preventDefault(); search.node().focus();
           }
-          if (e.key === "Escape") { pinned = null; clearHi(); hideTip(); search.node().blur(); }
+          if (e.key === "Escape") { stopRipple(); resetDuel(); pinned = null; clearHi(); hideTip(); search.node().blur(); }
         });
 
         window.addEventListener("resize", () => { sizeLinkCanvas(); queueEdgeDraw(); });
         drawEdges();
         renderLegend();
+        syncRipple();
       });
     </script>
   </body>
