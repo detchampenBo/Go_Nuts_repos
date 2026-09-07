@@ -166,21 +166,23 @@
       #duel-route { margin-top: 7px; color: #ffd166; word-break: break-word; }
       #duel-again { margin-top: 8px; }
     </style>
-    <link rel="stylesheet" href="assets/editorial.css" />
+    <link rel="stylesheet" href="assets/editorial.css?v=3" />
   </head>
   <body class="explorer-page">
+    <script src="assets/roster-portraits.js"></script>
+    <script src="assets/character-dossier.js"></script>
     <canvas id="links-canvas" aria-hidden="true"></canvas>
     <svg id="canvas" role="img" aria-label="Interactive node-link diagram of the Marvel superhero Wikipedia link network"></svg>
 
     <div class="masthead" aria-hidden="true">
-      <strong>THE MARVEL LINKVERSE</strong>
+      <strong>THE NETWORK CHRONICLES</strong>
       <span>hover to reveal the direction of attention</span>
     </div>
 
     <button class="ui-toggle" id="ui-toggle" type="button" aria-expanded="false">Controls</button>
 
     <div class="card hud">
-      <h1>Marvel link network</h1>
+      <h1>Inside the linkverse</h1>
       <p class="sub">303 nodes · 1&thinsp;784 directed links</p>
       <div class="field">
         <input id="search" type="search" placeholder="Find a character  ( / )" autocomplete="off" />
@@ -353,18 +355,29 @@
           ctx.lineWidth = .62 / t.k;
           ctx.stroke();
 
-          if (duelEdges.size) {
+          if (duelPath.length > 1 && duelEdges.size) {
+            // one continuous stroke straight through the revealed hop centres,
+            // so it meets every node cleanly; a single arrowhead into the last one
             ctx.globalAlpha = 1; ctx.strokeStyle = "#ffd166";
-            ctx.lineWidth = 2.6 / t.k; ctx.lineCap = "round";
-            for (const key of duelEdges) {
-              const bar = key.indexOf("|");
-              const a = +key.slice(0, bar), c = +key.slice(bar + 1);
-              const dir = linked.has(a + "|" + c) ? { s: a, t: c } : { s: c, t: a };
-              const g = edgeGeometry(dir);
-              ctx.beginPath(); traceEdge(g); ctx.stroke();
-              drawArrow(g, "#ffd166", t.k);
+            ctx.lineWidth = 3 / t.k; ctx.lineCap = "round"; ctx.lineJoin = "round";
+            ctx.beginPath();
+            let last = -1;
+            for (let i = 1; i < duelPath.length; i++) {
+              if (!duelEdges.has(duelPath[i - 1] + "|" + duelPath[i])) break;
+              const a = nodes[duelPath[i - 1]], b = nodes[duelPath[i]];
+              if (last < 0) ctx.moveTo(a.px, a.py);
+              ctx.lineTo(b.px, b.py);
+              last = i;
             }
-            ctx.lineCap = "butt";
+            ctx.stroke();
+            ctx.lineCap = "butt"; ctx.lineJoin = "miter";
+            if (last > 0) {
+              const a = nodes[duelPath[last - 1]], b = nodes[duelPath[last]];
+              const dx = b.px - a.px, dy = b.py - a.py, len = Math.hypot(dx, dy) || 1;
+              const tx = b.px - dx / len * (r(b) + 2) / t.k;
+              const ty = b.py - dy / len * (r(b) + 2) / t.k;
+              drawArrow({ tx, ty, sx: a.px, sy: a.py }, "#ffd166", t.k);
+            }
           }
 
           if (activeNode != null) {
@@ -410,7 +423,10 @@
             e.stopPropagation();
             if (pathMode) { pathPick(d); return; }
             if (pinned === d.index) { pinned = null; clearHi(); hideTip(); }
-            else { pinned = d.index; hover(d); }
+            else { pinned = d.index; hover(d); hideTip(); window.showCharacterDossier(d); }
+          })
+          .on("keydown", (e, d) => {
+            if(e.key === "Enter" || e.key === " ") { e.preventDefault(); pinned=d.index; hover(d); hideTip(); window.showCharacterDossier(d); }
           })
           .on("dblclick", (e, d) => { e.stopPropagation(); window.open(WIKI + d.id, "_blank"); });
 
@@ -704,12 +720,27 @@
           return null;
         }
         function duelClearVisuals() {
-          node.classed("dim", false).attr("fill", facesOn ? faceFill : colorNode);
+          node.classed("dim", false).attr("fill", facesOn ? faceFill : colorNode)
+            .style("stroke", null).style("stroke-width", 0.7 / currentK + "px");
           halo.classed("dim", false);
           regionLabel.classed("dim", false);
           pathRing.classed("on", false);
           duelEdges.clear();
           queueEdgeDraw();
+        }
+        // a hop on the chain: gold ring + the character's face (fetched on demand)
+        function paintHop(idx) {
+          const d = nodes[idx];
+          const sel = node.filter((n) => n.index === idx);
+          sel.style("stroke", "#ffd166").style("stroke-width", 2.4 / currentK + "px")
+            .attr("fill", thumbCache.get(d.id) ? "url(#face-" + idx + ")" : "#ffd166");
+          if (!thumbCache.has(d.id)) {
+            getThumb(d).then((u) => {
+              if (u && pathMode >= 3 && duelPath.includes(idx)) {
+                node.filter((n) => n.index === idx).attr("fill", "url(#face-" + idx + ")");
+              }
+            });
+          }
         }
         function resetDuel() {
           if (!pathMode) return;
@@ -770,7 +801,7 @@
           activeNode = null;
           const route = d3.select("#duel-route");
           route.html("<b>" + shortName(p[0]) + "</b>");
-          node.filter((d) => d.index === p[0]).attr("fill", "#ffd166");
+          paintHop(p[0]);
           queueEdgeDraw();
           let k = 0;
           const timer = setInterval(() => {
@@ -789,7 +820,7 @@
               return;
             }
             duelEdges.add(p[k - 1] + "|" + p[k]);
-            node.filter((d) => d.index === p[k]).attr("fill", "#ffd166");
+            paintHop(p[k]);
             route.html(route.html() + " &rarr; <b>" + shortName(p[k]) + "</b>");
             queueEdgeDraw();
           }, 720);
@@ -843,6 +874,7 @@
           suppressEdges = true;
           queueEdgeDraw();
           renderLabels(keep);
+          if (hits.length === 1) window.showCharacterDossier(hits[0]);
           if (hits.length) {
             const bx = d3.extent(hits, (d) => d.px), by = d3.extent(hits, (d) => d.py);
             const k = Math.min(6, 0.8 * Math.min(W / (bx[1] - bx[0] + 120), H / (by[1] - by[0] + 120)));

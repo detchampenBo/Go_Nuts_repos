@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 340">
+<path d="M420.0,170.0L380.2275553302262,99.29336293448064" stroke="#ffbf73" stroke-opacity=".55" fill="none"/>
+<path d="M380.22755533022627,240.70663706551932L279.52019020337815,278.3288528313429" stroke="#ffbf73" stroke-opacity=".55" fill="none"/>
+<path d="M279.52019020337815,278.3288528313429L380.22755533022627,240.70663706551932" stroke="#ffbf73" stroke-opacity=".55" fill="none"/>
+<path d="M279.52019020337815,278.3288528313429L165.00000000000006,265.2627944162883" stroke="#ffbf73" stroke-opacity=".55" fill="none"/>
+<path d="M279.52019020337815,278.3288528313429L90.25225446639556,132.37778423417643" stroke="#ffbf73" stroke-opacity=".55" fill="none"/>
+<path d="M279.52019020337815,278.3288528313429L164.99999999999994,74.73720558371178" stroke="#ffbf73" stroke-opacity=".55" fill="none"/>
+<path d="M279.52019020337815,278.3288528313429L279.5201902033781,61.6711471686571" stroke="#ffbf73" stroke-opacity=".55" fill="none"/>
+<path d="M279.52019020337815,278.3288528313429L380.2275553302262,99.29336293448064" stroke="#ffbf73" stroke-opacity=".55" fill="none"/>
+<path d="M165.00000000000006,265.2627944162883L279.52019020337815,278.3288528313429" stroke="#ffbf73" stroke-opacity=".55" fill="none"/>
+<path d="M165.00000000000006,265.2627944162883L90.25225446639558,207.62221576582357" stroke="#ffbf73" stroke-opacity=".55" fill="none"/>
+<path d="M165.00000000000006,265.2627944162883L279.5201902033781,61.6711471686571" stroke="#ffbf73" stroke-opacity=".55" fill="none"/>
+<path d="M90.25225446639558,207.62221576582357L165.00000000000006,265.2627944162883" stroke="#ffbf73" stroke-opacity=".55" fill="none"/>
+<path d="M90.25225446639558,207.62221576582357L279.5201902033781,61.6711471686571" stroke="#ffbf73" stroke-opacity=".55" fill="none"/>
+<path d="M90.25225446639556,132.37778423417643L420.0,170.0" stroke="#ffbf73" stroke-opacity=".55" fill="none"/>
+<path d="M90.25225446639556,132.37778423417643L279.52019020337815,278.3288528313429" stroke="#ffbf73" stroke-opacity=".55" fill="none"/>
+<path d="M164.99999999999994,74.73720558371178L380.22755533022627,240.70663706551932" stroke="#ffbf73" stroke-opacity=".55" fill="none"/>
+<path d="M164.99999999999994,74.73720558371178L279.52019020337815,278.3288528313429" stroke="#ffbf73" stroke-opacity=".55" fill="none"/>
+<path d="M164.99999999999994,74.73720558371178L380.2275553302262,99.29336293448064" stroke="#ffbf73" stroke-opacity=".55" fill="none"/>
+<path d="M279.5201902033781,61.6711471686571L165.00000000000006,265.2627944162883" stroke="#ffbf73" stroke-opacity=".55" fill="none"/>
+<path d="M279.5201902033781,61.6711471686571L90.25225446639558,207.62221576582357" stroke="#ffbf73" stroke-opacity=".55" fill="none"/>
+<path d="M380.2275553302262,99.29336293448064L420.0,170.0" stroke="#ffbf73" stroke-opacity=".55" fill="none"/>
+<path d="M380.2275553302262,99.29336293448064L164.99999999999994,74.73720558371178" stroke="#ffbf73" stroke-opacity=".55" fill="none"/>
+<circle cx="420.0" cy="170.0" r="9" fill="#ffd681"/><text x="420.0" y="192.0" fill="#f9eccb" text-anchor="middle" font-size="12" font-family="sans-serif">Backhand</text>
+<circle cx="380.22755533022627" cy="240.70663706551932" r="9" fill="#ffd681"/><text x="380.22755533022627" y="262.7066370655193" fill="#f9eccb" text-anchor="middle" font-size="12" font-family="sans-serif">Blackthorn</text>
+<circle cx="279.52019020337815" cy="278.3288528313429" r="9" fill="#ffd681"/><text x="279.52019020337815" y="300.3288528313429" fill="#f9eccb" text-anchor="middle" font-size="12" font-family="sans-serif">Radian</text>
+<circle cx="165.00000000000006" cy="265.2627944162883" r="9" fill="#ffd681"/><text x="165.00000000000006" y="287.2627944162883" fill="#f9eccb" text-anchor="middle" font-size="12" font-family="sans-serif">Scaredycat</text>
+<circle cx="90.25225446639558" cy="207.62221576582357" r="9" fill="#ffd681"/><text x="90.25225446639558" y="229.62221576582357" fill="#f9eccb" text-anchor="middle" font-size="12" font-family="sans-serif">Scatterbrain</text>
+<circle cx="90.25225446639556" cy="132.37778423417643" r="9" fill="#ffd681"/><text x="90.25225446639556" y="154.37778423417643" fill="#f9eccb" text-anchor="middle" font-size="12" font-family="sans-serif">Shear</text>
+<circle cx="164.99999999999994" cy="74.73720558371178" r="9" fill="#ffd681"/><text x="164.99999999999994" y="96.73720558371178" fill="#f9eccb" text-anchor="middle" font-size="12" font-family="sans-serif">Snapdragon</text>
+<circle cx="279.5201902033781" cy="61.6711471686571" r="9" fill="#ffd681"/><text x="279.5201902033781" y="83.6711471686571" fill="#f9eccb" text-anchor="middle" font-size="12" font-family="sans-serif">Toxyn</text>
+<circle cx="380.2275553302262" cy="99.29336293448064" r="9" fill="#ffd681"/><text x="380.2275553302262" y="121.29336293448064" fill="#f9eccb" text-anchor="middle" font-size="12" font-family="sans-serif">Vyking</text>
+</svg>

@@ -7,7 +7,7 @@
       name="description"
       content="Week-1 go-nuts post: degree structure, in vs out hubs, and the hidden islands of the frozen Marvel superhero Wikipedia link network."
     />
-    <title>Go Nuts — Inside the Marvel Linkverse</title>
+    <title>Heroes, Hubs &amp; Hidden Islands — Go Nuts</title>
     <link rel="icon" href="data:," />
     <style>
       :root {
@@ -115,7 +115,7 @@
       @media(max-width:600px) { .rec-baselines { grid-template-columns:1fr; } }
       @media(prefers-reduced-motion:reduce) { .rec-map line,.rec-map circle { transition:none; } }
     </style>
-    <link rel="stylesheet" href="assets/editorial.css" />
+    <link rel="stylesheet" href="assets/editorial.css?v=3" />
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
@@ -127,7 +127,7 @@
       <section class="intro">
         <div class="hero-copy">
           <p class="eyebrow"><span class="issue-stamp">ISSUE 01</span> Social graphs &amp; interactions</p>
-          <h1>EVERY HERO.<br>EVERY LINK.<br><em>ONE STRANGE<br>UNIVERSE.</em></h1>
+          <h1>HEROES, HUBS<br>&amp; <em>HIDDEN<br>ISLANDS.</em></h1>
           <p class="lede">Some heroes get all the attention. Others live on islands.
             Follow the Wikipedia links holding the Marvel universe together—and find out what happens when they disappear.</p>
           <div class="hero-actions"><a class="action-primary" href="game/">Outsmart Thanos <span>↗</span></a><a class="action-secondary" href="explorer.html">Enter the linkverse ↗</a></div>
@@ -135,7 +135,7 @@
         <a class="hero-art" href="explorer.html" aria-label="Open the interactive Marvel network explorer">
           <span class="art-topline">TRANSMISSION FROM THE LINKVERSE <span>FIG. 01</span></span>
           <span class="comic-caption">Meanwhile, in the giant component…</span>
-          <img src="assets/communities.png" alt="Eight coloured communities in the largest connected part of the Marvel Wikipedia network." />
+          <img src="assets/community-map.svg" alt="The largest component of the Marvel Wikipedia graph, with eight numbered communities." />
           <span class="art-caption"><span>One giant component.<br><strong>A universe of smaller worlds.</strong></span><span class="art-arrow" aria-hidden="true">↗</span></span>
         </a>
       </section>
@@ -144,9 +144,9 @@
         <div><strong>39%</strong><span>Links have a return</span></div><div><strong>17</strong><span>Isolated articles</span></div>
       </div>
       <nav class="chapter-nav" id="chapters" aria-label="Article chapters"><span>IN THIS ISSUE</span><a href="game/">Play / Outsmart Thanos ↗</a><a href="#reciprocity">01 / One-way universe</a><a href="#balance">02 / The attention gap</a><a href="#explore">03 / Explore</a><a href="#findings">04 / Hidden patterns</a><a href="#methods">05 / Behind the data</a></nav>
-      <section class="game-promo" aria-labelledby="game-promo-title">
-        <p class="section-label">Playable issue · Three shields. One snap.</p>
-        <h2 id="game-promo-title">Can you outsmart Thanos?</h2>
+      <section id="finale" class="game-promo" aria-labelledby="game-promo-title">
+        <p class="section-label">The finale · Put your knowledge to the test</p>
+        <h2 id="game-promo-title">You know the network. Now defend it.</h2>
         <p>He announces ten targets. Scarlet Witch can shield three. Choose who survives,
           watch the snap, and keep the largest group of Wikipedia articles connected.</p>
         <a class="action-primary" href="game/">Play Outsmart Thanos <span>↗</span></a>
@@ -206,6 +206,15 @@
         <div class="balance">
           <p class="eyebrow">Why in-degree and out-degree split</p>
           <h2 id="balance-title">The link balance</h2>
+          <div class="spidey-spotlight">
+            <div class="spidey-portrait"><img src="assets/characters/3.png" alt="Spider-Man" loading="lazy" /><span>THE IN-DEGREE LEADER</span></div>
+            <div class="spidey-copy"><p class="spidey-kicker">ALL THESE ARROWS POINT TO…</p><h3>Spider-Man.</h3>
+              <p><strong class="spidey-number">106</strong> incoming links <span class="spidey-versus">/ just <b>9</b> outgoing</span></p>
+              <p>106 other hero articles link to Spider-Man. His article links to nine. That is the difference between in-degree and out-degree.</p>
+              <button id="inspect-spidey" type="button">Inspect his link balance ↘</button>
+              <a class="spidey-credit" href="https://en.wikipedia.org/wiki/Spider-Man">Character image via Wikipedia</a>
+            </div>
+          </div>
           <p>Every article has two signatures: who references it, and who it
             references. This chart shows why the top inbound and outbound
             characters are different people.</p>
@@ -334,10 +343,10 @@
           about 39% of directed edges have a reverse edge.</p>
       </section>
 
-      <section>
-        <p class="section-label">What surprised us</p>
-        <h2>There is a second, hidden island</h2>
-        <div class="callout">
+      <section id="island" class="island-scene">
+        <p class="section-label">Chapter 04 · A lost transmission</p>
+        <h2>Nine articles. No way across.</h2>
+        <div class="prediction" data-answer="1"><p class="prediction-kicker">YOUR TURN / PREDICT THE REVEAL</p><h3>Can you reach this island from the giant component if you ignore link direction?</h3><div class="prediction-options"><button type="button" data-choice="0" aria-pressed="false">Yes—follow the right bridge</button><button type="button" data-choice="1" aria-pressed="false">No—there is no connecting path</button></div><p class="prediction-feedback" role="status" aria-live="polite"></p></div><div class="island-stage"><div class="mainland"><strong>277</strong><span>THE GIANT COMPONENT</span><p>Most of the universe is here.</p></div><div class="island-gap"><span>NO CONNECTING PATH</span><button type="button" id="locate-island" aria-expanded="false" aria-controls="island-reveal">Locate the island ↗</button></div><div id="island-reveal" hidden><img src="assets/island-scene.svg" alt="Nine articles connected only to one another, with their real Wikipedia links."/><span>TRANSMISSION FOUND / 9 ARTICLES</span></div></div><div class="callout">
           <p>
             Beyond the <strong>277-node giant component</strong>, there are
             <strong>17 isolates</strong> and a <strong>nine-node island</strong>.
@@ -402,11 +411,14 @@ jupyter lab showcases/week-01-network-questions/claude/analysis.ipynb   # run al
     </main>
 
     <footer><a class="footer-brand" href="./">GO NUTS!</a><span>Week 01 · The network chronicles</span><a href="#main">Back to top ↑</a></footer>
+    <script src="assets/story.js"></script>
     <script src="assets/roster-data.js"></script>
     <script src="assets/roster-portraits.js"></script>
     <script src="assets/roster.js"></script>
     <script src="assets/reciprocity-data.js"></script>
     <script src="assets/reciprocity.js"></script>
     <script src="assets/link-balance.js"></script>
+    <script src="assets/spidey-spotlight.js"></script>
+    <script src="assets/character-dossier.js"></script>
   </body>
 </html>
