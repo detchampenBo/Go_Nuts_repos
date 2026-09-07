@@ -338,3 +338,17 @@ body main > .game-promo { background:radial-gradient(ellipse at right,#653954,tr
 .spidey-copy h3 { font:italic 900 2rem Impact,'Arial Narrow',sans-serif; color:#f4edd9; margin:0 0 12px; }.spidey-copy p { font-size:.83rem; margin-bottom:14px; }.spidey-copy .spidey-number { color:#82cfff; font-size:2.3rem; line-height:1; }.spidey-versus { color:#ffaf96; }
 .spidey-copy button { padding:10px 13px; background:#d3f66b; color:#17210c; border:2px solid #080e16; box-shadow:3px 3px 0 #080e16; font:850 .72rem system-ui; cursor:pointer; }.spidey-credit { display:block; margin-top:13px; color:#b5c5d4; font-size:.61rem; }
 @media(max-width:600px){ .spidey-spotlight { grid-template-columns:105px minmax(0,1fr); }.spidey-copy { padding:14px; }.spidey-copy h3 { font-size:1.6rem; }.spidey-copy p { font-size:.75rem; }.spidey-portrait > span { font-size:.47rem; padding:5px; }.spidey-versus { display:block; margin-top:7px; } }
+.explorer-page .district-outline { fill-opacity:.035; stroke-opacity:.23; stroke-width:1; stroke-dasharray:3 6; pointer-events:none; }
+.explorer-page .region-label { opacity:.65; font-size:10px; letter-spacing:.04em; }
+.explorer-page #district { width:100%; padding:9px; border:2px solid #526575; background:#202d33; color:#f3efdf; font:inherit; font-size:11px; }
+.explorer-page .overview-links { margin-top:12px; }.explorer-page .district-note { font-size:10px; line-height:1.5; color:#adbdc9; margin:10px 0; }
+.explorer-page .web-mode { display:flex; gap:7px; margin:15px 0 12px; }.web-mode button { flex:1; padding:9px 5px; border:2px solid #526575; background:#253346; color:#d9e4ee; font:800 10px system-ui; cursor:pointer; }.web-mode button[aria-pressed=true] { background:#d3f66b; border-color:#d3f66b; color:#17210c; }
+.explorer-page #web-summary { border-left:3px solid #ff9c87; padding:8px 10px; background:#202d3b; margin:12px 0; }.explorer-page #web-summary strong { display:block; font:italic 900 19px Impact,sans-serif; color:#f2e7ca; }.explorer-page #web-summary span { display:block; font-size:11px; color:#8ed0f1; margin-top:7px; }.explorer-page #web-summary small { display:block; font-size:10px; line-height:1.5; color:#b4c1d1; margin-top:8px; }.explorer-page .web-guide { font-size:10px; color:#bac7d4; line-height:1.5; }
+.explorer-page .web-rings { pointer-events:none; }.explorer-page .web-rings circle { fill:none; stroke:#8da3c6; stroke-opacity:.17; stroke-width:1; stroke-dasharray:2 7; }
+.explorer-page.hero-web .legend { display:none; }
+.explorer-page #district:disabled { opacity:.5; cursor:not-allowed; }
+.explorer-page .hero-search-results { max-height:200px; overflow-y:auto; border:2px solid #63788c; background:#101923; margin:0 0 10px; }
+.explorer-page .hero-search-results[hidden] { display:none; }
+.explorer-page .hero-search-results button { display:block; width:100%; padding:10px; text-align:left; color:#e8efdc; background:transparent; border:0; border-bottom:1px solid #344658; font:12px system-ui; cursor:pointer; }
+.explorer-page .hero-search-results button:hover,.explorer-page .hero-search-results button:focus-visible { color:#14200e; background:#d3f66b; outline-offset:-3px; }
+.explorer-page #hero-search-status { font-size:10px; line-height:1.5; color:#c6d6e3; margin:8px 0; }.explorer-page #hero-search-status:empty { display:none; }

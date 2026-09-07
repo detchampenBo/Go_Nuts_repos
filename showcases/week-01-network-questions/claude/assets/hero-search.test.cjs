@@ -1,0 +1,10 @@
+const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
+const {matchHeroes}=require('./hero-search.js');
+const nodes=JSON.parse(fs.readFileSync(path.join(__dirname,'../../../../data/graph.json'))).nodes;
+test('exact Hulk beats Hulk variants',()=>assert.equal(matchHeroes(nodes,'Hulk').exact.name,'Hulk'));
+test('Spider-Man accepts spaces, case and Unicode hyphens',()=>{for(const q of ['spider man',' SPIDER-MAN ','Spider–Man'])assert.equal(matchHeroes(nodes,q).exact.name,'Spider-Man');});
+test('ambiguous Wolverine variants remain selectable',()=>assert.ok(matchHeroes(nodes,'wolverine').hits.some(n=>n.name==='Wolverine (character)')));
+test('full disambiguated name selects the exact article',()=>assert.equal(matchHeroes(nodes,'Wolverine (character)').exact.name,'Wolverine (character)'));
+test('partial names return selectable alternatives',()=>{const r=matchHeroes(nodes,'spider');assert.ok(r.hits.length>1);assert.equal(r.exact,null);});
+test('isolates and articles outside the current web are searchable',()=>assert.equal(matchHeroes(nodes,'Baymax').exact.name,'Baymax'));
+test('no match and empty input',()=>{assert.equal(matchHeroes(nodes,'zzzzunknown').hits.length,0);assert.equal(matchHeroes(nodes,' ').hits.length,0);});

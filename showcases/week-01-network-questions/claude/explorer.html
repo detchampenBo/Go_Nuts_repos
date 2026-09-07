@@ -169,6 +169,8 @@
     <link rel="stylesheet" href="assets/editorial.css?v=3" />
   </head>
   <body class="explorer-page">
+    <script src="assets/hero-search.js"></script>
+    <script src="assets/explorer-layout.js"></script>
     <script src="assets/roster-portraits.js"></script>
     <script src="assets/character-dossier.js"></script>
     <canvas id="links-canvas" aria-hidden="true"></canvas>
@@ -176,7 +178,7 @@
 
     <div class="masthead" aria-hidden="true">
       <strong>THE NETWORK CHRONICLES</strong>
-      <span>hover to reveal the direction of attention</span>
+      <span>CYAN → INCOMING · CORAL → OUTGOING · SELECT AN ARTICLE</span>
     </div>
 
     <button class="ui-toggle" id="ui-toggle" type="button" aria-expanded="false">Controls</button>
@@ -185,10 +187,19 @@
       <h1>Inside the linkverse</h1>
       <p class="sub">303 nodes · 1&thinsp;784 directed links</p>
       <div class="field">
-        <input id="search" type="search" placeholder="Find a character  ( / )" autocomplete="off" />
+        <input id="search" type="search" placeholder="Search any character…" autocomplete="off" aria-label="Search all 303 hero articles" aria-controls="hero-search-results" aria-describedby="hero-search-status" />
         <button class="plain" id="clear" aria-label="Clear selection">Clear</button>
       </div>
 
+      <div id="hero-search-results" class="hero-search-results" aria-label="Matching hero articles" hidden></div>
+      <p id="hero-search-status" role="status" aria-live="polite"></p>
+      <div class="web-mode" role="group" aria-label="Graph view"><button id="view-web" aria-pressed="true">Hero web</button><button id="view-all" aria-pressed="false">All 303 articles</button></div>
+      <div id="web-summary" aria-live="polite"></div>
+      <p class="web-guide">Click a hero to centre their web. Cyan arrows point in; coral arrows point out. Search any article by name.</p>
+      <label class="lbl" for="district">Jump to a district</label>
+      <select id="district"><option value="all">All 303 articles</option></select>
+      <label class="chk overview-links"><input id="cross-links" type="checkbox" checked /> Links between communities</label>
+      <p class="district-note">Schematic districts, real links. Scroll to zoom; drag to explore.</p>
       <div class="lbl">Colour by</div>
       <div class="seg" id="mode" role="group" aria-label="Colour nodes by">
         <button data-mode="community" aria-pressed="true">Community</button>
@@ -274,14 +285,20 @@
                : d.grp === "island" ? CORAL : GREY;
         }
 
-        // fit the pre-computed layout into the viewport, aspect preserved
-        const W = window.innerWidth, H = window.innerHeight, pad = 72;
-        const xe = d3.extent(nodes, (d) => d.x), ye = d3.extent(nodes, (d) => d.y);
-        const s = Math.min((W - 2 * pad) / (xe[1] - xe[0]), (H - 2 * pad) / (ye[1] - ye[0]));
-        const ox = (W - s * (xe[0] + xe[1])) / 2, oy = (H - s * (ye[0] + ye[1])) / 2;
-        nodes.forEach((d) => { d.px = ox + s * d.x; d.py = oy + s * d.y; });
-
-        const r = (d) => (d.deg === 0 ? 4 : 3 + 2.1 * Math.sqrt(d.deg));
+        // Fit the schematic districts into the map area, clear of the desktop sidebar.
+        let W = window.innerWidth, H = window.innerHeight;
+        const desktopInset = W > 700 ? 330 : 20;
+        const availableW = Math.max(240, W-desktopInset-40), availableH=Math.max(230,H-150);
+        const layout=window.explorerDistrictLayout || {};
+        nodes.forEach(d=>{const p=layout[d.id] || [d.x,d.y];d.lx=p[0];d.ly=p[1];});
+        const xe=d3.extent(nodes,d=>d.lx),ye=d3.extent(nodes,d=>d.ly);
+        const s=Math.min(availableW/(xe[1]-xe[0]+100),availableH/(ye[1]-ye[0]+100));
+        const ox=desktopInset+availableW/2-s*(xe[0]+xe[1])/2,oy=85+availableH/2-s*(ye[0]+ye[1])/2;
+        nodes.forEach(d=>{d.px=ox+s*d.lx;d.py=oy+s*d.ly;});
+        let webCentre=null; const webHidden=new Set();
+        const originalPositions=nodes.map(d=>({x:d.px,y:d.py}));
+        const r = d => d.index===webCentre ? 27 : d.deg===0 ? 3.3 : 3+ .72*Math.sqrt(d.deg);
+        let showCrossLinks=true;
 
         const outAdj = nodes.map(() => new Set());
         const inAdj = nodes.map(() => new Set());
@@ -298,7 +315,7 @@
           const tx = b.px - dx / len * (r(b) + 4) / k;
           const ty = b.py - dy / len * (r(b) + 4) / k;
           if (!linked.has(`${l.t}|${l.s}`)) return { sx, sy, tx, ty };
-          const bend = l.s < l.t ? 10 : -10;
+          const bend = 10 / k; // Reversing direction reverses the normal: separate reciprocal arcs.
           const cx = (a.px + b.px) / 2 - dy / len * bend;
           const cy = (a.py + b.py) / 2 + dx / len * bend;
           return { sx, sy, tx, ty, cx, cy };
@@ -345,15 +362,21 @@
           ctx.translate(t.x, t.y);
           ctx.scale(t.k, t.k);
 
-          ctx.beginPath();
-          for (const l of graph.links) {
-            if (hiddenIdx.has(l.s) || hiddenIdx.has(l.t)) continue;
-            traceEdge(edgeGeometry(l));
+          // Muted bridges preserve the global structure without obscuring each district.
+          for(const same of [false,true]) {
+            if(webCentre!==null)continue;
+            if(!same&&!showCrossLinks)continue;
+            ctx.beginPath();
+            for(const l of graph.links){
+              if(hiddenIdx.has(l.s)||hiddenIdx.has(l.t))continue;
+              const local=nodes[l.s].comm===nodes[l.t].comm;
+              if(local!==same)continue;
+              traceEdge(edgeGeometry(l));
+            }
+            ctx.strokeStyle=same?'#a4b8cd':'#798da8';
+            ctx.globalAlpha=(suppressEdges||activeNode!=null)? .025 : (same?.3:.07);
+            ctx.lineWidth=(same?.85:.65)/t.k;ctx.stroke();
           }
-          ctx.strokeStyle = "#59607e";
-          ctx.globalAlpha = suppressEdges ? .035 : .22;
-          ctx.lineWidth = .62 / t.k;
-          ctx.stroke();
 
           if (duelPath.length > 1 && duelEdges.size) {
             // one continuous stroke straight through the revealed hop centres,
@@ -384,7 +407,7 @@
             ctx.globalAlpha = .96;
             for (const l of graph.links) {
               if ((l.s !== activeNode && l.t !== activeNode) || hiddenIdx.has(l.s) || hiddenIdx.has(l.t)) continue;
-              const color = l.s === activeNode ? "#c9ec45" : "#5cdbeb";
+              const color = l.s === activeNode ? "#ff9c87" : "#76c8ff";
               const g = edgeGeometry(l);
               ctx.beginPath(); traceEdge(g);
               ctx.strokeStyle = color;
@@ -418,15 +441,15 @@
           .attr("cx", (d) => d.px).attr("cy", (d) => d.py)
           .on("pointerenter", (e, d) => hover(d))
           .on("pointermove", (e) => moveTip(e))
-          .on("pointerleave", () => { if (pinned == null) { clearHi(); hideTip(); } })
+          .on("pointerleave", () => { if (pinned == null) clearHi(); else hover(nodes[pinned]); hideTip(); })
           .on("click", (e, d) => {
             e.stopPropagation();
             if (pathMode) { pathPick(d); return; }
             if (pinned === d.index) { pinned = null; clearHi(); hideTip(); }
-            else { pinned = d.index; hover(d); hideTip(); window.showCharacterDossier(d); }
+            else { if(webCentre!==null)focusWeb(d.index); pinned = d.index; hover(d); hideTip(); window.showCharacterDossier(d); }
           })
           .on("keydown", (e, d) => {
-            if(e.key === "Enter" || e.key === " ") { e.preventDefault(); pinned=d.index; hover(d); hideTip(); window.showCharacterDossier(d); }
+            if(e.key === "Enter" || e.key === " ") { e.preventDefault(); if(webCentre!==null)focusWeb(d.index); pinned=d.index; hover(d); hideTip(); window.showCharacterDossier(d); }
           })
           .on("dblclick", (e, d) => { e.stopPropagation(); window.open(WIKI + d.id, "_blank"); });
 
@@ -442,14 +465,19 @@
             queueEdgeDraw();
           }));
 
-        const communityCentres = d3.groups(nodes.filter((d) => d.comm >= 0), (d) => d.comm)
-          .map(([id, members]) => ({
-            id, label: members[0].commLabel,
-            x: d3.mean(members, (d) => d.px), y: d3.mean(members, (d) => d.py),
-          }));
-        const regionLabel = gRegions.selectAll("text").data(communityCentres).join("text")
-          .attr("class", "region-label").attr("x", (d) => d.x).attr("y", (d) => d.y)
-          .text((d) => d.label);
+        const districtGroups=d3.groups(nodes,d=>d.comm>=0?String(d.comm):d.grp);
+        const communityCentres=districtGroups.map(([id,members])=>({id,
+          label:members[0].comm>=0?`${Number(id)+1}. ${members[0].commLabel}`:id==='island'?'The nine-article island':'17 isolated articles',
+          x:d3.mean(members,d=>d.px), y:d3.min(members,d=>d.py)-22,
+          minX:d3.min(members,d=>d.px)-16,maxX:d3.max(members,d=>d.px)+16,
+          minY:d3.min(members,d=>d.py)-16,maxY:d3.max(members,d=>d.py)+16,
+          color:members[0].comm>=0?commColor.get(Number(id)):id==='island'?CORAL:GREY
+        }));
+        gRegions.selectAll('rect').data(communityCentres).join('rect').attr('class','district-outline')
+          .attr('x',d=>d.minX).attr('y',d=>d.minY).attr('width',d=>d.maxX-d.minX).attr('height',d=>d.maxY-d.minY)
+          .attr('rx',22).attr('fill',d=>d.color).attr('stroke',d=>d.color);
+        const regionLabel=gRegions.selectAll('text').data(communityCentres).join('text')
+          .attr('class','region-label').attr('x',d=>d.x).attr('y',d=>d.y).attr('fill',d=>d.color).text(d=>d.label);
 
         // ---- labels -------------------------------------------------------
         const hubIds = new Set(nodes.slice().sort((a, b) => b.deg - a.deg).slice(0, 14).map((d) => d.id));
@@ -479,6 +507,7 @@
             if (pathMode === 1 || pathMode === 2) showTip(d);
             return;
           }
+          if(webCentre!==null && d.index!==webCentre){showTip(d);return;}
           const keep = new Set([d.index, ...outAdj[d.index], ...inAdj[d.index]]);
           node.classed("dim", (n) => !keep.has(n.index));
           halo.classed("dim", (n) => !keep.has(n.index));
@@ -495,7 +524,7 @@
           node.classed("dim", false);
           halo.classed("dim", false);
           regionLabel.classed("dim", false);
-          activeNode = null;
+          activeNode = webCentre;
           suppressEdges = false;
           queueEdgeDraw();
           focusRing.classed("on", false);
@@ -526,7 +555,7 @@
 
         // ---- min-degree filter ----------------------------------------
         function recomputeHidden() {
-          hiddenIdx = new Set([...filterHidden, ...snapHidden]);
+          hiddenIdx = new Set([...filterHidden, ...snapHidden, ...webHidden]);
           node.classed("gone", (d) => hiddenIdx.has(d.index));
           halo.classed("gone", (d) => hiddenIdx.has(d.index));
           queueEdgeDraw();
@@ -553,7 +582,7 @@
                 .style("stroke-width", .7 / currentK + "px");
               halo.attr("r", (d) => (r(d) + 5) / currentK)
                 .style("stroke-width", 5 / currentK + "px");
-              regionLabel.style("font-size", 12 / currentK + "px")
+              regionLabel.style("font-size", 10 / currentK + "px")
                 .style("stroke-width", 5 / currentK + "px");
               if (activeNode != null) {
                 focusRing.attr("r", (r(nodes[activeNode]) + 6) / currentK)
@@ -573,6 +602,24 @@
           .on("click", () => { if (pathMode && pathMode < 3) resetDuel(); pinned = null; clearHi(); hideTip(); });
         d3.select("#fit").on("click", () =>
           svg.transition().duration(500).call(zoom.transform, d3.zoomIdentity));
+
+        const districtSelect=document.getElementById('district');
+        for(const d of communityCentres){const option=document.createElement('option');option.value=d.id;option.textContent=d.label;districtSelect.append(option);}
+        function focusDistrict(){
+          showFullGraph();
+          const id=districtSelect.value;
+          if(id==='all'){svg.transition().duration(350).call(zoom.transform,d3.zoomIdentity);return;}
+          const members=nodes.filter(n=>(n.comm>=0?String(n.comm):n.grp)===id);
+          const bx=d3.extent(members,n=>n.px),by=d3.extent(members,n=>n.py);
+          const left=window.innerWidth>700?330:20,aw=window.innerWidth-left-35,ah=window.innerHeight-160;
+          const k=Math.min(5,Math.max(.3,.8*Math.min(aw/(bx[1]-bx[0]+50),ah/(by[1]-by[0]+50))));
+          svg.transition().duration(matchMedia('(prefers-reduced-motion: reduce)').matches?0:500).call(zoom.transform,
+            d3.zoomIdentity.translate(left+aw/2,80+ah/2).scale(k).translate(-(bx[0]+bx[1])/2,-(by[0]+by[1])/2));
+          if(window.innerWidth<=700){document.body.classList.remove('controls-open');uiToggle.textContent='Controls';uiToggle.setAttribute('aria-expanded','false');}
+        }
+        districtSelect.addEventListener('change',focusDistrict);
+        document.getElementById('cross-links').addEventListener('change',e=>{showCrossLinks=e.target.checked;queueEdgeDraw();});
+        document.getElementById('fit').addEventListener('click',()=>{districtSelect.value='all';});
 
         // ---- legend ----------------------------------------------------
         const legend = d3.select("#legend");
@@ -665,6 +712,7 @@
           return best;
         }
         d3.select("#snap").on("click", () => {
+          showFullGraph();
           pinned = null; clearHi(); hideTip();
           const alive = nodes.filter((d) => !hiddenIdx.has(d.index));
           const shuffled = alive.slice().sort(() => Math.random() - 0.5);
@@ -827,6 +875,7 @@
         }
         function setGuess(v) { guessN = Math.max(1, Math.min(8, v)); d3.select("#g-n").text(guessN); }
         pathBtn.on("click", () => {
+          showFullGraph();
           if (pathMode) { resetDuel(); return; }
           pinned = null; clearHi(); hideTip();
           d3.select("#search").property("value", "");
@@ -851,6 +900,7 @@
         const mindeg = d3.select("#mindeg");
         mindeg.on("input", function () {
           d3.select("#minval").text(this.value);
+          if(webCentre!==null)showFullGraph();
           applyFilter(+this.value);
         });
         d3.select("#labels").on("change", function () {
@@ -862,26 +912,40 @@
           resetDuel(); pinned = null; clearHi(); hideTip(); d3.select("#search").property("value", "");
         });
         const search = d3.select("#search");
+        const searchResults=document.getElementById('hero-search-results');
+        const searchStatus=document.getElementById('hero-search-status');
+        let currentHits=[];
+        function chooseSearchHero(d,writeName=true){
+          resetDuel();focusWeb(d.index);hideTip();window.showCharacterDossier(d);
+          if(writeName){search.property('value',d.name);searchResults.hidden=true;}
+          searchStatus.textContent=`Selected ${d.name}: ${d.in} incoming and ${d.out} outgoing links.`;
+        }
+        function clearSearch(){
+          currentHits=[];searchResults.replaceChildren();searchResults.hidden=true;searchStatus.textContent='';
+        }
+        document.getElementById('clear').addEventListener('click',clearSearch);
         search.on("input", function () {
-          const q = this.value.trim().toLowerCase();
-          if (!q) { clearHi(); return; }
-          const hits = nodes.filter((d) => !hiddenIdx.has(d.index) && d.name.toLowerCase().includes(q));
-          const keep = new Set(hits.map((d) => d.index));
-          node.classed("dim", (n) => !keep.has(n.index));
-          halo.classed("dim", (n) => !keep.has(n.index));
-          regionLabel.classed("dim", true);
-          activeNode = null;
-          suppressEdges = true;
-          queueEdgeDraw();
-          renderLabels(keep);
-          if (hits.length === 1) window.showCharacterDossier(hits[0]);
-          if (hits.length) {
-            const bx = d3.extent(hits, (d) => d.px), by = d3.extent(hits, (d) => d.py);
-            const k = Math.min(6, 0.8 * Math.min(W / (bx[1] - bx[0] + 120), H / (by[1] - by[0] + 120)));
-            svg.transition().duration(450).call(zoom.transform,
-              d3.zoomIdentity.translate(W / 2, H / 2).scale(k)
-                .translate(-(bx[0] + bx[1]) / 2, -(by[0] + by[1]) / 2));
+          const {hits,exact}=matchHeroes(nodes,this.value);currentHits=hits;
+          searchResults.replaceChildren();
+          if(!this.value.trim()){clearSearch();if(webCentre!==null)focusWeb(webCentre);else clearHi();return;}
+          searchResults.hidden=hits.length===0;
+          for(const d of hits.slice(0,12)){
+            const button=document.createElement('button');button.type='button';button.textContent=d.name;
+            button.addEventListener('click',()=>chooseSearchHero(d));searchResults.append(button);
           }
+          searchStatus.textContent=hits.length?`${hits.length} matching articles${hits.length>12?' — showing the first 12':''}. Choose a name or press Enter.`:'No matching character. Try a different name.';
+          if(exact||hits.length===1)chooseSearchHero(exact||hits[0],false);
+        });
+        search.on('keydown',function(e){
+          if(e.key==='Enter'&&currentHits.length){e.preventDefault();chooseSearchHero(currentHits[0]);}
+          if(e.key==='ArrowDown'&&!searchResults.hidden){e.preventDefault();searchResults.firstElementChild?.focus();}
+          if(e.key==='Escape')clearSearch();
+        });
+        searchResults.addEventListener('keydown',e=>{
+          const buttons=[...searchResults.children],i=buttons.indexOf(document.activeElement);
+          if(e.key==='ArrowDown'){e.preventDefault();buttons[(i+1)%buttons.length]?.focus();}
+          if(e.key==='ArrowUp'){e.preventDefault();if(i<=0)search.node().focus();else buttons[i-1].focus();}
+          if(e.key==='Escape'){clearSearch();search.node().focus();e.stopPropagation();}
         });
         window.addEventListener("keydown", (e) => {
           if (e.key === "/" && document.activeElement !== search.node()) {
@@ -890,9 +954,64 @@
           if (e.key === "Escape") { resetDuel(); pinned = null; clearHi(); hideTip(); search.node().blur(); }
         });
 
-        window.addEventListener("resize", () => { sizeLinkCanvas(); queueEdgeDraw(); });
-        drawEdges();
-        renderLegend();
+        window.addEventListener("resize", () => { sizeLinkCanvas(); if(webCentre!==null)focusWeb(webCentre); else queueEdgeDraw(); });
+        const webRings=root.insert('g',':first-child').attr('class','web-rings');
+        function refreshPositions(){
+          node.attr('cx',d=>d.px).attr('cy',d=>d.py).attr('r',d=>r(d)/currentK).attr('fill',colorNode);
+          halo.attr('cx',d=>d.px).attr('cy',d=>d.py).attr('r',d=>(r(d)+5)/currentK);
+          recomputeHidden();queueEdgeDraw();
+        }
+        function modeButtons(isWeb){
+          document.body.classList.toggle("hero-web",isWeb);
+          document.getElementById('view-web').setAttribute('aria-pressed',String(isWeb));
+          document.getElementById('view-all').setAttribute('aria-pressed',String(!isWeb));
+          document.getElementById('web-summary').hidden=!isWeb;
+          gRegions.style('display',isWeb?'none':null);webRings.style('display',isWeb?null:'none');
+          document.getElementById('district').disabled=isWeb;
+          document.getElementById('cross-links').disabled=isWeb;
+        }
+        function showFullGraph(){
+          if(webCentre===null)return;
+          webCentre=null;webHidden.clear();pinned=null;
+          nodes.forEach((d,i)=>{d.px=originalPositions[i].x;d.py=originalPositions[i].y;});
+          modeButtons(false);svg.interrupt().call(zoom.transform,d3.zoomIdentity);refreshPositions();clearHi();hideTip();
+        }
+        function focusWeb(index){
+          webCentre=index;pinned=index;filterHidden.clear();snapHidden.clear();
+          mindeg.property('value',0);d3.select('#minval').text('0');
+          const incoming=[...inAdj[index]],outgoing=[...outAdj[index]];
+          const inner=outgoing, outer=incoming.filter(i=>!outAdj[index].has(i));
+          const visible=new Set([index,...incoming,...outgoing]);webHidden.clear();nodes.forEach(d=>{if(!visible.has(d.index))webHidden.add(d.index);});
+          const width=window.innerWidth,height=window.innerHeight,left=width>700?335:20;
+          const cx=left+(width-left-30)/2,cy=85+(height-140)/2;
+          const radius=Math.max(75,Math.min((width-left-65)/2,(height-175)/2));
+          nodes[index].px=cx;nodes[index].py=cy;
+          const rings=[];
+          function place(list,start,end){
+            if(!list.length)return;
+            const count=Math.max(1,Math.ceil(list.length/32));
+            for(let ring=0;ring<count;ring++){
+              const batch=list.slice(Math.floor(ring*list.length/count),Math.floor((ring+1)*list.length/count));
+              const rad=count===1?end:start+(end-start)*ring/(count-1);rings.push(rad);
+              batch.forEach((id,j)=>{const angle=-Math.PI/2+2*Math.PI*(j+.35*ring)/batch.length;nodes[id].px=cx+rad*Math.cos(angle);nodes[id].py=cy+rad*Math.sin(angle);});
+            }
+          }
+          place(inner,radius*.25,radius*.38);place(outer,radius*.57,radius);
+          webRings.selectAll('circle').data(rings).join('circle').attr('cx',cx).attr('cy',cy).attr('r',d=>d);
+          modeButtons(true);svg.interrupt().call(zoom.transform,d3.zoomIdentity);refreshPositions();hover(nodes[index]);hideTip();
+          const summary=document.getElementById('web-summary');summary.replaceChildren();
+          const title=document.createElement('strong');title.textContent=nodes[index].name;summary.append(title);
+          const numbers=document.createElement('span');numbers.textContent=`${incoming.length} incoming · ${outgoing.length} outgoing · ${visible.size-1} distinct neighbours`;summary.append(numbers);
+          const note=document.createElement('small');note.textContent=visible.size===1?'An isolate: no links to other articles in this roster.':'Inner ring: outbound neighbours. Outer rings: incoming-only neighbours. Mutual links have both arrows.';summary.append(note);
+          const local=window.rosterPortraits?.find(p=>nodes[index].name===p.name||nodes[index].name.startsWith(p.name+' ('));
+          if(local){ensurePattern(nodes[index],local.src);node.filter(d=>d.index===index).attr('fill',`url(#face-${index})`);}
+          else getThumb(nodes[index]).then(url=>{if(url&&webCentre===index)node.filter(d=>d.index===index).attr('fill',`url(#face-${index})`);});
+        }
+        document.getElementById('view-all').addEventListener('click',()=>{resetDuel();showFullGraph();});
+        document.getElementById('view-web').addEventListener('click',()=>{resetDuel();focusWeb(pinned??nodes.findIndex(d=>d.id==='Spider-Man'));});
+        document.getElementById('fit').addEventListener('click',()=>{if(webCentre!==null)focusWeb(webCentre);});
+        drawEdges();renderLegend();focusWeb(nodes.findIndex(d=>d.id==='Spider-Man'));
+
       });
     </script>
   </body>
