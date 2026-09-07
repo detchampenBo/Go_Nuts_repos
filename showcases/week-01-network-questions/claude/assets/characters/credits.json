@@ -1,0 +1,58 @@
+[
+  {
+    "id": 0,
+    "name": "Wolverine",
+    "src": "assets/characters/0.jpg",
+    "article": "https://en.wikipedia.org/wiki/Wolverine_%28character%29",
+    "imageSource": "https://en.wikipedia.org/wiki/Wolverine_%28character%29"
+  },
+  {
+    "id": 1,
+    "name": "Adam Warlock",
+    "src": "assets/characters/1.jpg",
+    "article": "https://en.wikipedia.org/wiki/Adam_Warlock",
+    "imageSource": "https://en.wikipedia.org/wiki/Adam_Warlock"
+  },
+  {
+    "id": 2,
+    "name": "Hulk",
+    "src": "assets/characters/2.png",
+    "article": "https://en.wikipedia.org/wiki/Hulk",
+    "imageSource": "https://en.wikipedia.org/wiki/Hulk"
+  },
+  {
+    "id": 3,
+    "name": "Spider-Man",
+    "src": "assets/characters/3.png",
+    "article": "https://en.wikipedia.org/wiki/Spider-Man",
+    "imageSource": "https://en.wikipedia.org/wiki/Spider-Man"
+  },
+  {
+    "id": 4,
+    "name": "Moon Knight",
+    "src": "assets/characters/4.png",
+    "article": "https://en.wikipedia.org/wiki/Moon_Knight",
+    "imageSource": "https://en.wikipedia.org/wiki/Moon_Knight"
+  },
+  {
+    "id": 5,
+    "name": "Doctor Strange",
+    "src": "assets/characters/5.jpg",
+    "article": "https://en.wikipedia.org/wiki/Doctor_Strange",
+    "imageSource": "https://upload.wikimedia.org/wikipedia/en/4/4f/Doctor_Strange_Vol_4_2_Ross_Variant_Textless.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
+  },
+  {
+    "id": 6,
+    "name": "Scarlet Witch",
+    "src": "assets/characters/6.jpg",
+    "article": "https://en.wikipedia.org/wiki/Scarlet_Witch",
+    "imageSource": "https://upload.wikimedia.org/wikipedia/en/e/ec/Scarlet_Witch_Various_incarnations_2021.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
+  },
+  {
+    "id": 7,
+    "name": "Black Panther",
+    "src": "assets/characters/7.png",
+    "article": "https://en.wikipedia.org/wiki/Black_Panther_%28character%29",
+    "imageSource": "https://upload.wikimedia.org/wikipedia/en/f/f7/Black_Panther_%28T%27Challa%29.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
+  }
+]

@@ -7,7 +7,7 @@
       name="description"
       content="Week-1 go-nuts post: degree structure, in vs out hubs, and the hidden islands of the frozen Marvel superhero Wikipedia link network."
     />
-    <title>Marvel Link Network — Degrees &amp; Islands</title>
+    <title>Go Nuts — Inside the Marvel Linkverse</title>
     <link rel="icon" href="data:," />
     <style>
       :root {
@@ -78,75 +78,173 @@
       li { margin: 4px 0; }
 
       footer { padding: 40px 0; color: var(--muted); font-size: .8rem; border-top: 1px solid var(--line); }
+      .balance { background: #101926; color: #edf2f8; padding: clamp(18px,4vw,36px); border-radius: 18px; }
+      .balance h2 { color: white; } .balance p { color: #b6c4d5; }
+      .balance-controls { display:flex; flex-wrap:wrap; gap:16px; margin:24px 0; }
+      .balance label { display:grid; gap:6px; font-size:.8rem; flex:1; min-width:180px; }
+      .balance select { width:100%; background:#213044; color:white; border:1px solid #647083; padding:10px; border-radius:6px; font:inherit; }
+      .balance svg { display:block; width:100%; min-width:640px; }
+      .balance-scroll { overflow-x:auto; }
+      .balance .balance-detail { color:#c9ec45; min-height:3.2em; margin-bottom:0; }
+      .balance-key { display:flex; justify-content:space-between; font-size:.82rem; }
+      .balance-key span:first-child { color:#76c8ff; } .balance-key span:last-child { color:#ff9c87; }
+      @media(max-width:600px) { table { font-size:.75rem; } th,td { padding:6px 3px; } }
+      .reciprocity { background:#071e25; color:#e3f3f4; padding:clamp(18px,4vw,36px); border-radius:20px; }
+      .reciprocity h2 { font-size:clamp(2rem,5vw,3.6rem); line-height:1.05; max-width:750px; }
+      .reciprocity p { color:#b4ccd1; } .reciprocity strong { color:#d8ff70; }
+      .reciprocity .section-label { color:#74e5e3; }
+      .rec-controls { display:flex; flex-wrap:wrap; align-items:center; gap:16px; margin:24px 0 14px; }
+      .rec-toggle { display:flex; align-items:center; gap:10px; background:#163b43; border:1px solid #5c8b91; padding:12px 16px; border-radius:30px; cursor:pointer; }
+      #rec-toggle { width:20px; height:20px; accent-color:#74e5e3; }
+      .rec-controls select { max-width:100%; min-width:0; background:#163b43; color:#edfafa; border:1px solid #5c8b91; padding:10px; border-radius:6px; }
+      .rec-controls label:last-child { display:grid; gap:4px; font-size:.8rem; }
+      .rec-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin:16px 0; }
+      .rec-stats div { border-top:1px solid #36525a; padding-top:10px; font-size:.8rem; color:#b4ccd1; }
+      .rec-stats output { display:block; font-size:2rem; font-weight:800; color:#e3f3f4; }
+      .rec-map { width:100%; display:block; background:#0a252d; border-radius:12px; }
+      .rec-map line { transition:opacity .65s; } .rec-map circle { transition:fill .65s; }
+      .rec-map .one-way { opacity:.22; } .rec-map .mutual { opacity:.36; }
+      .rec-map.mutual-only .one-way { opacity:0; }
+      .rec-legend { display:flex; flex-wrap:wrap; gap:14px; font-size:.75rem; color:#b4ccd1; }
+      .rec-legend span::before { content:'●'; color:var(--key); margin-right:6px; }
+      #rec-detail { min-height:3em; margin:12px 0; font-size:.85rem; }
+      .rec-baselines { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:20px; }
+      .rec-baselines figure { margin:0; } .rec-baselines svg { width:100%; display:block; }
+      .reciprocity figcaption { color:#b4ccd1; }
+      .reciprocity a { color:#74e5e3; }
+      @media(max-width:600px) { .rec-baselines { grid-template-columns:1fr; } }
+      @media(prefers-reduced-motion:reduce) { .rec-map line,.rec-map circle { transition:none; } }
     </style>
+    <link rel="stylesheet" href="assets/editorial.css" />
   </head>
   <body>
+    <a class="skip-link" href="#main">Skip to content</a>
     <header>
-      <a class="brand" href="../../../"><span>G</span> GO NUTS</a>
-      <a class="back" href="../../../">← gallery</a>
+      <a class="brand" href="./"><span>G!</span> GO NUTS<span class="brand-edition">THE NETWORK CHRONICLES</span></a>
+      <nav aria-label="Main navigation"><a href="#chapters">The story</a><a href="explorer.html">Explore ↗</a><a class="back" href="../../../">Gallery</a></nav>
     </header>
+    <main id="main">
+      <section class="intro">
+        <div class="hero-copy">
+          <p class="eyebrow"><span class="issue-stamp">ISSUE 01</span> Social graphs &amp; interactions</p>
+          <h1>EVERY HERO.<br>EVERY LINK.<br><em>ONE STRANGE<br>UNIVERSE.</em></h1>
+          <p class="lede">Some heroes get all the attention. Others live on islands.
+            Follow the Wikipedia links holding the Marvel universe together—and find out what happens when they disappear.</p>
+          <div class="hero-actions"><a class="action-primary" href="game/">Outsmart Thanos <span>↗</span></a><a class="action-secondary" href="explorer.html">Enter the linkverse ↗</a></div>
+        </div>
+        <a class="hero-art" href="explorer.html" aria-label="Open the interactive Marvel network explorer">
+          <span class="art-topline">TRANSMISSION FROM THE LINKVERSE <span>FIG. 01</span></span>
+          <span class="comic-caption">Meanwhile, in the giant component…</span>
+          <img src="assets/communities.png" alt="Eight coloured communities in the largest connected part of the Marvel Wikipedia network." />
+          <span class="art-caption"><span>One giant component.<br><strong>A universe of smaller worlds.</strong></span><span class="art-arrow" aria-hidden="true">↗</span></span>
+        </a>
+      </section>
+      <div class="snapshot" aria-label="Frozen dataset overview">
+        <div><strong>303</strong><span>Hero articles</span></div><div><strong>1,784</strong><span>Directed links</span></div>
+        <div><strong>39%</strong><span>Links have a return</span></div><div><strong>17</strong><span>Isolated articles</span></div>
+      </div>
+      <nav class="chapter-nav" id="chapters" aria-label="Article chapters"><span>IN THIS ISSUE</span><a href="game/">Play / Outsmart Thanos ↗</a><a href="#reciprocity">01 / One-way universe</a><a href="#balance">02 / The attention gap</a><a href="#explore">03 / Explore</a><a href="#findings">04 / Hidden patterns</a><a href="#methods">05 / Behind the data</a></nav>
+      <section class="game-promo" aria-labelledby="game-promo-title">
+        <p class="section-label">Playable issue · Three shields. One snap.</p>
+        <h2 id="game-promo-title">Can you outsmart Thanos?</h2>
+        <p>He announces ten targets. Scarlet Witch can shield three. Choose who survives,
+          watch the snap, and keep the largest group of Wikipedia articles connected.</p>
+        <a class="action-primary" href="game/">Play Outsmart Thanos <span>↗</span></a>
+        <p class="game-promo-note">Three missions · Real network links · Animated characters · No sign-in</p>
+      </section>
 
-    <main>
-      <section class="intro" style="border: 0; padding-top: 76px;">
-        <p class="eyebrow">Week 01 · social graphs · go-nuts post</p>
-        <h1>Who everyone links to,<br />who links to everyone,<br />and the islands in between.</h1>
-        <p class="lede">
-          The course hands us one frozen dataset: 303 Marvel superhero Wikipedia
-          pages and the 1&nbsp;784 directed links between them. I asked what its
-          degree structure looks like, why in- and out-degree crown different
-          characters, and what lives outside the giant component.
-        </p>
+      <section id="reciprocity" aria-labelledby="rec-title">
+        <div class="reciprocity">
+          <p class="section-label">The surprise · links without a return</p>
+          <h2 id="rec-title">What if every reference<br>had to be returned?</h2>
+          <p>The network looks connected because one-way links are enough to hold
+            most pages together. But if we keep only relationships where both pages
+            link to each other, isolates jump from <strong>17</strong> to
+            <strong>96</strong>.</p>
+          <div class="rec-controls">
+            <label class="rec-toggle"><input type="checkbox" id="rec-toggle"> Keep mutual connections only</label>
+            <label>Inspect an article<select id="rec-article" aria-label="Inspect an article in the reciprocity graph"></select></label>
+          </div>
+          <div class="rec-stats" aria-live="polite">
+            <div><output id="rec-largest">277</output>articles in largest component</div>
+            <div><output id="rec-isolates">17</output>isolated articles</div>
+            <div><output id="rec-connections">1,434</output>article pairs connected</div>
+          </div>
+          <div class="rec-legend">
+            <span style="--key:#74e5e3">Mutual connection</span>
+            <span style="--key:#f39b83">One-way connection</span>
+            <span style="--key:#d8ff70">New isolate after filtering</span>
+            <span style="--key:#758b93">Original isolate</span>
+          </div>
+          <svg class="rec-map" id="rec-map" viewBox="0 0 930 550" role="img" aria-labelledby="rec-map-title rec-map-desc"></svg>
+          <p id="rec-detail" aria-live="polite"></p>
+          <p style="font-size:.8rem">All 303 articles stay in fixed positions. Coral lines are one-way links;
+            cyan lines are mutual links. The bright nodes are articles that become isolated
+            only after one-way links are removed.</p>
+          <h3>Why this is not just random deletion</h3>
+          <p>We compared the mutual-only graph with 500 random graphs that keep the
+            same number of connected article pairs: <strong>350 out of 1,434</strong>.</p>
+          <div class="rec-baselines">
+            <figure><svg id="rec-dist-largest" role="img" aria-label="Distribution of largest component sizes across random samples"></svg>
+              <figcaption>Largest component: <strong>185</strong> with mutual connections;
+                random median <strong>206</strong>.</figcaption></figure>
+            <figure><svg id="rec-dist-isolates" role="img" aria-label="Distribution of isolate counts across random samples"></svg>
+              <figcaption>Isolates: <strong>96</strong> with mutual connections;
+                random median <strong>83</strong>.</figcaption></figure>
+          </div>
+          <p><strong>Every random sample had a larger largest component than the mutual-only graph.</strong>
+            So the surprise is not simply that fewer links make the network smaller.
+            The one-way links are doing special bridge work.</p>
+          <p style="font-size:.8rem">Bars show random trials; lime lines mark the observed mutual-only graph.
+            This baseline preserves connection count, not each character's degree.
+            <a href="build_reciprocity.py">Reproduce the analysis</a>.</p>
+          <noscript><p>The interactive graph needs JavaScript. The measured results and random comparison are reported above.</p></noscript>
+        </div>
+      </section>
+
+      <section id="balance" aria-labelledby="balance-title">
+        <div class="balance">
+          <p class="eyebrow">Why in-degree and out-degree split</p>
+          <h2 id="balance-title">The link balance</h2>
+          <p>Every article has two signatures: who references it, and who it
+            references. This chart shows why the top inbound and outbound
+            characters are different people.</p>
+          <div class="balance-controls">
+            <label>Show 12 articles by<select id="balance-sort">
+              <option value="in">Most inbound links</option>
+              <option value="out">Most outbound links</option>
+              <option value="gap">Largest inbound − outbound gap</option>
+              <option value="island">The nine-node island</option>
+              <option value="isolates">Isolates (first 12 alphabetically)</option>
+            </select></label>
+            <label>Inspect any of the 303 articles<select id="balance-hero"></select></label>
+          </div>
+          <div class="balance-key"><span>← Inbound links</span><span>Outbound links →</span></div>
+          <div class="balance-scroll"><svg id="balance-chart" viewBox="0 0 860 560" role="img" aria-labelledby="balance-chart-title balance-chart-desc"></svg></div>
+          <p class="balance-detail" id="balance-detail" aria-live="polite"></p>
+          <p style="font-size:.8rem;margin-top:12px;margin-bottom:0">Both halves use 0-110 links.
+            Zero means no links within this roster.</p>
+          <noscript>This interactive chart needs JavaScript. The degree table below contains the leading articles.</noscript>
+        </div>
       </section>
 
       <section>
-        <p class="section-label">What I asked</p>
+        <p class="section-label">What we asked</p>
         <h2>Three questions</h2>
         <ul style="list-style: none; padding: 0;">
-          <li><strong>1.</strong>&nbsp; What shape is the degree distribution — and does it look scale-free on a log&ndash;log axis?</li>
+          <li><strong>1.</strong>&nbsp; What shape is the degree distribution — how concentrated are the links?</li>
           <li><strong>2.</strong>&nbsp; In-degree vs out-degree: the most linked-<em>to</em> character and the most linked-<em>from</em> character are not the same person. Why?</li>
           <li><strong>3.</strong>&nbsp; The data page warns there are isolated nodes. Are the isolates the <em>only</em> thing outside the giant component?</li>
         </ul>
       </section>
 
-      <section>
-        <p class="section-label">What I did</p>
-        <h2>Load it so the isolates survive</h2>
-        <p>
-          Built the directed graph the way the data page insists on — add every
-          node from <code>week1_nodes.tsv</code> first, then the edges — so the
-          17 characters with no link in either direction do not silently vanish:
-        </p>
-        <pre style="background: var(--ink); color: #eef1f4; padding: 18px 20px; border-radius: 12px; overflow-x: auto; font-size: .86rem; max-width: 680px;">G = nx.DiGraph()
-G.add_nodes_from(n["node_id"] for n in nodes)   # all 303 — isolates included
-G.add_edges_from(edges)                          # 1784 directed A -> B
-# G: 303 nodes, 1784 edges  ✓ matches the release notes</pre>
-        <p>
-          Then: in/out degree per node, the degree distributions (linear and
-          log&ndash;log), weakly-connected components, Louvain communities, a
-          Wikipedia-API cross-check, and the drawings below. The full worked
-          analysis is the notebook <a href="analysis.ipynb">analysis.ipynb</a>
-          (<a href="notebook_src.py">jupytext source</a>); raw data sits in
-          <code>data/week1/</code>.
-        </p>
-      </section>
-
-      <section>
+      <section id="explore">
         <p class="section-label">Explore it</p>
-        <h2>The network, live</h2>
+        <h2>Explore the frozen network</h2>
         <p>
-          Hover any character to light up who it links to (yellow) and who links
-          to it (cyan); the rest fades. Recolour by <strong>community</strong>,
-          <strong>component</strong>, or an <strong>in-degree heat map</strong>;
-          drag the <strong>minimum-degree</strong> slider to peel the network down
-          to its core; search, drag, zoom, double-click a node for its Wikipedia
-          article. Pin a character and hit <strong>&#9654; Ripple</strong> to watch
-          a breadth-first wave spread out hop by hop &mdash; from Spider-Man the
-          whole giant component lights up in three &mdash; flip on <strong>Faces</strong>
-          for Wikipedia portraits, hit <strong>&#10022; Snap</strong> to dust a
-          random half and see how little the network cares (random failure vs.
-          targeted attack), or play <strong>&#9876; Path</strong> &mdash; pick two
-          characters, guess the hop count, and watch the shortest link-chain draw
-          itself out: <em>Deadpool &rarr; Gwenpool &rarr; Storm</em>.
+          Select an article to inspect its incoming and outgoing links. Switch
+          between communities and components, or search for one of the 17 isolates.
+          The layout is interactive; the underlying data is the frozen snapshot.
         </p>
         <figure class="embed">
           <iframe src="explorer.html" title="Interactive Marvel link network explorer" loading="lazy"></iframe>
@@ -154,32 +252,33 @@ G.add_edges_from(edges)                          # 1784 directed A -> B
         <p><a href="explorer.html">Open the explorer full screen ↗</a></p>
       </section>
 
-      <section>
+      <section id="findings">
         <p class="section-label">The figure</p>
-        <h2>Eight families, one island, a column of loners</h2>
+        <h2>One network. Eight worlds.</h2>
+        <p class="community-intro">277 hero articles form the largest connected group. Meet its eight communities. Open a panel to see what connects their worlds.</p>
+        <div class="roster" aria-label="Comic community roster">
+          <div class="roster-toolbar"><span>MARVEL / THE NETWORK CHRONICLES</span><button id="roster-toggle" type="button" aria-pressed="false">Show full network ↗</button></div>
+          <p class="roster-hint" id="roster-status" aria-live="polite">Eight worlds. One shared universe. Open a panel and follow the links.</p>
+          <div id="roster-grid" class="roster-grid"></div>
+          <div id="roster-full" hidden><img src="assets/community-map.svg" alt="The complete 277-article giant component with eight numbered communities." /><ol id="roster-full-legend"></ol></div>
+          <noscript><p>Enable JavaScript for the interactive panels, or <a href="assets/community-map.svg">view the complete community map</a>.</p></noscript>
+          <p class="roster-footnote">Each panel contains real Wikipedia article links. Node area reflects total degree in the frozen roster.
+            Louvain communities are calculated on the undirected giant component; the group names are interpretations, not verified teams.
+            Layouts are illustrative. The nine-article island and 17 isolates are outside this view.
+            <a href="build_roster.py">Reproduce the roster</a>.</p>
+        </div>
         <figure>
-          <img src="assets/communities.png" alt="The 277-node giant component drawn as eight separate coloured lobes arranged in a ring — X-Men, Spider-family, cosmic, supernatural, street-level and more — with faint lines webbing between them and denser lines within each." />
-          <figcaption>
-            The giant component, each <strong>Louvain community</strong> laid out
-            on its own and placed around a ring. Dense lines stay inside a lobe;
-            faint lines cross between them. With no tuning, the link graph
-            reproduces Marvel's editorial "families": X-Men, Spider-family, cosmic
-            / Guardians, supernatural / Midnight Sons, street-level, and so on.
-            Beyond this: the 9-node <em>Morituri</em> island (no path here at all)
-            and 17 isolates.
-          </figcaption>
-        </figure>
-        <figure>
-          <img src="assets/degree-distributions.png" alt="Left: linear histogram of total degree, steeply right-skewed with a lone bar near degree 115. Right: log-log scatter of in-degree and out-degree counts, both roughly linear with in-degree reaching a much longer tail." />
+          <img src="assets/degree-comic.svg" alt="Left: linear histogram of total degree, steeply right-skewed with a lone bar near degree 115. Middle: log-log counts of positive inbound and outbound degrees. Right: complementary cumulative distributions." />
           <figcaption>
             Left: total degree is steeply right-skewed — most characters sit
-            under 20, one bar sits alone near 115 (Spider-Man). Right, log&ndash;log:
-            both distributions are broadly heavy-tailed, but <strong>in-degree
+            under 20, one bar sits alone near 115 (Spider-Man). Middle: positive degree counts on log&ndash;log axes. Right: the fraction
+            of articles at or above each positive degree. The distributions are skewed: <strong>in-degree
             (coral) runs out to 106 while out-degree (purple) stops at 28</strong>.
+            Zero degrees are omitted from log axes. These plots do not establish a power law.
           </figcaption>
         </figure>
 
-        <table>
+        <div class="table-scroll" role="region" aria-label="Data table" tabindex="0"><table>
           <thead>
             <tr><th>Most linked-<em>to</em></th><th class="num">in</th><th class="num">out</th><th>Most linked-<em>from</em></th><th class="num">out</th><th class="num">in</th></tr>
           </thead>
@@ -190,7 +289,7 @@ G.add_edges_from(edges)                          # 1784 directed A -> B
             <tr><td>Doctor Strange</td><td class="num">50</td><td class="num">17</td><td>Venom</td><td class="num">21</td><td class="num">17</td></tr>
             <tr><td>Deadpool</td><td class="num">33</td><td class="num">19</td><td>She-Hulk</td><td class="num">20</td><td class="num">29</td></tr>
           </tbody>
-        </table>
+        </table></div>
         <figcaption style="color: var(--muted); font-size: .86rem;">
           Snapshot totals: 303 nodes, 1&nbsp;784 edges, mean degree 11.8, density
           0.020, reciprocity 0.39. Giant component 277 · one 9-node island · 17 isolates.
@@ -198,62 +297,73 @@ G.add_edges_from(edges)                          # 1784 directed A -> B
       </section>
 
       <section>
-        <p class="section-label">Why in ≠ out</p>
-        <h2>Fame is measured in in-degree</h2>
+        <p class="section-label">What surprised us · the community that will not mix</p>
+        <h2>The X-Men are a walled garden</h2>
+        <figure>
+          <div class="share-chart" role="group" aria-labelledby="share-title"><span class="chart-kicker">COMMUNITY DOSSIER / INTERNAL LINKS</span><h3 id="share-title">How much stays inside the group?</h3><div class="share-row" style="--share:87.8860%;--bar:#d3f66b"><span class="share-label">X-Men</span><span class="share-track" aria-hidden="true"><span class="share-fill"></span></span><strong class="share-value">53%</strong></div><div class="share-row" style="--share:71.1207%;--bar:#ffc857"><span class="share-label">Classic Avengers / synthezoids</span><span class="share-track" aria-hidden="true"><span class="share-fill"></span></span><strong class="share-value">43%</strong></div><div class="share-row" style="--share:70.0409%;--bar:#a69af4"><span class="share-label">Cosmic / Guardians</span><span class="share-track" aria-hidden="true"><span class="share-fill"></span></span><strong class="share-value">42%</strong></div><div class="share-row" style="--share:67.2442%;--bar:#ff8c73"><span class="share-label">Spider-family</span><span class="share-track" aria-hidden="true"><span class="share-fill"></span></span><strong class="share-value">40%</strong></div><div class="share-row" style="--share:56.3872%;--bar:#74e5e3"><span class="share-label">Supernatural / Midnight Sons</span><span class="share-track" aria-hidden="true"><span class="share-fill"></span></span><strong class="share-value">34%</strong></div><div class="share-row" style="--share:49.3646%;--bar:#a1d675"><span class="share-label">Hulk &amp; Avengers-adjacent</span><span class="share-track" aria-hidden="true"><span class="share-fill"></span></span><strong class="share-value">30%</strong></div><div class="share-row" style="--share:45.7103%;--bar:#f5a9d0"><span class="share-label">Heroes for Hire / Defenders</span><span class="share-track" aria-hidden="true"><span class="share-fill"></span></span><strong class="share-value">27%</strong></div><div class="share-row" style="--share:39.4737%;--bar:#94b8e4"><span class="share-label">Street-level / espionage</span><span class="share-track" aria-hidden="true"><span class="share-fill"></span></span><strong class="share-value">24%</strong></div><p class="share-scale">Bar scale: 0–60% · Internal directed links ÷ all directed links touching the community.</p></div>
+          <figcaption>
+            For each of the eight communities, the fraction of its links whose
+            <em>other</em> end is also inside the community. The
+            <strong>X-Men group keeps 53%</strong> of its links in-house; the
+            <strong>street-level and Heroes-for-Hire groups only about a quarter</strong>.
+          </figcaption>
+        </figure>
         <p>
-          <strong>In-degree tracks how famous a character is.</strong> Spider-Man
-          (106 in / 9 out) barely links out at all, but nearly every other
-          article reaches for him as a reference point. Hulk, Wolverine and
-          Doctor Strange work the same way — they are the pages other pages cite.
-        </p>
-        <p>
-          <strong>Out-degree tracks how tangled a character's own backstory is.</strong>
-          Betsy Braddock / Psylocke tops out-degree (28 out / 7 in): a
-          body-swapping, retconned history roped through half the X-Men, so her
-          article name-drops everyone — but she is not a headliner, so few link
-          back. Cloak and Dagger, Adam Warlock, U.S.&nbsp;Agent: same profile,
-          dense ensemble history, modest fame. Reciprocity of only 0.39 says most
-          links are one-way: the small orbit the C-lister into the star,
-          rarely the reverse.
+          Louvain locks onto the X-Men most cleanly not because they are a
+          "team" but because, in the link structure, they are a
+          <strong>closed clique</strong> — more than half of everything they
+          reference is another X-Man. The street-level and Heroes-for-Hire
+          clusters are the opposite: they barely hold together on their own and
+          exist mostly by borrowing links from the rest of the roster. The
+          walled-off X-Men pattern matches decades of editorially separate
+          X-Men books; whether that is cause or coincidence, the graph alone
+          cannot say.
         </p>
       </section>
 
       <section>
-        <p class="section-label">What surprised me</p>
+        <p class="section-label">Why in ≠ out</p>
+        <h2>Being referenced and making references are different roles</h2>
+        <p>Spider-Man receives links from 106 articles and links to nine. Betsy
+          Braddock leads outbound degree with 28 links, but receives seven.
+          These count distinct links between articles in this roster.</p>
+        <p>Recognition, article length, and editorial choices could help explain
+          the difference, but this graph alone cannot separate them. Inbound
+          degree does not directly measure fame, and outbound degree does not
+          measure narrative complexity. The useful clue is reciprocity: only
+          about 39% of directed edges have a reverse edge.</p>
+      </section>
+
+      <section>
+        <p class="section-label">What surprised us</p>
         <h2>There is a second, hidden island</h2>
         <div class="callout">
           <p>
-            The data page told us about the <strong>17 isolates</strong>. It did
-            not mention that the giant component holds only <strong>277</strong>
-            of the 286 non-isolated nodes. The other <strong>9 form a completely
-            separate island</strong> with no path — in either direction — to the
-            rest of the Marvel universe.
+            Beyond the <strong>277-node giant component</strong>, there are
+            <strong>17 isolates</strong> and a <strong>nine-node island</strong>.
+            No path joins this island to the giant, even when link direction is ignored.
           </p>
         </div>
         <p>
-          And the nine are not random: Backhand, Blackthorn, Radian, Scaredycat,
-          Scatterbrain, Shear, Snapdragon, Toxyn, Vyking — the entire cast of
-          <em>Strikeforce: Morituri</em>, an 1986 Marvel series set in its own
-          continuity. Their Wikipedia articles link to each other and to nothing
-          else in the category. A self-contained comic becomes a self-contained
-          graph component, decades later, in the link structure. If you build the
-          graph from edges alone you lose the 17 isolates <em>and</em> silently
-          fold this island's absence into "just a smaller giant component."
+          The island contains Backhand, Blackthorn, Radian, Scaredycat,
+          Scatterbrain, Shear, Snapdragon, Toxyn and Vyking. Loading only the
+          edge list loses the 17 isolates, but keeps this island. That is why
+          the node roster matters.
         </p>
       </section>
 
-      <section>
+      <section id="methods">
         <p class="section-label">Stretch · Wikipedia API</p>
         <h2>Does the frozen snapshot match live Wikipedia?</h2>
         <p>
-          For five characters I pulled the current wiki-source from the API
+          The notebook stores an earlier API comparison for five articles
           (<code>action=parse&amp;prop=wikitext</code>, with a
-          <code>User-Agent</code> header or it 403s), scraped the
+          <code>User-Agent</code> header to identify the client), scraped the
           <code>[[links]]</code>, kept the ones pointing at another of the 303,
           and compared to the snapshot's out-edges (last section of
           <a href="analysis.ipynb">the notebook</a>):
         </p>
-        <table>
+        <div class="table-scroll" role="region" aria-label="Data table" tabindex="0"><table>
           <thead>
             <tr><th>character</th><th class="num">snapshot</th><th class="num">live wikitext</th><th class="num">shared</th><th class="num">snapshot-only</th><th class="num">live-only</th></tr>
           </thead>
@@ -264,16 +374,15 @@ G.add_edges_from(edges)                          # 1784 directed A -> B
             <tr><td>Venom</td><td class="num">21</td><td class="num">19</td><td class="num">19</td><td class="num">2</td><td class="num">0</td></tr>
             <tr><td>Luke Cage</td><td class="num">9</td><td class="num">7</td><td class="num">7</td><td class="num">2</td><td class="num">0</td></tr>
           </tbody>
-        </table>
+        </table></div>
         <p>
-          82 of 89 snapshot edges (92%) fall straight out of a naive regex over
-          raw wiki-source, and <strong>zero live-only edges</strong> — nothing in
-          the current articles that the snapshot missed. The seven misses are all
-          links that live inside infobox/navbox <code>{{templates}}</code>, which
-          a plain <code>[[ ]]</code> scrape skips but the course's harvester
-          (rendered links, redirects resolved) correctly caught. The snapshot is
-          faithful and slightly <em>fuller</em> than a hand-rolled scrape — good
-          to know before I trust my own crawl for the final project.
+          The stored run recovered <strong>82 of 89 snapshot links (92%)</strong>
+          across these five articles, with seven snapshot-only links and no
+          live-only links detected by this parser. This is a small spot-check,
+          not validation of the whole snapshot. The saved output does not record
+          revision IDs or retrieval time. Parsing limitations, title/redirect
+          handling and page edits are possible explanations for the differences;
+          the comparison does not establish which caused them.
         </p>
       </section>
 
@@ -292,6 +401,12 @@ jupyter lab showcases/week-01-network-questions/claude/analysis.ipynb   # run al
       </section>
     </main>
 
-    <footer>GO NUTS · Week 01 · Marvel link network</footer>
+    <footer><a class="footer-brand" href="./">GO NUTS!</a><span>Week 01 · The network chronicles</span><a href="#main">Back to top ↑</a></footer>
+    <script src="assets/roster-data.js"></script>
+    <script src="assets/roster-portraits.js"></script>
+    <script src="assets/roster.js"></script>
+    <script src="assets/reciprocity-data.js"></script>
+    <script src="assets/reciprocity.js"></script>
+    <script src="assets/link-balance.js"></script>
   </body>
 </html>

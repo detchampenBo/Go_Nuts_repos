@@ -14,12 +14,10 @@
 # 3. The data page warns about *isolated* nodes. Are they the **only** thing outside the
 #    giant component?
 #
-# **TL;DR** — the network is a scale-free-ish hub network (Spider-Man alone has
-# in-degree 106); in-degree measures *fame*, out-degree measures *how tangled a
-# character's own backstory is*; and beyond the 17 isolates there is a **second,
-# hidden island of 9** — the entire cast of *Strikeforce: Morituri*. Louvain
-# communities cleanly recover the real editorial "families" (X-Men, Spider-family,
-# cosmic, supernatural, street-level…).
+# **Main findings** — Spider-Man has 106 inbound links; Betsy Braddock leads
+# outbound links with 28. There are 17 isolates and a separate nine-node island.
+# Degree counts describe article references. They do not directly measure fame
+# or narrative complexity, and these plots do not establish a power law.
 
 # %%
 import csv
@@ -92,9 +90,9 @@ overview.to_frame()
 #
 # Left: **linear** histogram of total degree — a steep right skew, most characters
 # under 20, and one bar out on its own near 115. Middle: the same on **log–log**
-# axes, in- and out-degree separately — both broadly linear (heavy-tailed), but the
+# axes, in- and out-degree separately — both right-skewed, but the
 # in-degree tail runs three times further. Right: the **CCDF**, which is the
-# cleaner way to eyeball a power law (no binning noise).
+# fraction of articles at or above each positive degree.
 
 # %%
 fig, ax = plt.subplots(1, 3, figsize=(14, 4.2))
@@ -115,7 +113,7 @@ ax[1].legend(frameon=False)
 for seq, lab, col in [(ind, "in-degree", "#ff8c73"), (outd, "out-degree", "#a69af4")]:
     v = np.sort(np.array(list(seq.values())))
     ccdf = 1 - np.arange(len(v)) / len(v)
-    ax[2].loglog(np.clip(v, 1, None), ccdf, drawstyle="steps-post", color=col, label=lab)
+    ax[2].loglog(v[v > 0], ccdf[v > 0], drawstyle="steps-post", color=col, label=lab)
 ax[2].set(title="CCDF  P(K ≥ k)", xlabel="k", ylabel="P(K ≥ k)")
 ax[2].legend(frameon=False)
 
@@ -145,7 +143,7 @@ pd.concat({"most linked TO": most_linked_to,
            "most linking OUT": most_linking_out}, axis=1)
 
 # %%
-# in vs out per node — the anti-relationship between fame and self-reference
+# in vs out per node — compare inbound and outbound article references
 fig, ax = plt.subplots(figsize=(6.4, 5.4))
 ax.scatter([outd[n] for n in G], [ind[n] for n in G],
            s=[8 + deg[n] for n in G], c="#0c5adf", alpha=.35, edgecolors="none")
@@ -155,22 +153,14 @@ for n in sorted(G, key=lambda n: ind[n] + outd[n], reverse=True)[:8]:
 ax.plot([0, 30], [0, 30], "--", color="#c1c8cf", lw=1)
 ax.set(xlabel="out-degree  (links this article makes)",
        ylabel="in-degree  (links pointing here)",
-       title="Fame (in) and self-reference (out) are nearly orthogonal")
+       title="Inbound and outbound article links")
 plt.show()
 
 # %% [markdown]
-# **In-degree tracks fame.** Spider-Man (106 in / 9 out) barely links out, but almost
-# every other article reaches for him as a landmark. Hulk, Wolverine, Doctor Strange:
-# same profile.
-#
-# **Out-degree tracks how tangled the character's own history is.** Betsy Braddock /
-# Psylocke tops out-degree (28 out / 7 in) — a body-swapping, retconned biography
-# roped through half the X-Men, so her article name-drops everyone, but she is not a
-# headliner so few link back. Cloak & Dagger, Adam Warlock, U.S. Agent: dense
-# ensemble history, modest fame.
-#
-# Global **reciprocity is only 0.39** — most links are one-way, the minor character
-# pointing "up" at the star.
+# **Two different roles.** Spider-Man has 106 inbound / 9 outbound links;
+# Betsy Braddock has 7 inbound / 28 outbound. Recognition, article length and
+# editorial choices are possible explanations, not quantities tested here.
+# Reciprocity is 0.392: roughly 39% of directed edges have a reverse edge.
 
 # %% [markdown]
 # ## Q3 · What is outside the giant component?
@@ -199,23 +189,21 @@ for n in sorted(isolates, key=lambda n: name[n]):
 # %% [markdown]
 # ### The surprise
 #
-# The data page warns about the **17 isolates**. It does *not* mention that the giant
-# component holds only **277** of the 286 non-isolated nodes. The other **9 form a
+# The giant component holds **277** of the 286 non-isolated nodes. The other **9 form a
 # fully separate island** — and they are not random:
 #
 # > Backhand · Blackthorn · Radian · Scaredycat · Scatterbrain · Shear · Snapdragon · Toxyn · Vyking
 #
-# — the entire cast of ***Strikeforce: Morituri*** (Marvel, 1986), a series set in its
-# **own continuity**. Their articles link to each other and to nothing else in the
-# category. A self-contained comic becomes a self-contained graph component, 40 years
-# later, in the link structure. Build the graph from edges alone and you lose the 17
-# isolates *and* quietly fold this island's absence into "just a smaller giant".
+# — nine articles, three of whose titles explicitly carry the *Morituri* label.
+# They have no links to the giant within this sample. Paths via articles outside
+# the roster may still exist. Loading edges alone drops the 17 isolates but
+# preserves this nine-node island.
 
 # %% [markdown]
 # ## Bonus 1 · Communities — the link graph knows the Marvel "families"
 #
 # Louvain on the (undirected) giant component finds 8 groups. Labelling each by its
-# highest-degree members, they are immediately recognisable editorial franchises.
+# highest-degree members, the labels are interpretations, not verified franchise classifications.
 
 # %%
 U = G.subgraph(giant).to_undirected()
@@ -306,6 +294,40 @@ ax.set_title("Adjacency matrix, rows/cols grouped by community\n"
              "(dense blocks on the diagonal = links stay within the family)")
 ax.set_xticks([]); ax.set_yticks([])
 plt.show()
+
+# %% [markdown]
+# ## The surprise: the X-Men are a walled garden
+#
+# The community Louvain locks onto most cleanly (Wolverine's, 43 nodes) is also
+# the one that barely links out. Below: the share of each community's links that
+# stay *inside* it. The street-level and Heroes-for-Hire groups only ~a quarter;
+# the X-Men more than half. The algorithm finds them so easily *because* they are
+# a closed clique — which matches decades of editorially walled-off X-Men books.
+
+# %%
+fig, ax = plt.subplots(figsize=(8.4, 4.2))
+gedges = list(G.subgraph(giant).edges())
+bars = []
+for i, c in enumerate(comms):
+    cs = set(c)
+    inside = sum(1 for a, b in gedges if a in cs and b in cs)
+    touching = sum(1 for a, b in gedges if a in cs or b in cs)
+    bars.append((f"{LABELS[i]}  ({name[max(c, key=deg.get)]})",
+                 100 * inside / touching, pal[i]))
+bars.sort(key=lambda r: r[1])
+ax.barh([b[0] for b in bars], [b[1] for b in bars],
+        color=[b[2] for b in bars], edgecolor="none")
+for y, (_, v, _) in enumerate(bars):
+    ax.text(v + 1, y, f"{v:.0f}%", va="center", fontsize=9)
+ax.set_xlim(0, 62)
+ax.set_xlabel("share of the community's links that stay inside it")
+ax.set_title("How inward-looking is each Louvain community?")
+ax.spines[["top", "right"]].set_visible(False)
+fig.tight_layout()
+fig.savefig("assets/insularity.png", dpi=130, bbox_inches="tight")
+plt.show()
+
+print("\n".join(f"{n:40} {v:4.0f}% internal" for n, v, _ in reversed(bars)))
 
 # %% [markdown]
 # ## Bonus 2 · PageRank vs in-degree — who is *more* central than their link count says
@@ -414,7 +436,7 @@ IFrame("explorer.html", width="100%", height=660)
 # ## Stretch · does the frozen snapshot match live Wikipedia?
 #
 # Pull the current wiki-source from the API (`action=parse&prop=wikitext`, with a
-# `User-Agent` or it 403s), scrape the `[[links]]`, keep those pointing at another
+# `User-Agent` identifying the client), scrape the `[[links]]`, keep those pointing at another
 # of the 303, and diff against the snapshot's out-edges.
 
 # %%
@@ -459,41 +481,17 @@ for cname in ["She-Hulk", "Adam Warlock", "Doctor Strange", "Venom (character)",
 pd.DataFrame(rows).set_index("character")
 
 # %% [markdown]
-# **~92% of snapshot edges** fall straight out of a naive regex over raw wiki-source,
-# with **zero live-only** edges. The handful of misses are links that live inside
-# `{{infobox}}` / `{{navbox}}` templates — which the course harvester (rendered
-# links, redirects resolved) caught and a plain `[[ ]]` scrape does not. The snapshot
-# is faithful, and slightly *fuller* than a hand-rolled scrape. Good to know before
-# trusting my own crawl for the final project.
+# **The stored run recovered 82/89 snapshot links (92%)** across five articles,
+# with seven snapshot-only links and no live-only links detected by this parser.
+# Revision IDs and retrieval time were not saved. Parsing, title/redirect handling
+# and page edits could explain the mismatch; its cause has not been established.
+# This spot-check does not validate the entire snapshot.
 
 # %% [markdown]
 # ## What surprised me
 #
-# 1. **The second island.** Everyone will report the 17 isolates. The 9-node
-#    *Morituri* island is invisible unless you actually run connected-components —
-#    and it has a clean real-world cause (a spin-off in its own continuity).
-# 2. **Communities are almost embarrassingly clean.** No tuning — Louvain hands back
-#    X-Men, Spider-family, cosmic, supernatural, street-level. Link structure alone
-#    reconstructs Marvel's editorial org chart.
-# 3. **The snapshot has *more* edges than a raw `[[link]]` scrape, not fewer** — I
-#    expected drift the other way.
+# 1. The nine-node island remains separate even when direction is ignored.
+# 2. Louvain finds eight communities with recognisable prominent members, though
+#    the labels are interpretations and the separated lobes are imposed by layout.
+# 3. The saved API spot-check recovers 82/89 links; the seven misses remain unexplained.
 #
-# ## More fun to chase (ideas for later weeks / the project)
-#
-# - **Bow-tie decomposition** of the *directed* graph: strongly-connected core, the
-#   pure "IN" set (link in, never linked from), the pure "OUT" set, tendrils.
-# - **k-core peeling**: strip degree-1 nodes repeatedly; what's the dense innermost core?
-# - **Link prediction**: hide 10% of edges, score the missing ones with
-#   Adamic–Adar / Jaccard, see how well "who should link to whom" is recoverable.
-# - **Assortativity**: do hubs link to hubs, or to the long tail? (`nx.degree_assortativity_coefficient`)
-# - **Rich-club coefficient** across degree thresholds.
-# - **Wikidata join**: pull first-appearance year, publisher era, gender, creator for
-#   each character; correlate with degree / community.
-# - **Temporal network**: the Wikipedia revision API gives every past version of an
-#   article — reconstruct *when* each link appeared and animate the network growing.
-# - **Compare snapshot vs a fresh full crawl** of all 303 pages: how many edges
-#   churned in the weeks since the freeze?
-# - **Text layer** (later weeks): article text → TF-IDF / word clouds per community;
-#   does language cluster the same way links do?
-# - **"Six degrees of Spider-Man"**: BFS tree from Spider-Man, drawn as a radial
-#   dendrogram.

@@ -1,0 +1,34 @@
+[
+  {
+    "label": "X-Men",
+    "value": 52.73159144893112
+  },
+  {
+    "label": "Classic Avengers / synthezoids",
+    "value": 42.672413793103445
+  },
+  {
+    "label": "Cosmic / Guardians",
+    "value": 42.02453987730061
+  },
+  {
+    "label": "Spider-family",
+    "value": 40.34653465346535
+  },
+  {
+    "label": "Supernatural / Midnight Sons",
+    "value": 33.83233532934132
+  },
+  {
+    "label": "Hulk & Avengers-adjacent",
+    "value": 29.618768328445746
+  },
+  {
+    "label": "Heroes for Hire / Defenders",
+    "value": 27.426160337552744
+  },
+  {
+    "label": "Street-level / espionage",
+    "value": 23.68421052631579
+  }
+]

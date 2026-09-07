@@ -166,8 +166,9 @@
       #duel-route { margin-top: 7px; color: #ffd166; word-break: break-word; }
       #duel-again { margin-top: 8px; }
     </style>
+    <link rel="stylesheet" href="assets/editorial.css" />
   </head>
-  <body>
+  <body class="explorer-page">
     <canvas id="links-canvas" aria-hidden="true"></canvas>
     <svg id="canvas" role="img" aria-label="Interactive node-link diagram of the Marvel superhero Wikipedia link network"></svg>
 
@@ -203,7 +204,6 @@
       </div>
 
       <div class="row" style="margin-top:10px">
-        <button class="plain" id="ripple" disabled>&#9654; Ripple</button>
         <button class="plain" id="snap">&#10022; Snap</button>
         <button class="plain" id="path">&#8596; Path</button>
         <button class="plain" id="restore" hidden>&#8635; Restore</button>
@@ -305,8 +305,6 @@
         let filterHidden = new Set();
         let snapHidden = new Set();
         let hiddenIdx = new Set();
-        let rippleReached = null;
-        let rippleTimer = null;
         let facesOn = false;
         let tipNode = null;
         const thumbCache = new Map();
@@ -354,16 +352,6 @@
           ctx.globalAlpha = suppressEdges ? .035 : .22;
           ctx.lineWidth = .62 / t.k;
           ctx.stroke();
-
-          if (rippleReached) {
-            ctx.globalAlpha = .9; ctx.strokeStyle = "#9fc0ff"; ctx.lineWidth = 1 / t.k;
-            ctx.beginPath();
-            for (const l of graph.links) {
-              if (hiddenIdx.has(l.s) || hiddenIdx.has(l.t)) continue;
-              if (rippleReached.has(l.s) && rippleReached.has(l.t)) traceEdge(edgeGeometry(l));
-            }
-            ctx.stroke();
-          }
 
           if (duelEdges.size) {
             ctx.globalAlpha = 1; ctx.strokeStyle = "#ffd166";
@@ -421,7 +409,6 @@
           .on("click", (e, d) => {
             e.stopPropagation();
             if (pathMode) { pathPick(d); return; }
-            stopRipple();
             if (pinned === d.index) { pinned = null; clearHi(); hideTip(); }
             else { pinned = d.index; hover(d); }
           })
@@ -472,7 +459,7 @@
         // ---- highlight ---------------------------------------------------
         let pinned = null;
         function hover(d) {
-          if (rippleReached || pathMode) {
+          if (pathMode) {
             if (pathMode === 1 || pathMode === 2) showTip(d);
             return;
           }
@@ -487,7 +474,6 @@
             .attr("r", (r(d) + 6) / currentK).classed("on", true);
           renderLabels(keep, d.index);
           showTip(d);
-          syncRipple();
         }
         function clearHi() {
           node.classed("dim", false);
@@ -498,7 +484,6 @@
           queueEdgeDraw();
           focusRing.classed("on", false);
           renderLabels(null);
-          syncRipple();
         }
 
         function showTip(d) {
@@ -569,7 +554,7 @@
             }
           });
         svg.call(zoom).on("dblclick.zoom", null)
-          .on("click", () => { stopRipple(); if (pathMode && pathMode < 3) resetDuel(); pinned = null; clearHi(); hideTip(); });
+          .on("click", () => { if (pathMode && pathMode < 3) resetDuel(); pinned = null; clearHi(); hideTip(); });
         d3.select("#fit").on("click", () =>
           svg.transition().duration(500).call(zoom.transform, d3.zoomIdentity));
 
@@ -629,7 +614,7 @@
           while (inFlight < 6 && fetchQ.length) {
             const d = fetchQ.shift(); inFlight++;
             getThumb(d).then((u) => {
-              if (u && facesOn && !hiddenIdx.has(d.index) && !rippleReached)
+              if (u && facesOn && !hiddenIdx.has(d.index))
                 node.filter((nn) => nn.index === d.index).attr("fill", "url(#face-" + d.index + ")");
             }).finally(() => { inFlight--; pumpFaces(); });
           }
@@ -642,73 +627,7 @@
         }
         d3.select("#faces").on("change", function () { facesOn = this.checked; applyFaces(); });
 
-        // ---- ripple: BFS wave from the pinned character --------------
-        const HOPCOL = ["#ffffff", "#c9ec45", "#5cdbeb", "#4e9be6", "#a274e6", "#ff7ac0", "#ff8c73", "#f6ce6d"];
-        const rippleBtn = d3.select("#ripple");
         const playout = d3.select("#playout");
-        function syncRipple() {
-          const on = pinned != null;
-          rippleBtn.attr("disabled", on ? null : "")
-            .text(on ? "▶ Ripple from " + nodes[pinned].name.split(" (")[0] : "▶ Ripple");
-        }
-        function stopRipple() {
-          if (rippleTimer) { clearInterval(rippleTimer); rippleTimer = null; }
-          if (!rippleReached) return;
-          rippleReached = null;
-          node.classed("dim", false).attr("fill", facesOn ? faceFill : colorNode);
-          halo.classed("dim", false);
-          regionLabel.classed("dim", false);
-          focusRing.classed("on", false);
-          activeNode = null;
-          renderLabels(null);
-          queueEdgeDraw();
-          playout.html("");
-        }
-        function startRipple(src) {
-          stopRipple();
-          suppressEdges = false;
-          hideTip();
-          renderLabels(null);
-          focusRing.classed("on", false);
-          const hop = new Array(nodes.length).fill(-1);
-          hop[src] = 0;
-          let frontier = [src];
-          const layers = [[src]];
-          while (frontier.length) {
-            const next = [];
-            for (const u of frontier)
-              for (const v of undAdj[u])
-                if (hop[v] === -1 && !hiddenIdx.has(v)) { hop[v] = hop[u] + 1; next.push(v); }
-            if (next.length) layers.push(next);
-            frontier = next;
-          }
-          const total = layers.reduce((a, l) => a + l.length, 0);
-          rippleReached = new Set([src]);
-          node.classed("dim", (d) => d.index !== src)
-            .attr("fill", (d) => (d.index === src ? HOPCOL[0] : "#26262f"));
-          halo.classed("dim", true);
-          regionLabel.classed("dim", true);
-          activeNode = null;
-          queueEdgeDraw();
-          playout.html("hop 0 &mdash; 1 / " + total + " reached");
-          let k = 0;
-          rippleTimer = setInterval(() => {
-            k++;
-            if (k >= layers.length) {
-              clearInterval(rippleTimer); rippleTimer = null;
-              playout.html("<b>" + nodes[src].name.split(" (")[0] + "</b> reaches all "
-                + rippleReached.size + " in " + (layers.length - 1) + " hops");
-              return;
-            }
-            layers[k].forEach((i) => rippleReached.add(i));
-            node.classed("dim", (d) => hop[d.index] < 0 || hop[d.index] > k)
-              .attr("fill", (d) => (hop[d.index] >= 0 && hop[d.index] <= k
-                ? HOPCOL[Math.min(hop[d.index], HOPCOL.length - 1)] : "#26262f"));
-            queueEdgeDraw();
-            playout.html("hop " + k + " &mdash; " + rippleReached.size + " / " + total + " reached");
-          }, 640);
-        }
-        rippleBtn.on("click", () => { if (pinned != null) startRipple(pinned); });
 
         // ---- Thanos snap: a random half turns to dust ---------------
         const restoreBtn = d3.select("#restore");
@@ -730,7 +649,7 @@
           return best;
         }
         d3.select("#snap").on("click", () => {
-          stopRipple(); pinned = null; clearHi(); hideTip();
+          pinned = null; clearHi(); hideTip();
           const alive = nodes.filter((d) => !hiddenIdx.has(d.index));
           const shuffled = alive.slice().sort(() => Math.random() - 0.5);
           const dust = new Set(shuffled.slice(0, Math.floor(alive.length / 2)).map((d) => d.index));
@@ -878,7 +797,7 @@
         function setGuess(v) { guessN = Math.max(1, Math.min(8, v)); d3.select("#g-n").text(guessN); }
         pathBtn.on("click", () => {
           if (pathMode) { resetDuel(); return; }
-          stopRipple(); pinned = null; clearHi(); hideTip();
+          pinned = null; clearHi(); hideTip();
           d3.select("#search").property("value", "");
           renderLabels(null);
           pathBtn.text("✕ Cancel");
@@ -909,7 +828,7 @@
             ? new Set([pinned, ...outAdj[pinned], ...inAdj[pinned]]) : null, pinned);
         });
         d3.select("#clear").on("click", () => {
-          stopRipple(); resetDuel(); pinned = null; clearHi(); hideTip(); d3.select("#search").property("value", "");
+          resetDuel(); pinned = null; clearHi(); hideTip(); d3.select("#search").property("value", "");
         });
         const search = d3.select("#search");
         search.on("input", function () {
@@ -936,13 +855,12 @@
           if (e.key === "/" && document.activeElement !== search.node()) {
             e.preventDefault(); search.node().focus();
           }
-          if (e.key === "Escape") { stopRipple(); resetDuel(); pinned = null; clearHi(); hideTip(); search.node().blur(); }
+          if (e.key === "Escape") { resetDuel(); pinned = null; clearHi(); hideTip(); search.node().blur(); }
         });
 
         window.addEventListener("resize", () => { sizeLinkCanvas(); queueEdgeDraw(); });
         drawEdges();
         renderLegend();
-        syncRipple();
       });
     </script>
   </body>
