@@ -9,6 +9,7 @@ body { margin: 0; color: var(--ink); background: var(--paper); font-family: Inte
 .home-page header { border-bottom-color: #f4c45c4d; }
 .home-page .brand { color: #ffb21c; text-shadow: 0 1px 16px #000b; }
 .home-page .brand span { color: #f8c85c; background: #082b4ee6; border: 1px solid #f4c45c80; box-shadow: 0 6px 18px #0008; }
+.home-page .brand .brand-mark { display: inline-block; width: auto; height: auto; margin-right: 12px; color: #ffb21c; background: none; border: 0; border-radius: 0; box-shadow: none; font-family: Georgia, serif; font-size: 51px; line-height: 1; letter-spacing: -.12em; text-shadow: 0 3px 18px #000c; }
 .home-page .top-nav a { color: #c8d9e8; }
 .home-page .top-nav a:hover { color: #f8c85c; }
 .home-page .eyebrow { color: #f8c85c; text-shadow: 0 1px 12px #000; }
@@ -47,7 +48,7 @@ h2 { margin-bottom: 30px; font-size: 2rem; letter-spacing: -.045em; }
 .showcase-card--game { display: flex; min-height: 360px; flex-direction: column; align-items: center; text-align: center; text-decoration: none; }
 .showcase-card--game .week { align-self: flex-start; }
 .showcase-card--game h3 { margin: 22px 0 30px; }
-.nyt-game-mark { display: grid; width: 91.2px; height: 91.2px; margin: auto auto 0; place-items: center; color: #f8c85c; background: #03101fe8; border: 1px solid #f4c45c80; border-radius: 14px; box-shadow: 0 13px 28px #0008, inset 0 1px #ffffff14; }
+.nyt-game-mark { display: grid; width: 91.2px; height: 91.2px; margin: auto auto 0; place-items: center; color: #ffb21c; background: #03101fe8; border: 1px solid #f4c45c80; border-radius: 14px; box-shadow: 0 13px 28px #0008, inset 0 1px #ffffff14; }
 .nyt-game-mark span { font-family: "Old English Text MT", Georgia, serif; font-size: 4.02rem; line-height: 1; transform: translateY(-2px); }
 .play-button { display: inline-flex; min-width: 118px; margin-top: auto; padding: 11px 24px; justify-content: center; color: #f8c85c; background: #031a32a6; border: 1px solid #f4c45c99; border-radius: 8px; font-weight: 800; letter-spacing: .04em; box-shadow: 0 8px 20px #0004; }
 .showcase-card--game:hover .play-button { color: #082d55; background: #f8c85c; }
