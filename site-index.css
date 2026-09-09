@@ -18,7 +18,7 @@ body { margin: 0; color: var(--ink); background: var(--paper); font-family: Inte
 .home-page .showcase-card { color: #f8c85c; background: linear-gradient(145deg, #12577fdf, #082d55f2); border: 1px solid #f4c45c70; box-shadow: 0 16px 38px #0007, inset 0 1px #ffffff18; }
 .home-page .showcase-card:hover { box-shadow: 0 22px 46px #000a, 0 0 0 1px #f4c45c7a, inset 0 1px #ffffff1f; }
 .home-page .showcase-card:focus-visible { outline-color: #f8c85c; }
-.home-page .showcase-card h3, .home-page .showcase-card p, .home-page .showcase-card .week, .home-page .showcase-card .tag, .home-page .showcase-card .arrow { color: #f8c85c; }
+.home-page .showcase-card h3, .home-page .showcase-card p, .home-page .showcase-card .week, .home-page .showcase-card .tag, .home-page .showcase-card .arrow { color: #ffb21c; }
 .home-page .showcase-card .tag { background: #031a32a6; border: 1px solid #f4c45c66; }
 .home-page .solution-button { color: white; }
 .home-page footer { color: #c8d9e8; text-shadow: 0 2px 12px #000; }
