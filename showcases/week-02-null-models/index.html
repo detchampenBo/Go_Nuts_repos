@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f5f6f8" />
+    <meta name="description" content="A little network intuition goes a long way. Place Marvel hero cards, discover tight circles, and find out what survives a shuffle." />
+    <title>Marvel Lineup — Week 02</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script type="module" src="app.mjs"></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="../../" aria-label="Go Nuts course library"><span class="brand-mark" aria-hidden="true">g.</span> GO NUTS <span class="header-divider">/</span> <span class="week-label">WEEK 02</span></a>
+      <nav aria-label="Puzzle information">
+        <button class="text-button" id="help-button">How to play</button>
+        <button class="text-button" id="leaderboard-button">Leaderboard <span aria-hidden="true">↗</span></button>
+      </nav>
+    </header>
+    <main id="main">
+      <section class="title-row" aria-labelledby="page-title">
+        <div><p class="eyebrow">THE NETWORK PUZZLE</p><h1 id="page-title">Marvel Lineup<span>.</span></h1><p class="subtitle">Trust your intuition. See what the links reveal.</p></div>
+        <div class="score-box"><span class="eyebrow">YOUR SCORE</span><div><strong id="score">000</strong><span> / 800</span></div></div>
+      </section>
+      <div class="puzzle-meta"><span id="puzzle-label">Loading puzzle…</span><span>8 predictions <span class="dot">·</span> No timer <span class="dot">·</span> No Marvel knowledge needed</span></div>
+      <ol class="stages" aria-label="Puzzle stages">
+        <li id="stage-0" aria-current="step"><span>01</span> Connections</li>
+        <li id="stage-1"><span>02</span> Tight circles</li>
+        <li id="stage-2"><span>03</span> The shuffle</li>
+      </ol>
+      <section id="game" aria-label="Puzzle board"><div class="loading">Dealing your hero cards…</div></section>
+      <noscript><p>This puzzle needs JavaScript to place cards and keep score.</p></noscript>
+      <footer class="page-footer"><span>Real heroes. Real Wikipedia links.</span><button id="data-button" class="text-button">Behind the puzzle <span aria-hidden="true">↗</span></button></footer>
+    </main>
+    <dialog id="info-dialog" aria-labelledby="dialog-title"><div class="dialog-header"><h2 id="dialog-title"></h2><button id="close-dialog" class="close-button" aria-label="Close dialog">×</button></div><div id="dialog-content"></div></dialog>
+  </body>
+</html>
