@@ -1,7 +1,11 @@
 :root { --ink: #101926; --paper: #f7f8f5; --blue: #0c5adf; --lime: #c9ec45; --muted: #647083; --line: #d5dce1; }
 * { box-sizing: border-box; }
 body { margin: 0; color: var(--ink); background: var(--paper); font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
-.home-page { min-height: 100vh; color: #fff8e7; background-color: #041326; background-image: linear-gradient(180deg, #020b18a8 0%, #051a2d82 42%, #020b18d6 100%), radial-gradient(circle at 50% 34%, #155d8b42 0%, transparent 55%), url("data/background_pic/graph_background.jpg"); background-position: center; background-size: cover; background-attachment: fixed; }
+.home-page { position: relative; min-height: 100vh; isolation: isolate; color: #fff8e7; background: #041326; }
+.home-page::before, .home-page::after { position: fixed; z-index: 0; inset: 0; content: ""; pointer-events: none; }
+.home-page::before { background: url("data/background_pic/graph_background.jpg") center 44% / cover no-repeat; filter: saturate(1.12) contrast(1.06); }
+.home-page::after { background: linear-gradient(180deg, #020b1859 0%, #051a2d2e 44%, #020b187d 100%), radial-gradient(circle at 50% 32%, transparent 12%, #020b1852 100%); }
+.home-page > header, .home-page > main, .home-page > footer { position: relative; z-index: 1; }
 .home-page header { border-bottom-color: #f4c45c4d; }
 .home-page .brand { color: #fff8e7; text-shadow: 0 1px 16px #000b; }
 .home-page .brand span { color: #f8c85c; background: #082b4ee6; border: 1px solid #f4c45c80; box-shadow: 0 6px 18px #0008; }
@@ -65,4 +69,4 @@ footer { padding: 36px 0; color: var(--muted); font-size: .78rem; }
 .member-role { margin-bottom: 18px; color: var(--blue); font-size: .86rem; font-weight: 700; }
 .member-card p:last-child { margin-bottom: 0; color: var(--muted); line-height: 1.5; }
 @media (max-width: 800px) { .showcase-grid, .members { grid-template-columns: 1fr; } }
-@media (max-width: 600px) { .home-page { background-attachment: scroll; } header, main, footer { width: min(100% - 28px, 1120px); } .top-nav { gap: 12px; } .top-nav a { font-size: .78rem; } .intro, .team-intro { padding: 68px 0; } .showcases { padding: 25px; margin: 0 -2px; } .solution-actions { flex-direction: column; } .solution-button { width: 100%; } }
+@media (max-width: 600px) { .home-page::before, .home-page::after { position: absolute; } header, main, footer { width: min(100% - 28px, 1120px); } .top-nav { gap: 12px; } .top-nav a { font-size: .78rem; } .intro, .team-intro { padding: 68px 0; } .showcases { padding: 25px; margin: 0 -2px; } .solution-actions { flex-direction: column; } .solution-button { width: 100%; } }
