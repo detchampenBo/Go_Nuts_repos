@@ -4,7 +4,7 @@ import json
 import random
 import unittest
 
-from prepare_data import HERE, SOURCE, average_clustering, load_graph, neighborhood, shuffle_graph
+from prepare_data import HERE, SOURCE, average_clustering, load_graph, neighborhood, shuffle_graph, random_graph
 
 
 class GraphTests(unittest.TestCase):
@@ -29,6 +29,20 @@ class GraphTests(unittest.TestCase):
             for neighbor in shuffled[node]:
                 self.assertIn(node, shuffled[neighbor])
         self.assertEqual(shuffled, shuffle_graph(original, random.Random(42)))
+
+    def test_random_baseline_keeps_size_and_density_not_degrees(self):
+        _, original, _ = load_graph()
+        baseline = random_graph(original, random.Random(2806))
+        self.assertEqual(set(baseline), set(original))
+        self.assertEqual(sum(map(len, baseline.values())), sum(map(len, original.values())))
+        self.assertTrue(any(len(baseline[n]) != len(original[n]) for n in original))
+        for node, neighbors in baseline.items():
+            self.assertNotIn(node, neighbors)
+            self.assertTrue(all(node in baseline[v] for v in neighbors))
+        data = json.loads((HERE / "puzzle-data.json").read_text())
+        self.assertEqual(len(data["randomSamples"]), 100)
+        self.assertAlmostEqual(data["randomSamples"][0], average_clustering(baseline))
+        self.assertAlmostEqual(data["randomMean"], sum(data["randomSamples"]) / 100)
 
     def test_frozen_data_matches_source_and_all_puzzles_have_distinct_values(self):
         nodes, graph, directed = load_graph()

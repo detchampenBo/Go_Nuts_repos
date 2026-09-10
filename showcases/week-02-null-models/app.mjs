@@ -4,6 +4,8 @@ const $ = selector => document.querySelector(selector);
 const esc = value => String(value).replace(/[&<>"']/g, char => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
 const percent = value => `${Math.round(value * 100)}%`;
 let data, game, selection = null, runId, saved = false;
+let animationTimer;
+const reducedMotion = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 function sketch(hero, metric, shuffled = false) {
   const view = shuffled ? hero.shuffled : hero;
@@ -14,7 +16,7 @@ function sketch(hero, metric, shuffled = false) {
     return [80 + Math.cos(angle) * radius, 80 + Math.sin(angle) * radius];
   });
   const link = (a, b, color, width) => `<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="${color}" stroke-width="${width}"/>`;
-  const between = metric === "clustering" ? view.links.map(([a, b]) => link(points[a], points[b], "#b64025", 1.8)).join("") : "";
+  const between = metric === "clustering" ? view.links.map(([a, b]) => `<g class="triangle" tabindex="0" role="img" aria-label="Linked neighbor pair: one closed triangle"><path class="triangle-fill" d="M80 80 L${points[a].join(" ")} L${points[b].join(" ")} Z"/>${link(points[a], points[b], "#b64025", 1.8)}</g>`).join("") : "";
   const label = metric === "degree"
     ? `Connection sketch for ${hero.name}. ${k < 6 ? "A small circle of fewer than six neighbors." : k < 15 ? "A medium circle of six to fourteen neighbors." : k < 40 ? "A large circle of fifteen to thirty-nine neighbors." : "A very large circle of at least forty neighbors."}`
     : `Neighborhood of ${hero.name}: ${k} neighbors, ${view.links.length} links among them. Compare the share of possible neighbor pairs that are linked.`;
@@ -29,13 +31,13 @@ function sketch(hero, metric, shuffled = false) {
 function heroCard(id, metric, reveal = true, fresh = false, shuffled = false) {
   const hero = data.heroes[id];
   const view = shuffled ? hero.shuffled : hero;
-  const measure = metric === "degree" ? `${view.degree} links` : `${percent(view.clustering)} linked`;
-  return `<article class="hero-card${fresh ? " new-card" : ""}">${sketch(hero, metric, shuffled)}
+  const measure = metric === "degree" ? `${view.degree} links` : `Clustering: ${percent(view.clustering)}`;
+  return `<article class="hero-card${fresh ? " new-card" : ""}"><div class="card-heading"><span class="hero-emblem" aria-hidden="true">${esc(hero.name.split(/[ -]/).map(w => w[0]).slice(0, 2).join(""))}</span><span>FIELD NOTES / ${metric === "degree" ? "01" : "02"}</span></div>${sketch(hero, metric, shuffled)}
     <h3>${esc(hero.name)}</h3><div class="hero-value${reveal ? "" : " hidden"}">${reveal ? measure : "?"}</div></article>`;
 }
 
 function challenge(title, description) {
-  return `<div class="challenge"><div><h2 id="challenge-title" tabindex="-1">${title}</h2><p>${description}</p></div><span class="round-badge">${game.round + 1} / 8</span></div>`;
+  return `<div class="challenge"><div><h2 id="challenge-title" tabindex="-1">${title}</h2><p>${description}</p></div><span class="round-badge">${game.round - game.startRound + 1} / ${8 - game.startRound}</span></div>`;
 }
 
 function feedback() {
@@ -69,33 +71,45 @@ function renderPlacement() {
     ? "Estimate the number of connections from the sketch. Place the new hero from fewest to most."
     : "Compare the share of neighbor pairs joined by orange links. Place the new hero from least to most tightly connected.")}
     <div class="play-area"><aside class="candidate"><p class="eyebrow">${revealed ? "JUST REVEALED" : "YOUR NEXT HERO"}</p>${heroCard(card.id, card.metric, revealed)}
-      <p class="candidate-note">${isDegree ? "The orange dot is your hero. Each blue dot is one of their neighbors. All their neighbors are shown." : "Blue dots are neighbors. Orange lines link neighbors to each other. Look for triangles, not just lots of dots."}</p></aside>
+      <p class="candidate-note">${isDegree ? "The orange dot is your hero. Each blue dot is one of their neighbors. All their neighbors are shown." : "Blue dots are neighbors. Orange lines link neighbors to each other. Hover or tap an orange link to illuminate a triangle. Compare linked pairs with all possible pairs."}</p></aside>
     <div class="lineup-area"><div class="axis"><span>${isDegree ? "Fewer connections" : "Looser circle"}</span><span class="axis-line" aria-hidden="true"></span><span>${isDegree ? "More connections" : "Tighter circle"}</span></div>
       <div class="lineup-scroll"><div class="lineup">${row}</div></div><p class="slot-hint">${revealed ? "The outlined card is the hero you just placed." : 'Choose a <strong>+</strong> to place your card. Swipe the row if needed.'}</p></div></div>${actionBar()}`;
 }
 
 function swapDiagram() {
-  return `<svg class="swap-diagram" viewBox="0 0 390 125" role="img" aria-label="Edge swap: A–B and C–D become A–D and C–B. All four nodes keep one link.">
-    <g stroke="#76939c" stroke-width="2"><path d="M35 30H115 M35 90H115"/><path d="M275 30L355 90 M275 90L355 30"/></g>
-    <text x="195" y="70" text-anchor="middle" font-size="28" fill="#a6afb4">→</text>
-    ${[35, 115, 275, 355].map((x, i) => [30, 90].map((y, j) => `<circle cx="${x}" cy="${y}" r="14" fill="${i % 2 ? "#e0ecee" : "#fff0e5"}" stroke="${i % 2 ? "#668c94" : "#c77d55"}"/><text x="${x}" y="${y + 4}" text-anchor="middle" font-size="12" fill="#263842">${["A", "B", "C", "D"][j * 2 + i % 2]}</text>`).join("")).join("")}
-  </svg>`;
+  return `<div class="swap-lab"><svg class="swap-diagram" viewBox="0 0 440 200" role="img" aria-label="Illustrative edge swap: A–B and C–E become A–E and C–B. Every degree is preserved; a triangle opens.">
+    <g stroke="#a4bab8" stroke-width="3"><path d="M65 45L220 25L375 45"/></g>
+    <path id="swap-edges" d="M65 45L375 45 M65 155L375 155" fill="none" stroke="#c34426" stroke-width="4"/>
+    ${[[65,45,"A"],[375,45,"B"],[65,155,"C"],[220,25,"D"],[375,155,"E"]].map(([x,y,label]) => `<circle cx="${x}" cy="${y}" r="19" fill="#193c40"/><text x="${x}" y="${y+5}" text-anchor="middle" fill="white" font-size="14">${label}</text>`).join("")}
+    </svg><button class="primary-button accent" id="scramble-button">Scramble this universe ↗</button><p id="swap-status" role="status">Illustrative swap · A: 2 · B: 2 · C: 1 · D: 2 · E: 1<br>One closed triangle</p></div>`;
 }
 
-function histogram() {
-  const max = Math.max(data.clustering, ...data.shuffleSamples) * 1.2;
-  const bins = Array(30).fill(0);
-  for (const v of data.shuffleSamples) bins[Math.min(29, Math.floor(v / max * 30))]++;
-  const tallest = Math.max(...bins, 1);
-  const x = 40 + data.clustering / max * 380;
-  return `<svg class="histogram" viewBox="0 0 460 215" role="img" aria-label="Clustering distribution across 100 degree-preserving shuffles. Real network ${data.clustering.toFixed(3)}. Shuffle mean ${data.shuffleMean.toFixed(3)}.">
-    <text x="40" y="20" class="chart-label">Number of shuffles</text>
-    ${bins.map((count, i) => `<rect x="${40 + i * 380 / 30}" y="${160 - count / tallest * 105}" width="11" height="${count / tallest * 105}" rx="2" fill="#85b0ab"/>`).join("")}
-    <line x1="40" x2="420" y1="160" y2="160" stroke="#bac5cb"/>
-    <line x1="${x}" x2="${x}" y1="45" y2="160" stroke="#bc3d23" stroke-width="2"/>
-    <text x="${x}" y="36" text-anchor="middle" font-size="12" fill="#bc3d23">Real network</text>
-    ${[0, .1, .2, .3].filter(v => v <= max).map(v => `<text x="${40 + v / max * 380}" y="180" text-anchor="middle" class="chart-label">${v.toFixed(1)}</text>`).join("")}
-    <text x="230" y="205" text-anchor="middle" class="chart-label">Average clustering</text></svg>`;
+function histogram(count = 100) {
+  const max = Math.max(data.clustering, ...data.shuffleSamples, ...data.randomSamples) * 1.15;
+  const sets = [data.randomSamples, data.shuffleSamples].map(samples => {
+    const bins = Array(45).fill(0);
+    for (const v of samples.slice(0, count)) bins[Math.min(44, Math.floor(v / max * 45))]++;
+    return bins;
+  });
+  const tallest = Math.max(1, ...sets.flat());
+  const x = value => 65 + value / max * 760;
+  return `<svg class="histogram" viewBox="0 0 900 310" role="img" aria-label="${count} of 100 precomputed samples per baseline. Random mean ${data.randomMean.toFixed(3)}, degree-preserving shuffle mean ${data.shuffleMean.toFixed(3)}, real clustering ${data.clustering.toFixed(3)}.">
+    ${[0, .5, 1].map(f => `<line x1="65" x2="825" y1="${235-f*155}" y2="${235-f*155}" stroke="#e3e0d8"/><text x="50" y="${240-f*155}" text-anchor="end" class="chart-label">${Math.round(f*tallest)}</text>`).join("")}
+    <text x="65" y="25" class="chart-label">Samples per bin · ${count}/100 per baseline</text>
+    ${sets.map((bins, j) => bins.map((n,i) => `<rect x="${65+i*760/45}" y="${235-n/tallest*155}" width="15" height="${n/tallest*155}" fill="${j ? '#237b76' : '#8575b3'}" opacity=".85" rx="2"/>`).join("")).join("")}
+    <line x1="${x(data.clustering)}" x2="${x(data.clustering)}" y1="55" y2="235" stroke="#c34426" stroke-width="4"/>
+    <text x="${x(data.clustering)}" y="45" text-anchor="middle" fill="#c34426" font-size="16">Real: ${data.clustering.toFixed(3)}</text>
+    ${[0,.05,.1,.15,.2,.25,.3,.35].filter(v => v <= max).map(v => `<text x="${x(v)}" y="260" text-anchor="middle" class="chart-label">${v.toFixed(2)}</text>`).join("")}
+    <text x="445" y="295" text-anchor="middle" class="chart-label">Average clustering · all ${data.nodes} nodes</text></svg>`;
+}
+
+function animateSamples() {
+  clearInterval(animationTimer);
+  let count = reducedMotion() ? 100 : 0;
+  const draw = () => { const chart = $("#null-chart"); if (chart) chart.innerHTML = histogram(count); };
+  draw();
+  if (count === 100) return;
+  animationTimer = setInterval(() => { count = Math.min(100, count + 2); draw(); if (count === 100) clearInterval(animationTimer); }, 45);
 }
 
 function renderShuffle() {
@@ -115,10 +129,10 @@ function renderShuffle() {
       <div class="result-note"><h3>The links move. The counts stay.</h3><p>${esc(hero.name)} has ${hero.degree} neighbors before and after. The orange links show how their neighborhood can change. The complete ranking by connection count stays exactly the same.</p><div class="stats-pair"><div><strong>${hero.degree}</strong><span>Neighbors before</span></div><div><strong>${hero.shuffled.degree}</strong><span>Neighbors after</span></div></div></div></div>`;
   } else {
     const extreme = data.shuffleSamples.filter(v => v >= data.clustering).length;
-    content = `<div class="shuffle-result">${histogram()}<div class="result-note"><h3>The real network has extra structure.</h3><p>${extreme} out of 100 shuffles reached the real network’s clustering. Keeping the hubs was not enough to reproduce its tightly linked circles.</p><div class="stats-pair"><div><strong>${data.clustering.toFixed(3)}</strong><span>Real network</span></div><div><strong>${data.shuffleMean.toFixed(3)}</strong><span>Shuffle average</span></div></div></div></div>`;
+    content = `<div class="null-reveal"><p class="eyebrow">THE EVIDENCE</p><h3>Same connection counts.<br><em>${Math.round((1-data.shuffleMean/data.clustering)*100)}% less clustering.</em></h3><div class="chart-legend"><span class="random-key">Random links · same n and m</span><span class="shuffle-key">Shuffled · every degree preserved</span><span class="real-key">Real Marvel network</span></div><div id="null-chart">${histogram()}</div><button class="secondary-button" id="replay-samples">Replay sample reveal</button><p class="storage-note">100 precomputed networks per baseline, revealed in sequence.</p><div class="result-note"><h3>Can hubs alone explain these tight circles?</h3><p>${extreme} out of 100 shuffles reached the real network’s clustering. Keeping the hubs was not enough to reproduce its tightly linked circles. This supports structure beyond the degree sequence; it does not identify its cause. Empirical p = ${data.empiricalP.toFixed(4)}.</p><div class="stats-pair"><div><strong>${data.randomMean.toFixed(3)}</strong><span>Random-link average</span></div><div><strong>${data.clustering.toFixed(3)}</strong><span>Real network</span></div><div><strong>${data.shuffleMean.toFixed(3)}</strong><span>Shuffle average</span></div></div></div></div>`;
   }
-  return `${challenge(first ? "Would your first lineup survive?" : "What happens to the tight circles?", first
-    ? "You ranked heroes by their number of connections. Predict what happens when we shuffle the links."
+  return `${challenge(first ? "Would a degree ranking survive?" : "What happens to the tight circles?", first
+    ? "Imagine heroes ranked by their number of connections. Predict what happens when we shuffle the links."
     : "Predict how the network’s average clustering compares after 100 degree-preserving shuffles.")}
     <div class="shuffle-area">${content}</div>${actionBar()}`;
 }
@@ -132,25 +146,29 @@ function leaderboardMarkup() {
 }
 
 function renderFinish() {
-  return `<div class="finish"><div><p class="eyebrow">PUZZLE ${game.puzzle.id} COMPLETE</p><h2 id="challenge-title" tabindex="-1">${game.score >= 600 ? "A feel for the network." : "A few new connections."}</h2>
-    <div class="final-score">${game.score}<span> / ${MAX_SCORE}</span></div><div class="result-squares" aria-label="${game.score / 100} correct out of 8 predictions">${game.answers.map((a, i) => `<span class="result-square${a.correct ? " correct" : ""}" title="Prediction ${i + 1}: ${a.correct ? "correct" : "incorrect"}" aria-hidden="true">${a.correct ? "✓" : "−"}</span>`).join("")}</div>
-    <p class="finish-copy">${game.score / 100} of 8 predictions correct. You explored connections, clustering, and the structure that a shuffle leaves behind.</p>
-    <form class="save-form" id="save-form"><label for="player-name">Add your name to the leaderboard <span class="storage-note">(optional)</span></label><div class="input-row"><input id="player-name" name="name" maxlength="24" placeholder="Your name" autocomplete="nickname" required ${saved ? "disabled" : ""}/><button class="primary-button" type="submit" ${saved ? "disabled" : ""}>${saved ? "Score saved ✓" : "Save score"}</button></div><p class="storage-note">Saved on this browser only. Other visitors won’t see your name.</p><p class="form-message" id="save-message" role="status"></p></form>
+  return `<div class="finish-takeaway"><p class="eyebrow">TAKE THIS WITH YOU</p><h2>Hubs survive. Tight circles unravel.</h2><p>Keeping every degree still lowers average clustering from ${data.clustering.toFixed(3)} to ${data.shuffleMean.toFixed(3)}. The real network has structure beyond its connection counts.</p></div><div class="finish"><div><p class="eyebrow">PUZZLE ${game.puzzle.id} COMPLETE</p><h2 id="challenge-title" tabindex="-1">${game.score >= 600 ? "A feel for the network." : "A few new connections."}</h2>
+    <div class="final-score">${game.score}<span> / ${(8-game.startRound)*100}</span></div><div class="result-squares" aria-label="${game.score / 100} correct out of ${8-game.startRound} predictions">${game.answers.map((a, i) => `<span class="result-square${a.correct ? " correct" : ""}" title="Prediction ${i + 1}: ${a.correct ? "correct" : "incorrect"}" aria-hidden="true">${a.correct ? "✓" : "−"}</span>`).join("")}</div>
+    <p class="finish-copy">${game.score / 100} of ${8-game.startRound} predictions correct. You explored connections, clustering, and the structure that a shuffle leaves behind.</p>
+    ${game.startRound ? '<p class="storage-note">Practice complete. Start Connections for an eight-prediction leaderboard run.</p>' : `<form class="save-form" id="save-form"><label for="player-name">Add your name to the leaderboard <span class="storage-note">(optional)</span></label><div class="input-row"><input id="player-name" name="name" maxlength="24" placeholder="Your name" autocomplete="nickname" required ${saved ? "disabled" : ""}/><button class="primary-button" type="submit" ${saved ? "disabled" : ""}>${saved ? "Score saved ✓" : "Save score"}</button></div><p class="storage-note">Saved on this browser only. Other visitors won’t see your name.</p><p class="form-message" id="save-message" role="status"></p></form>`}
     <div class="finish-actions"><button class="primary-button accent" id="another-button">Next puzzle →</button><button class="secondary-button" id="replay-button">Replay this puzzle</button></div></div>
     <aside class="leaderboard-panel"><p class="eyebrow">THE LOCAL LEADERBOARD</p><h3>${esc(game.puzzle.name)}</h3><p class="storage-note">Same puzzle. Same eight predictions. Ties keep the earlier score first.</p><div id="leaderboard-entries">${leaderboardMarkup()}</div></aside></div>`;
 }
 
 function render(focus = false) {
+  clearInterval(animationTimer);
+  $("#run-description").textContent = game.startRound ? `Practice · ${8-game.startRound} predictions · no leaderboard` : "Full run · 8 predictions";
+  $(".score-box > div > span").textContent = ` / ${(8-game.startRound)*100}`;
   $("#score").textContent = String(game.score).padStart(3, "0");
   $("#puzzle-label").textContent = `Puzzle ${game.puzzle.id} · ${game.puzzle.name}`;
   const stage = Math.min(2, Math.floor(game.round / 3));
   for (let i = 0; i < 3; i++) {
     const item = $(`#stage-${i}`);
-    item.classList.toggle("done", i < stage || game.phase === "complete");
+    item.classList.toggle("done", (i >= game.startRound / 3 && i < stage) || (game.phase === "complete" && i >= game.startRound / 3));
     if (i === stage && game.phase !== "complete") item.setAttribute("aria-current", "step");
     else item.removeAttribute("aria-current");
   }
   $("#game").innerHTML = game.phase === "complete" ? renderFinish() : game.round < 6 ? renderPlacement() : renderShuffle();
+  if (game.round === 7 && game.phase === "revealed") animateSamples();
   if (focus) {
     const target = game.phase === "revealed" ? $("#next-button") : $("#challenge-title");
     target?.focus({ preventScroll: true });
@@ -170,8 +188,10 @@ function select(choice) {
   $("#selection-status").textContent = "Prediction selected. Ready for the reveal?";
 }
 
-function start(puzzleId) {
-  game = newGame(data, puzzleId);
+function start(puzzleId, stage = 0) {
+  clearInterval(animationTimer);
+  game = newGame(data, puzzleId, stage);
+  $("#puzzle-select").value = puzzleId;
   selection = null;
   saved = false;
   runId = crypto.randomUUID();
@@ -185,8 +205,19 @@ function openDialog(title, content) {
 }
 
 $("#game").addEventListener("click", event => {
+  const triangle = event.target.closest(".triangle");
+  if (triangle) { triangle.classList.toggle("active"); return; }
   const button = event.target.closest("button");
   if (!button) return;
+  if (button.id === "replay-samples") { animateSamples(); return; }
+  if (button.id === "scramble-button") {
+    const swapped = button.dataset.swapped !== "true";
+    button.dataset.swapped = String(swapped);
+    $("#swap-edges").setAttribute("d", swapped ? "M65 45L375 155 M65 155L375 45" : "M65 45L375 45 M65 155L375 155");
+    $("#swap-status").innerHTML = `Illustrative swap · A: 2 · B: 2 · C: 1 · D: 2 · E: 1<br>${swapped ? "Triangle opened. Every degree stays fixed." : "One closed triangle"}`;
+    button.textContent = swapped ? "Restore the links ↶" : "Scramble this universe ↗";
+    return;
+  }
   if (button.id === "retry-load") { load(); return; }
   if (!game) return;
   if (button.dataset.slot !== undefined) select(Number(button.dataset.slot));
@@ -197,7 +228,7 @@ $("#game").addEventListener("click", event => {
     advance(game, data); selection = null; render(true);
   } else if (button.id === "another-button" || button.id === "replay-button") {
     const next = button.id === "replay-button" ? game.puzzle.id : data.puzzles[(data.puzzles.findIndex(p => p.id === game.puzzle.id) + 1) % data.puzzles.length].id;
-    start(next); $("#challenge-title").focus();
+    start(next, game.startRound / 3); $("#challenge-title").focus();
   }
 });
 
@@ -236,6 +267,7 @@ $("#data-button").addEventListener("click", () => {
     <p>The original ${data.directedEdges.toLocaleString()} hyperlinks have a direction. For this puzzle, a link in either direction counts as one undirected connection. Reciprocal links count once.</p>
     <p><strong>Clustering</strong> is the number of links among a hero’s neighbors divided by the number of possible neighbor pairs. It measures the share of closed triangles, not the raw number of links.</p>
     <p><strong>The shuffle test:</strong> 100 independently restarted shuffles, each with ${ (data.edges * 10).toLocaleString()} accepted edge swaps and a fixed random seed. No self-links or duplicate edges. Each hero keeps their exact degree. We average local clustering over all ${data.nodes} heroes, counting degree below 2 as zero, including the ${data.isolates} isolates.</p>
+    <p><strong>Random-link baseline:</strong> 100 uniform simple G(n,m) graphs keep the same ${data.nodes} nodes and ${data.edges.toLocaleString()} edges, but allow individual degrees to change. Their mean clustering is ${data.randomMean.toFixed(3)}. Both baselines use the same all-node average.</p>
     <p>These are precomputed results from the full snapshot. The small diagrams show complete neighborhoods; the connection-count stage omits neighbor-to-neighbor lines for clarity.</p>
     <p>The final histogram compares the network statistic, not your game score, with the null distribution. Its one-sided empirical p-value uses (1 + shuffles at least as high) / 101. A finite simulation never establishes a probability of zero.</p>
     <p><a href="../../data/week2/Week%202_Models%20%26%20null%20models_02805_curriculum.html">Read the Week 2 curriculum ↗</a> · <a href="README.md">Data and methods ↗</a></p>`);
@@ -243,11 +275,22 @@ $("#data-button").addEventListener("click", () => {
 $("#close-dialog").addEventListener("click", () => $("#info-dialog").close());
 $("#info-dialog").addEventListener("click", event => { if (event.target === $("#info-dialog")) { const r = event.target.getBoundingClientRect(); if (event.clientX < r.left || event.clientX > r.right || event.clientY < r.top || event.clientY > r.bottom) event.target.close(); } });
 
+document.querySelector(".stages").addEventListener("click", event => {
+  const button = event.target.closest("[data-stage]");
+  if (!button || !data) return;
+  start(game.puzzle.id, Number(button.dataset.stage));
+  $("#challenge-title").focus({preventScroll:true});
+});
+
+$("#puzzle-select").addEventListener("change", event => { start(event.target.value, game.startRound / 3); $("#challenge-title").focus({preventScroll:true}); });
+
 async function load() {
   try {
     const response = await fetch("./puzzle-data.json");
     if (!response.ok) throw new Error("Data could not load");
     data = await response.json();
+    $("#puzzle-select").innerHTML = data.puzzles.map(p => `<option value="${p.id}">Deck ${p.id} · ${esc(p.name)}</option>`).join("");
+    $("#puzzle-select").disabled = false;
     start(data.puzzles[0].id);
   } catch {
     $("#game").innerHTML = '<div class="error"><h2>The cards couldn’t load.</h2><p>Check your connection and try again. If you opened the HTML file directly, open the site through a local web server instead.</p><button id="retry-load" class="primary-button">Try again</button></div>';

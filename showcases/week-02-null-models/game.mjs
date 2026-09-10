@@ -5,11 +5,12 @@ export function value(data, id, metric) {
   return data.heroes[id][metric];
 }
 
-export function newGame(data, puzzleId) {
+export function newGame(data, puzzleId, stage = 0) {
+  if (![0, 1, 2].includes(stage)) throw new Error("Unknown activity");
   const puzzle = data.puzzles.find(p => p.id === puzzleId);
   if (!puzzle) throw new Error("Unknown puzzle");
-  return { puzzle, round: 0, phase: "answering", score: 0, answers: [],
-    row: puzzle.degree.slice(0, 2).sort((a, b) => value(data, a, "degree") - value(data, b, "degree")) };
+  return { puzzle, startRound: stage * 3, round: stage * 3, phase: "answering", score: 0, answers: [],
+    row: puzzle[stage === 0 ? "degree" : "clustering"].slice(0, 2).sort((a, b) => value(data, a, stage === 0 ? "degree" : "clustering") - value(data, b, stage === 0 ? "degree" : "clustering")) };
 }
 
 export function currentCard(game) {
@@ -76,7 +77,7 @@ export function readLeaderboard(storage) {
 
 export function saveScore(storage, game, name, id, date = Date.now()) {
   const cleaned = cleanName(name);
-  if (game.phase !== "complete" || !cleaned) throw new Error("Complete a puzzle and enter a name first.");
+  if (game.phase !== "complete" || game.startRound > 0 || game.answers.length !== 8 || !cleaned) throw new Error("Complete a puzzle and enter a name first.");
   const entries = readLeaderboard(storage);
   if (!entries.some(e => e.id === id)) {
     entries.push({ id, puzzle: game.puzzle.id, name: cleaned, score: game.score, date });

@@ -78,3 +78,24 @@ Commit `puzzle-data.json` with any generator changes. It includes the input SHA-
 all displayed measurements, the three decks, and all 100 null samples. Python uses
 only its standard library. The UI uses browser-native ES modules and SVG. Google
 Fonts enhance the typography; system/Georgia fallbacks work when fonts are unavailable.
+
+## Visual exploration
+
+The puzzle picker is available throughout a run. Switching puzzles starts a fresh
+score; completed saved scores remain in the browser-local leaderboard. Cards expose
+linked triangles on hover, focus, or tap. The shuffle demonstration uses a labelled
+five-node illustrative graph with fixed positions and preserves every node's degree.
+The final chart reveals precomputed samples, with reduced-motion support and replay.
+
+The second baseline contains 100 uniform simple G(n,m) graphs with the same 303 nodes
+and 1,434 edges, generated with seed 2806. Individual degrees are not preserved.
+Both baselines average local clustering over all nodes, including isolates. Their
+shared chart separates density alone from the degree sequence; neither identifies a
+causal mechanism for the observed surplus clustering.
+
+The dropdown is labelled **Hero deck** to distinguish card selections from activities.
+The three activity buttons are directly selectable. Connections starts a full run;
+Tight circles starts five-prediction practice (including the shuffle); The shuffle
+starts two-prediction practice. Selecting an activity resets the run. Practice has
+an adjusted score total and cannot be submitted to the full-run leaderboard.
+Changing the hero deck retains the selected starting activity and resets its score.
