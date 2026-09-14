@@ -123,7 +123,26 @@ test("dotRadius grows with degree and never collapses to zero", () => {
 test("comparison examples explore smaller qualifying neighbors before the biggest hub", async () => {
   const { comparisonNeighbors } = await import("./paradox.mjs");
   const nodes = { hub: {degree: 106}, near: {degree: 12}, low: {degree: 3}, middle: {degree: 25} };
-  assert.deepEqual(comparisonNeighbors({degree: 10, neighbors: ['hub','low','middle','near']}, nodes), ['near','middle','hub']);
-  assert.deepEqual(comparisonNeighbors({degree: 110, neighbors: ['hub','near']}, nodes), ['hub']);
-  assert.deepEqual(comparisonNeighbors({degree: 0, neighbors: []}, nodes), []);
+  assert.deepEqual(comparisonNeighbors({degree: 10, neighbors: ['hub','low','middle','near']}, nodes), {
+    kind: "higher",
+    ids: ["near", "middle", "hub"],
+  });
+  assert.deepEqual(comparisonNeighbors({degree: 110, neighbors: ['hub','near']}, nodes), {
+    kind: "remaining",
+    ids: ["hub", "near"],
+  });
+  assert.deepEqual(comparisonNeighbors({degree: 0, neighbors: []}, nodes), { kind: "none", ids: [] });
+});
+
+test("comparison examples prefer tied neighbors after higher-degree options are exhausted", async () => {
+  const { comparisonNeighbors } = await import("./paradox.mjs");
+  const nodes = {
+    alpha: { name: "Alpha", degree: 5 },
+    beta: { name: "Beta", degree: 5 },
+    low: { name: "Low", degree: 2 },
+  };
+  assert.deepEqual(comparisonNeighbors({ degree: 5, neighbors: ["beta", "low", "alpha"] }, nodes), {
+    kind: "tied",
+    ids: ["alpha", "beta"],
+  });
 });

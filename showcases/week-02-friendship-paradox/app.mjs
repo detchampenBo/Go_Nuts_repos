@@ -26,7 +26,9 @@ let neighborIndex = 0;
 let searchActive = -1;
 let matches = [];
 let axisMax = 120;
+let degreeMax = 120;
 let networkOpen = false;
+let historyStack = [];
 
 const network = () => data.networks[netKey];
 const hero = (id) => network().heroes[id];
@@ -43,6 +45,14 @@ const TICKS = [0, 5, 10, 20, 40, 60, 80, 100, 120];
 const unit = (v) => Math.sqrt(Math.max(0, v) / axisMax);
 const sx = (v) => PLOT.x0 + unit(v) * (PLOT.x1 - PLOT.x0);
 const sy = (v) => PLOT.y1 - unit(v) * (PLOT.y1 - PLOT.y0);
+const selectedExample = () => {
+  const focal = hero(selectedId);
+  if (!focal) return { kind: "none", ids: [], id: null, index: 0 };
+  const comparison = comparisonNeighbors(focal, network().heroes);
+  const index = comparison.ids.length ? neighborIndex % comparison.ids.length : 0;
+  return { ...comparison, id: comparison.ids[index] ?? null, index };
+};
+const comparisonRadius = (degree) => 8 + Math.sqrt(Math.max(0, degree) / Math.max(1, degreeMax)) * 48;
 
 const NET_NOTE = {
   marvel: "The real network. A handful of hubs dominate, and almost every hero sits far above the line.",
@@ -62,6 +72,7 @@ function graphSvg() {
   const net = network();
   const entries = Object.entries(net.heroes);
   const focal = hero(selectedId);
+  const exampleId = selectedExample().id;
   const focalFriends = new Set(focal ? focal.neighbors : []);
 
   // Deduplicate undirected edges, and draw the selected hero's own links last
@@ -86,9 +97,12 @@ function graphSvg() {
     .sort((a, b) => (a[0] === selectedId ? 1 : 0) - (b[0] === selectedId ? 1 : 0))
     .map(([id, h]) => {
       const selected = id === selectedId;
+      const example = id === exampleId;
       const r = selected ? 9 : 2.4 + Math.sqrt(h.degree / maxDegree) * 10;
       const cls = selected
         ? "gnode sel"
+        : example
+        ? "gnode example"
         : h.degree === 0
         ? "gnode iso"
         : focalFriends.has(id)
@@ -109,6 +123,8 @@ function graphSvg() {
 function scatterSvg() {
   const net = network();
   const focal = hero(selectedId);
+  const example = selectedExample();
+  const exampleHero = example.id ? hero(example.id) : null;
   const ticks = TICKS.filter((t) => t <= axisMax);
 
   const grid = ticks
@@ -120,9 +136,25 @@ function scatterSvg() {
     )
     .join("");
 
+  const gap = focal && focal.degree ? friendGap(focal) : 0;
+  const gapLabel = gap >= 0 ? `Friends average ${one(gap)} more connections` : `Friends average ${one(-gap)} fewer connections`;
+  const gapX = focal ? sx(focal.degree) : 0;
+  const gapY1 = focal ? sy(focal.degree) : 0;
+  const gapY2 = focal ? sy(focal.neighborMean) : 0;
+  const labelY = Math.min(gapY1, gapY2) - 9;
+  const labelAnchor = gapX > 660 ? "end" : "start";
+  const labelX = gapX > 660 ? gapX - 10 : gapX + 10;
   const guides = focal && focal.degree
-    ? `<line class="guide" x1="${sx(focal.degree)}" y1="${sy(focal.neighborMean)}" x2="${sx(focal.degree)}" y2="${sy(0)}"/>
-       <line class="guide" x1="${sx(0)}" y1="${sy(focal.neighborMean)}" x2="${sx(focal.degree)}" y2="${sy(focal.neighborMean)}"/>`
+    ? `<line class="guide" x1="${gapX}" y1="${sy(focal.neighborMean)}" x2="${sx(0)}" y2="${sy(focal.neighborMean)}"/>
+       <line class="gap-guide" x1="${gapX}" y1="${gapY1}" x2="${gapX}" y2="${gapY2}"/>
+       <text class="gap-label" x="${labelX}" y="${Math.max(18, labelY)}" text-anchor="${labelAnchor}">${esc(gapLabel)}</text>`
+    : "";
+  const relation = focal && exampleHero
+    ? `<line class="relation-line" x1="${sx(focal.degree)}" y1="${sy(focal.neighborMean)}" x2="${sx(exampleHero.degree)}" y2="${sy(exampleHero.neighborMean)}"/>
+       <text class="point-label point-label--selected" x="${sx(focal.degree) + 10}" y="${sy(focal.neighborMean) - 10}">${esc(focal.name)}</text>
+       <text class="point-label point-label--example" x="${sx(exampleHero.degree) + 10}" y="${sy(exampleHero.neighborMean) + 18}">${esc(exampleHero.name)}</text>`
+    : focal
+    ? `<text class="point-label point-label--selected" x="${sx(focal.degree) + 10}" y="${sy(focal.neighborMean) - 10}">${esc(focal.name)}</text>`
     : "";
 
   const dots = Object.entries(net.heroes)
@@ -132,9 +164,10 @@ function scatterSvg() {
       const cx = sx(h.degree);
       const cy = sy(h.neighborMean);
       const selected = id === selectedId;
+      const exampleDot = id === example.id;
       const lift = (sy(h.degree) - cy).toFixed(1); // start life on the diagonal
-      return `<circle class="dot ${h.neighborMean > h.degree ? "up" : "down"}${selected ? " sel" : ""}"
-        data-id="${esc(id)}" cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="${selected ? 8 : 3.6}"
+      return `<circle class="dot ${h.neighborMean > h.degree ? "up" : "down"}${selected ? " sel" : ""}${exampleDot ? " example" : ""}"
+        data-id="${esc(id)}" cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="${selected ? 8 : exampleDot ? 7 : 3.6}"
         style="transform:translateY(${lift}px)"
         ><title>${esc(h.name)} · ${h.degree} connections · friends average ${one(h.neighborMean)}</title></circle>`;
     })
@@ -150,6 +183,7 @@ function scatterSvg() {
     <line class="friend-line" x1="${sx(0)}" y1="${sy(net.neighborMeanAverage)}" x2="${sx(axisMax)}" y2="${sy(net.neighborMeanAverage)}"/>
     <text class="friend-label" x="${sx(axisMax) - 6}" y="${sy(net.neighborMeanAverage) - 7}" text-anchor="end">average of these dots: ${one(net.neighborMeanAverage)}</text>
     <text class="mean-label" x="${sx(net.meanDegree) + 7}" y="${sy(axisMax) + 15}">all-node mean: ${one(net.meanDegree)}</text>
+    ${relation}
     ${guides}
     <g class="dots">${dots}</g>
     <text class="axis-title" x="${(PLOT.x0 + PLOT.x1) / 2}" y="538" text-anchor="middle">Your own connections →</text>
@@ -173,7 +207,7 @@ function vizPanel() {
         <p class="net-note">${NET_NOTE[netKey]}</p>
       </div>
       <div class="viz-row">
-        <figure class="viz-cell">
+        <figure class="viz-cell scatter-cell">
           <figcaption><strong>Every hero, one dot.</strong> Across: your own connections. Up: your friends' average.
             The diagonal is "exactly equal".</figcaption>
           <div class="scatter-wrap">${scatterSvg()}</div>
@@ -195,6 +229,7 @@ function vizPanel() {
         <span class="key key--up">above the line (${net.paradoxCount})</span>
         <span class="key key--down">on or below (${net.connectedCount - net.paradoxCount})</span>
         <span class="key key--sel">selected: ${esc(focal.name)}</span>
+        ${selectedExample().id ? `<span class="key key--example">example: ${esc(hero(selectedExample().id).name)}</span>` : ""}
 
       </p>
     </section>`;
@@ -204,6 +239,7 @@ function vizPanel() {
 
 function egoSvg(id) {
   const focal = hero(id);
+  const exampleId = selectedExample().id;
   const size = 300;
   const centre = size / 2;
   const { shown, hidden } = neighbourSample(focal, NEIGHBOUR_CAP);
@@ -217,7 +253,7 @@ function egoSvg(id) {
       const nb = hero(nid);
       const [x, y] = points[i];
       return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${dotRadius(nb.degree, maxDegree).toFixed(1)}"
-        class="ego-dot ${nb.degree > focal.degree ? "is-bigger" : "is-smaller"}"><title>${esc(nb.name)} · ${nb.degree} connections</title></circle>`;
+        class="ego-dot ${nb.degree > focal.degree ? "is-bigger" : "is-smaller"}${nid === exampleId ? " is-example" : ""}"><title>${esc(nb.name)} · ${nb.degree} connections</title></circle>`;
     })
     .join("");
   const biggerCount = shown.filter((n) => hero(n).degree > focal.degree).length;
@@ -246,19 +282,43 @@ const VERDICT_COPY = {
 function neighborCard(id) {
   const focal = hero(id);
   const candidates = comparisonNeighbors(focal, network().heroes);
-  const neighborId = candidates[neighborIndex % candidates.length] ?? null;
+  const neighborId = candidates.ids[neighborIndex % candidates.ids.length] ?? null;
   if (neighborId === null) return `<div class="neighbor-card"><p>No neighbors in this snapshot.</p></div>`;
   const neighbor = hero(neighborId);
   const higher = neighbor.degree > focal.degree;
+  const tied = neighbor.degree === focal.degree;
+  const focalR = comparisonRadius(focal.degree);
+  const neighborR = comparisonRadius(neighbor.degree);
+  const maxR = Math.max(focalR, neighborR);
+  const leftX = maxR + 12;
+  const rightX = maxR * 3 + 74;
+  const cy = maxR + 18;
+  const width = maxR * 4 + 96;
+  const height = maxR * 2 + 86;
+  const ruleCopy = {
+    higher: `Closest higher-degree neighbor`,
+    tied: `Tied-degree neighbor`,
+    remaining: `Highest-degree remaining neighbor`,
+  }[candidates.kind];
   return `<div class="neighbor-card">
-    <p class="eyebrow">${higher ? "MEET A MORE-CONNECTED NEIGHBOR" : "THEIR MOST-CONNECTED NEIGHBOR"}</p>
+    <p class="eyebrow">${ruleCopy}</p>
+    <svg class="circle-compare" viewBox="0 0 ${width.toFixed(0)} ${height.toFixed(0)}" role="img"
+      aria-label="${esc(focal.name)} has ${focal.degree} connections. ${esc(neighbor.name)} has ${neighbor.degree} connections. Circle area uses one fixed scale across all networks.">
+      <line class="compare-baseline" x1="${leftX}" y1="${cy}" x2="${rightX}" y2="${cy}"/>
+      <circle class="compare-circle compare-circle--selected" cx="${leftX}" cy="${cy}" r="${focalR.toFixed(1)}"/>
+      <circle class="compare-circle compare-circle--neighbor" cx="${rightX}" cy="${cy}" r="${neighborR.toFixed(1)}"/>
+      <text class="compare-label" x="${leftX}" y="${height - 28}" text-anchor="middle">${esc(focal.name)}</text>
+      <text class="compare-count" x="${leftX}" y="${height - 10}" text-anchor="middle">${focal.degree}</text>
+      <text class="compare-label" x="${rightX}" y="${height - 28}" text-anchor="middle">${esc(neighbor.name)}</text>
+      <text class="compare-count" x="${rightX}" y="${height - 10}" text-anchor="middle">${neighbor.degree}</text>
+    </svg>
     <p aria-live="polite"><strong>${esc(focal.name)}</strong> has ${focal.degree} connections.
       Their neighbor <strong>${esc(neighbor.name)}</strong> has ${neighbor.degree}.</p>
-    ${higher ? "" : '<p class="muted">None of their neighbors has more connections than they do.</p>'}
+    ${higher ? "" : tied ? '<p class="muted">No higher-degree neighbor; this example is tied.</p>' : '<p class="muted">No higher-degree or tied neighbor; this is their highest-degree remaining neighbor.</p>'}
     <button class="neighbor-button" data-neighbor="${esc(neighborId)}">Explore ${esc(neighbor.name)} <span aria-hidden="true">→</span></button>
-    ${higher ? `<p class="neighbor-note">Example ${neighborIndex % candidates.length + 1} of ${candidates.length} more-connected neighbors · ordered by degree, closest first.</p>` : ""}
-    ${candidates.length > 1 ? '<button class="chip" data-another-neighbor>Show another neighbor ↻</button>' : ""}
-    <p class="neighbor-note">One neighbor is an example. The friends’ average above determines whether the paradox holds for this hero.</p>
+    <p class="neighbor-note">Example ${neighborIndex % candidates.ids.length + 1} of ${candidates.ids.length}. Circle area represents degree.</p>
+    ${candidates.ids.length > 1 ? '<button class="chip" data-another-neighbor>Show another</button>' : ""}
+
   </div>`;
 }
 
@@ -267,6 +327,9 @@ function egoPanel(id) {
   const v = verdict(focal);
   return `
     <section class="ego-panel">
+      <div class="panel-actions">
+        <button class="chip back-chip" data-back ${historyStack.length ? "" : "disabled"}>Back</button>
+      </div>
       <div class="picker">
         <label for="hero-search">Find a hero</label>
         <div class="picker-field">
@@ -282,13 +345,13 @@ function egoPanel(id) {
         </div>
       </div>
       <h3 class="ego-name">${esc(focal.name)}</h3>
-      <figure class="ego">${egoSvg(id)}</figure>
+
       <div class="you-vs-friends">
         <div class="stat"><strong>${focal.degree}</strong><span>own connections</span></div>
         <div class="versus" aria-hidden="true">vs</div>
         <div class="stat stat--accent"><strong>${focal.degree ? one(focal.neighborMean) : "—"}</strong><span>friends' average</span></div>
       </div>
-      <p class="verdict verdict--${v}" role="status">${VERDICT_COPY[v](focal)}</p>
+
       ${neighborCard(id)}
     </section>`;
 }
@@ -302,7 +365,8 @@ function aggregatePanel() {
   const extra = net.topOfCircle.length > 5 ? `, and ${net.topOfCircle.length - 5} more` : "";
   return `
     <aside class="aggregate-panel">
-      <p class="eyebrow">WHY IT HAPPENS</p>
+      <details class="why-detail">
+        <summary>Why?</summary>
       <h3>The counting identity</h3>
       <div class="identity">
         <div class="identity-row"><span>Pick a <em>hero</em> at random</span><strong>${one(parts.mean)}</strong></div>
@@ -315,6 +379,7 @@ function aggregatePanel() {
       <p class="muted">Averaging the scatter's dots instead — one value per hero — gives
         <strong>${one(net.neighborMeanAverage)}</strong>. Close, but a different question: that samples heroes
         uniformly, then averages within each circle.</p>
+      </details>
 
       <h3>Top of their circle</h3>
       <p>${net.topOfCircle.length
@@ -363,13 +428,14 @@ function render(animate = false) {
   document.querySelectorAll(".net-option").forEach((button) => {
     button.setAttribute("aria-pressed", String(button.dataset.net === netKey));
   });
-  $("#explorer").innerHTML = `${vizPanel()}<div class="explorer-grid">${egoPanel(selectedId)}${aggregatePanel()}</div>`;
+  $("#explorer").innerHTML = `<div class="explorer-grid">${vizPanel()}${egoPanel(selectedId)}</div><section class="neighborhood-detail"><h2>${esc(hero(selectedId).name)}’s neighborhood</h2><div class="neighborhood-content"><figure class="ego">${egoSvg(selectedId)}</figure><div><p class="verdict" role="status">${VERDICT_COPY[verdict(hero(selectedId))](hero(selectedId))}</p><p>Each dot is a neighbor, sized by its degree. The outlined dot is the comparison example.</p><p>One neighbor is an example; the average across all neighbors determines whether the paradox holds for this hero.</p></div></div></section>${aggregatePanel()}`;
   if (animate) playRise();
   else $(".scatter .dots")?.querySelectorAll("circle").forEach((c) => (c.style.transform = ""));
 }
 
-function selectHero(id, focusInput = false) {
+function selectHero(id, focusInput = false, pushHistory = true) {
   if (!hero(id)) return;
+  if (pushHistory && selectedId && selectedId !== id) historyStack.push(selectedId);
   selectedId = id;
   neighborIndex = 0;
   searchActive = -1;
@@ -382,6 +448,7 @@ function switchNetwork(key) {
   if (!data.networks[key] || key === netKey) return;
   netKey = key;
   neighborIndex = 0;
+  historyStack = [];
   if (!hero(selectedId)) selectedId = network().suggested;
   searchActive = -1;
   matches = [];
@@ -435,8 +502,14 @@ explorer.addEventListener("toggle", event => {
 explorer.addEventListener("click", (event) => {
   if (event.target.closest("[data-another-neighbor]")) {
     neighborIndex++;
-    $(".neighbor-card").outerHTML = neighborCard(selectedId);
+    render();
     $("[data-another-neighbor]")?.focus({ preventScroll: true });
+    return;
+  }
+  if (event.target.closest("[data-back]")) {
+    const previous = historyStack.pop();
+    if (previous) selectHero(previous, false, false);
+    $(".back-chip")?.focus({ preventScroll: true });
     return;
   }
   const neighbor = event.target.closest("[data-neighbor]");
@@ -579,6 +652,7 @@ async function load() {
       }
     }
     axisMax = niceCeil(peak, 20);
+    degreeMax = Math.max(...Object.values(data.networks).flatMap((net) => Object.values(net.heroes).map((h) => h.degree)), 1);
     selectedId = network().suggested;
     render(true);
   } catch {

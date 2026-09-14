@@ -106,10 +106,27 @@ export function dotRadius(degree, maxDegree) {
   return 3 + Math.sqrt(t) * 9;
 }
 
-/** Actual higher-degree neighbors, closest degree first; peaks fall back to their top neighbor. */
+/**
+ * Deterministic example-neighbor rule:
+ * closest higher-degree neighbor -> tied neighbor -> highest-degree remaining
+ * neighbor -> no-neighbors state.
+ */
 export function comparisonNeighbors(focal, heroes) {
-  const higher = focal.neighbors.filter(id => heroes[id].degree > focal.degree);
-  const byDegree = (a, b) => heroes[a].degree - heroes[b].degree || a.localeCompare(b);
-  if (higher.length) return higher.sort(byDegree);
-  return [...focal.neighbors].sort((a, b) => -byDegree(a, b)).slice(0, 1);
+  const name = (id) => heroes[id].name ?? id;
+  const byClosestHigher = (a, b) =>
+    heroes[a].degree - heroes[b].degree || name(a).localeCompare(name(b)) || a.localeCompare(b);
+  const byName = (a, b) => name(a).localeCompare(name(b)) || a.localeCompare(b);
+  const byHighest = (a, b) =>
+    heroes[b].degree - heroes[a].degree || name(a).localeCompare(name(b)) || a.localeCompare(b);
+
+  const higher = focal.neighbors.filter((id) => heroes[id].degree > focal.degree).sort(byClosestHigher);
+  if (higher.length) return { kind: "higher", ids: higher };
+
+  const tied = focal.neighbors.filter((id) => heroes[id].degree === focal.degree).sort(byName);
+  if (tied.length) return { kind: "tied", ids: tied };
+
+  const remaining = focal.neighbors.filter((id) => heroes[id].degree < focal.degree).sort(byHighest);
+  if (remaining.length) return { kind: "remaining", ids: remaining };
+
+  return { kind: "none", ids: [] };
 }
