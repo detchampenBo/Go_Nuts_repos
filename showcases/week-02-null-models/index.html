@@ -19,15 +19,15 @@
     </header>
     <main id="main">
       <section class="title-row" aria-labelledby="page-title">
-        <div><p class="eyebrow">THE NETWORK PUZZLE</p><h1 id="page-title">Marvel Lineup<span>.</span></h1><p class="subtitle">Trust your intuition. See what the links reveal.</p></div>
+        <div><p class="eyebrow">A FIELD GUIDE TO THE MARVEL NETWORK</p><h1 id="page-title">Marvel Lineup<span>.</span></h1><p class="subtitle">Read the connections. Find the circles. Scramble the universe.</p></div>
         <div class="score-box"><span class="eyebrow">YOUR SCORE</span><div><strong id="score">000</strong><span> / 800</span></div></div>
       </section>
-      <div class="puzzle-meta"><span id="puzzle-label">Loading puzzle…</span><span>8 predictions <span class="dot">·</span> No timer <span class="dot">·</span> No Marvel knowledge needed</span></div>
+      <div class="puzzle-meta"><div class="puzzle-picker"><label for="puzzle-select">Hero deck</label><select id="puzzle-select" disabled></select><span id="puzzle-label">Loading puzzle…</span><small>Different heroes, same three activities · changing deck starts fresh</small></div><span><span id="run-description">Full run · 8 predictions</span> <span class="dot">·</span> No timer <span class="dot">·</span> No Marvel knowledge needed</span></div>
       <ol class="stages" aria-label="Puzzle stages">
-        <li id="stage-0" aria-current="step"><span>01</span> Connections</li>
-        <li id="stage-1"><span>02</span> Tight circles</li>
-        <li id="stage-2"><span>03</span> The shuffle</li>
-      </ol>
+        <li id="stage-0" aria-current="step"><button data-stage="0"><span>01</span> Connections</button></li>
+        <li id="stage-1"><button data-stage="1"><span>02</span> Tight circles</button></li>
+        <li id="stage-2"><button data-stage="2"><span>03</span> The shuffle</button></li>
+      </ol><p class="activity-hint">Choose an activity above. Jumping ahead starts a practice run; Connections starts the full scored run.</p>
       <section id="game" aria-label="Puzzle board"><div class="loading">Dealing your hero cards…</div></section>
       <noscript><p>This puzzle needs JavaScript to place cards and keep score.</p></noscript>
       <footer class="page-footer"><span>Real heroes. Real Wikipedia links.</span><button id="data-button" class="text-button">Behind the puzzle <span aria-hidden="true">↗</span></button></footer>

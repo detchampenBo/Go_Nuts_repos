@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f5f6f8" />
+    <meta
+      name="description"
+      content="Pick a hero and see it for yourself: in the Marvel link network almost everyone's friends are more connected than they are. The friendship paradox, one node at a time."
+    />
+    <title>The Friendship Paradox — Week 02</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script type="module" src="app.mjs"></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="../../" aria-label="Go Nuts course library">
+        <span class="brand-mark" aria-hidden="true">g.</span> GO NUTS
+        <span class="header-divider">/</span> <span class="week-label">WEEK 02</span>
+      </a>
+      <nav aria-label="Page information">
+        <button class="text-button" id="help-button">How to read this</button>
+        <button class="text-button" id="data-button">Behind the data <span aria-hidden="true">↗</span></button>
+      </nav>
+    </header>
+
+    <main id="main">
+      <section class="title-row" aria-labelledby="page-title">
+        <div>
+          <p class="eyebrow">A FIELD GUIDE TO THE MARVEL NETWORK</p>
+          <h1 id="page-title">The Friendship Paradox<span>.</span></h1>
+          <p class="subtitle">
+            Your friends have more friends than you do. It is not bad luck — it is how
+            counting works when a few nodes are hubs.
+          </p>
+        </div>
+      </section>
+
+      <div class="network-switch" role="group" aria-label="Choose a network">
+        <button class="net-option" data-net="marvel" aria-pressed="true">Marvel links</button>
+        <button class="net-option" data-net="scalefree" aria-pressed="false">Scale-free model</button>
+        <button class="net-option" data-net="random" aria-pressed="false">Random model</button>
+      </div>
+
+      <section id="explorer" aria-label="Friendship paradox explorer">
+        <div class="loading">Loading the network…</div>
+      </section>
+
+      <noscript><p class="noscript">This explorer needs JavaScript to draw the network and run the counts.</p></noscript>
+
+      <footer class="page-footer">
+        <span>Real heroes. Real Wikipedia links. The models are generated, seeded, and reproducible.</span>
+      </footer>
+    </main>
+
+    <dialog id="info-dialog" aria-labelledby="dialog-title">
+      <div class="dialog-header">
+        <h2 id="dialog-title"></h2>
+        <button id="close-dialog" class="close-button" aria-label="Close dialog">×</button>
+      </div>
+      <div id="dialog-content"></div>
+    </dialog>
+  </body>
+</html>

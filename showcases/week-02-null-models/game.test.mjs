@@ -115,3 +115,18 @@ test("each puzzle keeps its best 50 scores without crowding out other puzzles", 
   assert.equal(readLeaderboard(store).filter(e => e.puzzle === "01").length, 50);
   assert.equal(readLeaderboard(store).filter(e => e.puzzle === "02").length, 1);
 });
+
+test('activity selection starts the matching content and excludes partial runs from leaderboard', () => {
+  for (const stage of [1, 2]) {
+    const game = newGame(data, '01', stage);
+    assert.equal(game.round, stage * 3);
+    assert.equal(currentCard(game)?.metric ?? 'shuffle', stage === 1 ? 'clustering' : 'shuffle');
+    while (game.phase !== 'complete') {
+      submit(game, data, correctChoice(game));
+      advance(game, data);
+    }
+    assert.equal(game.answers.length, 8 - stage * 3);
+    assert.equal(game.score, (8 - stage * 3) * 100);
+    assert.throws(() => saveScore(storage(), game, 'Practice', 'practice'));
+  }
+});

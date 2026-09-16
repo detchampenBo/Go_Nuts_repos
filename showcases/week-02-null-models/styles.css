@@ -200,3 +200,70 @@ dialog::backdrop { background: #152a3d66; backdrop-filter: blur(3px); }
   .input-row .primary-button { width: 100%; }
 }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
+
+/* A field guide: warm stock, bold ink, and diagrams that carry the story. */
+:root { --paper: #f2efe5; --ink: #193c40; --line: #d4d3c6; --accent: #c34426; --muted: #576965; }
+body { background-image: radial-gradient(#193c4009 .7px, transparent .7px); background-size: 7px 7px; }
+h1 { font-family: Impact, 'Arial Narrow', var(--sans); font-size: clamp(48px, 7vw, 88px); text-transform: uppercase; letter-spacing: -.045em; }
+.site-header { border-bottom: 2px solid var(--ink); }
+.subtitle { font-size: 17px; }
+#game { border: 2px solid var(--ink); border-radius: 3px; box-shadow: 7px 7px 0 #193c4015; }
+.challenge { background: #fffdf6; }
+.challenge h2 { font-size: 36px; }
+.puzzle-picker { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.puzzle-picker label { color: var(--ink); font-weight: 700; }
+.puzzle-picker select { font: inherit; color: var(--ink); background: #fffdf6; border: 1px solid var(--ink); border-radius: 4px; padding: 9px 30px 9px 12px; max-width: 100%; }
+.puzzle-picker small { flex-basis: 100%; }
+#puzzle-label { display: none; }
+.stages { border-radius: 3px; }
+.play-area { grid-template-columns: 290px minmax(0, 1fr); }
+.candidate { background: #e9e8d8; padding: 25px; }
+.hero-card { border-radius: 3px; background: #fffef9; border-color: #b4bdb3; }
+.candidate .hero-card { transform: rotate(-2deg); box-shadow: 5px 6px 0 #193c4020; border: 2px solid var(--ink); }
+.card-heading { display: flex; align-items: center; gap: 7px; text-align: left; font-size: 8px; letter-spacing: .08em; color: var(--muted); }
+.hero-emblem { display: grid; place-items: center; flex: 0 0 28px; height: 28px; border-radius: 50%; background: var(--ink); color: #fff9df; font-weight: 800; font-size: 11px; letter-spacing: 0; }
+.candidate .network { max-height: 220px; }
+.candidate .hero-card h3 { font-size: 23px; }
+.hero-value { font-size: 12px; }
+.lineup-scroll { padding: 12px 0 18px; }
+.lineup { min-width: 100%; width: max-content; }
+.lineup .hero-card { flex: 0 0 115px; width: 115px; }
+.slot { flex-basis: 44px; width: 44px; height: 145px; border: 2px dashed #869e97; background: #f3f5ed; }
+.slot.selected { box-shadow: 0 0 0 4px #c3442620; }
+.triangle { cursor: pointer; outline: none; }
+.triangle-fill { fill: transparent; pointer-events: none; }
+.triangle:hover .triangle-fill, .triangle:focus .triangle-fill, .triangle.active .triangle-fill { fill: #edb63070; stroke: #bd451d; stroke-width: 2; }
+.triangle line { pointer-events: stroke; stroke-width: 3; }
+.triangle:hover line, .triangle:focus line, .triangle.active line { stroke-width: 5; }
+.swap-lab { padding: 18px; text-align: center; background: #f0f2e8; border: 1px solid var(--line); }
+.swap-diagram { max-height: 220px; }
+#swap-edges { transition: d .7s ease, stroke .3s; }
+#swap-status { font-size: 13px; font-variant-numeric: tabular-nums; }
+.null-reveal > h3 { font: 48px/1.08 var(--serif); margin: 12px 0 25px; }
+.null-reveal > h3 em { color: var(--accent); font-style: normal; }
+.histogram { max-height: none; background: #fffef9; }
+.chart-legend { display: flex; gap: 20px; flex-wrap: wrap; font-size: 13px; margin: 12px 0; }
+.chart-legend span::before { content: ''; display: inline-block; width: 11px; height: 11px; margin-right: 6px; background: #8575b3; }
+.chart-legend .shuffle-key::before { background: #237b76; }
+.chart-legend .real-key::before { background: #c34426; }
+.null-reveal .result-note { border-top: 1px solid var(--line); padding-top: 22px; margin-top: 20px; }
+.finish-takeaway { padding: 30px; background: var(--ink); color: #fff8e6; }
+.finish-takeaway p { max-width: 750px; }
+@keyframes reveal { from { transform: translateY(-25px) rotate(-5deg) scale(1.05); opacity: .2; } to { transform: translateY(0) rotate(0) scale(1); opacity: 1; } }
+@media (max-width: 850px) { .play-area { grid-template-columns: 230px minmax(0,1fr); } .candidate { padding: 18px; } }
+@media (max-width: 650px) {
+  .play-area { display: block; } .candidate { grid-template-columns: 1fr 175px; } .candidate .network { max-height: 145px; }
+  .candidate .hero-card h3 { font-size: 18px; } .candidate .card-heading { font-size: 7px; }
+  .challenge h2 { font-size: 29px; } .slot { height: 140px; } .null-reveal > h3 { font-size: 37px; }
+  .chart-legend { gap: 8px 15px; font-size: 12px; } .stats-pair { flex-wrap: wrap; gap: 15px; }
+  .puzzle-picker { width: 100%; } .puzzle-picker select { width: 100%; } .subtitle { font-size: 14px; }
+}
+.score-box > div > span { white-space: nowrap; }
+@media (max-width: 650px) { .score-box { min-width: 108px; } }
+.stages li { padding: 0; }
+.stages button { width: 100%; padding: 13px 20px; border: 0; background: transparent; color: inherit; font: inherit; text-align: left; }
+.stages button span { margin-right: 10px; font-size: 12px; }
+.stages button:hover { background: #b5bdaa30; }
+.stages { margin-bottom: 8px; }
+.activity-hint { font-size: 12px; color: var(--muted); margin: 0 0 22px; }
+@media (max-width: 650px) { .stages button { padding: 12px 7px; text-align: center; } .stages button span { margin-right: 4px; } }

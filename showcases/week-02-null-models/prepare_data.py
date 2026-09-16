@@ -48,6 +48,17 @@ def average_clustering(graph):
     return total / len(graph)
 
 
+def random_graph(original, rng):
+    """Uniform G(n,m): keep node and edge counts, but not individual degrees."""
+    nodes = sorted(original)
+    pairs = [(a, b) for i, a in enumerate(nodes) for b in nodes[i + 1:]]
+    graph = {node: set() for node in nodes}
+    for a, b in rng.sample(pairs, sum(map(len, original.values())) // 2):
+        graph[a].add(b)
+        graph[b].add(a)
+    return graph
+
+
 def shuffle_graph(original, rng, swaps=None):
     """Simple undirected double-edge swaps: no loops or duplicate edges."""
     graph = {node: set(neighbors) for node, neighbors in original.items()}
@@ -111,6 +122,8 @@ def build():
             values = [heroes[n][metric] for n in puzzle[metric]]
             assert len(set(values)) == len(values), (puzzle["id"], metric, values)
     observed = average_clustering(graph)
+    random_rng = random.Random(2806)
+    random_samples = [average_clustering(random_graph(graph, random_rng)) for _ in range(100)]
     digest = hashlib.sha256((SOURCE / "week1_nodes.tsv").read_bytes()
                             + (SOURCE / "week1_edges.tsv").read_bytes()).hexdigest()
     output = {
@@ -121,6 +134,8 @@ def build():
         "isolates": sum(not ns for ns in graph.values()),
         "clustering": observed, "shuffleSamples": samples,
         "shuffleMean": sum(samples) / len(samples),
+        "randomSamples": random_samples,
+        "randomMean": sum(random_samples) / len(random_samples),
         "empiricalP": (1 + sum(x >= observed for x in samples)) / (1 + len(samples)),
         "heroes": heroes, "puzzles": PUZZLES,
     }
