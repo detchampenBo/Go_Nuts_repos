@@ -1,0 +1,180 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - link "g. / Go Nuts" [ref=e3] [cursor=pointer]:
+      - /url: ../../../index.html
+    - generic [ref=e4]: Week 3 · A network mystery
+    - button "Restart case" [ref=e5] [cursor=pointer]
+  - main [ref=e6]:
+    - generic [ref=e7]:
+      - generic [ref=e8]:
+        - generic [ref=e9]: Case 01 · The last portal went dark.
+        - heading "The silent vault." [level=1] [ref=e10]: The silentvault.
+      - generic [ref=e12]:
+        - paragraph [ref=e13]:
+          - text: Someone sent a shutdown command to the Vault. Four heroes were stationed nearby.
+          - strong [ref=e14]: Only one fits all three surviving logs.
+        - paragraph [ref=e15]: Read a clue → use the map → clear one innocent hero. Repeat three times. The last suspect is your culprit.
+      - generic [aria-hidden] [ref=e16]: 4 suspects3 clues1 answer
+    - navigation "Evidence files" [ref=e19]:
+      - button "1 The alarm log BFS & distance Open" [ref=e20] [cursor=pointer]:
+        - generic [ref=e21]: "1"
+        - generic [ref=e22]:
+          - text: The alarm log
+          - generic [ref=e23]: BFS & distance
+        - generic [ref=e24]: Open
+      - button "2 The return receipt One-way reachability Locked" [disabled] [ref=e25]:
+        - generic [ref=e26]: "2"
+        - generic [ref=e27]:
+          - text: The return receipt
+          - generic [ref=e28]: One-way reachability
+        - generic [ref=e29]: Locked
+      - button "3 The traffic archive Shortest-path counts Locked" [disabled] [ref=e30]:
+        - generic [ref=e31]: "3"
+        - generic [ref=e32]:
+          - text: The traffic archive
+          - generic [ref=e33]: Shortest-path counts
+        - generic [ref=e34]: Locked
+      - button "! Make the case Your accusation Locked" [disabled] [ref=e35]:
+        - generic [ref=e36]: "!"
+        - generic [ref=e37]:
+          - text: Make the case
+          - generic [ref=e38]: Your accusation
+        - generic [ref=e39]: Locked
+    - generic [ref=e40]:
+      - generic [ref=e41]:
+        - generic [ref=e42]:
+          - generic [ref=e43]:
+            - text: The portal network
+            - heading "Follow the alarm." [level=2] [ref=e44]
+          - generic [ref=e45]: Arrow = one allowed hop
+        - group "Nine-room directed portal network. Use the controls and room selector below for keyboard exploration." [ref=e47]:
+          - button "Inspect Alarm Tower" [ref=e68] [cursor=pointer]:
+            - generic: ⚡
+            - generic: "0"
+            - generic: Alarm Tower
+          - button "Inspect Junction" [ref=e72] [cursor=pointer]:
+            - generic: J
+            - generic: Junction
+          - button "Inspect Rooftop" [ref=e75] [cursor=pointer]:
+            - generic: R
+            - generic: Rooftop
+          - button "Inspect Observatory, occupied by Black Widow" [ref=e78] [cursor=pointer]:
+            - generic: Observatory
+            - generic: Black Widow
+          - button "Inspect Workshop, occupied by Spider-Man" [ref=e86] [cursor=pointer]:
+            - generic: Workshop
+            - generic: Spider-Man
+          - button "Inspect Archive, occupied by Daredevil" [ref=e94] [cursor=pointer]:
+            - generic: Archive
+            - generic: Daredevil
+          - button "Inspect Bridge, occupied by Wolverine" [ref=e102] [cursor=pointer]:
+            - generic: Bridge
+            - generic: Wolverine
+          - button "Inspect Lift" [ref=e109] [cursor=pointer]:
+            - generic: L
+            - generic: Lift
+          - button "Inspect Vault" [ref=e112] [cursor=pointer]:
+            - generic: V
+            - generic: Vault
+        - generic [ref=e115]:
+          - strong [ref=e116]: "Distance 0: Alarm Tower."
+          - generic [ref=e117]: Start at distance 0. Expand once to discover every room one hop away.
+        - generic [ref=e118]:
+          - button "Send alarm one step" [ref=e119] [cursor=pointer]
+          - button "Start at the alarm" [ref=e120] [cursor=pointer]
+          - generic [ref=e121]: Layer 0 · 1 room in this layer
+        - generic [ref=e122]:
+          - generic [ref=e123]: Inspect a room
+          - combobox "Inspect a room" [ref=e124]:
+            - option "Alarm Tower" [selected]
+            - option "Junction"
+            - option "Rooftop"
+            - option "Observatory"
+            - option "Workshop"
+            - option "Archive"
+            - option "Bridge"
+            - option "Lift"
+            - option "Vault"
+          - generic [ref=e125]: "Out: Junction, Rooftop. In: none."
+      - complementary [ref=e126]:
+        - generic [ref=e127]: Evidence 1 / 3
+        - heading "The alarm log" [level=2] [ref=e128]
+        - blockquote [ref=e129]: The alarm first reached the saboteur’s room after exactly two portal crossings.
+        - paragraph [ref=e130]: 1. Send the alarm outward, one step at a time. 2. Read the numbered badges. 3. Clear the hero whose number is not 2.
+        - group [ref=e131]:
+          - generic "How do I use this clue?" [ref=e132] [cursor=pointer]
+        - generic [ref=e133]:
+          - text: Your deduction
+          - heading "Who is NOT two steps from the alarm?" [level=3] [ref=e134]
+          - paragraph [ref=e135]: Choose one hero using the cards below, then press “Clear selected suspect”.
+    - region [ref=e136]:
+      - generic [ref=e137]:
+        - generic [ref=e138]:
+          - heading "Who can you clear?" [level=2] [ref=e139]
+          - paragraph [ref=e140]: Choose ONE suspect who cannot fit the clue. Cleared heroes stay out of the case.
+        - generic [ref=e141]: 4 suspects remain
+      - generic [ref=e142]:
+        - button "Black Widow, Observatory" [ref=e143] [cursor=pointer]:
+          - generic [aria-hidden] [ref=e150]: +
+          - generic [ref=e151]:
+            - generic [ref=e152]: Black Widow
+            - generic [ref=e153]: Observatory
+            - generic [ref=e154]: Still a suspect
+        - button "Spider-Man, Workshop" [ref=e155] [cursor=pointer]:
+          - generic [aria-hidden] [ref=e162]: +
+          - generic [ref=e163]:
+            - generic [ref=e164]: Spider-Man
+            - generic [ref=e165]: Workshop
+            - generic [ref=e166]: Still a suspect
+        - button "Daredevil, Archive" [ref=e167] [cursor=pointer]:
+          - generic [aria-hidden] [ref=e174]: +
+          - generic [ref=e175]:
+            - generic [ref=e176]: Daredevil
+            - generic [ref=e177]: Archive
+            - generic [ref=e178]: Still a suspect
+        - button "Wolverine, Bridge" [ref=e179] [cursor=pointer]:
+          - generic [aria-hidden] [ref=e185]: +
+          - generic [ref=e186]:
+            - generic [ref=e187]: Wolverine
+            - generic [ref=e188]: Bridge
+            - generic [ref=e189]: Still a suspect
+      - generic [ref=e190]:
+        - status
+        - button "Clear selected suspect" [ref=e191] [cursor=pointer]
+    - region [ref=e192]:
+      - generic [ref=e193]:
+        - text: Your deduction notebook
+        - heading "One clue isn’t enough." [level=2] [ref=e194]
+        - paragraph [ref=e195]: Filed evidence appears here. A suspect must fit every clue to remain possible.
+      - table [ref=e197]:
+        - caption [ref=e198]: Which suspects match each filed clue
+        - rowgroup [ref=e199]:
+          - row [ref=e200]:
+            - columnheader "Suspect" [ref=e201]
+            - columnheader "2 hops away" [ref=e202]
+            - columnheader "No reply route" [ref=e203]
+            - columnheader "½ of routes" [ref=e204]
+        - rowgroup [ref=e205]:
+          - row [ref=e206]:
+            - cell "Black Widow" [ref=e207]
+            - cell "—" [ref=e208]
+            - cell "—" [ref=e209]
+            - cell "—" [ref=e210]
+          - row [ref=e211]:
+            - cell "Spider-Man" [ref=e212]
+            - cell "—" [ref=e213]
+            - cell "—" [ref=e214]
+            - cell "—" [ref=e215]
+          - row [ref=e216]:
+            - cell "Daredevil" [ref=e217]
+            - cell "—" [ref=e218]
+            - cell "—" [ref=e219]
+            - cell "—" [ref=e220]
+          - row [ref=e221]:
+            - cell "Wolverine" [ref=e222]
+            - cell "—" [ref=e223]
+            - cell "—" [ref=e224]
+            - cell "—" [ref=e225]
+    - group [ref=e226]:
+      - generic "What is real, what is fictional, and what am I learning?" [ref=e227] [cursor=pointer]
+    - generic [ref=e228]: "Go Nuts · Week 3 · Interactive prototype: can mathematical evidence make a network mystery intuitive?"

@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>One link changes everything — Go Nuts, Week 3</title>
+<link rel="icon" href="data:,">
+<meta name="description" content="Add a hypothetical Wikipedia link. Watch shortest paths bypass a Marvel hero, and measure the change in betweenness.">
+<style>/* VISUAL_STYLE */</style>
+<header class="top"><a class="wordmark" href="../../../index.html">g. / Go Nuts</a><span>Week 3 · Paths &amp; centrality</span></header>
+<main>
+<section class="intro"><h1>One link.<br>Everything<br>changes.</h1><div><p class="prototype">A Marvel network experiment</p><p>Black Widow holds the routes together. What happens when you give them a way around her?</p><button class="primary" id="reveal">Add the bypass</button></div></section>
+<section class="workspace" aria-label="Interactive bypass experiment">
+<div class="toolbar"><div class="tabs" aria-label="Map view"><button id="impact-tab" aria-pressed="true">The ripple effect</button><button id="full-tab" aria-pressed="false">Full network</button></div><div class="legend"><span><i class="sample"></i>Original route</span><span><i class="sample new"></i>Route with bypass</span></div><span class="badge">277 heroes. One new link.</span></div>
+<div class="layout"><div class="map-wrap"><div class="map-head"><div><strong id="map-title">A shortcut waiting to happen</strong><p id="map-caption"></p></div><svg id="overview" viewBox="0 0 800 450" role="img" aria-label="Overview of the full network; highlighted stations appear in the impact view"></svg></div>
+<div id="scene-note" aria-live="polite"></div><svg id="map" viewBox="0 0 860 440" role="group" aria-label="Interactive network. Use the selectors below as a keyboard alternative to drawing a link."></svg>
+<div class="scrubber"><div class="scrubrow"><button id="play" aria-label="Play the before and after comparison">Play</button><input id="scrub" aria-label="Before and after comparison" type="range" min="0" max="100" value="0"><button id="reset" class="quiet">Reset</button></div><div class="scrub-labels"><span>Original universe</span><strong id="phase">Before</strong><span>One link later</span></div></div></div>
+<aside aria-live="polite"><div class="broker-heading"><p class="broker-label">The hero being bypassed</p><h2 id="broker-name"></h2></div><div class="metric"><label>Brokerage lost after adding the link</label><div class="value" id="loss"></div><div id="score-line"></div><div class="caption">Relative drop in normalized betweenness.</div></div><div class="metric"><label>Journeys shortened</label><div class="value" id="shortened"></div><div class="caption" id="pair-total"></div></div><div class="metric"><label>Biggest betweenness gain</label><div class="value small-value after" id="winner"></div><div class="caption" id="gain"></div></div></aside></div>
+<div class="controls"><section><h3>Add your own bypass</h3><div class="selectors"><label>Link from<select id="link-a"></select></label><span>↔</span><label>Link to<select id="link-b"></select></label></div><div class="actions"><button id="apply" class="primary">Add this link</button><button id="draw">Draw on map</button><button id="best">Use strongest bypass</button></div><p class="message" id="link-state" aria-live="polite"></p></section><section><h3>Follow a journey</h3><div class="selectors"><label>Start<select id="route-a"></select></label><span>→</span><label>Destination<select id="route-b"></select></label></div><div class="actions"><button id="next">Next affected journey</button><button id="show-route">Show this journey</button></div><p class="message" id="journey-state" aria-live="polite"></p></section></div>
+<div class="journey"><div><strong>Before the bypass</strong><div class="chain" id="before-chain"></div><p id="before-share"></p></div><div><strong>With the bypass</strong><div class="chain new" id="after-chain"></div><p id="after-share"></p></div></div>
+</section>
+<section class="under"><div><h2>Try the experiment</h2><div class="walk-tabs" aria-label="Guided walkthroughs"><button data-walk="0" aria-pressed="true">The big reveal</button><button data-walk="1" aria-pressed="false">Equal-length alternatives</button><button data-walk="2" aria-pressed="false">An existing link</button></div><p id="walk-copy"></p><div class="walk-actions"><button id="walk-start">Start walkthrough</button><button id="walk-step" class="primary">Reveal the bypass</button></div></div><div><h2>A route is not a friendship.</h2><p>These stations are Wikipedia articles. A track means at least one article links to the other; we ignore direction here. The new cyan link is hypothetical.</p><p>Betweenness counts a hero’s share of shortest paths between other heroes. When two routes tie, each gets a fraction. A bypass can reduce that share without making a journey shorter.</p><p id="finding"></p></div></section>
+<details><summary>What is measured, and what is shown?</summary><p id="method"></p><p>The ripple view shows a disclosed sample of affected article pairs, with one possible shortest route per pair before and after. The brighter selected route is the journey named below the map. Metrics count <em>all</em> shortest paths, splitting credit across ties. All pairs are unordered and exclude the hero whose betweenness is being measured. Normalization is 2 / ((n − 1)(n − 2)). “Journeys shortened” counts all unordered pairs whose shortest distance falls. No characters are removed.</p><p>All 277 articles remain visible. The ripple view arranges stations schematically around the broker and bypass endpoints; it does not encode geographic or graph distance. Grey tracks are original links. Colored tracks trace the sampled shortest routes; their width represents how many displayed routes use that track. Full network uses a force layout. Positions stay fixed while you scrub. The three featured nodes are enlarged for legibility, and their ring area changes in proportion to their own before/after betweenness. Intermediate frames interpolate visually; they are not fractional graphs.</p><p>In the full network, drag between two stations to choose a link, or enable “Draw on map” and click two stations. The selectors provide the same actions with a keyboard. The moving marks illustrate routes, not measured traffic or a random sample of travelers. The drawing is inspired by comic printing and the visual language of Into the Spider-Verse.</p><p>Source: <a href="https://sunelehmann.com/socialgraphs2026-web/weeks/week3.html">Week 3: Who matters, and why</a>; course snapshot dated 26 August 2026, supplied in this repository. This is an experiment about article-link structure, not fictional power, observed traffic, or causation in social life.</p></details>
+<footer>Go Nuts · Week 3 · Throwaway prototype. Question: does watching paths reroute make the change in brokerage understandable?</footer>
+</main>
+<script>/* GRAPH_DATA */</script>
+<script>/* GRAPH_LOGIC */</script>
+<script>
+const $=id=>document.getElementById(id), N=DATA.nodes.length;
+const name=i=>DATA.nodes[i].name.replace(/ \([^)]*\)$/,'');
+const escape=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const key=(a,b)=>a<b?`${a}-${b}`:`${b}-${a}`;
+const baseAdj=Graph.adjacency(N,DATA.edges), before=Graph.analyze(baseAdj), edgeSet=new Set(DATA.edges.map(e=>key(...e)));
+let u=DATA.discovery.u,v=DATA.discovery.v,broker=DATA.discovery.broker,after,afterAdj,comparison,s,t,routeIndex=0;
+let phase=0,full=false,drawMode=false,firstStation=null,playing=false,frame=0,walk=0,dragStart=null;
+const reduced=matchMedia('(prefers-reduced-motion: reduce)');
+const options=DATA.nodes.map((n,i)=>({i,n:name(i)})).sort((a,b)=>a.n.localeCompare(b.n)).map(o=>`<option value="${o.i}">${escape(o.n)}</option>`).join('');
+for(const id of ['link-a','link-b','route-a','route-b'])$(id).innerHTML=options;
+// Deterministic force layout, computed once. Layout is an illustration, not a metric.
+function makePositions(){
+  const p=Array.from({length:N},(_,i)=>({x:430+Math.cos(i*2.39996)*Math.sqrt(i/N)*340,y:220+Math.sin(i*2.39996)*Math.sqrt(i/N)*180}));
+  for(let iter=0;iter<190;iter++){
+    const dx=new Float64Array(N),dy=new Float64Array(N);
+    for(let a=0;a<N;a++)for(let b=a+1;b<N;b++){
+      let x=p[a].x-p[b].x,y=p[a].y-p[b].y,d=x*x+y*y+25,f=220/d;
+      dx[a]+=x*f;dy[a]+=y*f;dx[b]-=x*f;dy[b]-=y*f;
+    }
+    for(const [a,b] of DATA.edges){const x=p[b].x-p[a].x,y=p[b].y-p[a].y,d=Math.hypot(x,y)||1,f=(d-35)*.018;dx[a]+=x/d*f;dy[a]+=y/d*f;dx[b]-=x/d*f;dy[b]-=y/d*f;}
+    const cooling=1-iter/240;
+    for(let i=0;i<N;i++){p[i].x+=Math.max(-8,Math.min(8,dx[i]+(430-p[i].x)*.01))*cooling;p[i].y+=Math.max(-8,Math.min(8,dy[i]+(220-p[i].y)*.018))*cooling;}
+  }
+  const xs=p.map(a=>a.x),ys=p.map(a=>a.y),xmin=Math.min(...xs),xmax=Math.max(...xs),ymin=Math.min(...ys),ymax=Math.max(...ys);
+  return p.map(a=>({x:50+(a.x-xmin)/(xmax-xmin)*760,y:40+(a.y-ymin)/(ymax-ymin)*350}));
+}
+const globalPositions=makePositions();let positions=globalPositions,visible=[],oldPath=[],newPath=[];
+function setJourney(a,b){
+  s=a;t=b;$('route-a').value=s;$('route-b').value=t;
+  oldPath=Graph.path(baseAdj,s,t);newPath=Graph.path(afterAdj,s,t);
+  visible=[...new Set([...oldPath,...newPath,u,v,broker])];
+  positions=globalPositions.map(p=>({...p}));
+  // Two transit lanes; shared stations use their original fixed position.
+  oldPath.forEach((id,i)=>positions[id]={x:100+i*660/Math.max(1,oldPath.length-1),y:155});
+  const extras=newPath.filter(id=>!oldPath.includes(id));
+  extras.forEach((id,i)=>positions[id]={x:180+(i+1)*500/(extras.length+1),y:300});
+  const leftover=visible.filter(id=>!oldPath.includes(id)&&!extras.includes(id));
+  leftover.forEach((id,i)=>positions[id]={x:150+(i+1)*540/(leftover.length+1),y:365});
+  updateJourney();render();
+}
+function stop(){playing=false;cancelAnimationFrame(frame);$('play').textContent='Play';}
+function calculate(a,b,autoPlay=false){
+  stop();drawMode=false;firstStation=null;$('draw').textContent='Draw on map';
+  if(a===b){$('link-state').textContent='Choose two different heroes. Self-links are not part of this experiment.';return false;}
+  if(edgeSet.has(key(a,b))){$('link-state').textContent='Those articles already share a link. Choose a missing connection; the active experiment is unchanged.';return false;}
+  u=a;v=b;$('link-a').value=u;$('link-b').value=v;
+  afterAdj=baseAdj.map(a=>a.slice());afterAdj[u].push(v);afterAdj[v].push(u);after=Graph.analyze(afterAdj);
+  broker=0;for(let i=1;i<N;i++)if(before.b[i]-after.b[i]>before.b[broker]-after.b[broker])broker=i;
+  comparison=Graph.compare(before,after,broker);routeIndex=0;
+  const route=comparison.journeys[0]||{s:u,t:v};phase=0;$('scrub').value=0;
+  $('link-state').textContent=`Active hypothetical link: ${name(u)} ↔ ${name(v)}. The broker shown loses the most betweenness for this link.`;
+  buildScene();updateMetrics();setJourney(route.s,route.t);if(autoPlay)play();return true;
+}
+function updateMetrics(){
+  const loss=before.b[broker]-after.b[broker],pct=before.b[broker]>0?100*loss/before.b[broker]:0;
+  $('broker-name').textContent=name(broker);$('loss').textContent=pct.toFixed(1)+'%';
+  $('score-line').innerHTML=`${(before.b[broker]*100).toFixed(2)}% <span aria-hidden="true">→</span> <span class="after">${(after.b[broker]*100).toFixed(2)}%</span>`;
+  $('shortened').textContent=comparison.shortened.toLocaleString();$('pair-total').textContent=`of ${(N*(N-1)/2).toLocaleString()} possible unordered article pairs`;
+  $('winner').textContent=name(comparison.winner);$('gain').textContent=`+${((after.b[comparison.winner]-before.b[comparison.winner])*100).toFixed(2)} percentage points of normalized betweenness`;
+}
+function updateJourney(){
+  const chain=p=>p.map(i=>`<b>${escape(name(i))}</b>`).join(' → ');
+  $('before-chain').innerHTML=chain(oldPath);$('after-chain').innerHTML=chain(newPath);
+  for(const [id,r] of [['before-share',before],['after-share',after]]){
+    const share=(100*Graph.share(r,s,t,broker)).toFixed(1),cnt=r.counts[s][t];
+    $(id).textContent=`${r.distances[s][t]} links · ${cnt} shortest ${cnt===1?'route':'routes'} · ${name(broker)} carries ${share}% of shortest routes for this pair${s===broker||t===broker?' (endpoints receive no brokerage credit)':''}.`;
+  }
+  const saved=before.distances[s][t]-after.distances[s][t];
+  $('journey-state').textContent=s===t?'Choose different stations for a journey.':saved>0?`This journey becomes ${saved} ${saved===1?'link':'links'} shorter.`:'The distance stays the same. Compare the number of tied routes and the broker’s share.';
+}
+function line(a,b,p){return `M${p[a].x},${p[a].y} L${p[b].x},${p[b].y}`;}
+function routeD(path,p){return path.map((id,i)=>`${i?'L':'M'}${p[id].x},${p[id].y}`).join(' ');}
+/* SCENE_RENDERER */
+
+function play(){
+  if(playing){stop();render();return;}
+  if(reduced.matches){phase=phase===100?0:100;$('scrub').value=phase;render();return;}
+  playing=true;$('play').textContent='Pause';if(phase===100)phase=0;
+  const start=performance.now()-phase*48;
+  function step(now){phase=Math.min(100,Math.round((now-start)/48));$('scrub').value=phase;render();if(phase<100)frame=requestAnimationFrame(step);else{stop();render();}}
+  frame=requestAnimationFrame(step);
+}
+function best(auto=true){calculate(DATA.discovery.u,DATA.discovery.v,auto);}
+$('play').onclick=play;$('scrub').oninput=e=>{stop();phase=+e.target.value;render();};$('reset').onclick=()=>{stop();phase=0;$('scrub').value=0;render();};
+$('reveal').onclick=()=>best(true);$('best').onclick=()=>best(true);$('apply').onclick=()=>calculate(+$('link-a').value,+$('link-b').value,true);
+$('show-route').onclick=()=>{stop();setJourney(+$('route-a').value,+$('route-b').value);};
+$('next').onclick=()=>{if(!comparison.journeys.length)return;stop();routeIndex=(routeIndex+1)%comparison.journeys.length;const r=comparison.journeys[routeIndex];setJourney(r.s,r.t);};
+function view(value){full=value;$('full-tab').setAttribute('aria-pressed',full);$('impact-tab').setAttribute('aria-pressed',!full);render();}
+$('impact-tab').onclick=()=>view(false);$('full-tab').onclick=()=>view(true);
+$('draw').onclick=()=>{drawMode=!drawMode;firstStation=null;$('draw').textContent=drawMode?'Cancel drawing':'Draw on map';if(drawMode){view(true);$('link-state').textContent='Click two stations, or drag from one station to another. Selectors below work with a keyboard.';}};
+function pick(id){if(!drawMode){$('link-a').value=id;$('link-state').textContent=`${name(id)} selected as first endpoint. Choose a second in “Link to” and add the link.`;return;}if(firstStation===null){firstStation=id;$('link-a').value=id;$('link-state').textContent=`Start: ${name(id)}. Now choose the other station.`;}else{calculate(firstStation,id,true);}}
+$('map').addEventListener('pointerdown',e=>{const g=e.target.closest('[data-id]');if(g)dragStart=+g.dataset.id;});
+$('map').addEventListener('pointerup',e=>{const g=e.target.closest('[data-id]');if(g&&dragStart!==null&&+g.dataset.id!==dragStart){calculate(dragStart,+g.dataset.id,true);dragStart=null;e.preventDefault();}else if(g){pick(+g.dataset.id);dragStart=null;}});
+$('map').addEventListener('pointerleave',()=>{dragStart=null;});
+$('map').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){const g=e.target.closest('[data-id]');if(g){e.preventDefault();pick(+g.dataset.id);}}});
+const walkTexts=[
+  'Start with the strongest bypass. Follow the amber route through the broker, then reveal the new link and watch the cyan route avoid it.',
+  'A journey can keep exactly the same length while the broker loses a share of its shortest routes. Look at the route counts under the map.',
+  'An existing link cannot be added twice. Try it and check that the active experiment and its measurements stay unchanged.'
+];
+function startWalk(){best(false);view(false);$('walk-copy').textContent=walkTexts[walk];$('walk-step').disabled=false;
+  if(walk===1){const r=comparison.journeys.find(r=>r.saved===0);if(r)setJourney(r.s,r.t);else{$('walk-copy').textContent='This bypass has no equal-length example with reduced broker share. Try another link in free play.';$('walk-step').disabled=true;}}
+  if(walk===2){$('link-a').value=DATA.edges[0][0];$('link-b').value=DATA.edges[0][1];}
+  $('walk-step').textContent=walk===2?'Try adding the existing link':'Reveal the bypass';
+}
+document.querySelectorAll('[data-walk]').forEach(b=>b.onclick=()=>{walk=+b.dataset.walk;document.querySelectorAll('[data-walk]').forEach(x=>x.setAttribute('aria-pressed',x===b));startWalk();});
+$('walk-start').onclick=startWalk;$('walk-step').onclick=()=>walk===2?calculate(+$('link-a').value,+$('link-b').value):play();
+$('walk-copy').textContent=walkTexts[0];
+const found=DATA.discovery;
+$('finding').textContent=`The search checked all ${found.candidates.toLocaleString()} missing links. The largest absolute drop: ${name(found.broker)}, when ${name(found.u)} and ${name(found.v)} are connected. “Strongest” means absolute betweenness loss, not percentage loss.`;
+$('method').textContent=`The frozen source has ${DATA.sourceNodes} articles and ${DATA.sourceEdges} directed links. We collapse reciprocal links, ignore direction, and keep the largest component: ${N} articles and ${DATA.edges.length} links. The exhaustive search adds each of ${found.candidates.toLocaleString()} missing edges separately, recomputes exact normalized betweenness using Brandes’ algorithm, and finds the largest absolute decrease across every hero and candidate edge. Free-play results are recalculated in your browser.`;
+calculate(u,v);
+window.addEventListener('resize',()=>{buildScene();render();});
+</script>
+</html>
