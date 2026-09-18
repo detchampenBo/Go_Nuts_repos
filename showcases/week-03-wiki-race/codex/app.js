@@ -30,6 +30,7 @@ function positionMission(){racePositions=positions.map(p=>({...p}));racePosition
 function bezier(a,b,p){const x=p[a],y=p[b],mx=(x.x+y.x)/2;return`M${x.x},${x.y} Q${mx},${(x.y+y.y)/2-25} ${y.x},${y.y}`;}
 function strokePath(route,p){return route.slice(1).map((v,i)=>`<path d="${bezier(route[i],v,p)}"/>`).join('');}
 function draw(){
+  if(solution&&['replay','done'].includes(state)){drawBFS();return;}
   const replaying=frames.length>0&&['replay','done','searching','search-error'].includes(state),dist=replaying?frames[Math.min(ring,frames.length-1)].distance:null;
   let p=racePositions;
   if(replaying){
@@ -65,12 +66,12 @@ function draw(){
   }
   $('network').innerHTML=svg;
 }
-function stopAuto(){clearInterval(autoTimer);autoTimer=0;$('auto').textContent='Play BFS';}
-function clearRace(){epoch++;controller.abort();controller=new AbortController();stopAuto();api=null;path=[];cardIds=[];currentLinks=[];known=new Map();frames=[];solution=null;ring=0;won=false;cardsVersion++;viewPending.clear();for(const id of ['replay','results','link-section','retry','practice','article-link'])$(id).classList.add('hidden');$('links').innerHTML='';$('filter').value='';}
-function idle(){clearRace();state='idle';mission=chosen();mode=$('mode').value;current=mission.start;positionMission();$('start-name').textContent=name(mission.start);$('target-name').textContent=name(mission.target);$('current-name').textContent=name(mission.start);$('summary').textContent='Reach '+name(mission.target)+' using only outgoing links between Marvel hero articles. Your goal is fewer clicks, not a faster clock.';$('article-art').innerHTML=emblem(mission.start);$('status').textContent='';$('clicks').textContent='0';$('trail').innerHTML='<li>No clicks yet.</li>';$('graph-title').textContent='The universe is waiting.';$('graph-kicker').textContent='Your route. Your instincts.';$('mode-badge').textContent='Choose a mission to begin';$('start').disabled=false;$('restart').disabled=true;$('give-up').disabled=true;$('splash-caption').classList.remove('hidden');draw();}
+function stopAuto(){clearInterval(autoTimer);autoTimer=0;$('auto').textContent='Auto-play';}
+function clearRace(){epoch++;controller.abort();controller=new AbortController();stopAuto();api=null;path=[];cardIds=[];currentLinks=[];known=new Map();frames=[];solution=null;ring=0;won=false;cardsVersion++;viewPending.clear();for(const id of ['replay','results','link-section','retry','practice','article-link','show-results'])$(id).classList.add('hidden');$('links').innerHTML='';$('filter').value='';$('step').classList.remove('hidden');}
+function idle(){clearRace();setStage('setup');state='idle';mission=chosen();mode=$('mode').value;current=mission.start;positionMission();$('destination-reminder').textContent=name(mission.target);$('start-name').textContent=name(mission.start);$('target-name').textContent=name(mission.target);$('destination-reminder').textContent=name(mission.target);$('current-name').textContent=name(mission.start);$('summary').textContent='Reach '+name(mission.target)+' using only outgoing links between Marvel hero articles. Your goal is fewer clicks, not a faster clock.';$('article-art').innerHTML=emblem(mission.start);$('status').textContent='';$('clicks').textContent='0';$('trail').innerHTML='<li>No clicks yet.</li>';$('graph-title').textContent='The universe is waiting.';$('graph-kicker').textContent='Your route. Your instincts.';$('mode-badge').textContent='Choose a mission to begin';$('start').disabled=false;$('restart').disabled=true;$('give-up').disabled=true;$('splash-caption').classList.remove('hidden');draw();}
 async function begin(){
-  clearRace();mission=chosen();mode=$('mode').value;current=mission.start;positionMission();state='loading';const e=epoch;
-  $('start-name').textContent=name(mission.start);$('target-name').textContent=name(mission.target);$('current-name').textContent=name(current);$('article-art').innerHTML=emblem(current);$('start').disabled=true;$('restart').disabled=false;$('give-up').disabled=true;$('splash-caption').classList.add('hidden');$('clicks').textContent='0';$('trail').innerHTML='<li>Getting ready…</li>';
+  clearRace();setStage('race');mission=chosen();mode=$('mode').value;current=mission.start;positionMission();state='loading';const e=epoch;
+  $('start-name').textContent=name(mission.start);$('target-name').textContent=name(mission.target);$('destination-reminder').textContent=name(mission.target);$('current-name').textContent=name(current);$('article-art').innerHTML=emblem(current);$('start').disabled=true;$('restart').disabled=false;$('give-up').disabled=true;$('splash-caption').classList.add('hidden');$('clicks').textContent='0';$('trail').innerHTML='<li>Getting ready…</li>';
   $('mode-badge').textContent=mode==='live'?'Live Wikipedia · shared race cache':'Frozen practice · 26 Aug 2026';
   try{
     if(mode==='live'){api=WikiAPI.create(nodes,controller.signal);$('status').textContent='Opening Wikipedia and resolving the hero roster…';await api.init((n,total)=>{if(still(e))$('status').textContent=`Preparing live Wikipedia: ${n} / ${total} heroes resolved.`;});}
@@ -98,24 +99,27 @@ function renderLinks(){
 }
 async function move(id){if(state!=='playing'||!currentLinks.includes(id))return;path.push(id);current=id;sessionVisits.set(id,(sessionVisits.get(id)||0)+1);drawTrail();if(id===mission.target){won=true;$('current-name').textContent=name(id);$('article-art').innerHTML=emblem(id,'#ffe579');$('summary').textContent='Destination reached. Your route is locked in. Now BFS checks the same directed links.';$('link-section').classList.add('hidden');$('article-link').classList.add('hidden');await solve();}else await showPage();}
 async function solve(){
-  const e=epoch;state='searching';frames=[];solution=null;ring=0;stopAuto();$('replay').classList.remove('hidden');$('results').classList.add('hidden');$('link-section').classList.add('hidden');$('give-up').disabled=true;$('step').disabled=true;$('auto').disabled=true;$('replay-reset').disabled=true;$('retry-bfs').classList.add('hidden');$('status').textContent=won?'You made it. Let’s see what BFS finds.':'Your attempt is saved. BFS is taking over.';$('graph-kicker').textContent='Same links. A different strategy.';$('graph-title').textContent='Searching one ring at a time…';
+  const e=epoch;setStage('bfs');state='searching';frames=[];solution=null;ring=0;stopAuto();$('replay').classList.remove('hidden');$('results').classList.add('hidden');$('link-section').classList.add('hidden');$('give-up').disabled=true;$('step').disabled=true;$('auto').disabled=true;$('replay-reset').disabled=true;$('retry-bfs').classList.add('hidden');$('status').textContent=won?'You made it. Let’s see what BFS finds.':'Your attempt is saved. BFS is taking over.';$('graph-kicker').textContent='Same links. A different strategy.';$('graph-title').textContent='Searching one ring at a time…';
   try{
     solution=await RaceGraph.search(N,mission.start,mission.target,getLinks,async frame=>{
       if(!still(e))return;frames.push(frame);$('bfs-status').textContent=`${mode==='live'?'Reading live pages. ':''}Discovered ${frame.distance.filter(x=>x>=0).length} heroes through distance ${frame.depth}.`;
     },controller.signal);
-    if(!still(e))return;state='replay';ring=0;$('step').disabled=false;$('auto').disabled=false;$('replay-reset').disabled=false;renderReplay();if(reduceMotion.matches||!motion){ring=frames.length-1;renderReplay();finish();}else autoplay();
+    if(!still(e))return;state='replay';ring=0;$('step').disabled=false;$('auto').disabled=false;$('replay-reset').disabled=false;renderReplay();$('replay').scrollIntoView({block:'start',behavior:reduceMotion.matches?'auto':'smooth'});
   }catch(err){if(!still(e))return;state='search-error';$('bfs-status').textContent='The live search is incomplete because a page request failed. This is not proof that the target is unreachable. Retry reuses pages already fetched.';$('retry-bfs').classList.remove('hidden');$('status').textContent='No shortest-path score until the search completes.';draw();}
 }
 function renderReplay(){
-  $('ring-list').innerHTML=frames.map((f,i)=>`<button data-ring="${i}" class="${i===ring?'active':''}" aria-pressed="${i===ring}">Ring ${i} · ${f.nodes.length} ${f.nodes.length===1?'hero':'heroes'}</button>`).join('');
+  $('step').classList.remove('hidden');$('show-results').classList.add('hidden');$('step').textContent=ring===0?'Explore the first ring':`Explore ring ${ring+1}`;
+  $('ring-list').innerHTML=frames.map((f,i)=>`<button data-ring="${i}" class="${i===ring?'active':''} ${i>ring?'future':''}" aria-pressed="${i===ring}" ${i>ring?'disabled':''}><strong>${i===0?'Start':i+' '+(i===1?'click':'clicks')}</strong>${i<=ring?f.nodes.length+' discovered':'Not explored yet'}</button>`).join('');
   const frame=frames[ring],hit=frame.distance[mission.target]>=0;
   $('bfs-status').textContent=hit?`Target found at distance ${frame.distance[mission.target]}. Every earlier ring was searched first.`:`Ring ${ring}: ${frame.nodes.length} ${frame.nodes.length===1?'article':'articles'} discovered ${ring} ${ring===1?'click':'clicks'} from ${name(mission.start)}.`;
+  $('replay-title').textContent=hit?`${name(mission.target)} found in ${frame.distance[mission.target]} clicks.`:ring===0?`Start at ${name(mission.start)}.`:`Every hero here is ${ring} clicks away.`;
+  $('bfs-status').textContent=hit?'BFS checked every shorter distance first. That is why this route is guaranteed to use the fewest clicks.':ring===0?'Only the starting hero has been discovered. Next, follow all of its outgoing links together.':`BFS found ${frame.nodes.length} new heroes at this distance. Next, follow their outgoing links and ignore heroes already seen.`;
   $('graph-title').textContent=hit?'Shortest route found.':`BFS ring ${ring}`;$('graph-note').textContent='Rings encode shortest directed distance. The final ring stops once the target is found; some peers may remain undiscovered.';draw();
 }
 function nextRing(){if(!solution)return;if(ring<frames.length-1){ring++;renderReplay();}if(ring===frames.length-1){stopAuto();finish();}}
-function autoplay(){if(autoTimer){stopAuto();return;}if(state==='done'){state='replay';ring=0;renderReplay();}if(reduceMotion.matches||!motion){ring=frames.length-1;renderReplay();finish();return;}$('auto').textContent='Pause BFS';autoTimer=setInterval(nextRing,1000);}
+function autoplay(){if(autoTimer){stopAuto();return;}if(state==='done'){state='replay';ring=0;renderReplay();}if(reduceMotion.matches||!motion){ring=frames.length-1;renderReplay();finish();return;}$('auto').textContent='Pause BFS';autoTimer=setInterval(nextRing,1800);}
 function finish(){
-  state='done';stopAuto();$('results').classList.remove('hidden');const shortest=solution.path.length?solution.path.length-1:null,clicks=path.length-1;
+  state='done';stopAuto();$('show-results').classList.remove('hidden');$('step').classList.add('hidden');$('results').classList.remove('hidden');const shortest=solution.path.length?solution.path.length-1:null,clicks=path.length-1;
   $('result-title').textContent=shortest===null?'A one-way dead end.':won?(clicks===shortest?'You matched the machine.':'You got there. It found a shortcut.'):'The algorithm found a way.';
   $('result-copy').textContent=shortest===null?'BFS exhausted every reachable article in this race graph. The target cannot be reached by following its arrows.':won?`You took ${clicks} clicks. The shortest route takes ${shortest}.`:`Your unfinished attempt took ${clicks} clicks. BFS found a route of ${shortest}.`;
   $('score-stamp').innerHTML=shortest===null?'NO<br>ROUTE':won&&clicks===shortest?'PERFECT<br>ROUTE':won?`+${clicks-shortest}<br>CLICKS`:`${shortest}<br>CLICKS`;
@@ -162,9 +166,11 @@ $('retry').onclick=()=>state==='start-error'?begin():showPage();$('practice').on
 $('give-up').onclick=()=>{won=false;solve();};$('retry-bfs').onclick=solve;$('step').onclick=nextRing;$('auto').onclick=autoplay;
 $('replay-reset').onclick=()=>{stopAuto();state='replay';ring=0;renderReplay();};
 $('ring-list').onclick=e=>{const b=e.target.closest('[data-ring]');if(!b)return;stopAuto();ring=+b.dataset.ring;state='replay';renderReplay();if(ring===frames.length-1)finish();};
-$('reverse').onclick=reverseCheck;$('cards').onchange=e=>{if(e.target.matches('[data-card]')){cardIds[+e.target.dataset.card]=+e.target.value;renderCards();}};
+$('reverse').onclick=reverseCheck;$('change-mission').onclick=idle;$('show-results').onclick=()=>{setStage('results');$('results').scrollIntoView({block:'start',behavior:reduceMotion.matches?'auto':'smooth'});};$('back-bfs').onclick=()=>{setStage('bfs');ring=0;state='replay';renderReplay();};$('cards').onchange=e=>{if(e.target.matches('[data-card]')){cardIds[+e.target.dataset.card]=+e.target.value;renderCards();}};
 $('cards').onclick=e=>{const b=e.target.closest('[data-stat]');if(b)battle(b.dataset.stat);};
 $('soundless-motion').onclick=()=>{motion=!motion;$('soundless-motion').setAttribute('aria-pressed',!motion);$('soundless-motion').textContent=motion?'Pause motion':'Resume motion';if(!motion)stopAuto();draw();};
 reduceMotion.addEventListener('change',()=>{if(reduceMotion.matches)stopAuto();draw();});
 let lastTick=0;function animate(now){if(now-lastTick>100){lastTick=now;if(motion&&!reduceMotion.matches&&path.length>1){tick++;draw();}}requestAnimationFrame(animate);}requestAnimationFrame(animate);
 idle();
+
+function setStage(stage){document.body.dataset.stage=stage;const active=stage==='bfs'?'stage-bfs':stage==='results'?'stage-cards':'stage-race';for(const id of ['stage-race','stage-bfs','stage-cards']){if(id===active)$(id).setAttribute('aria-current','step');else $(id).removeAttribute('aria-current');}$('change-mission').classList.toggle('hidden',stage==='setup');}
