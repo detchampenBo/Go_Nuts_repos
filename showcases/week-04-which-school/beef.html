@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Three philosophical disputes. Fifty community-detection runs. Discover why being connected is not the same as agreeing.">
+  <title>Philosophical Beef · Go Nuts</title>
+  <link rel="icon" href="beef-icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="beef.css"><script type="module" src="beef.mjs"></script>
+</head>
+<body>
+  <a class="skip" href="#case-heading">Skip to the dispute</a>
+  <header class="site-head"><a class="brand" href="../../"><b>g.</b> Go Nuts</a><span>Week 4 / Communities</span><a href="#method">The evidence ↗</a></header>
+  <main>
+    <section class="masthead" aria-labelledby="page-title">
+      <div><p class="overline">Great minds. Terrible chemistry.</p><h1 id="page-title">Philosophical <span>Beef.</span></h1></div>
+      <div class="premise"><p>They disagreed.<br>Does the network?</p><span>Three documented disputes. One Wikipedia network. Find out whether opponents end up in the same community.</span><a href="#case-heading">Pick a dispute ↓</a></div>
+    </section>
+    <nav class="case-nav" aria-label="Choose a philosophical dispute">
+      <button data-case="hegel" aria-pressed="true"><span>Hegel / Schopenhauer</span><small>A system, or nonsense?</small></button>
+      <button data-case="hobbes" aria-pressed="false"><span>Hobbes / Rousseau</span><small>Are we born at war?</small></button>
+      <button data-case="plato" aria-pressed="false"><span>Plato / Aristotle</span><small>Do we need another reality?</small></button>
+    </nav>
+    <section class="fight" aria-labelledby="case-heading">
+      <div class="fight-head"><span id="case-kind">A documented criticism</span><h2 id="case-heading">A system, or nonsense?</h2><span id="case-count">Dispute 1 of 3</span></div>
+      <div class="arena" id="arena"></div>
+      <div class="context-line"><p id="dispute-context"></p><a href="#sources">Read the original texts ↗</a></div>
+      <section class="prediction" aria-labelledby="prediction-title">
+        <div><p class="overline">Your prediction</p><h3 id="prediction-title">Opposing ideas. Same community?</h3><p>Louvain sees Wikipedia links, not what the philosophers believe.</p></div>
+        <div class="prediction-actions"><button data-guess="together">Usually together <span>↔</span></button><button data-guess="apart">Usually apart <span>↗</span></button><button class="text-button" id="skip-guess">Just show me the evidence</button></div>
+      </section>
+    </section>
+    <section class="evidence" id="evidence" aria-labelledby="result-title" hidden>
+      <div class="result-top"><div><p class="overline" id="guess-feedback">What the network says</p><h2 id="result-title" tabindex="-1"></h2><p id="result-copy"></p></div><div class="result-number"><span id="together-count"></span><small>of 50 runs<br>in the same community</small></div></div>
+      <div class="runs-heading"><h3>One pair. Fifty second opinions.</h3><p><span class="joined-key">●—●</span> Together <span class="apart-key">● / ●</span> Apart</p></div>
+      <div id="runs" class="runs" role="group" aria-label="Inspect each of the 50 Louvain runs"></div>
+      <div class="run-caption"><span>Each tile is one seed. Click to inspect.</span><output id="run-detail" aria-live="polite"></output></div>
+    </section>
+    <section class="connections" id="connections" aria-labelledby="network-title" hidden>
+      <div class="section-intro"><div><p class="overline">Look past the argument</p><h2 id="network-title">A shared intellectual neighbourhood.</h2></div><p id="network-intro"></p></div>
+      <div class="network-controls"><div class="view-buttons" role="group" aria-label="Highlight connections"><button data-view="all" aria-pressed="true">All shown links</button><button data-view="shared" aria-pressed="false">Shared neighbours only</button></div><p>Circle size = full-network degree<br>Colour = reference community</p></div>
+      <div class="graph-wrap"><svg id="network" viewBox="0 0 1120 560" role="group" aria-labelledby="network-title network-note"></svg></div>
+      <div class="graph-legend" id="graph-legend"></div>
+      <div class="graph-footer"><p id="network-note"></p><div id="node-detail" aria-live="polite">Select a philosopher in the drawing to inspect their connections.</div></div>
+      <details class="neighbour-list"><summary>Read the complete neighbour list</summary><div id="neighbour-list"></div></details>
+    </section>
+    <section class="takeaway"><p class="overline">The Week 4 idea</p><h2>A community is a pattern of connections.<br>Agreement is a different question.</h2><p>The disputes come from philosophical texts. The groups come from the network. Putting the two together lets you test an interpretation, rather than treating a group’s name as a discovery.</p></section>
+    <div class="notes-grid">
+      <section id="sources"><h2>Check the argument.</h2><p>Positions above are short paraphrases, not quotations. These sources document the criticism and the ideas involved.</p><div id="source-list"></div></section>
+      <section id="method"><h2>Check the network.</h2><p>1,374 philosophers; 9,139 undirected links. An edge means one Wikipedia article links to the other. It does not identify friendship, agreement, or historical influence.</p><p id="null-note"></p><details><summary>How the results and drawing were made</summary><p>The same unweighted Louvain implementation runs on the full network with seeds 1–50. Pair membership is checked in the original partitions, before any display alignment or merging. These are repeated algorithm results, not probabilities that a philosophical claim is true.</p><p>The drawing is a two-person ego view, not a backbone: at most 12 shared neighbours and 6 exclusive neighbours per side, ranked by full-network degree. Only links incident to the two featured philosophers are drawn. All counts and the complete neighbour list use the full graph.</p><p>Positions are arranged by connection to the pair, not by philosophical distance. Node radius is 2 + 0.8√degree. Colour uses the reference partition (the run with highest mean NMI to the other 49); tiny reference groups are combined in grey. The drawing stays fixed when inspecting runs.</p></details><a href="https://sunelehmann.com/socialgraphs2026-web/weeks/week4.html#essentials" target="_blank" rel="noopener">Week 4 Essentials ↗</a></section>
+    </div>
+    <footer><span>Philosophical Beef / Go Nuts</span><a href="index.html">Explore the original “Which School?”</a><details><summary>Portrait credits</summary><p>Public-domain works, via Wikimedia Commons; cropped and colour-treated for this page.</p><p><a href="https://commons.wikimedia.org/wiki/File:Jakob_Schlesinger_-_Hegel_1831.jpg">Hegel: Jakob Schlesinger</a> · <a href="https://commons.wikimedia.org/wiki/File:Arthur_Schopenhauer_by_J_Sch%C3%A4fer,_1859b.jpg">Schopenhauer: Johann Schäfer</a> · <a href="https://commons.wikimedia.org/wiki/File:Thomas_Hobbes_by_John_Michael_Wright_(colour)_(3x4_cropped).jpg">Hobbes: after John Michael Wright</a> · <a href="https://commons.wikimedia.org/wiki/File:Maurice_Quentin_de_La_Tour_-_Portrait_of_Jean-Jacques_Rousseau_-_adjusted.jpg">Rousseau: Maurice Quentin de La Tour</a> · <a href="https://commons.wikimedia.org/wiki/File:Plato_Silanion_Musei_Capitolini_MC1377.png">Plato: Marie-Lan Nguyen</a> · <a href="https://commons.wikimedia.org/wiki/File:Aristotle_Altemps_Inv8575.jpg">Aristotle: Jastrow</a>.</p></details></footer>
+  </main>
+  <p id="load-error" role="alert" hidden></p><noscript><p>Enable JavaScript to explore the disputes and their network evidence.</p></noscript>
+</body>
+</html>

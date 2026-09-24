@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Louvain sorted 1,374 philosophers into schools of thought. We asked it 50 times. Name the schools, reroll the seed, and put philosophers on trial."
+    />
+    <title>Which School? — Week 04</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script type="module" src="app.mjs"></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="../../" aria-label="Go Nuts course library">
+        <span class="brand-mark" aria-hidden="true">g.</span> GO NUTS
+        <span class="header-divider">/</span> <span class="week-label">WEEK 04 · COMMUNITIES</span>
+      </a>
+      <nav aria-label="Page sections">
+        <a class="text-link" href="#lessons">What to take away</a>
+        <a class="text-link" href="#table">Table view</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="title-row" aria-labelledby="page-title">
+        <p class="eyebrow">1,374 philosophers · 9,139 Wikipedia links · 50 Louvain runs</p>
+        <h1 id="page-title">Which school<span>?</span></h1>
+        <p class="subtitle">
+          A community algorithm groups the philosophy network into schools of thought. Run it again and the
+          borders shift: some people stay put; others, like Aristotle, sit between schools.
+        </p>
+        <ol class="steps" aria-label="How to play">
+          <li><b>1</b><span><strong>Name the schools.</strong> Each lane is a community. Type a name for it on the left.</span></li>
+          <li><b>2</b><span><strong>Reroll the seed.</strong> Watch who changes school, and see whether your names still hold up.</span></li>
+          <li><b>3</b><span><strong>Put someone on trial.</strong> Click a philosopher to see how the 50 runs voted.</span></li>
+        </ol>
+      </section>
+
+      <section class="controls" aria-label="Louvain run controls">
+        <div class="run-picker" role="group" aria-label="Choose a run">
+          <button class="chip" id="consensus" aria-pressed="true">Consensus</button>
+          <button class="icon-btn" id="prev" aria-label="Previous run">‹</button>
+          <output id="run-label" class="run-label" aria-live="polite">Majority of 50 runs</output>
+          <button class="icon-btn" id="next" aria-label="Next run">›</button>
+          <button class="primary" id="reroll"><span aria-hidden="true">⚄</span> Reroll seed</button>
+          <button class="chip" id="play" aria-pressed="false">▶ Play all 50</button>
+        </div>
+        <div class="readouts">
+          <div class="readout">
+            <span class="readout-k" id="k-val">—</span>
+            <span class="readout-l">communities found</span>
+          </div>
+          <div class="readout">
+            <span class="readout-k" id="moved-val">—</span>
+            <span class="readout-l">philosophers not in their usual school</span>
+          </div>
+          <div class="readout">
+            <span class="readout-k" id="nmi-val">—</span>
+            <span class="readout-l">NMI vs. the reference map</span>
+          </div>
+        </div>
+      </section>
+
+      <figure class="q-gauge" aria-labelledby="q-caption">
+        <svg id="q-svg" role="img" aria-labelledby="q-caption"></svg>
+        <figcaption id="q-caption"></figcaption>
+      </figure>
+
+      <div class="layout">
+        <section class="stage-wrap" aria-label="Philosophers by school and birth year">
+          <div class="chart-heading">
+            <div>
+              <p class="eyebrow">The community map</p>
+              <h2>Read the schools at a glance</h2>
+            </div>
+            <ul class="chart-key" aria-label="How to read the community map">
+              <li><i class="key-dot" aria-hidden="true"></i><span><strong>Dot</strong> philosopher</span></li>
+              <li><i class="key-line" aria-hidden="true"></i><span><strong>Across</strong> birth year</span></li>
+              <li><i class="key-ring" aria-hidden="true"></i><span><strong>Size</strong> links</span></li>
+            </ul>
+          </div>
+          <div class="stage" id="stage">
+            <div class="gutter" id="gutter"></div>
+            <canvas id="canvas" aria-hidden="true"></canvas>
+            <div class="tooltip" id="tooltip" role="status" hidden></div>
+          </div>
+          <p class="stage-note">
+            A lane is one detected school. In the consensus view, dots near the centre stay in that school in
+            every run; dots pushed toward an edge often move to the neighbouring school. Rename a lane by
+            typing directly into its label.
+          </p>
+        </section>
+
+        <aside class="tribunal" id="tribunal" aria-live="polite" aria-label="Selected philosopher"></aside>
+      </div>
+
+      <section class="find" aria-label="Find a philosopher">
+        <label for="search">Put a philosopher on trial</label>
+        <input id="search" list="names" placeholder="Try Spinoza, Galileo, Confucius…" autocomplete="off" />
+        <datalist id="names"></datalist>
+        <div class="chip-rows">
+          <div><p class="eyebrow">Most contested (degree ≥ 25)</p><div class="chips" id="contested"></div></div>
+          <div><p class="eyebrow">Never wavered (degree ≥ 60)</p><div class="chips" id="loyal"></div></div>
+        </div>
+      </section>
+
+      <section class="lessons" id="lessons" aria-labelledby="lessons-title">
+        <p class="eyebrow">Week 4 essentials, with numbers from this network</p>
+        <h2 id="lessons-title">What the rerolls teach</h2>
+        <div class="lesson-grid" id="lesson-grid"></div>
+      </section>
+
+      <section class="table-view" id="table" aria-labelledby="table-title">
+        <details>
+          <summary><h2 id="table-title">Table view: every school</h2></summary>
+          <div class="table-scroll"><table id="school-table"></table></div>
+        </details>
+      </section>
+
+      <noscript><p>This explorer needs JavaScript to draw the schools.</p></noscript>
+    </main>
+
+    <footer class="site-footer">
+      Data: the course's frozen snapshot of Wikipedia philosophers born before 1900 (links in either direction count
+      as one undirected link; giant component only). Birth years come from Wikidata. Louvain is unweighted, implemented from
+      scratch in <code>prepare_data.py</code>, with seeds 1–50. The reference map is the run with the highest mean NMI to the other 49.
+    </footer>
+  </body>
+</html>

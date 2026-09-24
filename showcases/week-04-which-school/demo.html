@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Which school? — interactive demo</title>
+  <link rel="stylesheet" href="demo.css"><script type="module" src="demo.mjs"></script>
+</head>
+<body>
+  <header><a href="../../">g. / Go Nuts</a><span>Week 4 · Community detection</span><a href="index.html">Demo · Back to original</a></header>
+  <main>
+    <section class="intro">
+      <div><p class="kicker">Same network. Different answers.</p><h1>Even Aristotle<br>doesn’t fit one school.</h1><p>Louvain groups philosophers by their Wikipedia links. Change the random seed and the boundaries shift. Here’s what happened across 50 runs.</p></div>
+      <div class="opening"><p>Aristotle’s assignments</p><div id="split"></div><small>Groups are labelled by a prominent member, not by a verified philosophical tradition.</small></div>
+    </section>
+    <section class="map-section" aria-label="Explore community assignments">
+      <div class="toolbar"><div><button id="again" class="primary">Run it again <span aria-hidden="true">↻</span></button><button id="reset">Reset to run 1</button></div><output id="status" aria-live="polite"></output></div>
+      <div class="map-key"><span><b>Each dot</b> is a philosopher</span><span><b>Larger dots</b> have more links</span><span><b>Trails</b> show moves from the previous run</span><span>Birth year → <em>uneven time scale</em></span></div>
+      <div class="map-scroll"><svg id="map" viewBox="0 0 1200 590" role="img" aria-label="Philosophers grouped into community lanes by birth year; choose a philosopher using the search below"></svg></div>
+      <div class="selection"><div><label for="person">Follow a philosopher</label><input id="person" list="people" value="Aristotle" autocomplete="off"><datalist id="people"></datalist><small id="search-message"></small></div><div id="detail" aria-live="polite"></div></div>
+      <p class="footnote">Colour follows each philosopher’s most frequent group; the lane shows their group in this run. Outlined dots changed lanes. Small communities share the grey lane. Unknown birth years use an era midpoint.</p>
+    </section>
+    <details id="method"><summary>Why the results differ</summary><div class="method-body"><p>Louvain searches for groups with more internal links than expected under a degree-based null model. Its random visit order can lead to different partitions with similar modularity. Switching groups is evidence of instability across runs, not proof that a philosopher belongs to overlapping schools.</p><p id="metrics"></p><p>This demo replays 50 precomputed seeds in order. Labels are aligned to a reference partition so you can follow groups between runs. The graph has 1,374 philosophers and 9,139 undirected links; Louvain treats each link equally.</p></div></details>
+  </main>
+</body>
+</html>
