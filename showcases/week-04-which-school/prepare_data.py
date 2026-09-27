@@ -78,14 +78,17 @@ def load():
 
 # ---------------------------------------------------------------- Louvain
 
-def louvain(adj, rng):
-    """Blondel et al. 2008 on an unweighted graph. Returns {node: community index}."""
+def louvain(adj, rng, weight=None, on_move=None):
+    """Blondel et al. 2008. Unweighted unless `weight` ({sorted pair: w}) is given.
+    `on_move`, if set, is called with {node: community} after every move. Returns {node: community index}."""
     # Sorted everywhere: set order depends on PYTHONHASHSEED, and tie-breaks must not.
-    graph = {n: {nb: 1.0 for nb in sorted(adj[n])} for n in sorted(adj)}
-    strength = {n: float(len(nbs)) for n, nbs in adj.items()}
+    w = (lambda a, b: float(weight[tuple(sorted((a, b)))])) if weight else (lambda a, b: 1.0)
+    graph = {n: {nb: w(n, nb) for nb in sorted(adj[n])} for n in sorted(adj)}
+    strength = {n: sum(nbs.values()) for n, nbs in graph.items()}
     member = {n: n for n in adj}  # original node -> current super-node
     while True:
-        com = one_level(graph, strength, rng)
+        report = on_move and (lambda c, member=member: on_move({n: c[s] for n, s in member.items()}))
+        com = one_level(graph, strength, rng, report)
         if len(set(com.values())) == len(graph):
             break
         member = {n: com[s] for n, s in member.items()}
@@ -94,7 +97,7 @@ def louvain(adj, rng):
     return {n: labels[c] for n, c in member.items()}
 
 
-def one_level(graph, strength, rng):
+def one_level(graph, strength, rng, on_move=None):
     """Phase 1: move single nodes to the neighbouring community with the best gain."""
     m2 = sum(strength.values())
     com = {n: n for n in graph}
@@ -120,6 +123,8 @@ def one_level(graph, strength, rng):
             if best != home:
                 com[n] = best
                 moved = True
+                if on_move:
+                    on_move(com)
     return com
 
 

@@ -13,6 +13,16 @@ Rebuild the exact pair results with `python3 prepare_beef.py` after rebuilding
 modularity and community counts; aligned display lanes are not used to infer
 co-membership. All user state stays in memory.
 
+## The Symposium
+
+Open `symposium.html` for a scroll-told dinner party that teaches the week's
+concepts on 24 well-known philosophers: your own seating plan scored by
+modularity, Louvain replayed move by move, the degree-preserving null, weights
+and strength, the disparity filter against a global cut, k-clique circles, and
+finally where the guests sit among all 1,374. Rebuild its data with
+`python3 prepare_symposium.py` (after `prepare_data.py`); `node --test` also
+runs `symposium.test.mjs`.
+
 ## Original explorer
 
 Week 4 explorable on communities. Louvain sorts the course's 1,374 Wikipedia

@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A dinner for twenty-four philosophers, seated by an algorithm. Learn community detection one course at a time.">
+  <title>The Symposium · Go Nuts</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='9' fill='%23fbf8f2' stroke='%231f1a17' stroke-width='2'/%3E%3Ccircle cx='16' cy='3.5' r='2.5' fill='%238e2c3a'/%3E%3Ccircle cx='28.5' cy='16' r='2.5' fill='%235b6b22'/%3E%3Ccircle cx='16' cy='28.5' r='2.5' fill='%232f4f86'/%3E%3Ccircle cx='3.5' cy='16' r='2.5' fill='%23b06f19'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="symposium.css"><script type="module" src="symposium.mjs"></script>
+</head>
+<body>
+  <a class="skip" href="#course-guests">Skip to the first course</a>
+  <header class="site-head"><a class="brand" href="../../"><b>g.</b> Go Nuts</a><span>Week 4 · Communities</span><a href="#kitchen">The kitchen ↓</a></header>
+
+  <div class="story is-cover" id="story">
+    <figure class="stage" aria-labelledby="stage-title">
+      <svg id="room" role="group" aria-labelledby="stage-title stage-note">
+        <g id="world"><g id="tables"></g><g id="links"></g><g id="guests"></g></g>
+      </svg>
+      <div class="stage-head"><span id="stage-course" class="smallcaps"></span><span id="stage-title"></span></div>
+      <figcaption>
+        <p id="stage-note" class="note"></p>
+        <div id="tray" aria-live="polite"></div>
+      </figcaption>
+    </figure>
+
+    <div class="courses">
+      <section class="cover" id="cover" data-course="cover" aria-labelledby="title">
+        <div class="cover-text">
+          <h1 id="title">The Symposium</h1>
+          <p class="subtitle">Twenty-four philosophers. One algorithm deciding who sits where.</p>
+          <a class="begin" href="#course-guests">Take your seat ↓</a>
+        </div>
+        <nav class="menu-line" aria-label="Courses">
+          <a href="#course-guests">Aperitif</a><a href="#course-plan">First course</a><a href="#course-louvain">Second course</a><a href="#course-null">Intermezzo</a><a href="#course-volume">Main course</a><a href="#course-backbone">Cheese</a><a href="#course-cliques">Dessert</a><a href="#course-hall">Digestif</a>
+        </nav>
+      </section>
+
+      <section class="course" id="course-guests" data-course="guests" aria-labelledby="h-guests">
+        <p class="course-name">Aperitif</p>
+        <h2 id="h-guests">The guest list</h2>
+        <p class="lede">Twenty-four philosophers, from Socrates to Nietzsche, at one long table.</p>
+        <p>Two guests share a <em>conversation</em> when one of their Wikipedia articles links to the other’s. <strong>110</strong> of the 276 possible pairs do. That is the whole party: 24 nodes, 110 links.</p>
+        <p>Some guests are more sociable than others. The number of conversations a guest has is their <em>degree</em>.</p>
+        <p class="try">Tap a guest to see who they talk to.</p>
+        <ol id="sociable" class="ranking" aria-label="Most sociable guests"></ol>
+        <p class="moral">A conversation is a link. How many a guest has is their degree.</p>
+      </section>
+
+      <section class="course" id="course-plan" data-course="plan" aria-labelledby="h-plan">
+        <p class="course-name">First course</p>
+        <h2 id="h-plan">Your seating plan</h2>
+        <p class="lede">Four tables. Seat the room so that guests talk to their tablemates.</p>
+        <p>Choose a guest on the table plan, then send them to table A, B, C or D. The meter scores your plan.</p>
+        <div class="actions" role="group" aria-label="Quick plans">
+          <button data-plan="one">Everyone at one table</button><button data-plan="era">Seat by era</button><button data-plan="random">Seat at random</button>
+        </div>
+        <div class="meter-block">
+          <div class="score"><span>Harmony</span><output id="plan-q">0.000</output></div>
+          <div class="terms">
+            <div><span>Conversations kept at a table</span><b id="plan-together">100%</b></div>
+            <div><span>Expected, for guests this sociable</span><b id="plan-expected">100%</b></div>
+          </div>
+          <svg class="meter" id="plan-meter" viewBox="0 0 400 64" role="img" aria-label="Harmony scale"></svg>
+        </div>
+        <p>Why the second term? Two chatty guests would find each other at almost any table, so seating them together earns less. Everyone at one table keeps every conversation, and scores exactly zero.</p>
+        <p class="moral">Modularity: the share of links inside groups, minus the share you would expect from degrees alone.</p>
+      </section>
+
+      <section class="course" id="course-louvain" data-course="louvain" aria-labelledby="h-louvain">
+        <p class="course-name">Second course</p>
+        <h2 id="h-louvain">The maître d’</h2>
+        <p class="lede">Louvain seats the room by the same score, one guest at a time.</p>
+        <p>Every guest starts at a table for one. In a random order, each moves to whichever neighbouring table raises the harmony most. When nobody wants to move, every table becomes a single guest and the process repeats.</p>
+        <div class="actions" role="group" aria-label="The maître d’">
+          <button id="play" class="primary">▶ Watch the maître d’ seat the room</button><button id="another">Another evening</button>
+        </div>
+        <p id="louvain-status" class="status" aria-live="polite"></p>
+        <p class="caption">Fifty evenings, fifty random orders. Squares with the same letter are the same seating plan.</p>
+        <div id="evenings" class="evenings" role="group" aria-label="Choose an evening"></div>
+        <p class="moral">The order is random, so the plan can change. Compare two plans with NMI: 1 is identical, 0 is unrelated.</p>
+      </section>
+
+      <section class="course" id="course-null" data-course="null" aria-labelledby="h-null">
+        <p class="course-name">Intermezzo</p>
+        <h2 id="h-null">Gatecrashers</h2>
+        <p class="lede">Is that harmony real, or would any crowd do?</p>
+        <p>Keep every guest exactly as sociable, but rewire who talks to whom at random. Then let the maître d’ seat that party.</p>
+        <div class="actions"><button id="shuffle" class="primary">Shuffle the conversations</button></div>
+        <svg class="meter dotplot" id="null-plot" viewBox="0 0 400 110" role="img" aria-labelledby="null-status"></svg>
+        <p id="null-status" class="status" aria-live="polite"></p>
+        <p class="moral">Random parties score above zero too. Report modularity against a null, never alone.</p>
+      </section>
+
+      <section class="course" id="course-volume" data-course="volume" aria-labelledby="h-volume">
+        <p class="course-name">Main course</p>
+        <h2 id="h-volume">Turn up the volume</h2>
+        <p class="lede">Some pairs cannot stop talking.</p>
+        <p>Hegel’s and Marx’s articles link to each other ten times. Count that as <em>volume</em>, the link’s weight. A guest’s total volume is their <em>strength</em>.</p>
+        <div class="toggle" role="group" aria-label="What the maître d’ listens to">
+          <button data-weight="count" aria-pressed="true">Count conversations</button><button data-weight="volume" aria-pressed="false">Weigh by volume</button>
+        </div>
+        <p id="volume-status" class="status" aria-live="polite"></p>
+        <div class="two-rankings"><div><h3>Most conversations</h3><ol id="rank-degree" class="ranking"></ol></div><div><h3>Most volume</h3><ol id="rank-strength" class="ranking"></ol></div></div>
+        <p class="moral">Weights can change the answer. Say which one you used.</p>
+      </section>
+
+      <section class="course" id="course-backbone" data-course="backbone" aria-labelledby="h-backbone">
+        <p class="course-name">Cheese</p>
+        <h2 id="h-backbone">Only the conversations that matter</h2>
+        <p class="lede">A crowded room hides its structure. Keep only the conversations that matter.</p>
+        <p>A conversation matters to a guest if it carries more of their volume than chance would give it. The disparity filter keeps a link when <span class="formula">(1 − p)<sup>k−1</sup> &lt; α</span> for either guest, where p is the link’s share of that guest’s volume and k is their degree.</p>
+        <label class="slider">α <input id="alpha" type="range" min="0" max="4" step="1" value="2" aria-valuetext="0.2"><output id="alpha-out">0.20</output></label>
+        <div class="toggle" role="group" aria-label="Which filter">
+          <button data-filter="disparity" aria-pressed="true">Disparity filter</button><button data-filter="global" aria-pressed="false">Loudest links only</button>
+        </div>
+        <p id="backbone-status" class="status" aria-live="polite"></p>
+        <p class="moral">The loudest links are not the important ones. Quiet guests keep their one important conversation.</p>
+      </section>
+
+      <section class="course" id="course-cliques" data-course="cliques" aria-labelledby="h-cliques">
+        <p class="course-name">Dessert</p>
+        <h2 id="h-cliques">Circles of friends</h2>
+        <p class="lede">Tables force every guest to choose. Circles do not.</p>
+        <p>A <em>k-clique</em> is k guests who all talk to one another. Two k-cliques that share k − 1 guests join the same circle. A guest can stand in several circles, or in none.</p>
+        <label class="slider">k <input id="k" type="range" min="3" max="6" step="1" value="5"><output id="k-out">5</output></label>
+        <p id="clique-status" class="status" aria-live="polite"></p>
+        <ul id="circles" class="circles"></ul>
+        <p class="moral">Overlapping communities: a guest may belong to many groups. Bigger k, tighter circles, more guests left out.</p>
+      </section>
+
+      <section class="course" id="course-hall" data-course="hall" aria-labelledby="h-hall">
+        <p class="course-name">Digestif</p>
+        <h2 id="h-hall">The full hall</h2>
+        <p class="lede">Our party was 24 guests. The hall holds 1,374.</p>
+        <p>Run the same maître d’ on every philosopher in the network, and these guests land in five schools. The medieval guests split into a Christian table and an Islamic and Jewish one. There were not enough of them at our dinner to show it.</p>
+        <p>Communities depend on who is in the room.</p>
+        <div class="next">
+          <a href="beef.html"><span>Philosophical beef</span>Do rivals share a table? ↗</a>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <section class="kitchen" id="kitchen" aria-labelledby="kitchen-title">
+    <h2 id="kitchen-title">From the kitchen</h2>
+    <div class="kitchen-grid">
+      <p><strong>The party.</strong> 24 philosophers chosen by hand for recognisability, and every link among them in the Week 4 snapshot. A link means one Wikipedia article links to the other; volume is how many times, summed over both directions. A link is not friendship, agreement, or influence.</p>
+      <p><strong>The seating.</strong> Louvain, modularity and the shuffle are the from-scratch versions in <code>prepare_data.py</code>, run on this party by <code>prepare_symposium.py</code> with seeds 1–50. Shuffles are degree-preserving double-edge swaps. The replay is the recorded move order of each seed.</p>
+      <p><strong>Live on this page.</strong> Your plan’s harmony, NMI, the disparity filter and the loudest-links comparison are computed in your browser. Tests check that the harmony here matches the Python value on every evening.</p>
+      <p><strong>The hall.</strong> Colours in the digestif are the reference run of the full network (the run with the highest mean NMI to the other 49).</p>
+    </div>
+    <a href="https://sunelehmann.com/socialgraphs2026-web/weeks/week4.html" target="_blank" rel="noopener">Week 4 · Communities ↗</a>
+    <details class="credits"><summary>Portrait credits</summary><p>Wikipedia lead images via Wikimedia Commons, cropped to faces for this page. Licences as listed; CC BY and CC BY-SA images are credited to their photographers.</p><p><a href="https://commons.wikimedia.org/wiki/File:St-thomas-aquinasFXD.jpg" target="_blank" rel="noopener">Aquinas</a>: Carlo Crivelli (Public domain) · <a href="https://commons.wikimedia.org/wiki/File:Aristotle_Altemps_Inv8575.jpg" target="_blank" rel="noopener">Aristotle</a>: After Lysippos (Public domain) · <a href="https://commons.wikimedia.org/wiki/File:Saint_Augustine_by_Philippe_de_Champaigne.jpg" target="_blank" rel="noopener">Augustine</a>: Philippe de Champaigne (Public domain) · <a href="https://commons.wikimedia.org/wiki/File:Andrea_di_bonaiuto,_apoteosi_di_san_tommaso_d%27aquino,_11_averro%C3%A8.jpg" target="_blank" rel="noopener">Averroes</a>: Sailko (CC BY 3.0) · <a href="https://commons.wikimedia.org/wiki/File:Avicenna_Bust,_left_profile_(cropped).jpg" target="_blank" rel="noopener">Avicenna</a>: National Library of Medicine (No restrictions) · <a href="https://commons.wikimedia.org/wiki/File:Boethius.jpeg" target="_blank" rel="noopener">Boethius</a>: Unknown authorUnknown author (Public domain) · <a href="https://commons.wikimedia.org/wiki/File:Bust_of_Cicero_(1st-cent._BC)_-_Palazzo_Nuovo_-_Musei_Capitolini_-_Rome_2016.jpg" target="_blank" rel="noopener">Cicero</a>: José Luiz (CC BY-SA 4.0) · <a href="https://commons.wikimedia.org/wiki/File:Frans_Hals_-_Portret_van_Ren%C3%A9_Descartes.jpg" target="_blank" rel="noopener">Descartes</a>: After Frans Hals (Public domain) · <a href="https://commons.wikimedia.org/wiki/File:Epikouros_BM_1843.jpg" target="_blank" rel="noopener">Epicurus</a>: Unknown artistUnknown artist (Public domain) · <a href="https://commons.wikimedia.org/wiki/File:Jakob_Schlesinger_-_Hegel_1831.jpg" target="_blank" rel="noopener">Hegel</a>: Jakob Schlesinger (Public domain) · <a href="https://commons.wikimedia.org/wiki/File:Thomas_Hobbes_by_John_Michael_Wright_(colour)_(3x4_cropped).jpg" target="_blank" rel="noopener">Hobbes</a>: John Michael Wright (Public domain) · <a href="https://commons.wikimedia.org/wiki/File:David_Hume_Ramsay.jpg" target="_blank" rel="noopener">Hume</a>: Allan Ramsay (Public domain) · <a href="https://commons.wikimedia.org/wiki/File:Immanuel_Kant_-_Gemaelde_1.jpg" target="_blank" rel="noopener">Kant</a>: Johann Gottlieb Becker (1720-1782) (Public domain) · <a href="https://commons.wikimedia.org/wiki/File:S%C3%B8ren_Kierkegaard_(1813-1855)_-_(cropped).jpg" target="_blank" rel="noopener">Kierkegaard</a>: La Biblioteca Real de Dinamarca (Public domain) · <a href="https://commons.wikimedia.org/wiki/File:Christoph_Bernhard_Francke_-_Bildnis_des_Philosophen_Leibniz_(ca._1695).jpg" target="_blank" rel="noopener">Leibniz</a>: Christoph Bernhard Francke (Public domain) · <a href="https://commons.wikimedia.org/wiki/File:Godfrey_Kneller_-_Portrait_of_John_Locke_(Hermitage).jpg" target="_blank" rel="noopener">Locke</a>: Godfrey Kneller (Public domain) · <a href="https://commons.wikimedia.org/wiki/File:Portrait_of_Moses_Maimonides_in_Thesaurus_antiquitatum_sacrarum.tif" target="_blank" rel="noopener">Maimonides</a>: Blaisio Ugolino (Public domain) · <a href="https://commons.wikimedia.org/wiki/File:Karl_Marx_by_John_Jabez_Edwin_Mayall_1875_-_Restored.png" target="_blank" rel="noopener">Marx</a>: John Jabez Edwin Mayall (Public domain) · <a href="https://commons.wikimedia.org/wiki/File:Nietzsche187a.jpg" target="_blank" rel="noopener">Nietzsche</a>: Friedrich Hermann Hartmann (Public domain) · <a href="https://commons.wikimedia.org/wiki/File:Plato_Silanion_Musei_Capitolini_MC1377.png" target="_blank" rel="noopener">Plato</a>: Marie-Lan Nguyen (Public domain) · <a href="https://commons.wikimedia.org/wiki/File:Arthur_Schopenhauer_by_J_Sch%C3%A4fer,_1859b.jpg" target="_blank" rel="noopener">Schopenhauer</a>: Johann Schäfer (Public domain) · <a href="https://commons.wikimedia.org/wiki/File:Duble_herma_of_Socrates_and_Seneca_Antikensammlung_Berlin_07.jpg" target="_blank" rel="noopener">Seneca</a>: Calidius (CC BY-SA 3.0) · <a href="https://commons.wikimedia.org/wiki/File:Socrates_Louvre.jpg" target="_blank" rel="noopener">Socrates</a>: Copy of Lysippos (?) (Public domain) · <a href="https://commons.wikimedia.org/wiki/File:Spinoza.jpg" target="_blank" rel="noopener">Spinoza</a>: anonymous (Public domain)</p></details>
+  </section>
+  <footer><span>The Symposium · Go Nuts</span><a href="../../">All weeks</a></footer>
+  <p id="load-error" role="alert" hidden></p><noscript><p>Enable JavaScript to seat the guests.</p></noscript>
+</body>
+</html>
