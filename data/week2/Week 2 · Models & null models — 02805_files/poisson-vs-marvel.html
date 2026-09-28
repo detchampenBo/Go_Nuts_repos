@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<!-- saved from url=(0079)https://sunelehmann.com/socialgraphs2026-web/explorables/poisson-vs-marvel.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Explorable · Where chance gives up: Marvel vs a random network</title>
+<link rel="stylesheet" href="./tokens.css">
+<link rel="stylesheet" href="./explore.css">
+</head>
+<body>
+
+<div class="controls">
+  <label>degree
+    <span class="seg" id="deg-seg">
+      <button data-v="und">undirected</button><button data-v="in" class="on">in</button><button data-v="out">out</button>
+    </span>
+  </label>
+  <label>axes
+    <span class="seg" id="ax-seg">
+      <button data-v="lin" class="">linear</button><button data-v="log" class="on">log–log</button>
+    </span>
+  </label>
+  <label>binning
+    <span class="seg" id="bin-seg">
+      <button data-v="raw" class="on">raw</button><button data-v="binned">binned</button>
+    </span>
+  </label>
+  <label>reference
+    <span class="seg" id="ref-seg">
+      <button data-v="none">none</button><button data-v="poisson" class="on">random network, same ⟨k⟩</button>
+    </span>
+  </label>
+</div>
+
+<div class="panels">
+  <div class="panel">
+    <h2>P(k) — fraction of nodes with degree k</h2>
+    <div class="legend" id="legend"><span class="key"><span class="swatch dot" style="background: var(--series-1)"></span>raw P(k)</span><span class="key"><span class="swatch" style="background: var(--series-2)"></span>random network with the same ⟨k⟩ (Poisson)</span></div>
+    <svg class="chart" id="chart"><g transform="translate(46,14)"><line class="gridline" x1="0" x2="328" y1="0" y2="0"></line><line class="gridline" x1="0" x2="328" y1="57.37445265293547" y2="57.37445265293547"></line><line class="gridline" x1="0" x2="328" y1="114.74890530587093" y2="114.74890530587093"></line><line class="gridline" x1="0" x2="328" y1="172.12335795880642" y2="172.12335795880642"></line><line class="gridline" x1="0" x2="328" y1="229.49781061174187" y2="229.49781061174187"></line><line class="axisline" x1="0" x2="328" y1="246" y2="246"></line><text class="ticktext xtick" x="6.856042367202761" y="262" text-anchor="middle">1</text><text class="ticktext xtick" x="156.6903598351056" y="262" text-anchor="middle">10</text><text class="ticktext xtick" x="306.5246773030084" y="262" text-anchor="middle">100</text><text class="ticktext ytick" x="-8" y="3.5" text-anchor="end">1</text><text class="ticktext ytick" x="-8" y="60.87445265293547" text-anchor="end">0.1</text><text class="ticktext ytick" x="-8" y="118.24890530587093" text-anchor="end">0.01</text><text class="ticktext ytick" x="-8" y="175.62335795880642" text-anchor="end">10⁻³</text><text class="ticktext ytick" x="-8" y="232.99781061174187" text-anchor="end">10⁻⁴</text><text class="axistitle" x="164" y="278" text-anchor="middle">k + 1</text><text class="axistitle" transform="translate(-34,123) rotate(-90)" text-anchor="middle">P(k)</text><g><circle cx="6.856042367202761" cy="41.19569667644349" r="6" fill="#fcfcfb"></circle><circle cx="6.856042367202761" cy="41.19569667644349" r="4" fill="#2a78d6"></circle></g><g><circle cx="51.96066630488112" cy="49.83882157319611" r="6" fill="#fcfcfb"></circle><circle cx="51.96066630488112" cy="49.83882157319611" r="4" fill="#2a78d6"></circle></g><g><circle cx="78.3451799175528" cy="48.65205403526664" r="6" fill="#fcfcfb"></circle><circle cx="78.3451799175528" cy="48.65205403526664" r="4" fill="#2a78d6"></circle></g><g><circle cx="97.0652902425595" cy="59.34151264942179" r="6" fill="#fcfcfb"></circle><circle cx="97.0652902425595" cy="59.34151264942179" r="4" fill="#2a78d6"></circle></g><g><circle cx="111.5857358974272" cy="66.50980427747227" r="6" fill="#fcfcfb"></circle><circle cx="111.5857358974272" cy="66.50980427747227" r="4" fill="#2a78d6"></circle></g><g><circle cx="123.44980385523115" cy="65.35064605892089" r="6" fill="#fcfcfb"></circle><circle cx="123.44980385523115" cy="65.35064605892089" r="4" fill="#2a78d6"></circle></g><g><circle cx="133.48073038620134" cy="78.45952247500041" r="6" fill="#fcfcfb"></circle><circle cx="133.48073038620134" cy="78.45952247500041" r="4" fill="#2a78d6"></circle></g><g><circle cx="142.16991418023784" cy="84.99695994704578" r="6" fill="#fcfcfb"></circle><circle cx="142.16991418023784" cy="84.99695994704578" r="4" fill="#2a78d6"></circle></g><g><circle cx="149.83431746790282" cy="93.88437511609473" r="6" fill="#fcfcfb"></circle><circle cx="149.83431746790282" cy="93.88437511609473" r="4" fill="#2a78d6"></circle></g><g><circle cx="156.6903598351056" cy="93.88437511609473" r="6" fill="#fcfcfb"></circle><circle cx="156.6903598351056" cy="93.88437511609473" r="4" fill="#2a78d6"></circle></g><g><circle cx="162.89240456395203" cy="93.88437511609473" r="6" fill="#fcfcfb"></circle><circle cx="162.89240456395203" cy="93.88437511609473" r="4" fill="#2a78d6"></circle></g><g><circle cx="168.55442779290954" cy="107.82855013330834" r="6" fill="#fcfcfb"></circle><circle cx="168.55442779290954" cy="107.82855013330834" r="4" fill="#2a78d6"></circle></g><g><circle cx="173.76298425800528" cy="114.99684176135882" r="6" fill="#fcfcfb"></circle><circle cx="173.76298425800528" cy="114.99684176135882" r="4" fill="#2a78d6"></circle></g><g><circle cx="178.58535432387973" cy="97.72541052802235" r="6" fill="#fcfcfb"></circle><circle cx="178.58535432387973" cy="97.72541052802235" r="4" fill="#2a78d6"></circle></g><g><circle cx="183.07487344777724" cy="125.09998136664478" r="6" fill="#fcfcfb"></circle><circle cx="183.07487344777724" cy="125.09998136664478" r="4" fill="#2a78d6"></circle></g><g><circle cx="187.2745381179162" cy="125.09998136664478" r="6" fill="#fcfcfb"></circle><circle cx="187.2745381179162" cy="125.09998136664478" r="4" fill="#2a78d6"></circle></g><g><circle cx="191.21951668103364" cy="114.99684176135882" r="6" fill="#fcfcfb"></circle><circle cx="191.21951668103364" cy="114.99684176135882" r="4" fill="#2a78d6"></circle></g><g><circle cx="194.93894140558118" cy="107.82855013330834" r="6" fill="#fcfcfb"></circle><circle cx="194.93894140558118" cy="107.82855013330834" r="4" fill="#2a78d6"></circle></g><g><circle cx="201.79498377278392" cy="142.37141259998126" r="6" fill="#fcfcfb"></circle><circle cx="201.79498377278392" cy="142.37141259998126" r="4" fill="#2a78d6"></circle></g><g><circle cx="204.9698679365514" cy="142.37141259998126" r="6" fill="#fcfcfb"></circle><circle cx="204.9698679365514" cy="142.37141259998126" r="4" fill="#2a78d6"></circle></g><g><circle cx="207.99702850163038" cy="107.82855013330834" r="6" fill="#fcfcfb"></circle><circle cx="207.99702850163038" cy="107.82855013330834" r="4" fill="#2a78d6"></circle></g><g><circle cx="210.88960325394308" cy="125.09998136664478" r="6" fill="#fcfcfb"></circle><circle cx="210.88960325394308" cy="125.09998136664478" r="4" fill="#2a78d6"></circle></g><g><circle cx="213.65905173058786" cy="142.37141259998126" r="6" fill="#fcfcfb"></circle><circle cx="213.65905173058786" cy="142.37141259998126" r="4" fill="#2a78d6"></circle></g><g><circle cx="216.31542942765165" cy="114.99684176135882" r="6" fill="#fcfcfb"></circle><circle cx="216.31542942765165" cy="114.99684176135882" r="4" fill="#2a78d6"></circle></g><g><circle cx="218.86760819568363" cy="142.37141259998126" r="6" fill="#fcfcfb"></circle><circle cx="218.86760819568363" cy="142.37141259998126" r="4" fill="#2a78d6"></circle></g><g><circle cx="221.32345501825284" cy="142.37141259998126" r="6" fill="#fcfcfb"></circle><circle cx="221.32345501825284" cy="142.37141259998126" r="4" fill="#2a78d6"></circle></g><g><circle cx="223.68997826155808" cy="142.37141259998126" r="6" fill="#fcfcfb"></circle><circle cx="223.68997826155808" cy="142.37141259998126" r="4" fill="#2a78d6"></circle></g><g><circle cx="225.97344824882043" cy="142.37141259998126" r="6" fill="#fcfcfb"></circle><circle cx="225.97344824882043" cy="142.37141259998126" r="4" fill="#2a78d6"></circle></g><g><circle cx="228.1794973854556" cy="142.37141259998126" r="6" fill="#fcfcfb"></circle><circle cx="228.1794973854556" cy="142.37141259998126" r="4" fill="#2a78d6"></circle></g><g><circle cx="236.32414061871202" cy="142.37141259998126" r="6" fill="#fcfcfb"></circle><circle cx="236.32414061871202" cy="142.37141259998126" r="4" fill="#2a78d6"></circle></g><g><circle cx="262.70865423138366" cy="142.37141259998126" r="6" fill="#fcfcfb"></circle><circle cx="262.70865423138366" cy="142.37141259998126" r="4" fill="#2a78d6"></circle></g><g><circle cx="274.3597196511245" cy="142.37141259998126" r="6" fill="#fcfcfb"></circle><circle cx="274.3597196511245" cy="142.37141259998126" r="4" fill="#2a78d6"></circle></g><g><circle cx="278.4926777882297" cy="142.37141259998126" r="6" fill="#fcfcfb"></circle><circle cx="278.4926777882297" cy="142.37141259998126" r="4" fill="#2a78d6"></circle></g><g><circle cx="310.92737557710035" cy="142.37141259998126" r="6" fill="#fcfcfb"></circle><circle cx="310.92737557710035" cy="142.37141259998126" r="4" fill="#2a78d6"></circle></g><path d="M6.856,146.708L51.961,102.533L78.345,75.629L97.065,58.828L111.586,49.195L123.45,45.122L133.481,45.593L142.17,49.904L149.834,57.543L156.69,68.117L162.892,81.315L168.554,96.889L173.763,114.631L178.585,134.367L183.075,155.95L187.275,179.252L191.22,204.162L194.939,230.583" fill="none" stroke="#1baf7a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path><text class="directlabel" x="200.93894140558118" y="234.5830441548057" text-anchor="start">Poisson, ⟨k⟩ = 5.9</text></g></svg>
+  </div>
+  <div class="panel">
+    <h2>The tail, by name</h2>
+    <ol id="top" style="margin: 6px 0 0; padding-left: 22px; color: var(--text-secondary); font-size: 13.5px; line-height: 1.9"><li>Spider-Man — <strong>106</strong></li><li>Hulk — <strong>64</strong></li><li>Wolverine (character) — <strong>60</strong></li><li>Doctor Strange — <strong>50</strong></li><li>Deadpool — <strong>33</strong></li><li>She-Hulk — <strong>29</strong></li><li>Scarlet Witch — <strong>28</strong></li><li>Black Panther (character) — <strong>27</strong></li></ol>
+  </div>
+</div>
+
+<div class="readout">
+  <div class="tile"><div class="label">Nodes</div><div class="value" id="r-n">303</div></div>
+  <div class="tile"><div class="label">Directed edges</div><div class="value" id="r-m">1784</div></div>
+  <div class="tile"><div class="label">Max k</div><div class="value" id="r-max">106</div></div>
+  <div class="tile"><div class="label">Mean k</div><div class="value" id="r-mean">5.89</div></div>
+  <div class="tile"><div class="label">Median k</div><div class="value" id="r-med">3</div></div>
+  <div class="tile"><div class="label">Nodes with k = 0</div><div class="value" id="r-iso">58 (at k + 1 = 1)</div></div>
+</div>
+
+<script src="./d3.v7.min.js.download"></script>
+<script src="./vizkit.js.download"></script>
+<script>window.RD_DEFAULTS = { deg: "in", ax: "log", bin: "raw", ref: "poisson" };</script>
+<script src="./real-degrees.js.download"></script>
+
+
+</body></html>
