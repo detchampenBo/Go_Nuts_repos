@@ -1,0 +1,288 @@
+% Task I outline: Life-cycle sustainability of AI inference measured per token
+% Working hypothesis: tokens may be a useful activity unit, but not necessarily
+% a sufficient functional unit because they do not directly measure user value.
+
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{hyperref}
+
+\title{Is a Token a Meaningful Functional Unit for the\\
+Life-Cycle Assessment of AI Inference?}
+\author{Author 1 \and Author 2}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+% Replace this with a short summary once the scope and data sources are fixed.
+\begin{abstract}
+\textit{TODO: State the case, the proposed functional unit, the main system
+boundary, the expected contribution, and the main uncertainty in 100--150
+words.}
+\end{abstract}
+
+\tableofcontents
+
+\section{Introduction}
+
+\subsection{Background and motivation}
+% Explain why this case matters in the context of the course case study.
+% Suggested points:
+\begin{itemize}[leftmargin=*]
+    \item AI services depend on large-scale computation, electricity, cooling,
+    networking, and semiconductor hardware.
+    \item Digitalisation and AI may increase demand for microchips and data-centre
+    capacity, linking the case to the environmental impacts of microfabrication.
+    \item The environmental burden of AI is often reported per request or per
+    token, but the basis for this choice is not always transparent or comparable.
+    \item A functional unit should represent the function delivered by the system,
+    not only an easily counted activity.
+\end{itemize}
+
+\subsection{Connection to microfabrication}
+% Decide explicitly how close the study should be to the course's microfabrication
+% case. Keep one of the following framings and justify the choice.
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Primary framing:} AI inference is assessed as a digital service
+    enabled by semiconductor manufacturing; chip and data-centre impacts are
+    included where data permits.
+    \item \textbf{Narrow framing:} the study assesses only operational inference
+    energy, while semiconductor manufacturing and model training are discussed as
+    excluded upstream processes and uncertainty sources.
+\end{itemize}
+
+\subsection{Problem statement}
+% Draft the problem statement as one paragraph. It should identify the decision
+% or knowledge gap, not merely describe the topic.
+\textit{Working draft:} It is unclear whether ``one token'' is a sufficiently
+meaningful and reproducible functional unit for comparing the sustainability of
+AI language-model inference. Token counts are measurable, but they may not
+capture differences in model capability, response quality, input context,
+hardware, electricity mix, or the useful service delivered to a user.
+
+\subsection{Aim and research questions}
+\textbf{Overall aim:} To evaluate whether a token-based functional unit can
+support a transparent and decision-relevant sustainability assessment of AI
+language-model inference.
+
+\begin{enumerate}[leftmargin=*]
+    \item What is the object of assessment and what service does an AI inference
+    system provide?
+    \item How should the functional unit be defined so that input tokens, output
+    tokens, model quality, and workload are represented?
+    \item What environmental, economic, and social factors dominate the result?
+    \item How sensitive are the results to model size, hardware utilisation,
+    response length, data-centre electricity mix, and system boundaries?
+    \item Does a token-based unit provide a more useful comparison than an
+    alternative unit such as one completed task or one accepted answer at a
+    specified quality level?
+\end{enumerate}
+
+\section{Task I -- Problem formulation}
+
+\subsection{Object of assessment}
+% Define the system in operational terms. Avoid using ``AI'' as the object by
+% itself; name the service and the life-cycle stage being assessed.
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Object:} an AI language-model inference service that receives a
+    user prompt and returns generated text.
+    \item \textbf{Service function:} transformation of an input prompt into a
+    useful generated response under specified quality and latency conditions.
+    \item \textbf{Reference flow:} the electricity, cooling, hardware use,
+    networking, and other inputs required to deliver the defined service.
+    \item \textbf{Unit process:} one inference event, or a batch of inference
+    events, at a named model and hardware configuration.
+\end{itemize}
+
+\subsection{Functional unit}
+
+\subsubsection{Candidate definitions}
+% The primary proposal should be measurable and reproducible. Compare it with
+% alternatives before selecting the final unit.
+\begin{table}[htbp]
+    \centering
+    \begin{tabular}{p{0.27\textwidth} p{0.34\textwidth} p{0.29\textwidth}}
+        \toprule
+        Candidate & Strength & Limitation \\
+        \midrule
+        1 million output tokens & Simple, measurable, and easy to scale &
+        Ignores input length, quality, model capability, and usefulness \\
+        1 million total tokens (input + output) & Includes both sides of the
+        inference workload & Input and output tokens may have different energy
+        requirements; still not a direct measure of value \\
+        One standardised prompt--response pair & Represents a concrete workload
+        and enables model comparison & Results depend strongly on the selected
+        prompt, response length, and quality \\
+        One completed task at a defined quality level & Closest to the service
+        delivered to a user & Quality is harder to measure and may require human
+        evaluation \\
+        \bottomrule
+    \end{tabular}
+    \caption{Functional-unit candidates to evaluate before selecting the main unit.}
+    \label{tab:functional-unit-candidates}
+\end{table}
+
+\subsubsection{Proposed working functional unit}
+% Select and justify one unit after the literature/data review. A good starting
+% point is deliberately specific rather than simply ``one token''.
+\textbf{Working proposal:} one million tokens processed by a specified AI
+inference workload, defined by an input-to-output token ratio, model class,
+quality target, hardware configuration, and data-centre electricity mix.
+
+\begin{equation}
+    FU = 10^{6}\ \text{tokens processed}
+    \quad\text{with a specified input/output ratio and service quality.}
+\end{equation}
+
+% Explain why the unit is suitable, what it leaves out, and how the result will
+% be stress-tested against ``one completed task at defined quality''.
+\textit{Decision to make:} The final report should state whether tokens are being
+used as (i) the functional unit, (ii) an intermediate activity unit, or (iii) a
+scenario variable that must be combined with a quality-based functional unit.
+
+\subsection{Quantification of the function}
+% Describe how the function will be measured. Do not claim that token count alone
+% measures usefulness.
+\begin{itemize}[leftmargin=*]
+    \item Input tokens and output tokens per inference event.
+    \item Model identity, parameter/model class, quantisation, and serving mode.
+    \item Hardware type, accelerator utilisation, batch size, and assumed lifetime.
+    \item Response quality or task success criterion, if a quality-based unit is
+    selected.
+    \item Latency/service availability assumptions, if they influence the function.
+\end{itemize}
+
+\subsection{System boundary}
+
+\subsubsection{Included processes}
+% Mark each item as included, excluded, or sensitivity-only once data sources are
+% known.
+\begin{itemize}[leftmargin=*]
+    \item Electricity consumed during inference.
+    \item Cooling and other data-centre overheads, represented by PUE or a similar
+    factor.
+    \item Manufacturing and replacement of servers/accelerators, allocated over
+    useful lifetime and workload where data permits.
+    \item Networking and storage associated with the service, if relevant.
+    \item Upstream electricity generation and regional electricity mix.
+\end{itemize}
+
+\subsubsection{Excluded or separate scenario processes}
+\begin{itemize}[leftmargin=*]
+    \item Model development and training, unless an amortisation scenario is
+    added.
+    \item Construction of data-centre buildings and semiconductor fabrication,
+    unless reliable data can support their inclusion.
+    \item End-user device energy, unless the service boundary is extended to the
+    full user interaction.
+    \item Rebound effects and changes in demand, treated as a limitation or
+    separate systemic scenario rather than hidden in the operational result.
+\end{itemize}
+
+\subsection{Reference flow and calculation structure}
+% Keep the calculation transparent and dimensional. Replace symbols with data in
+% Task II.
+\begin{align}
+    E_{FU} &= E_{\mathrm{inference}} + E_{\mathrm{cooling}} +
+    E_{\mathrm{network}} + E_{\mathrm{allocated\ hardware}}, \\
+    CF_{FU} &= E_{FU} \times EF_{\mathrm{electricity}},
+\end{align}
+where $E_{FU}$ is energy per functional unit and $CF_{FU}$ is the resulting
+carbon footprint per functional unit. The allocation method and emission factor
+must be reported explicitly.
+
+\subsection{Three-pillar motivation}
+
+\subsubsection{Environmental motivation (Planet)}
+% Energy use, greenhouse-gas emissions, water use, critical materials, e-waste,
+% and upstream semiconductor impacts.
+
+\subsubsection{Economic motivation (Prosperity)}
+% Cost of electricity, hardware utilisation, infrastructure investment, and the
+% economic value of more efficient models or shorter responses.
+
+\subsubsection{Social motivation (People)}
+% Access to AI services, labour and supply-chain conditions, privacy, digital
+% inequality, and the societal consequences of scaling AI services.
+
+\subsubsection{Potential trade-offs}
+% Examples: larger models may improve quality but increase energy demand; longer
+% responses may improve task completion but increase token use; local deployment
+% may reduce latency but reduce utilisation; efficiency measures may increase
+% hardware demand or critical-material use.
+
+\subsection{Assumptions and limitations}
+% State assumptions before collecting data. Use a table if the list becomes long.
+\begin{itemize}[leftmargin=*]
+    \item Tokenisation is consistent within the selected model and language.
+    \item The reported energy is allocated consistently between inference events.
+    \item Hardware lifetime and utilisation are known or varied in sensitivity
+    analysis.
+    \item Electricity emission factors represent the selected geography and time
+    period.
+    \item Model quality is either held constant, measured explicitly, or clearly
+    acknowledged as missing from a token-only unit.
+\end{itemize}
+
+\subsection{Uncertainty plan}
+% This section is required by the evaluation criteria and should be designed in
+% Task I, even though the numerical analysis belongs in Task II.
+\begin{itemize}[leftmargin=*]
+    \item Parameter uncertainty: power draw, PUE, utilisation, lifetime, and
+    electricity emission factor.
+    \item Scenario uncertainty: training included vs excluded; hardware allocation;
+    regional electricity mix; model size; input/output ratio.
+    \item Structural uncertainty: token-based unit versus quality-based service
+    unit; attributional versus broader systemic perspective.
+    \item Data quality: vendor estimates, academic measurements, ESG reports, and
+    secondary databases should be ranked by reliability and comparability.
+\end{itemize}
+
+\section{Planned methods for Task II}
+% Keep this section as a bridge. It can be expanded after Task I is approved.
+\begin{enumerate}[leftmargin=*]
+    \item Define a standard workload and collect energy or power data.
+    \item Calculate energy and carbon footprint per candidate functional unit.
+    \item Perform sensitivity analysis for the dominant assumptions.
+    \item Compare the result with other digital services or relevant consumables,
+    while documenting differences in function and quality.
+    \item Evaluate economic and social indicators alongside the environmental result.
+\end{enumerate}
+
+\section{Planned systemic assessment for Task III}
+% Placeholder for the later integrated assessment.
+\begin{itemize}[leftmargin=*]
+    \item Relate the result to planetary boundaries or another global benchmark.
+    \item Discuss circular-economy options for hardware, heat, water, and
+    electricity systems.
+    \item Assess trade-offs between environmental, economic, and social outcomes.
+    \item Explain what the chosen functional unit makes visible and what it hides.
+    \item Integrate Task I and Task II as appendices in the final submission.
+\end{itemize}
+
+\section{Expected contribution}
+% End Task I by stating what the study will deliver.
+\textit{TODO: Explain whether the main contribution is a numerical estimate, a
+comparison of functional units, a framework for transparent reporting, or a
+combination of these.}
+
+\section{References}
+% Add sources from DTU Learn and the literature review. Use a .bib file when the
+% bibliography is established.
+% \bibliographystyle{plain}
+% \bibliography{references}
+
+\appendix
+\section{Appendix: Decision log for scope and functional unit}
+% Record decisions, rejected alternatives, and the reason for each decision.
+
+\section{Appendix: Data collection template}
+% Suggested fields: source, date, model, hardware, workload, input tokens,
+% output tokens, power, runtime, PUE, geography, emission factor, uncertainty.
+
+\end{document}
