@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<!-- saved from url=(0074)https://sunelehmann.com/socialgraphs2026-web/explorables/ngram-window.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Explorable · N-grams</title>
+<link rel="stylesheet" href="./tokens.css">
+<link rel="stylesheet" href="./explore.css">
+<link rel="stylesheet" href="./text-explore.css">
+</head>
+<body>
+
+<div class="controls">
+  <span class="seg" id="n-seg">
+    <button data-n="1">unigrams</button>
+    <button data-n="2" class="on">bigrams</button>
+    <button data-n="3">trigrams</button>
+  </span>
+  <button id="reset">Reset sentence</button>
+</div>
+
+<div class="text-panels">
+  <div class="panel">
+    <h2>Text</h2>
+    <textarea class="textbox" id="text">New York City is a city in the state of New York</textarea>
+    <div class="small-label">Tokens</div>
+    <div class="token-row" id="tokens"><span class="token">new</span><span class="token">york</span><span class="token">city</span><span class="token">is</span><span class="token">a</span><span class="token">city</span><span class="token">in</span><span class="token">the</span><span class="token">state</span><span class="token">of</span><span class="token">new</span><span class="token">york</span></div>
+  </div>
+  <div class="panel">
+    <h2>Sliding windows</h2>
+    <div class="ngram-grid" id="ngrams">
+      <div class="ngram"><span class="idx">1</span><span class="token">new</span><span class="token">york</span></div>
+      <div class="ngram"><span class="idx">2</span><span class="token">york</span><span class="token">city</span></div>
+      <div class="ngram"><span class="idx">3</span><span class="token">city</span><span class="token">is</span></div>
+      <div class="ngram"><span class="idx">4</span><span class="token">is</span><span class="token">a</span></div>
+      <div class="ngram"><span class="idx">5</span><span class="token">a</span><span class="token">city</span></div>
+      <div class="ngram"><span class="idx">6</span><span class="token">city</span><span class="token">in</span></div>
+      <div class="ngram"><span class="idx">7</span><span class="token">in</span><span class="token">the</span></div>
+      <div class="ngram"><span class="idx">8</span><span class="token">the</span><span class="token">state</span></div>
+      <div class="ngram"><span class="idx">9</span><span class="token">state</span><span class="token">of</span></div>
+      <div class="ngram"><span class="idx">10</span><span class="token">of</span><span class="token">new</span></div>
+      <div class="ngram"><span class="idx">11</span><span class="token">new</span><span class="token">york</span></div></div>
+  </div>
+</div>
+
+<div class="readout">
+  <div class="tile"><div class="label">n</div><div class="value" id="r-n">2</div></div>
+  <div class="tile"><div class="label">Tokens</div><div class="value" id="r-tokens">12</div></div>
+  <div class="tile"><div class="label">N-grams</div><div class="value" id="r-grams">11</div></div>
+</div>
+
+<script src="./ngram-window.js.download"></script>
+
+
+</body></html>

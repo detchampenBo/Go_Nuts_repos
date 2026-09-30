@@ -58,6 +58,7 @@ h2 { margin-bottom: 30px; font-size: 2rem; letter-spacing: -.045em; }
 .solution-button:hover { transform: translateY(-2px); box-shadow: 0 7px 14px #1019262b; }
 .solution-button:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
 .solution-button--codex { background: #10a37f; }
+.home-page .solution-button--curriculum { color: var(--ink); background: white; border-color: var(--line); }
 .solution-button--claude { background: #d97757; }
 footer { padding: 36px 0; color: var(--muted); font-size: .78rem; }
 .team-intro { max-width: 720px; padding: 105px 0 64px; }

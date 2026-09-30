@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<!-- saved from url=(0076)https://sunelehmann.com/socialgraphs2026-web/explorables/token-pipeline.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Explorable - Tokenization and preprocessing</title>
+<link rel="stylesheet" href="./tokens.css">
+<link rel="stylesheet" href="./explore.css">
+<link rel="stylesheet" href="./text-explore.css">
+</head>
+<body>
+
+<div class="controls">
+  <label class="inline-check"><input type="checkbox" id="lower"> lowercase</label>
+  <label class="inline-check"><input type="checkbox" id="punct"> drop punctuation</label>
+  <label class="inline-check"><input type="checkbox" id="stop"> remove stopwords</label>
+  <button id="reset">Reset</button>
+</div>
+
+<div class="text-panels">
+  <div class="panel">
+    <h2>Raw text</h2>
+    <textarea class="textbox" id="text">Marvel's heroes weren't fighting in New York. Fans marvel at heroes who fight, too.</textarea>
+    <p class="note">Tokenization happens first. The controls above are applied afterwards. The browser version mirrors the spaCy splits used in the Python example below.</p>
+  </div>
+  <div class="panel">
+    <h2>Tokens after your choices</h2>
+    <div class="token-row" id="tokens"><span class="token" title="text: Marvel
+is_stop: false
+is_punct: false
+lemma_: Marvel
+sentence: 1">Marvel</span><span class="token stop-token-chip" title="text: 's
+is_stop: true
+is_punct: false
+lemma_: 's
+sentence: 1">'s</span><span class="token" title="text: heroes
+is_stop: false
+is_punct: false
+lemma_: hero
+sentence: 1">heroes</span><span class="token stop-token-chip" title="text: were
+is_stop: true
+is_punct: false
+lemma_: be
+sentence: 1">were</span><span class="token stop-token-chip" title="text: n't
+is_stop: true
+is_punct: false
+lemma_: not
+sentence: 1">n't</span><span class="token" title="text: fighting
+is_stop: false
+is_punct: false
+lemma_: fight
+sentence: 1">fighting</span><span class="token stop-token-chip" title="text: in
+is_stop: true
+is_punct: false
+lemma_: in
+sentence: 1">in</span><span class="token" title="text: New
+is_stop: false
+is_punct: false
+lemma_: New
+sentence: 1">New</span><span class="token" title="text: York
+is_stop: false
+is_punct: false
+lemma_: York
+sentence: 1">York</span><span class="token punct-token-chip" title="text: .
+is_stop: false
+is_punct: true
+lemma_: .
+sentence: 1">.</span><span class="token" title="text: Fans
+is_stop: false
+is_punct: false
+lemma_: fan
+sentence: 2">Fans</span><span class="token" title="text: marvel
+is_stop: false
+is_punct: false
+lemma_: marvel
+sentence: 2">marvel</span><span class="token stop-token-chip" title="text: at
+is_stop: true
+is_punct: false
+lemma_: at
+sentence: 2">at</span><span class="token" title="text: heroes
+is_stop: false
+is_punct: false
+lemma_: hero
+sentence: 2">heroes</span><span class="token stop-token-chip" title="text: who
+is_stop: true
+is_punct: false
+lemma_: who
+sentence: 2">who</span><span class="token" title="text: fight
+is_stop: false
+is_punct: false
+lemma_: fight
+sentence: 2">fight</span><span class="token punct-token-chip" title="text: ,
+is_stop: false
+is_punct: true
+lemma_: ,
+sentence: 2">,</span><span class="token stop-token-chip" title="text: too
+is_stop: true
+is_punct: false
+lemma_: too
+sentence: 2">too</span><span class="token punct-token-chip" title="text: .
+is_stop: false
+is_punct: true
+lemma_: .
+sentence: 2">.</span></div>
+    <div class="small-label">Vocabulary</div>
+    <div class="token-row" id="types"><span class="token series2" title="type: ,">,</span><span class="token series2" title="type: .">.</span><span class="token series2" title="type: 's">'s</span><span class="token series2" title="type: at">at</span><span class="token series2" title="type: Fans">Fans</span><span class="token series2" title="type: fight">fight</span><span class="token series2" title="type: fighting">fighting</span><span class="token series2" title="type: heroes">heroes</span><span class="token series2" title="type: in">in</span><span class="token series2" title="type: Marvel">Marvel</span><span class="token series2" title="type: marvel">marvel</span><span class="token series2" title="type: n't">n't</span><span class="token series2" title="type: New">New</span><span class="token series2" title="type: too">too</span><span class="token series2" title="type: were">were</span><span class="token series2" title="type: who">who</span><span class="token series2" title="type: York">York</span></div>
+  </div>
+</div>
+
+<div class="readout">
+  <div class="tile"><div class="label">Tokens</div><div class="value" id="r-tokens">19</div></div>
+  <div class="tile"><div class="label">Types</div><div class="value" id="r-types">17</div></div>
+  <div class="tile"><div class="label">Type/token ratio</div><div class="value" id="r-ttr">0.89</div></div>
+  <div class="tile"><div class="label">Sentences</div><div class="value" id="r-sentences">2</div></div>
+</div>
+
+<p class="note token-help">Hover over a token to inspect <code>is_stop</code>, <code>is_punct</code>, <code>lemma_</code>, and its sentence number. <code>New</code> and <code>York</code> remain separate tokens. Deciding that together they name one place is a job for a later step, not for the tokenizer.</p>
+
+<script src="./token-pipeline.js.download"></script>
+
+
+</body></html>

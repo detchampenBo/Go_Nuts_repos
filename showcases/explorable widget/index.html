@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="A Week 5 explorable about Bag-of-Words representation loss." />
+    <title>Same words. Different meaning. · Go Nuts</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a href="../../">← Go Nuts visual library</a>
+      <span>Week 05 · Exercise 5.8</span>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="page-title">
+        <p class="eyebrow">Ship an explorable · Bag-of-Words</p>
+        <h1 id="page-title">What information is lost when using Bag of Words?</h1>
+        <p class="lede">Arrange one shared set of words into three sentences. Then watch a Bag-of-Words model turn all three into the same numerical representation.</p>
+      </section>
+
+      <section class="widget" aria-labelledby="widget-title">
+        <div class="widget-heading">
+          <div>
+            <p class="eyebrow">Build the collision</p>
+            <h2 id="widget-title">Can five words say three things?</h2>
+          </div>
+          <p class="widget-note">The word bank is shared. Every tile can be used once in each lane.</p>
+        </div>
+
+        <div class="instruction-strip">
+          <span class="step-number">1</span>
+          <p><strong>Drag</strong> each word into any lane. One drag places it in all three lanes; then reorder the copies to make different sentences.</p>
+        </div>
+
+        <div class="bank-panel">
+          <div>
+            <p class="label">Shared word bank</p>
+            <p class="help">Try three different word orders. The words stay available for every lane.</p>
+          </div>
+          <div class="word-bank" id="word-bank" aria-label="Shared word bank. Drag any word into a lane to place it in all three sentence lanes.">
+            <button class="bank-word" draggable="true" data-word="robots">robots</button>
+            <button class="bank-word" draggable="true" data-word="help">help</button>
+            <button class="bank-word" draggable="true" data-word="humans">humans</button>
+            <button class="bank-word" draggable="true" data-word="and">and</button>
+            <button class="bank-word" draggable="true" data-word="doctors">doctors</button>
+          </div>
+        </div>
+
+        <div class="lanes" id="lanes">
+          <article class="lane lane-a" data-lane="0">
+            <div class="lane-heading"><span class="lane-index">01</span><h3>Sentence A</h3></div>
+            <div class="dropzone" data-lane-target="0" role="listbox" tabindex="0" aria-label="Sentence A drop zone">
+              <span class="drop-hint">Drop words here</span>
+            </div>
+            <p class="sentence" id="sentence-0">Your sentence will appear here.</p>
+          </article>
+          <article class="lane lane-b" data-lane="1">
+            <div class="lane-heading"><span class="lane-index">02</span><h3>Sentence B</h3></div>
+            <div class="dropzone" data-lane-target="1" role="listbox" tabindex="0" aria-label="Sentence B drop zone">
+              <span class="drop-hint">Drop words here</span>
+            </div>
+            <p class="sentence" id="sentence-1">Your sentence will appear here.</p>
+          </article>
+          <article class="lane lane-c" data-lane="2">
+            <div class="lane-heading"><span class="lane-index">03</span><h3>Sentence C</h3></div>
+            <div class="dropzone" data-lane-target="2" role="listbox" tabindex="0" aria-label="Sentence C drop zone">
+              <span class="drop-hint">Drop words here</span>
+            </div>
+            <p class="sentence" id="sentence-2">Your sentence will appear here.</p>
+          </article>
+        </div>
+
+        <div class="compare-panel">
+          <div class="prediction">
+            <label for="prediction"><span class="step-number">2</span><span><strong>Predict</strong> before you compare:</span></label>
+            <select id="prediction">
+              <option value="">Choose an answer…</option>
+              <option value="same">The three vectors will match</option>
+              <option value="different">The three vectors will differ</option>
+              <option value="unsure">I’m not sure yet</option>
+            </select>
+          </div>
+          <div class="action-row">
+            <button class="compare-button" id="compare" disabled>Compare vectors</button>
+            <button class="reset-button" id="reset">Start over</button>
+          </div>
+          <p class="status" id="status" role="status" aria-live="polite">Fill all three lanes with five different words.</p>
+        </div>
+
+        <div class="reveal" id="reveal" hidden>
+          <div class="reveal-heading">
+            <p class="eyebrow">The reveal</p>
+            <h2>Three meanings. One vector.</h2>
+            <p id="prediction-result"></p>
+          </div>
+
+          <div class="sentence-stack" id="sentence-stack"></div>
+
+          <div class="vector-card">
+            <div class="vector-heading">
+              <div>
+                <p class="label">One shared vocabulary</p>
+                <p class="help">The model counts each word, but does not record its position.</p>
+              </div>
+              <span class="collision-badge">VECTOR COLLISION</span>
+            </div>
+            <div class="vector-table-wrap" id="vector-table"></div>
+          </div>
+
+          <div class="loss-callout">
+            <span class="loss-mark" aria-hidden="true">↯</span>
+            <p><strong>Word order is the information that disappeared.</strong> The sentences are different to a human reader, but Bag-of-Words sees five words appearing once each in every sentence.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="takeaway" aria-labelledby="takeaway-title">
+        <p class="eyebrow">Why this matters</p>
+        <h2 id="takeaway-title">A representation is a choice.</h2>
+        <p>Bag-of-Words is useful because it makes text countable. It is limited because it keeps word identity and frequency while throwing away order. The same representation can be exactly right for one research question and useless for another.</p>
+      </section>
+    </main>
+
+    <footer>
+      <span>Go Nuts · Week 5 · 5.8</span>
+      <a href="../../">Back to the visual library</a>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>

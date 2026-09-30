@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<!-- saved from url=(0076)https://sunelehmann.com/socialgraphs2026-web/explorables/zipf-idealized.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Explorable · An idealized Zipf curve</title>
+<link rel="stylesheet" href="./tokens.css">
+<link rel="stylesheet" href="./explore.css">
+<link rel="stylesheet" href="./text-explore.css">
+</head>
+<body>
+
+<div class="controls">
+  <span class="seg" id="scale-seg">
+    <button data-scale="linear" class="on">linear axes</button>
+    <button data-scale="log">log-log axes</button>
+  </span>
+  <label>Exponent s <input type="range" id="s" min="0.7" max="1.3" step="0.02" value="1.00">
+    <span class="val" id="s-val">1.00</span></label>
+</div>
+
+<div class="panels">
+  <div class="panel">
+    <h2>Rank-frequency curve</h2>
+    <svg class="chart" id="chart"><g transform="translate(76,14)"><line class="gridline" x1="0" x2="298" y1="246" y2="246"></line><line class="gridline" x1="0" x2="298" y1="184.5" y2="184.5"></line><line class="gridline" x1="0" x2="298" y1="123" y2="123"></line><line class="gridline" x1="0" x2="298" y1="61.5" y2="61.5"></line><line class="gridline" x1="0" x2="298" y1="0" y2="0"></line><line class="axisline" x1="0" x2="298" y1="246" y2="246"></line><text class="ticktext xtick" x="0" y="262" text-anchor="middle">1</text><text class="ticktext xtick" x="73.37688442211055" y="262" text-anchor="middle">50</text><text class="ticktext xtick" x="148.25125628140702" y="262" text-anchor="middle">100</text><text class="ticktext xtick" x="223.12562814070353" y="262" text-anchor="middle">150</text><text class="ticktext xtick" x="298" y="262" text-anchor="middle">200</text><text class="ticktext ytick" x="-8" y="249.5" text-anchor="end">0</text><text class="ticktext ytick" x="-8" y="188" text-anchor="end">2500</text><text class="ticktext ytick" x="-8" y="126.5" text-anchor="end">5000</text><text class="ticktext ytick" x="-8" y="65" text-anchor="end">7500</text><text class="ticktext ytick" x="-8" y="3.5" text-anchor="end">10000</text><text class="axistitle" x="149" y="278" text-anchor="middle">frequency rank</text><text class="axistitle" transform="translate(-54,123) rotate(-90)" text-anchor="middle">frequency (idealized)</text><path d="M0,0L1.497,123L2.995,164L4.492,184.5L5.99,196.8L7.487,205L8.985,210.857L10.482,215.25L11.98,218.667L13.477,221.4L14.975,223.636L16.472,225.5L17.97,227.077L19.467,228.429L20.965,229.6L22.462,230.625L23.96,231.529L25.457,232.333L26.955,233.053L28.452,233.7L29.95,234.286L31.447,234.818L32.945,235.304L34.442,235.75L35.94,236.16L37.437,236.538L38.935,236.889L40.432,237.214L41.93,237.517L43.427,237.8L44.925,238.065L46.422,238.313L47.92,238.545L49.417,238.765L50.915,238.971L52.412,239.167L53.91,239.351L55.407,239.526L56.905,239.692L58.402,239.85L59.899,240L61.397,240.143L62.894,240.279L64.392,240.409L65.889,240.533L67.387,240.652L68.884,240.766L70.382,240.875L71.879,240.98L73.377,241.08L74.874,241.176L76.372,241.269L77.869,241.358L79.367,241.444L80.864,241.527L82.362,241.607L83.859,241.684L85.357,241.759L86.854,241.831L88.352,241.9L89.849,241.967L91.347,242.032L92.844,242.095L94.342,242.156L95.839,242.215L97.337,242.273L98.834,242.328L100.332,242.382L101.829,242.435L103.327,242.486L104.824,242.535L106.322,242.583L107.819,242.63L109.317,242.676L110.814,242.72L112.312,242.763L113.809,242.805L115.307,242.846L116.804,242.886L118.302,242.925L119.799,242.963L121.296,243L122.794,243.036L124.291,243.071L125.789,243.106L127.286,243.14L128.784,243.172L130.281,243.205L131.779,243.236L133.276,243.267L134.774,243.297L136.271,243.326L137.769,243.355L139.266,243.383L140.764,243.411L142.261,243.438L143.759,243.464L145.256,243.49L146.754,243.515L148.251,243.54L149.749,243.564L151.246,243.588L152.744,243.612L154.241,243.635L155.739,243.657L157.236,243.679L158.734,243.701L160.231,243.722L161.729,243.743L163.226,243.764L164.724,243.784L166.221,243.804L167.719,243.823L169.216,243.842L170.714,243.861L172.211,243.879L173.709,243.897L175.206,243.915L176.704,243.933L178.201,243.95L179.698,243.967L181.196,243.984L182.693,244L184.191,244.016L185.688,244.032L187.186,244.048L188.683,244.063L190.181,244.078L191.678,244.093L193.176,244.108L194.673,244.122L196.171,244.136L197.668,244.15L199.166,244.164L200.663,244.178L202.161,244.191L203.658,244.204L205.156,244.217L206.653,244.23L208.151,244.243L209.648,244.255L211.146,244.268L212.643,244.28L214.141,244.292L215.638,244.303L217.136,244.315L218.633,244.327L220.131,244.338L221.628,244.349L223.126,244.36L224.623,244.371L226.121,244.382L227.618,244.392L229.116,244.403L230.613,244.413L232.111,244.423L233.608,244.433L235.106,244.443L236.603,244.453L238.101,244.463L239.598,244.472L241.095,244.481L242.593,244.491L244.09,244.5L245.588,244.509L247.085,244.518L248.583,244.527L250.08,244.536L251.578,244.544L253.075,244.553L254.573,244.561L256.07,244.57L257.568,244.578L259.065,244.586L260.563,244.594L262.06,244.602L263.558,244.61L265.055,244.618L266.553,244.626L268.05,244.633L269.548,244.641L271.045,244.648L272.543,244.656L274.04,244.663L275.538,244.67L277.035,244.677L278.533,244.684L280.03,244.691L281.528,244.698L283.025,244.705L284.523,244.712L286.02,244.719L287.518,244.725L289.015,244.732L290.513,244.738L292.01,244.745L293.508,244.751L295.005,244.758L296.503,244.764L298,244.77" fill="none" stroke="#2a78d6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path><g><circle cx="0" cy="0" r="7" fill="#fcfcfb"></circle><circle cx="0" cy="0" r="5" fill="#2a78d6"></circle></g><g><circle cx="1.4974874371859297" cy="123" r="7" fill="#fcfcfb"></circle><circle cx="1.4974874371859297" cy="123" r="5" fill="#2a78d6"></circle></g><g><circle cx="5.989949748743719" cy="196.8" r="7" fill="#fcfcfb"></circle><circle cx="5.989949748743719" cy="196.8" r="5" fill="#2a78d6"></circle></g><g><circle cx="13.477386934673367" cy="221.4" r="7" fill="#fcfcfb"></circle><circle cx="13.477386934673367" cy="221.4" r="5" fill="#2a78d6"></circle></g><g><circle cx="73.37688442211055" cy="241.07999999999998" r="7" fill="#fcfcfb"></circle><circle cx="73.37688442211055" cy="241.07999999999998" r="5" fill="#2a78d6"></circle></g><g><circle cx="148.25125628140702" cy="243.54" r="7" fill="#fcfcfb"></circle><circle cx="148.25125628140702" cy="243.54" r="5" fill="#2a78d6"></circle></g><g><circle cx="298" cy="244.77" r="7" fill="#fcfcfb"></circle><circle cx="298" cy="244.77" r="5" fill="#2a78d6"></circle></g></g></svg>
+  </div>
+  <div class="panel">
+    <h2>What rank means</h2>
+    <div class="bar-list" id="topwords">
+      <div class="bar-row"><span class="word">the</span><span class="bar"><span style="width:100%"></span></span><span class="num">10000</span></div>
+      <div class="bar-row"><span class="word">of</span><span class="bar"><span style="width:50%"></span></span><span class="num">5000</span></div>
+      <div class="bar-row"><span class="word">and</span><span class="bar"><span style="width:33.333333333333336%"></span></span><span class="num">3333</span></div>
+      <div class="bar-row"><span class="word">to</span><span class="bar"><span style="width:25%"></span></span><span class="num">2500</span></div>
+      <div class="bar-row"><span class="word">a</span><span class="bar"><span style="width:20%"></span></span><span class="num">2000</span></div>
+      <div class="bar-row"><span class="word">in</span><span class="bar"><span style="width:16.666666666666668%"></span></span><span class="num">1667</span></div>
+      <div class="bar-row"><span class="word">that</span><span class="bar"><span style="width:14.285714285714286%"></span></span><span class="num">1429</span></div>
+      <div class="bar-row"><span class="word">is</span><span class="bar"><span style="width:12.5%"></span></span><span class="num">1250</span></div>
+      <div class="bar-row"><span class="word">was</span><span class="bar"><span style="width:11.11111111111111%"></span></span><span class="num">1111</span></div>
+      <div class="bar-row"><span class="word">it</span><span class="bar"><span style="width:10%"></span></span><span class="num">1000</span></div></div>
+    <p class="note">The labels are familiar English examples; the frequencies are generated from an idealized Zipf distribution, f(r) ∝ 1/r<sup>s</sup>.</p>
+  </div>
+</div>
+
+<div class="readout">
+  <div class="tile"><div class="label">Rank 1 / rank 10</div><div class="value" id="r-ratio">10.0×</div></div>
+  <div class="tile"><div class="label">Ideal Zipf exponent</div><div class="value">≈ 1</div></div>
+  <div class="tile"><div class="label">Plot to inspect</div><div class="value" id="r-scale">linear</div></div>
+</div>
+
+<script src="./d3.v7.min.js.download"></script>
+<script src="./vizkit.js.download"></script>
+<script src="./zipf-idealized.js.download"></script>
+
+
+</body></html>
