@@ -116,7 +116,7 @@ button { font: inherit; color: inherit; }
 .unit.u-light .guide-btn { border-color: #3b2a0040; }
 .guide-btn:hover { background: #ffffff1f; }
 .unit-path { position: relative; display: flex; flex-direction: column; align-items: center; gap: 22px; padding: 76px 0 10px; }
-.unit-char { position: absolute; top: 110px; width: 130px; height: 130px; pointer-events: none; }
+.unit-char { position: absolute; top: 100px; width: 150px; height: 150px; pointer-events: none; }
 .unit-char .char { width: 100%; height: 100%; }
 .unit-char.left { left: max(0px, calc(50% - 230px)); }
 .unit-char.right { right: max(0px, calc(50% - 230px)); }
@@ -163,7 +163,7 @@ button { font: inherit; color: inherit; }
 .cast-card { display: grid; grid-template-rows: auto 1fr; overflow: hidden; padding: 0; text-align: left; background: var(--panel); border: 2px solid var(--line); border-bottom-width: 5px; border-radius: var(--radius); cursor: pointer; }
 .cast-card:hover .cast-art { background: color-mix(in srgb, var(--cc) 28%, var(--panel)); }
 .cast-art { display: grid; place-items: center; height: 170px; background: color-mix(in srgb, var(--cc) 16%, var(--panel)); transition: background .2s; }
-.cast-art .char { width: 140px; height: 140px; }
+.cast-art .char { width: 156px; height: 156px; }
 .cast-info { display: grid; gap: 6px; align-content: start; padding: 16px 18px 18px; }
 .cast-role { justify-self: start; padding: 3px 9px; color: #fff; background: var(--cd); border-radius: 8px; font-size: .74rem; font-weight: 900; letter-spacing: .07em; text-transform: uppercase; }
 .cast-card h2 { font-size: 1.4rem; }
@@ -196,7 +196,7 @@ button { font: inherit; color: inherit; }
 .l-body { width: min(620px, 100%); margin: 0 auto; padding: 18px 16px 40px; }
 .l-q { font-size: clamp(1.35rem, 3.6vw, 1.75rem); margin-bottom: 18px; }
 .speaker { display: flex; align-items: flex-end; gap: 10px; margin-bottom: 20px; }
-.speaker .char { width: 112px; height: 112px; flex: none; }
+.speaker .char { width: 128px; height: 128px; flex: none; }
 .speaker .char.react-happy { animation: hop .5s; }
 .speaker .char.react-sad { animation: shake .45s; }
 .bubble { position: relative; min-width: 0; margin-bottom: 30px; padding: 12px 16px; color: var(--heading); border: 2px solid var(--line); border-radius: 16px; font-size: 1.02rem; }
@@ -355,8 +355,8 @@ button { font: inherit; color: inherit; }
   .logo, .back-home { display: none; }
   .nav { grid-template-columns: repeat(3, 1fr); width: 100%; }
   .nav-item { flex-direction: column; gap: 2px; padding: 6px; font-size: .7rem; }
-  .unit-char { width: 96px; height: 96px; top: 120px; }
-  .speaker .char { width: 88px; height: 88px; }
+  .unit-char { width: 112px; height: 112px; top: 112px; }
+  .speaker .char { width: 100px; height: 100px; }
   .l-foot-inner { flex-direction: column; align-items: stretch; min-height: 0; }
   .l-foot .btn { width: 100%; }
   .l-feedback .fb-ico { width: 44px; height: 44px; font-size: 26px; }

@@ -1,185 +1,269 @@
-// The Tokenlingo cast: Marvel heroes from the course's character network, drawn in a
-// flat, round, big-eyed lesson-app style. Each hero embodies one Week 5 idea.
+// The Tokenlingo cast: Marvel heroes from the course's character network, drawn in the
+// style of lesson-app characters: full bodies with big rounded heads, flat colour with a
+// one-sided cel shadow, solid dot eyes, chunky brows, and poses that act out the mood.
 // Every drawing takes an expression: idle, happy, sad or think.
 (function () {
-  const INK = "#22313a";
+  const INK = "#1f1f1f";
+  const tileText = 'font-family="Nunito, system-ui, sans-serif" font-weight="800" text-anchor="middle"';
 
-  function eye(x, y, r, expr, arc = INK) {
-    if (expr === "happy") {
-      return `<path d="M${x - r * 0.78} ${y + r * 0.3} Q${x} ${y - r * 0.95} ${x + r * 0.78} ${y + r * 0.3}" fill="none" stroke="${arc}" stroke-width="${Math.max(2.6, r * 0.34)}" stroke-linecap="round"/>`;
-    }
-    const dx = expr === "think" ? r * 0.3 : r * 0.1;
-    const dy = expr === "think" ? -r * 0.36 : expr === "sad" ? r * 0.3 : r * 0.12;
-    return `<circle cx="${x}" cy="${y}" r="${r}" fill="#fff"/>` +
-      `<circle cx="${x + dx}" cy="${y + dy}" r="${r * 0.54}" fill="${INK}"/>` +
-      `<circle cx="${x + dx + r * 0.2}" cy="${y + dy - r * 0.22}" r="${r * 0.17}" fill="#fff"/>`;
+  // ---------- shared parts ----------
+  // A rounded block with a darker crescent on its right side (flat cel shading).
+  function block(x, y, w, h, r, light, shade, cut = 6) {
+    return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${r}" fill="${shade}"/>` +
+      `<rect x="${x}" y="${y}" width="${w - cut}" height="${h}" rx="${Math.min(r, (w - cut) / 2)}" fill="${light}"/>`;
   }
 
-  function brows(expr, eyes, r, color = INK) {
-    if (expr !== "sad" && expr !== "think") return "";
-    return eyes.map(([x, y], i) => {
-      const dir = i === 0 ? 1 : -1;
-      if (expr === "think") {
-        return i === 0 ? `<path d="M${x - r * 0.8} ${y - r * 1.45} Q${x} ${y - r * 1.9} ${x + r * 0.8} ${y - r * 1.5}" fill="none" stroke="${color}" stroke-width="2.8" stroke-linecap="round"/>` : "";
-      }
-      return `<path d="M${x - r * 0.9 * dir} ${y - r * 1.15} L${x + r * 0.7 * dir} ${y - r * 1.6}" stroke="${color}" stroke-width="3" stroke-linecap="round"/>`;
+  function dotEye(x, y, expr, color = INK, shine = true) {
+    if (expr === "happy") return `<path d="M${x - 4.6} ${y + 1.8} Q${x} ${y - 5.2} ${x + 4.6} ${y + 1.8}" fill="none" stroke="${color}" stroke-width="3.4" stroke-linecap="round"/>`;
+    const dx = expr === "think" ? 1.6 : 0, dy = expr === "think" ? -1.6 : expr === "sad" ? 1.6 : 0;
+    const ry = expr === "sad" ? 4.4 : 5.2;
+    return `<ellipse cx="${x + dx}" cy="${y + dy}" rx="3.7" ry="${ry}" fill="${color}"/>` +
+      (shine ? `<circle cx="${x + dx + 1.2}" cy="${y + dy - 1.8}" r="1.3" fill="#fff"/>` : "");
+  }
+
+  function brow(x, y, side, expr, color = INK, w = 3.6) {
+    // side: -1 left eye, 1 right eye. "inner" is toward the face centre.
+    const o = x + 5.5 * side, i = x - 5.5 * side;
+    let d;
+    if (expr === "happy") d = `M${i} ${y - 11} Q${x} ${y - 14} ${o} ${y - 11.5}`;
+    else if (expr === "sad") d = `M${i} ${y - 13} L${o} ${y - 9}`;
+    else if (expr === "think") d = side === 1 ? `M${i} ${y - 12} Q${x} ${y - 16.5} ${o} ${y - 13}` : `M${i} ${y - 9.5} L${o} ${y - 9.5}`;
+    else d = `M${i} ${y - 10} Q${x} ${y - 12} ${o} ${y - 10}`;
+    return `<path d="${d}" fill="none" stroke="${color}" stroke-width="${w}" stroke-linecap="round"/>`;
+  }
+
+  function mouth(x, y, expr, w = 1, color = INK) {
+    if (expr === "happy") {
+      return `<path d="M${x - 8 * w} ${y - 1} Q${x} ${y + 13 * w} ${x + 8 * w} ${y - 1} Z" fill="#5b1a1f"/>` +
+        `<path d="M${x - 7 * w} ${y - 0.2} L${x + 7 * w} ${y - 0.2} Q${x + 5 * w} ${y + 3.4} ${x} ${y + 3.6} Q${x - 5 * w} ${y + 3.4} ${x - 7 * w} ${y - 0.2} Z" fill="#fff"/>` +
+        `<ellipse cx="${x}" cy="${y + 7.5 * w}" rx="${3.6 * w}" ry="${1.8 * w}" fill="#ff7b8a"/>`;
+    }
+    if (expr === "sad") return `<path d="M${x - 5 * w} ${y + 3} Q${x} ${y - 2.5} ${x + 5 * w} ${y + 3}" fill="none" stroke="${color}" stroke-width="2.8" stroke-linecap="round"/>`;
+    if (expr === "think") return `<path d="M${x - 4 * w} ${y + 1.5} Q${x + 1} ${y + 2} ${x + 4.5 * w} ${y - 1}" fill="none" stroke="${color}" stroke-width="2.8" stroke-linecap="round"/>`;
+    return `<path d="M${x - 5 * w} ${y} Q${x} ${y + 4.5} ${x + 5 * w} ${y}" fill="none" stroke="${color}" stroke-width="2.8" stroke-linecap="round"/>`;
+  }
+
+  // Arm poses: shoulder → elbow → hand. "think" brings the right hand up to the chin.
+  const POSES = {
+    idle: [[[42, 66], [36, 80], [33, 93]], [[78, 66], [84, 80], [87, 93]]],
+    happy: [[[42, 66], [29, 59], [23, 43]], [[78, 66], [91, 59], [97, 43]]],
+    sad: [[[43, 67], [41, 81], [40, 95]], [[77, 67], [79, 81], [80, 95]]],
+    think: [[[42, 66], [36, 80], [33, 93]], [[78, 66], [90, 76], [73, 63]]],
+  };
+  function armPoints(expr, spread) {
+    return POSES[expr].map((pts, s) => pts.map(([x, y], k) => [x + (k ? spread * (s ? 1 : -1) : spread * 0.6 * (s ? 1 : -1)), y]));
+  }
+  function arm(pts, color, hand, w = 10) {
+    const p = pts.map((q) => q.join(",")).join(" ");
+    const [hx, hy] = pts[2];
+    return `<polyline points="${p}" fill="none" stroke="${color}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"/>` +
+      `<circle cx="${hx}" cy="${hy}" r="${w * 0.62}" fill="${hand}"/>`;
+  }
+
+  // Assemble a figure from its parts in back-to-front order.
+  function figure(expr, o) {
+    const arms = armPoints(expr, o.spread || 0);
+    const aw = o.armW || 10;
+    const left = arm(arms[0], o.arm, o.hand, aw), right = arm(arms[1], o.arm, o.hand, aw);
+    const legs = o.legs || `
+      <rect x="47" y="93" width="11" height="20" rx="5.5" fill="${o.leg}"/><rect x="62" y="93" width="11" height="20" rx="5.5" fill="${o.leg}"/>
+      <ellipse cx="50" cy="114" rx="8" ry="4.6" fill="${o.shoe}"/><ellipse cx="70" cy="114" rx="8" ry="4.6" fill="${o.shoe}"/>`;
+    const t = o.torsoBox || [38, 58, 44, 40, 14];
+    const h = o.headBox || [34, 8, 52, 52, 24];
+    return (o.behind ? o.behind(expr) : "") + legs +
+      block(...t, o.torso, o.torsoShade) + (o.torsoExtra || "") +
+      left + (expr === "think" ? "" : right) + (o.hands ? o.hands(arms, expr) : "") +
+      block(...h, o.head, o.headShade) +
+      o.face(expr) +
+      (expr === "think" ? right : "") + (o.front ? o.front(expr) : "");
+  }
+
+  // Wolverine's claws come out of the fist along the forearm.
+  function claws([elbow, hand]) {
+    const dx = hand[0] - elbow[0], dy = hand[1] - elbow[1], L = Math.hypot(dx, dy);
+    const ux = dx / L, uy = dy / L;
+    return [-0.32, 0, 0.32].map((a) => {
+      const c = Math.cos(a), s = Math.sin(a);
+      const vx = ux * c - uy * s, vy = ux * s + uy * c;
+      return `<line x1="${hand[0] + vx * 4}" y1="${hand[1] + vy * 4}" x2="${hand[0] + vx * 18}" y2="${hand[1] + vy * 18}" stroke="#cfd8dc" stroke-width="2.6" stroke-linecap="round"/>`;
     }).join("");
   }
 
-  function mouth(x, y, w, expr) {
-    if (expr === "happy") {
-      return `<path d="M${x - w} ${y} Q${x} ${y + w * 1.6} ${x + w} ${y} Z" fill="${INK}"/>` +
-        `<ellipse cx="${x}" cy="${y + w * 0.52}" rx="${w * 0.42}" ry="${w * 0.2}" fill="#ff7b8a"/>`;
-    }
-    if (expr === "sad") {
-      return `<path d="M${x - w * 0.55} ${y + w * 0.45} Q${x} ${y - w * 0.25} ${x + w * 0.55} ${y + w * 0.45}" fill="none" stroke="${INK}" stroke-width="3" stroke-linecap="round"/>`;
-    }
-    if (expr === "think") {
-      return `<path d="M${x - w * 0.4} ${y + 2} Q${x} ${y + 4} ${x + w * 0.45} ${y - 1}" fill="none" stroke="${INK}" stroke-width="3" stroke-linecap="round"/>`;
-    }
-    return `<path d="M${x - w * 0.6} ${y} Q${x} ${y + w * 0.75} ${x + w * 0.6} ${y}" fill="none" stroke="${INK}" stroke-width="3" stroke-linecap="round"/>`;
+  // Mask eyes: white almonds whose shape carries the expression.
+  function maskEye(x, y, side, expr, fill = "#fff", stroke = "") {
+    const st = stroke ? `stroke="${stroke}" stroke-width="2.6" stroke-linejoin="round"` : "";
+    if (expr === "happy") return `<path d="M${x - 6.5} ${y + 2.5} Q${x} ${y - 7} ${x + 6.5} ${y + 2.5} Q${x} ${y - 1.5} ${x - 6.5} ${y + 2.5} Z" fill="${fill}" ${st}/>`;
+    const o = x + 7 * side, i = x - 6 * side;
+    if (expr === "sad") return `<path d="M${o} ${y + 1} Q${x} ${y - 1} ${i} ${y - 4} Q${x} ${y + 6} ${o} ${y + 1} Z" fill="${fill}" ${st}/>`;
+    if (expr === "think" && side === 1) return `<path d="M${o} ${y - 1} Q${x} ${y - 2.5} ${i} ${y + 0.5} Q${x} ${y + 2.6} ${o} ${y - 1} Z" fill="${fill}" ${st}/>`;
+    return `<path d="M${o} ${y - 4} Q${x} ${y - 3} ${i} ${y + 1} Q${x} ${y + 6.5} ${o} ${y - 4} Z" fill="${fill}" ${st}/>`;
   }
 
-  function face(expr, eyes, r, m, w, opts = {}) {
-    return brows(expr, eyes, r, opts.brow) + eyes.map(([x, y]) => eye(x, y, r, expr, opts.arc)).join("") + mouth(m[0], m[1], w, expr);
+  // Spider-Man's big rounded lenses. The left lens is drawn; the right one is its mirror image.
+  function spideyLenses(expr) {
+    const st = 'fill="#fff" stroke="#1d1d1d" stroke-width="2.8" stroke-linejoin="round"';
+    const shape = {
+      idle: "M57 36 Q55 25 41 23 Q36 31 41 37 Q49 41 57 36 Z",
+      happy: "M57 34 Q52 22 40 25 Q38 30 40 32 Q50 27 57 34 Z",
+      sad: "M57 29 Q50 26 41 31 Q38 37 44 39 Q53 39 57 29 Z",
+      think: "M57 34 Q50 30 41 30 Q39 35 43 37 Q51 39 57 34 Z",
+    };
+    const left = `<path d="${expr === "think" ? shape.idle : shape[expr]}" ${st}/>`;
+    const right = `<path d="${shape[expr]}" ${st} transform="translate(120 0) scale(-1 1)"/>`;
+    return left + right;
   }
 
-  const cheeks = (a, b, color = "#ff9db0") =>
-    `<circle cx="${a[0]}" cy="${a[1]}" r="5" fill="${color}" opacity=".5"/><circle cx="${b[0]}" cy="${b[1]}" r="5" fill="${color}" opacity=".5"/>`;
-
-  const tileText = 'font-family="Nunito, system-ui, sans-serif" font-weight="800" text-anchor="middle"';
-
-  // Spider-Man's mask lenses carry his whole expression.
-  function lens(cx, cy, side, expr) {
-    const st = 'fill="#fff" stroke="#1d1d1d" stroke-width="3.6" stroke-linejoin="round"';
-    if (expr === "happy") {
-      return `<path d="M${cx - 12} ${cy + 3} Q${cx} ${cy - 13} ${cx + 12} ${cy + 3} Q${cx} ${cy - 3} ${cx - 12} ${cy + 3} Z" ${st}/>`;
-    }
-    if (expr === "sad") {
-      return `<ellipse cx="${cx}" cy="${cy + 2}" rx="11" ry="7" transform="rotate(${22 * side} ${cx} ${cy + 2})" ${st}/>`;
-    }
-    if (expr === "think" && side === 1) {
-      return `<ellipse cx="${cx}" cy="${cy}" rx="11" ry="4" transform="rotate(-18 ${cx} ${cy})" ${st}/>`;
-    }
-    return `<ellipse cx="${cx}" cy="${cy}" rx="12" ry="8.5" transform="rotate(${-20 * side} ${cx} ${cy})" ${st}/>`;
-  }
-
-  // Iron Man's glowing eye slits.
-  function slit(cx, cy, side, expr) {
-    const glow = 'fill="#e6fdff" stroke="#4dd0e1" stroke-width="2"';
-    if (expr === "happy") {
-      return `<path d="M${cx - 8} ${cy + 3} Q${cx} ${cy - 6} ${cx + 8} ${cy + 3}" fill="none" stroke="#b3f5ff" stroke-width="4.5" stroke-linecap="round"/>`;
-    }
-    const o = cx + 8 * side, i = cx - 8 * side; // outer and inner x
-    if (expr === "sad") return `<path d="M${o} ${cy + 1} L${i} ${cy - 4} L${i} ${cy + 1} L${o} ${cy + 5} Z" ${glow}/>`;
-    if (expr === "think" && side === 1) return `<path d="M${o} ${cy} L${i} ${cy} L${i} ${cy + 2.5} L${o} ${cy + 2.5} Z" ${glow}/>`;
-    return `<rect x="${cx - 8}" y="${cy - 2}" width="16" height="5.5" rx="2.5" ${glow}/>`;
-  }
-
+  // ---------- the heroes ----------
   const drawings = {
-    wolverine: (e) => `
-      <g stroke="#cfd8dc" stroke-width="3.2" stroke-linecap="round">
-        <line x1="20" y1="92" x2="7" y2="62"/><line x1="24" y1="91" x2="17" y2="58"/><line x1="28" y1="92" x2="27" y2="61"/>
-        <line x1="100" y1="92" x2="113" y2="62"/><line x1="96" y1="91" x2="103" y2="58"/><line x1="92" y1="92" x2="93" y2="61"/>
-      </g>
-      <path d="M34 92 Q60 84 86 92 L90 120 L30 120 Z" fill="#ffc800"/>
-      <path d="M34 92 L45 89 L42 120 L30 120 Z M86 92 L75 89 L78 120 L90 120 Z" fill="#1f4fbf"/>
-      <rect x="38" y="108" width="44" height="5" rx="2" fill="#e0a800"/>
-      <circle cx="24" cy="98" r="9" fill="#1f4fbf"/><circle cx="96" cy="98" r="9" fill="#1f4fbf"/>
-      <path d="M33 40 Q20 22 13 5 Q30 15 42 29 Z M87 40 Q100 22 107 5 Q90 15 78 29 Z" fill="#1d1d1d"/>
-      <circle cx="60" cy="54" r="32" fill="#f6c9a0"/>
-      <path d="M31 66 Q33 80 45 85 L42 70 Z M89 66 Q87 80 75 85 L78 70 Z" fill="#3a2a1e"/>
-      <path d="M28 62 Q28 22 60 22 Q92 22 92 62 Q76 55 60 58 Q44 55 28 62 Z" fill="#ffc800"/>
-      <path d="M31 54 Q37 39 53 47 Q57 55 51 61 Q38 62 31 54 Z M89 54 Q83 39 67 47 Q63 55 69 61 Q82 62 89 54 Z" fill="#1d1d1d"/>
-      ${face(e, [[45, 53], [75, 53]], 7.5, [60, 73], 7, { arc: "#fff", brow: "#ffc800" })}`,
+    wolverine: (e) => figure(e, {
+      behind: () => `<path d="M39 24 L27 1 L50 15 Z M81 24 L93 1 L70 15 Z" fill="#1d1d1d"/>`,
+      legs: `<rect x="47" y="93" width="11" height="20" rx="5.5" fill="#ffc800"/><rect x="62" y="93" width="11" height="20" rx="5.5" fill="#ffc800"/>
+        <rect x="46" y="103" width="13" height="10" rx="4" fill="#1f4fbf"/><rect x="61" y="103" width="13" height="10" rx="4" fill="#1f4fbf"/>
+        <ellipse cx="50" cy="114" rx="8" ry="4.6" fill="#1f4fbf"/><ellipse cx="70" cy="114" rx="8" ry="4.6" fill="#1f4fbf"/>`,
+      torso: "#ffc800", torsoShade: "#e5a800",
+      torsoExtra: `<path d="M39.5 68 Q41 60 50 58.5 L46 89 L39 89 Z M80.5 68 Q79 60 70 58.5 L74 89 L81 89 Z" fill="#1f4fbf"/>
+        <path d="M38 86 H82 V88 Q82 98 72 98 H48 Q38 98 38 88 Z" fill="#1f4fbf"/>`,
+      arm: "#ffc800", hand: "#1f4fbf",
+      hands: (a) => claws(a[0].slice(1)) + claws(a[1].slice(1)),
+      head: "#f3bf95", headShade: "#d99a6c",
+      face: (e) => `
+        <path d="M34 36 Q34 8 60 8 Q86 8 86 36 L86 41 Q74 45 60 46.5 Q46 45 34 41 Z" fill="#ffc800"/>
+        <path d="M78 11 Q86 18 86 36 L86 41 L80.5 42.6 Q82 24 78 11 Z" fill="#e5a800"/>
+        <path d="M37.5 34 Q42 22 56.5 28.5 L57.5 40 Q45 43 37.5 34 Z M82.5 34 Q78 22 63.5 28.5 L62.5 40 Q75 43 82.5 34 Z" fill="#1d1d1d"/>
+        <path d="M34 40 Q33 54 44 59 L42 46 Z M86 40 Q87 54 76 59 L78 46 Z" fill="#3e2a1e"/>
+        ${maskEye(48.5, 34, -1, e)}${maskEye(71.5, 34, 1, e)}
+        <ellipse cx="60" cy="48" rx="3" ry="2.2" fill="#d99a6c"/>
+        ${mouth(60, 53, e, 0.8)}`,
+    }),
 
-    antman: (e) => `
-      <line x1="48" y1="24" x2="36" y2="5" stroke="#90a4ae" stroke-width="3" stroke-linecap="round"/>
-      <line x1="72" y1="24" x2="84" y2="5" stroke="#90a4ae" stroke-width="3" stroke-linecap="round"/>
-      <circle cx="36" cy="5" r="3" fill="#90a4ae"/><circle cx="84" cy="5" r="3" fill="#90a4ae"/>
-      <path d="M36 94 Q60 86 84 94 L88 120 L32 120 Z" fill="#e53935"/>
-      <rect x="36" y="106" width="48" height="6" rx="2" fill="#263238"/>
-      <circle cx="28" cy="104" r="7.5" fill="#263238"/><circle cx="92" cy="104" r="7.5" fill="#263238"/>
-      <circle cx="60" cy="54" r="34" fill="#e53935"/>
-      <rect x="55" y="20" width="10" height="18" rx="5" fill="#cfd8dc"/>
-      <path d="M36 68 Q60 96 84 68 Q60 77 36 68 Z" fill="#cfd8dc"/>
-      <path d="M48 80 L50 86 M56 82 L56 89 M64 82 L64 89 M72 80 L70 86" stroke="#90a4ae" stroke-width="2" stroke-linecap="round"/>
-      <ellipse cx="45" cy="53" rx="13" ry="12" fill="#1d2a33"/><ellipse cx="75" cy="53" rx="13" ry="12" fill="#1d2a33"/>
-      ${brows(e, [[45, 53], [75, 53]], 8.5, "#fff")}
-      ${eye(45, 53, 8.5, e, "#fff")}${eye(75, 53, 8.5, e, "#fff")}
-      ${mouth(60, 75, 6, e)}
-      <g fill="#1d1d1d"><circle cx="104" cy="88" r="3.4"/><circle cx="99" cy="90" r="2.6"/><circle cx="109" cy="86" r="2.6"/></g>
-      <path d="M99 92 L96 96 M104 91 L104 96 M108 89 L111 93 M110 84 L113 80" stroke="#1d1d1d" stroke-width="1.4" stroke-linecap="round"/>`,
+    antman: (e) => figure(e, {
+      behind: () => `<path d="M51 12 L41 1 M69 12 L79 1" stroke="#90a4ae" stroke-width="2.6" stroke-linecap="round"/><circle cx="41" cy="1.5" r="2.4" fill="#90a4ae"/><circle cx="79" cy="1.5" r="2.4" fill="#90a4ae"/>`,
+      leg: "#e53935", shoe: "#263238",
+      torso: "#e53935", torsoShade: "#b71c1c",
+      torsoExtra: `<path d="M39.5 68 Q41 60 48 58.5 L46 97 Q39 95 38.5 88 Z M80.5 68 Q79 60 72 58.5 L74 97 Q81 95 81.5 88 Z" fill="#263238"/>
+        <rect x="38" y="84" width="44" height="5" fill="#263238"/><circle cx="60" cy="86.5" r="4" fill="#cfd8dc"/>`,
+      arm: "#e53935", hand: "#263238",
+      head: "#e53935", headShade: "#b71c1c",
+      face: (e) => `
+        <rect x="56" y="8" width="8" height="14" rx="4" fill="#cfd8dc"/>
+        <path d="M37 45 Q40 59 60 60 Q80 59 83 45 Q60 51 37 45 Z" fill="#cfd8dc"/>
+        <path d="M77 47.5 Q80 47 83 45 Q81 57 70 59.5 Q77 54 77 47.5 Z" fill="#a7b6bd"/>
+        <circle cx="49" cy="33" r="9.5" fill="#263238"/><circle cx="71" cy="33" r="9.5" fill="#263238"/>
+        <circle cx="45.5" cy="29.5" r="2.2" fill="#fff" opacity=".35"/><circle cx="67.5" cy="29.5" r="2.2" fill="#fff" opacity=".35"/>
+        ${dotEye(49, 34, e, "#fff", false)}${dotEye(71, 34, e, "#fff", false)}
+        ${e === "sad" || e === "think" ? brow(49, 33, -1, e, "#fff", 2.6) + brow(71, 33, 1, e, "#fff", 2.6) : ""}
+        ${mouth(60, 53, e, 0.7, "#546e7a")}`,
+      front: () => `<g fill="#1d1d1d"><ellipse cx="86" cy="61" rx="3.4" ry="2.6"/><circle cx="81" cy="62" r="2"/><circle cx="90.5" cy="59.5" r="2.2"/></g>
+        <path d="M82 64 L80 67 M86 63.5 L86 67 M89 62.5 L91.5 65.5 M91.5 58 L94 55" stroke="#1d1d1d" stroke-width="1.2" stroke-linecap="round"/>`,
+    }),
 
-    hulk: (e) => `
-      <path d="M20 102 Q60 82 100 102 L102 120 L18 120 Z" fill="#5fb236"/>
-      <path d="M44 102 Q52 108 60 104 Q68 108 76 102" fill="none" stroke="#2e7d32" stroke-width="2.4" stroke-linecap="round"/>
-      <path d="M24 116 L96 116 L98 120 L22 120 Z" fill="#7b3fa0"/>
-      <circle cx="15" cy="104" r="12" fill="#5fb236"/><circle cx="105" cy="104" r="12" fill="#5fb236"/>
-      <path d="M10 100 Q15 97 20 100 M100 100 Q105 97 110 100" fill="none" stroke="#2e7d32" stroke-width="2" stroke-linecap="round"/>
-      <path d="M27 50 Q27 18 60 18 Q93 18 93 50 L93 64 Q93 90 60 90 Q27 90 27 64 Z" fill="#6abf3c"/>
-      <path d="M25 48 Q22 14 60 12 Q98 14 95 48 L89 34 L85 42 L79 29 L73 38 L65 27 L59 37 L51 27 L45 37 L39 29 L35 42 Z" fill="#1d1d1d"/>
-      ${e === "idle" || e === "happy" ? `<path d="M35 43 Q46 39 55 45 M85 43 Q74 39 65 45" fill="none" stroke="#2e7d32" stroke-width="4" stroke-linecap="round"/>` : ""}
-      ${face(e, [[46, 55], [74, 55]], 8.5, [60, 73], 10, { brow: "#1d1d1d" })}`,
+    hulk: (e) => figure(e, {
+      spread: 6, armW: 15,
+      legs: `<rect x="43" y="92" width="15" height="19" rx="6" fill="#7b3fa0"/><rect x="62" y="92" width="15" height="19" rx="6" fill="#7b3fa0"/>
+        <path d="M43 106 L46 111 L49 106 L52 111 L55 106 L58 110 L58 100 L43 100 Z M62 106 L65 111 L68 106 L71 111 L74 106 L77 110 L77 100 L62 100 Z" fill="#7b3fa0"/>
+        <ellipse cx="49" cy="114" rx="10" ry="5" fill="#5fb236"/><ellipse cx="71" cy="114" rx="10" ry="5" fill="#5fb236"/>`,
+      torsoBox: [31, 57, 58, 41, 16],
+      torso: "#6cc04a", torsoShade: "#4f9e35",
+      torsoExtra: `<path d="M44 68 Q51 73 58 69 M62 69 Q69 73 76 68 M52 80 H57 M63 80 H68" fill="none" stroke="#4f9e35" stroke-width="2.4" stroke-linecap="round"/>
+        <path d="M31 86 H89 V88 Q89 98 79 98 H41 Q31 98 31 88 Z" fill="#7b3fa0"/>`,
+      arm: "#6cc04a", hand: "#5fb236",
+      headBox: [30, 7, 60, 53, 20],
+      head: "#6cc04a", headShade: "#4f9e35",
+      face: (e) => `
+        <path d="M29 30 Q28 4 60 4 Q92 4 91 30 L85 20 L81 27 L75 15 L69 24 L61 13 L54 24 L47 15 L41 26 L36 19 Z" fill="#1d1d1d"/>
+        ${brow(50, 37, -1, e, "#1d1d1d", 4.8)}${brow(70, 37, 1, e, "#1d1d1d", 4.8)}
+        ${dotEye(50, 37, e)}${dotEye(70, 37, e)}
+        <ellipse cx="60" cy="45" rx="5" ry="3.2" fill="#4f9e35"/>
+        ${mouth(60, 52, e, 1.15)}`,
+    }),
 
-    fury: (e) => `
-      <path d="M34 92 Q60 84 86 92 L90 120 L30 120 Z" fill="#37474f"/>
-      <path d="M43 91 L56 120 M77 91 L64 120" stroke="#eceff1" stroke-width="4"/>
-      <path d="M48 88 L60 96 L72 88" fill="#263238"/>
-      <circle cx="60" cy="55" r="31" fill="#f2c09a"/>
-      <path d="M29 50 Q29 21 60 21 Q91 21 91 50 Q85 33 60 33 Q35 33 29 50 Z" fill="#4e342e"/>
-      <path d="M29 50 Q29 40 33 35 L36 51 Z M91 50 Q91 40 87 35 L84 51 Z" fill="#b0bec5"/>
-      <path d="M44 74 Q60 86 76 74 Q74 84 60 86 Q46 84 44 74 Z" fill="#8d6e63" opacity=".45"/>
-      <path d="M30 45 L90 37" stroke="#1d1d1d" stroke-width="3"/>
-      <circle cx="46" cy="54" r="9.5" fill="#1d1d1d"/>
-      ${e === "sad" ? `<path d="M82 45 L67 41" stroke="${INK}" stroke-width="3" stroke-linecap="round"/>` : e === "think" ? `<path d="M66 43 Q74 38 82 42" fill="none" stroke="${INK}" stroke-width="2.8" stroke-linecap="round"/>` : `<path d="M66 44 L82 43" stroke="#4e342e" stroke-width="3" stroke-linecap="round"/>`}
-      ${eye(74, 54, 8, e)}
-      ${mouth(60, 72, 7, e)}`,
+    fury: (e) => figure(e, {
+      leg: "#2a2f33", shoe: "#111",
+      torso: "#353b40", torsoShade: "#1d2124",
+      torsoExtra: `<path d="M38 88 L33 107 Q60 110.5 87 107 L82 88 Z" fill="#353b40"/>
+        <path d="M76 88 H82 L87 107 Q84 107.6 80.5 108 Z" fill="#1d2124"/>
+        <path d="M60 70 V108" stroke="#1d2124" stroke-width="1.6"/>
+        <path d="M47.5 59 L56 77 L60 70 L64 77 L72.5 59" fill="none" stroke="#5d656c" stroke-width="2.2" stroke-linejoin="round"/>`,
+      arm: "#353b40", hand: "#8d5a3b",
+      head: "#8d5a3b", headShade: "#6b4129",
+      face: (e) => `
+        <ellipse cx="50" cy="15.5" rx="9" ry="4" fill="#a8714f" opacity=".7"/>
+        <path d="M34 31 L86 24" stroke="#111" stroke-width="2.4"/>
+        <ellipse cx="50" cy="35" rx="7" ry="6.5" fill="#111"/>
+        ${brow(70, 35, 1, e, "#1d1d1d")}${dotEye(70, 35, e)}
+        <ellipse cx="60" cy="43" rx="3.2" ry="2.4" fill="#6b4129"/>
+        <path d="M51 48.5 Q60 45 69 48.5 Q65.5 50.2 60 49.2 Q54.5 50.2 51 48.5 Z" fill="#241811"/>
+        <path d="M51.5 49 Q50 56 55 60 M68.5 49 Q70 56 65 60" fill="none" stroke="#241811" stroke-width="2.2" stroke-linecap="round"/>
+        <path d="M54.5 58.6 Q60 61.5 65.5 58.6 L64.5 60.4 Q60 62.4 55.5 60.4 Z" fill="#241811"/>
+        ${mouth(60, 52.5, e, 0.85)}`,
+    }),
 
-    spidey: (e) => `
-      <path d="M34 92 Q60 84 86 92 L90 120 L30 120 Z" fill="#1f4fbf"/>
-      <path d="M46 89 Q60 86 74 89 L72 120 L48 120 Z" fill="#e23636"/>
-      <g stroke="#1d1d1d" stroke-width="1.6" stroke-linecap="round"><line x1="60" y1="94" x2="60" y2="106"/><path d="M54 95 L60 99 L66 95 M54 105 L60 101 L66 105" fill="none"/></g>
-      <circle cx="60" cy="100" r="2.6" fill="#1d1d1d"/>
-      <circle cx="25" cy="100" r="7.5" fill="#e23636"/><circle cx="95" cy="100" r="7.5" fill="#e23636"/>
-      <path d="M95 93 L113 30" stroke="#b0bec5" stroke-width="1.6"/>
-      <ellipse cx="60" cy="52" rx="33" ry="35" fill="#e23636"/>
-      <g fill="none" stroke="#8e1b1b" stroke-width="1.3" opacity=".55">
-        <path d="M60 58 L60 17 M60 58 L37 26 M60 58 L83 26 M60 58 L27 52 M60 58 L93 52 M60 58 L35 79 M60 58 L85 79 M60 58 L60 87"/>
-        <ellipse cx="60" cy="57" rx="13" ry="12"/><ellipse cx="60" cy="55" rx="25" ry="25"/>
-      </g>
-      ${lens(45, 50, -1, e)}${lens(75, 50, 1, e)}
-      ${mouth(60, 74, 6, e)}`,
+    spidey: (e) => figure(e, {
+      leg: "#1f4fbf", shoe: "#e23636",
+      torso: "#1f4fbf", torsoShade: "#173d96",
+      torsoExtra: `<path d="M49 58.5 H71 L69 97.5 H51 Z" fill="#e23636"/>
+        <g stroke="#1d1d1d" stroke-width="1.5" stroke-linecap="round"><path d="M60 68 V80 M54.5 69 L60 73 L65.5 69 M54.5 79 L60 75 L65.5 79" fill="none"/></g><ellipse cx="60" cy="74" rx="2.4" ry="3.2" fill="#1d1d1d"/>`,
+      arm: "#e23636", hand: "#e23636",
+      head: "#e23636", headShade: "#b71c1c",
+      face: (e) => `
+        <g fill="none" stroke="#8e1b1b" stroke-width="1.1" opacity=".45">
+          <path d="M60 8 V60 M47 9.5 Q42 34 47 59 M73 9.5 Q78 34 73 59 M35 26 Q60 32 80 26 M34 44 Q60 50 80 44"/>
+        </g>
+        ${spideyLenses(e)}
+        ${mouth(60, 51, e, 0.8, "#7f1010")}`,
+    }),
 
-    loki: (e) => `
-      <path d="M44 30 C40 12 30 3 21 5 C31 9 35 19 35 36 Z M76 30 C80 12 90 3 99 5 C89 9 85 19 85 36 Z" fill="#ffc800"/>
-      <path d="M22 96 Q60 80 98 96 L106 120 L14 120 Z" fill="#1b5e20"/>
-      <path d="M38 92 Q60 86 82 92 L84 120 L36 120 Z" fill="#43a047"/>
-      <path d="M44 92 L60 104 L76 92" fill="none" stroke="#ffc800" stroke-width="4" stroke-linejoin="round"/>
-      <path d="M30 50 Q25 80 34 94 L41 70 Z M90 50 Q95 80 86 94 L79 70 Z" fill="#1d1d1d"/>
-      <circle cx="60" cy="57" r="28" fill="#f5d9c6"/>
-      <path d="M31 52 Q31 25 60 25 Q89 25 89 52 Q85 44 76 42 L60 53 L44 42 Q35 44 31 52 Z" fill="#ffc800"/>
-      <path d="M44 42 L60 53 L76 42" fill="none" stroke="#e0a800" stroke-width="2"/>
-      ${cheeks([40, 70], [80, 70])}
-      ${brows(e, [[48, 61], [72, 61]], 7)}
-      ${eye(48, 61, 7, e)}${eye(72, 61, 7, e)}
-      ${e === "idle" ? `<path d="M52 74 Q61 79 68 71" fill="none" stroke="${INK}" stroke-width="3" stroke-linecap="round"/>` : mouth(60, 74, 7, e)}
-      <g transform="rotate(-14 13 66)"><rect x="1" y="59" width="24" height="13" rx="4" fill="#fff" stroke="#d5dde1" stroke-width="1.6"/><text x="13" y="68.5" ${tileText} font-size="8" fill="#4b4b4b">ball</text></g>
-      <g transform="rotate(14 107 66)"><rect x="95" y="59" width="24" height="13" rx="4" fill="#fff" stroke="#d5dde1" stroke-width="1.6"/><text x="107" y="68.5" ${tileText} font-size="8" fill="#4b4b4b">dog</text></g>`,
+    loki: (e) => figure(e, {
+      behind: () => `
+        <path d="M38 60 L23 116 H97 L82 60 Z" fill="#1b5e20"/>
+        <path d="M33 30 Q30 64 40 70 H80 Q90 64 87 30 Z" fill="#1d1d1d"/>
+        <path d="M41 16 C37 2 28 -2 19 2 C29 5 33 13 34 27 Z M79 16 C83 2 92 -2 101 2 C91 5 87 13 86 27 Z" fill="#ffc800"/>`,
+      leg: "#2e7d32", shoe: "#ffc800",
+      torso: "#43a047", torsoShade: "#2e7d32",
+      torsoExtra: `<path d="M45 59 L60 72 L75 59" fill="none" stroke="#ffc800" stroke-width="4" stroke-linejoin="round"/><rect x="38" y="86" width="44" height="4" fill="#ffc800"/>`,
+      arm: "#2e7d32", hand: "#1b5e20",
+      head: "#f6dcc8", headShade: "#e3bfa5",
+      face: (e) => `
+        <path d="M34 31 Q34 8 60 8 Q86 8 86 31 Q78 23 68 23 L60 33 L52 23 Q42 23 34 31 Z" fill="#ffc800"/>
+        <path d="M78 12 Q86 19 86 31 Q83 28 79.5 25.5 Q81 18 78 12 Z" fill="#e0a800"/>
+        <path d="M34 29 Q32 47 39 57 L41 33 Z M86 29 Q88 47 81 57 L79 33 Z" fill="#1d1d1d"/>
+        ${brow(51, 39, -1, e)}${brow(69, 39, 1, e === "idle" ? "think" : e)}
+        ${dotEye(51, 39, e)}${dotEye(69, 39, e)}
+        <ellipse cx="60" cy="46" rx="2.8" ry="2.1" fill="#e3bfa5"/>
+        ${e === "idle" ? `<path d="M54 52 Q62 56 67 50" fill="none" stroke="${INK}" stroke-width="2.8" stroke-linecap="round"/>` : mouth(60, 52, e, 0.9)}`,
+      front: (e) => {
+        const up = e === "happy";
+        return `<g transform="rotate(-12 ${up ? 22 : 14} ${up ? 26 : 30})"><rect x="${up ? 10 : 2}" y="${up ? 20 : 24}" width="24" height="12" rx="4" fill="#fff" stroke="#d5dde1" stroke-width="1.5"/><text x="${up ? 22 : 14}" y="${up ? 28.8 : 32.8}" ${tileText} font-size="7.5" fill="#4b4b4b">ball</text></g>
+          <g transform="rotate(12 ${up ? 98 : 106} ${up ? 26 : 30})"><rect x="${up ? 86 : 94}" y="${up ? 20 : 24}" width="24" height="12" rx="4" fill="#fff" stroke="#d5dde1" stroke-width="1.5"/><text x="${up ? 98 : 106}" y="${up ? 28.8 : 32.8}" ${tileText} font-size="7.5" fill="#4b4b4b">dog</text></g>`;
+      },
+    }),
 
-    ironman: (e) => `
-      <path d="M34 92 Q60 84 86 92 L90 120 L30 120 Z" fill="#c62828"/>
-      <path d="M48 106 L72 106 L70 120 L50 120 Z" fill="#ffc107"/>
-      <circle cx="60" cy="98" r="6" fill="#b3f5ff" stroke="#4dd0e1" stroke-width="2.6"/>
-      <circle cx="26" cy="102" r="8" fill="#ffc107"/><circle cx="94" cy="102" r="8" fill="#ffc107"/>
-      <path d="M28 52 Q28 18 60 18 Q92 18 92 52 L90 70 Q86 88 60 90 Q34 88 30 70 Z" fill="#c62828"/>
-      <path d="M36 40 Q60 33 84 40 L84 62 Q82 80 70 86 L50 86 Q38 80 36 62 Z" fill="#ffc107"/>
-      <path d="M41 66 L49 71 M79 66 L71 71" stroke="#d4a000" stroke-width="2" stroke-linecap="round"/>
-      ${slit(46, 53, -1, e)}${slit(74, 53, 1, e)}
-      ${e === "happy" ? `<path d="M50 75 Q60 83 70 75" fill="none" stroke="#8a6d00" stroke-width="3" stroke-linecap="round"/>`
-        : e === "sad" ? `<path d="M51 80 Q60 73 69 80" fill="none" stroke="#8a6d00" stroke-width="3" stroke-linecap="round"/>`
-        : e === "think" ? `<path d="M53 78 L67 76" stroke="#8a6d00" stroke-width="3" stroke-linecap="round"/>`
-        : `<path d="M52 77 L68 77" stroke="#8a6d00" stroke-width="3" stroke-linecap="round"/>`}`,
+    ironman: (e) => figure(e, {
+      leg: "#c62828", shoe: "#ffc107",
+      torso: "#c62828", torsoShade: "#8e0000",
+      torsoExtra: `<path d="M49 80 H71 L69 97.5 H51 Z" fill="#ffc107"/><circle cx="60" cy="69" r="5.5" fill="#d9fbff" stroke="#4dd0e1" stroke-width="2.6"/>`,
+      arm: "#c62828", hand: "#ffc107",
+      head: "#c62828", headShade: "#8e0000",
+      face: (e) => {
+        const slit = (x, side) => {
+          if (e === "happy") return `<path d="M${x - 6} ${y + 2} Q${x} ${y - 5} ${x + 6} ${y + 2}" fill="none" stroke="#d9fbff" stroke-width="3.6" stroke-linecap="round"/>`;
+          const o = x + 6.5 * side, i = x - 6.5 * side;
+          if (e === "sad") return `<path d="M${o} ${y + 1.5} L${i} ${y - 3} L${i} ${y + 1} L${o} ${y + 4.5} Z" fill="#d9fbff" stroke="#4dd0e1" stroke-width="1.4" stroke-linejoin="round"/>`;
+          if (e === "think" && side === 1) return `<rect x="${x - 6.5}" y="${y - 0.5}" width="13" height="2.6" rx="1.3" fill="#d9fbff"/>`;
+          return `<rect x="${x - 6.5}" y="${y - 2}" width="13" height="5" rx="2.5" fill="#d9fbff" stroke="#4dd0e1" stroke-width="1.4"/>`;
+        };
+        const y = 34;
+        const m = e === "happy" ? `<path d="M52 51 Q60 57 68 51" fill="none" stroke="#8a6d00" stroke-width="2.8" stroke-linecap="round"/>`
+          : e === "sad" ? `<path d="M53 54 Q60 49 67 54" fill="none" stroke="#8a6d00" stroke-width="2.8" stroke-linecap="round"/>`
+          : e === "think" ? `<path d="M54 52.5 L66 51" stroke="#8a6d00" stroke-width="2.8" stroke-linecap="round"/>`
+          : `<path d="M53 52 H67" stroke="#8a6d00" stroke-width="2.8" stroke-linecap="round"/>`;
+        return `
+          <path d="M40 23 Q60 19 80 23 L80 44 Q78 56 68 60 H52 Q42 56 40 44 Z" fill="#ffc107"/>
+          <path d="M74 21.5 Q80 22 80 30 V44 Q78 56 68 60 H65 Q75 51 75 37 Z" fill="#e0a000"/>
+          <path d="M44 44 L50 48 M76 44 L70 48" stroke="#d4a000" stroke-width="1.8" stroke-linecap="round"/>
+          ${slit(50, -1)}${slit(70, 1)}${m}`;
+      },
+    }),
   };
 
   const CHARS = {
@@ -196,7 +280,7 @@
       lines: ["Shrink carefully. Something always gets lost.", "Stopwords are tiny, but they're everywhere.", "Every cleaning step deletes information."],
     },
     hulk: {
-      name: "Hulk", role: "The Counter", color: "#6abf3c", dark: "#7b3fa0",
+      name: "Hulk", role: "The Counter", color: "#6cc04a", dark: "#7b3fa0",
       teaches: "Counting tokens, types and frequencies, and Zipf's law on linear and log-log axes.",
       quote: "HULK COUNT FIRST. HULK MODEL LATER.",
       lines: ["HULK COUNT FIRST!", "Few words BIG. Many words tiny.", "Log-log axes make curve STRAIGHT. Hulk like."],
@@ -230,7 +314,7 @@
   for (const [id, c] of Object.entries(CHARS)) {
     c.id = id;
     c.svg = (expr = "idle", cls = "") =>
-      `<svg class="char ${cls}" viewBox="0 0 120 120" role="img" aria-label="${c.name}, ${c.role}">${drawings[id](expr)}</svg>`;
+      `<svg class="char ${cls}" viewBox="0 -2 120 122" role="img" aria-label="${c.name}, ${c.role}">${drawings[id](expr)}</svg>`;
   }
 
   window.TL_CHARS = CHARS;
