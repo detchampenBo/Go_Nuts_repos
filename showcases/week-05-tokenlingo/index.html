@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="description" content="A Duolingo-style game for Week 5 of 02805: tokens, counting, n-grams and Bag of Words, taught by a cast of characters." />
+    <title>Tokenlingo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app">
+      <aside class="sidebar" aria-label="Main">
+        <a class="logo" href="#learn" data-view="learn"><span class="logo-mark" id="logo-mark"></span><span>tokenlingo</span></a>
+        <nav class="nav">
+          <a href="#learn" data-view="learn" class="nav-item"><span class="nav-ico" data-icon="home"></span><span>Learn</span></a>
+          <a href="#cast" data-view="cast" class="nav-item"><span class="nav-ico" data-icon="cast"></span><span>Cast</span></a>
+          <a href="#guide" data-view="guide" class="nav-item"><span class="nav-ico" data-icon="book"></span><span>Guidebook</span></a>
+        </nav>
+        <a class="back-home" href="../../index.html">← Go Nuts library</a>
+      </aside>
+
+      <main class="main">
+        <div class="statbar" aria-label="Your progress">
+          <span class="course-chip" title="DTU 02805 · Week 5">W5</span>
+          <span class="stat stat-streak" id="stat-streak"></span>
+          <span class="stat stat-xp" id="stat-xp"></span>
+          <button class="stat sound-toggle" id="sound-toggle" type="button"></button>
+        </div>
+        <section id="view-learn" class="view" aria-label="Learning path"></section>
+        <section id="view-cast" class="view" aria-label="Meet the cast" hidden></section>
+        <section id="view-guide" class="view" aria-label="Guidebook" hidden></section>
+      </main>
+
+      <aside class="rail" aria-label="Quests">
+        <div class="rail-card" id="quests"></div>
+        <div class="rail-card" id="fact"></div>
+        <div class="rail-card rail-about">
+          <h3>About this game</h3>
+          <p>Built for Week 5 of DTU 02805 Social Graphs and Interactions: <em>From language to numbers</em>. Every lesson follows a section of the course page.</p>
+          <a href="https://sunelehmann.com/socialgraphs2026-web/weeks/week5.html" target="_blank" rel="noopener">Open the Week 5 page ↗</a>
+        </div>
+      </aside>
+    </div>
+
+    <div id="lesson" class="lesson" hidden role="dialog" aria-modal="true" aria-label="Lesson">
+      <div class="l-top">
+        <button class="icon-btn l-close" id="l-close" type="button" aria-label="Quit lesson"></button>
+        <div class="l-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100"><span id="l-bar"></span><em id="l-combo"></em></div>
+        <span class="l-hearts" id="l-hearts"></span>
+      </div>
+      <div class="l-scroll"><div class="l-body" id="l-body"></div></div>
+      <footer class="l-foot" id="l-foot">
+        <div class="l-foot-inner">
+          <div class="l-feedback" id="l-feedback" aria-live="polite"></div>
+          <button class="btn btn-primary" id="l-check" type="button" disabled>Check</button>
+        </div>
+      </footer>
+      <div class="sheet" id="sheet" hidden></div>
+    </div>
+
+    <script src="characters.js"></script>
+    <script src="lessons.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
