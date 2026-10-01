@@ -26,7 +26,7 @@
 
   const gen = () => {
     const rows = [["New", 0.55], ["Wakanda", 0.3], ["the", 0.15]];
-    return `<figure class="v v-gen"><figcaption>Toki's toy table · hand-written teaching values, not a real model</figcaption>
+    return `<figure class="v v-gen"><figcaption>Toy table · hand-written teaching values, not a real model</figcaption>
       <p class="v-prompt">Iron Man flew to <span class="v-caret">▍</span></p>
       ${rows.map(([w, p]) => `<div class="v-bar"><span class="v-bar-label">${w}</span><span class="v-bar-track"><span style="width:${p * 100}%"></span></span><span class="v-bar-num">${p.toFixed(2)}</span></div>`).join("")}
     </figure>`;
@@ -87,7 +87,7 @@
   // ---------- units and lessons ----------
   const UNITS = [
     {
-      id: "u1", title: "From raw text to tokens", section: "Sections 1–2", char: "toki", color: "#58cc02", dark: "#58a700",
+      id: "u1", title: "From raw text to tokens", section: "Sections 1–2", char: "wolverine", color: "#1cb0f6", dark: "#1899d6",
       lessons: [
         {
           id: "why", title: "Why language?", desc: "Language as data about people, and the next-token loop.",
@@ -95,7 +95,7 @@
             { type: "choice", say: "In Kuuk Thaayorre you don't ask for the beer on your right. You use the compass.", q: "How would a Kuuk Thaayorre speaker point you to the beer?", options: ["The beer southwest of you", "The beer on your left", "The beer in front of you", "The beer next to the chips"], answer: 0, why: "Kuuk Thaayorre uses absolute directions (north, south, east, west) where English uses left and right, so speakers always keep track of which way they face." },
             { type: "choice", say: "Gaby (2012) asked people to lay out pictures of a person growing older.", q: "How did Kuuk Thaayorre speakers order the pictures?", options: ["East to west, whichever way they were seated", "Always left to right", "Always right to left", "Oldest picture in the middle"], answer: 0, why: "The order followed the compass, not the table. Seat them facing another way and the sequence turns too. Language is data about how people think." },
             { type: "build", say: "Chatbots write one token at a time. Put the loop in order.", q: "Build the next-token loop", tiles: ["text so far", "probabilities for the next token", "pick one token", "append it", "look it up in a dictionary"], answer: ["text so far", "probabilities for the next token", "pick one token", "append it"], why: "A causal language model repeats: text so far → probabilities over possible next tokens → pick one → add it → do it again." },
-            { type: "choice", say: "Here's my toy probability table.", visual: gen(), q: "Toki samples the next token 100 times. About how often is it 'Wakanda'?", options: ["About 30 times", "Never, the top token always wins", "About 55 times", "Exactly once"], answer: 0, why: "Sampling follows the probabilities, so roughly 30 out of 100. Only greedy decoding would always pick 'New'." },
+            { type: "choice", say: "Here's my toy probability table.", visual: gen(), q: "You sample the next token 100 times. About how often is it 'Wakanda'?", options: ["About 30 times", "Never, the top token always wins", "About 55 times", "Exactly once"], answer: 0, why: "Sampling follows the probabilities, so roughly 30 out of 100. Only greedy decoding would always pick 'New'." },
             { type: "choice", say: "I asked the same prompt twice and got two different sentences!", q: "Why?", options: ["The model samples from probabilities, so it is stochastic", "The tokenizer changed between runs", "The vocabulary was shuffled", "Wikipedia was edited in between"], answer: 0, why: "A lower-probability pick can send the sentence somewhere new. A deterministic model would give the same output every time." },
           ],
         },
@@ -111,14 +111,14 @@
           ],
         },
         {
-          id: "preprocess", title: "Preprocessing choices", char: "stoppy", desc: "Every cleaning step throws something away.",
+          id: "preprocess", title: "Preprocessing choices", char: "antman", desc: "Every cleaning step throws something away.",
           ex: [
             { type: "match", q: "Match each step to what it does", pairs: [["lowercasing", "Apple → apple"], ["stopword removal", "drops the, of, in"], ["lemmatization", "fighting → fight"], ["punctuation filter", "drops . , !"]] },
-            { type: "multi", say: "I'm Stoppy. My friends and I get filtered out a lot.", q: "Select every stopword", options: ["the", "Thor", "of", "hammer", "in", "were"], answer: [0, 2, 4, 5], why: "Stopwords are very frequent function words. Thor and hammer are content words, the ones left behind after filtering." },
+            { type: "multi", say: "Stopwords are tiny, but they're everywhere. Let's shrink some text.", q: "Select every stopword", options: ["the", "Thor", "of", "hammer", "in", "were"], answer: [0, 2, 4, 5], why: "Stopwords are very frequent function words. Thor and hammer are content words, the ones left behind after filtering." },
             { type: "build", say: "Lemmatize me: heroes were fighting", q: "Map each word to its lemma", tiles: ["hero", "be", "fight", "heroes", "was", "fought"], answer: ["hero", "be", "fight"], why: "Lemmatization maps word forms to dictionary forms: heroes → hero, were → be, fighting → fight. Number and tense are gone." },
             { type: "choice", say: "'The Big Apple' is New York. 'a big apple' is lunch.", q: "Which step erases the difference?", options: ["Lowercasing", "Tokenization", "Counting", "Stopword removal"], answer: 0, why: "Sometimes the capital letter is exactly the useful information. Lowercasing deletes it." },
             { type: "choice", say: "Here's my trick question. You measure 'power' as a share of all tokens.", q: "You remove stopwords. No 'power' token is removed. What happens to power's relative frequency?", options: ["It goes up, because the total shrinks", "It stays exactly the same", "It goes down", "It becomes zero"], answer: 0, why: "Relative frequency is count ÷ total tokens. Dropping the, of and in shrinks the total, so every remaining word looks more frequent." },
-            { type: "choice", char: "toki", say: "A speech transcript is full of 'um' and 'uh'.", q: "When should you keep them as tokens?", options: ["When hesitation is part of what you study", "Never, they are noise", "Only after lemmatization", "Only when capitalized"], answer: 0, why: "The useful choice depends on what you measure. In speech, hesitations carry information." },
+            { type: "choice", char: "wolverine", say: "A speech transcript is full of 'um' and 'uh'.", q: "When should you keep them as tokens?", options: ["When hesitation is part of what you study", "Never, they are noise", "Only after lemmatization", "Only when capitalized"], answer: 0, why: "The useful choice depends on what you measure. In speech, hesitations carry information." },
           ],
         },
         {
@@ -136,15 +136,15 @@
       ],
     },
     {
-      id: "u2", title: "Counting language", section: "Section 3", char: "zipfy", color: "#ce82ff", dark: "#a568cc",
+      id: "u2", title: "Counting language", section: "Section 3", char: "hulk", color: "#ce82ff", dark: "#a568cc",
       lessons: [
         {
           id: "count", title: "Count first", desc: "Tokens, types, hapaxes and relative frequency.",
           ex: [
-            { type: "number", say: "Before any model, count! This corpus has 28 tokens.", visual: corpus(), q: "How many times does 'the' occur?", answer: 4, why: "Once in each sentence. Count it yourself before you believe Counter." },
+            { type: "number", say: "HULK COUNT FIRST! This corpus has 28 tokens.", visual: corpus(), q: "How many times does 'the' occur?", answer: 4, why: "Once in each sentence. Count it yourself before you believe Counter." },
             { type: "choice", visual: corpus(), q: "counts.most_common(2) puts which two at the top?", options: ["'the' and '.'", "'iron' and 'man'", "'villain' and 'york'", "'fights' and 'city'"], answer: 0, why: "The definite article and a full stop win, 4 times each. That is a fact about English, not about superheroes." },
-            { type: "multi", char: "hapax", say: "I'm Hapax. I show up exactly once.", visual: corpus(), q: "Select every hapax", options: ["fights", "villain", "escapes", "to", "follows", "city", "york", "thanks"], answer: [0, 2, 4, 5, 7], why: "fights, escapes, follows, city and thanks occur once each: 5 of the 13 types, almost 40%." },
-            { type: "choice", char: "hapax", say: "Big corpora must get rid of me, right?", q: "Across 727,000 tokens of full Marvel pages, what share of the ~27,000 types occur only once?", options: ["About 36%", "About 1%", "About 90%", "None"], answer: 0, why: "The hapax share shrinks surprisingly slowly. More text keeps bringing in new rare words." },
+            { type: "multi", char: "fury", say: "A hapax shows up exactly once. Like me.", visual: corpus(), q: "Select every hapax", options: ["fights", "villain", "escapes", "to", "follows", "city", "york", "thanks"], answer: [0, 2, 4, 5, 7], why: "fights, escapes, follows, city and thanks occur once each: 5 of the 13 types, almost 40%." },
+            { type: "choice", char: "fury", say: "Big corpora must get rid of hapaxes, right? Think again.", q: "Across 727,000 tokens of full Marvel pages, what share of the ~27,000 types occur only once?", options: ["About 36%", "About 1%", "About 90%", "None"], answer: 0, why: "The hapax share shrinks surprisingly slowly. More text keeps bringing in new rare words." },
             { type: "choice", q: "'the' occurs 4 times in 28 tokens. Its relative frequency is…", options: ["4 / 28 ≈ 0.14", "4", "28 / 4 = 7", "4 / 13 ≈ 0.31"], answer: 0, why: "Divide by the total number of tokens, not by the number of types." },
             { type: "choice", q: "Why use relative frequencies to compare documents?", options: ["Longer documents contain more of almost everything", "Raw counts can't be sorted", "They remove stopwords", "They fix the tokenizer"], answer: 0, why: "Dividing by length puts a short page and a long page on the same scale." },
           ],
@@ -152,7 +152,7 @@
         {
           id: "zipf", title: "Zipf's law", desc: "A few words everywhere, and a very long tail.",
           ex: [
-            { type: "choice", say: "My tail is long, like the vocabulary.", visual: zipf("linear"), q: "With s = 1, the word at rank 2 occurs about…", options: ["half as often as rank 1", "as often as rank 1", "twice as often", "100 times less often"], answer: 0, why: "f(r) ∝ 1 / r^s. With s = 1, rank 2 gets 1/2 of rank 1, and rank 10 gets 1/10." },
+            { type: "choice", say: "Few words BIG. Many words tiny. Long tail!", visual: zipf("linear"), q: "With s = 1, the word at rank 2 occurs about…", options: ["half as often as rank 1", "as often as rank 1", "twice as often", "100 times less often"], answer: 0, why: "f(r) ∝ 1 / r^s. With s = 1, rank 2 gets 1/2 of rank 1, and rank 10 gets 1/10." },
             { type: "number", q: "Rank 1 occurs 1,000 times. With s = 1, about how often does rank 10 occur?", answer: 100, why: "1,000 × 1/10 = 100." },
             { type: "choice", visual: zipf("both"), q: "Draw the same ideal curve on log-log axes. What does it become?", options: ["A straight line", "A circle", "The same steep curve", "A flat line"], answer: 0, why: "log f = −s · log r + c is a straight line with slope −s. Same numbers, different coordinate system." },
             { type: "choice", say: "Throwback to week 2!", q: "The rank-frequency plot is the CCDF with its axes swapped. Why?", options: ["A word's rank is the number of words at least that frequent", "Both always use linear axes", "Both need careful binning", "Words are nodes"], answer: 0, why: "The rank of a word with frequency f counts the words occurring at least f times, which is what a CCDF counts. That is also why neither plot needs binning." },
@@ -164,7 +164,7 @@
           ex: [
             { type: "choice", say: "Three claims, three flaws. Let's go.", visual: report(), q: "Claim A lists 'the' and 'of' at the top. What is wrong with calling that a finding?", options: ["Function words top almost every English corpus", "The counts must be wrong", "'the' is not a word", "Nothing, it is a finding about Marvel"], answer: 0, why: "A frequency list is not a finding. You need a comparison before it says anything about Marvel." },
             { type: "choice", visual: report(), q: "Claim B says a straight log-log line 'proves' Zipf's law. What is honest?", options: ["The plot is suggestive, not proof", "It proves Heaps' law instead", "It proves the corpus is random", "It is proof, but only on linear axes"], answer: 0, why: "A straight-ish log-log line is consistent with Zipf. To say more you would fit it, compare alternatives and check the tails." },
-            { type: "choice", char: "gramps", visual: report(), q: "Claim C: 'power' occurs 1,204 times, so it is the central theme. What do you check first?", options: ["A concordance: how is 'power' used?", "The number of hapaxes", "The tokenizer's speed", "Whether 'power' is a stopword"], answer: 0, why: "A raw count is not meaning. 'power' can be political, electrical or a superpower. Read it in context." },
+            { type: "choice", char: "spidey", visual: report(), q: "Claim C: 'power' occurs 1,204 times, so it is the central theme. What do you check first?", options: ["A concordance: how is 'power' used?", "The number of hapaxes", "The tokenizer's speed", "Whether 'power' is a stopword"], answer: 0, why: "A raw count is not meaning. 'power' can be political, electrical or a superpower. Read it in context." },
             { type: "multi", q: "Which habits make a claim about a corpus honest?", options: ["State the preprocessing you used", "Say what you compared against", "Check examples in the raw text", "Trust the plot if the line looks straight", "Report the top counts as themes"], answer: [0, 1, 2], why: "What was counted, what it was compared against, and what you verified in the text." },
             { type: "choice", say: "Last one!", q: "Your code says 'power' occurs 1,204 times. Your own reading of the text disagrees. Who wins?", options: ["The text. Then find out what the code did", "The code, computers don't miscount", "Whichever number is bigger", "Average the two"], answer: 0, why: "If the code and the text disagree, the text wins. Work out what happened." },
           ],
@@ -172,12 +172,12 @@
       ],
     },
     {
-      id: "u3", title: "Words in context", section: "Section 3", char: "gramps", color: "#ff9600", dark: "#cd7900",
+      id: "u3", title: "Words in context", section: "Section 3", char: "spidey", color: "#ff4b4b", dark: "#ea2b2b",
       lessons: [
         {
           id: "ngrams", title: "N-grams", desc: "Slide a window and keep a little order.",
           ex: [
-            { type: "multi", say: "Each of my segments is a token. Slide a window over me!", q: "Select every bigram in 'New York City'", options: ["New York", "York City", "New City", "New York City", "City New"], answer: [0, 1], why: "Bigrams are neighbouring pairs: New York and York City. 'New York City' is the single trigram." },
+            { type: "multi", say: "I'm from Queens. Let's web up New York City.", q: "Select every bigram in 'New York City'", options: ["New York", "York City", "New City", "New York City", "City New"], answer: [0, 1], why: "Bigrams are neighbouring pairs: New York and York City. 'New York City' is the single trigram." },
             { type: "number", q: "A sentence has 6 tokens. How many trigrams does it contain?", answer: 4, why: "A window of 3 fits 6 − 3 + 1 = 4 times." },
             { type: "choice", q: "As n grows from 1 to 5, each n-gram keeps…", options: ["more local order, but exact repeats get rarer", "less order and more repeats", "the same information", "only stopwords"], answer: 0, why: "That is the context-versus-sparsity trade-off. A particular five-word sequence may occur once in the whole corpus." },
             { type: "choice", say: "This is next-token prediction too, just tiny.", q: "'New' is followed by 'York' 900 times and by 'car' 100 times. What is P(York | New)?", options: ["0.9", "0.1", "900", "0.5"], answer: 0, why: "P(York | New) = count(New York) ÷ count(New followed by anything) = 900 ÷ 1,000." },
@@ -198,12 +198,12 @@
       ],
     },
     {
-      id: "u4", title: "From words to documents", section: "Sections 4–5", char: "baggy", color: "#1cb0f6", dark: "#1899d6",
+      id: "u4", title: "From words to documents", section: "Sections 4–5", char: "loki", color: "#58cc02", dark: "#58a700",
       lessons: [
         {
           id: "bow", title: "Bag of Words", desc: "Turn a document into a row of counts.",
           ex: [
-            { type: "vector", say: "Toss a document in. I count every vocabulary word.", q: "Build the vector for 'models predict the future'", vocab: ["brains", "build", "future", "models", "predict", "the"], doc: "models predict the future", answer: [0, 0, 1, 1, 1, 1], why: "One position per vocabulary term, in the same order for every document: [0, 0, 1, 1, 1, 1]." },
+            { type: "vector", say: "Toss me a document. I count every word and forget the order.", q: "Build the vector for 'models predict the future'", vocab: ["brains", "build", "future", "models", "predict", "the"], doc: "models predict the future", answer: [0, 0, 1, 1, 1, 1], why: "One position per vocabulary term, in the same order for every document: [0, 0, 1, 1, 1, 1]." },
             { type: "vector", say: "Zeros count too.", q: "Build the vector for 'Loki tricks Thor and Thor tricks Loki'", vocab: ["and", "hulk", "loki", "smashes", "thor", "tricks"], doc: "loki tricks thor and thor tricks loki", answer: [1, 0, 2, 0, 2, 2], why: "hulk and smashes are in the vocabulary but not in this document, so their cells stay 0." },
             { type: "choice", visual: matrix(4), q: "Read down the 'predict' column. What does it say?", options: ["[1, 1, 0]: predict is in documents 1 and 2", "[0, 0, 1, 1, 1, 1]", "predict is the most common word", "[0, 0, 1]"], answer: 0, why: "Row view: one document across all terms. Column view: one term across all documents." },
             { type: "choice", visual: matrix(-1), q: "3 documents and 6 vocabulary terms. What shape is the document-term matrix?", options: ["3 × 6", "6 × 3", "6 × 6", "3 × 3"], answer: 0, why: "Rows are documents, columns are vocabulary terms. Some books use the transpose, the term-document matrix." },
@@ -214,19 +214,19 @@
         {
           id: "collide", title: "The collision machine", desc: "Different meanings, same vector.",
           ex: [
-            { type: "choice", say: "Shake shake shake. I forget the order!", q: "Which sentence gets the SAME vector as 'the dog chased the ball'?", options: ["the ball chased the dog", "a dog chased a ball", "the dog chased the balls", "the dog chased"], answer: 0, why: "Same words, same counts, same vector. Opposite story." },
-            { type: "build", say: "Flip the meaning. Keep my vector.", q: "Rearrange 'brains predict models'", tiles: ["models", "predict", "brains"], answer: ["models", "predict", "brains"], why: "Both sentences give [1, 0, 0, 1, 1, 0] over brains, build, future, models, predict, the. Bag of Words can't tell them apart." },
+            { type: "choice", say: "Mischief time. I keep the counts and lose the order.", q: "Which sentence gets the SAME vector as 'the dog chased the ball'?", options: ["the ball chased the dog", "a dog chased a ball", "the dog chased the balls", "the dog chased"], answer: 0, why: "Same words, same counts, same vector. Opposite story." },
+            { type: "build", say: "Flip the meaning. Keep the vector. Delightful.", q: "Rearrange 'brains predict models'", tiles: ["models", "predict", "brains"], answer: ["models", "predict", "brains"], why: "Both sentences give [1, 0, 0, 1, 1, 0] over brains, build, future, models, predict, the. Bag of Words can't tell them apart." },
             { type: "choice", q: "Where is losing word order probably fine?", options: ["Comparing what two political speeches talk about", "Working out who did what to whom", "Translating a sentence", "Spotting negation like 'not good'"], answer: 0, why: "Topic-level questions survive the bag. Questions about relations between words do not." },
             { type: "choice", q: "Bag of Words can't tell 'bank' (money) from 'bank' (river). Why?", options: ["Each type gets one column, whatever its context", "The tokenizer drops it", "It's a stopword", "Banks are rare"], answer: 0, why: "One column per type, so every sense of a word lands in the same cell." },
           ],
         },
         {
-          id: "cosine", title: "Where counting stops", char: "cosi", desc: "Cosine similarity, and what counts can't see.",
+          id: "cosine", title: "Where counting stops", char: "ironman", desc: "Cosine similarity, and what counts can't see.",
           ex: [
-            { type: "choice", say: "I'm Cosi. I only care about the angle between two vectors.", q: "A cosine of 1 means the two vectors…", options: ["point in the same direction", "share no terms", "have the same length", "are at right angles"], answer: 0, why: "1 means same direction. 0 means right angles, which for word counts means no shared terms." },
+            { type: "choice", say: "Cosine only cares about the angle between two vectors.", q: "A cosine of 1 means the two vectors…", options: ["point in the same direction", "share no terms", "have the same length", "are at right angles"], answer: 0, why: "1 means same direction. 0 means right angles, which for word counts means no shared terms." },
             { type: "choice", visual: cosine(), q: "What is cos(x, y)?", options: ["0.75", "3", "0.5", "1"], answer: 0, why: "x · y = 3 (future, predict, the). ‖x‖ = ‖y‖ = √4 = 2. So 3 ÷ (2 × 2) = 0.75." },
             { type: "choice", q: "A short page and a long page use words in exactly the same proportions. Their cosine is…", options: ["1", "0", "the ratio of their lengths", "undefined"], answer: 0, why: "Cosine divides by the lengths, so only direction counts." },
-            { type: "choice", say: "Wolverine's page looks a lot like Quicksilver's. They aren't even linked.", q: "Why, with raw counts?", options: ["the, and and of dominate every vector", "They are secretly the same character", "Cosine favours short pages", "The link data is wrong"], answer: 0, why: "Remove the stopwords and language starts to rediscover the network: linked characters tend to be described in similar words." },
+            { type: "choice", char: "wolverine", say: "My page looks a lot like Quicksilver's. We aren't even linked, bub.", q: "Why, with raw counts?", options: ["the, and and of dominate every vector", "They are secretly the same character", "Cosine favours short pages", "The link data is wrong"], answer: 0, why: "Remove the stopwords and language starts to rediscover the network: linked characters tend to be described in similar words." },
             { type: "choice", visual: onehot(), q: "cosine(dog, puppy) = ?", options: ["0, same as dog vs democracy", "1", "0.5", "Higher than dog vs democracy"], answer: 0, why: "Basis vectors are at right angles. Counted independently, words carry no information about how they relate." },
             { type: "choice", say: "Next week, words get vectors from the company they keep.", q: "Which idea takes us there?", options: ["Words in similar contexts often have related meanings", "Longer words carry more meaning", "Rare words matter most", "Alphabetical order encodes meaning"], answer: 0, why: "dog and puppy share neighbours like walk, leash and bark. Record those contexts and meaning starts to show up as geometry." },
           ],
@@ -234,9 +234,9 @@
       ],
     },
     {
-      id: "u5", title: "Week 5 Legendary", section: "Review", char: "hapax", color: "#ffc800", dark: "#e0a800",
+      id: "u5", title: "Week 5 Legendary", section: "Review", char: "fury", color: "#ffc800", dark: "#e0a800",
       lessons: [
-        { id: "legend", title: "Legendary challenge", legend: true, desc: "Ten questions drawn from the whole week. Every character shows up." },
+        { id: "legend", title: "Legendary challenge", legend: true, desc: "Ten questions drawn from the whole week. Every hero shows up." },
       ],
     },
   ];

@@ -5,23 +5,27 @@ Open `index.html` (no build step, no server logic).
 
 ## Cast
 
-Each character embodies one idea from the week, so the character on screen tells you
-which concept the question is about.
+Seven heroes from the Marvel network the course has used since week 1, drawn in a flat,
+round, big-eyed lesson-app style. Each one embodies one idea from the week, so the hero on
+screen tells you which concept the question is about.
 
-| Character | Role | Concept |
+| Hero | Role | Concept |
 | --- | --- | --- |
-| Toki | The Tokenizer | tokens, types, token IDs, subword pieces (scissors on its head) |
-| Stoppy | The Stopword | preprocessing; wears a "the" label and holds a stop sign |
-| Zipfy | The Long Tail | counting and Zipf's law; its spots shrink as 1/rank along the tail |
-| Hapax | Seen Only Once | hapax types; a one-eyed unicorn |
-| Gramps | The N-gram | n-grams and context; a caterpillar of tokens with a bigram window |
-| Baggy | The Bag of Words | document vectors; words tumble out of order |
-| Cosi | The Cosine | cosine similarity; antennae measure an angle θ |
+| Wolverine | The Tokenizer | tokens, types, token IDs, subword pieces (claws cut the text) |
+| Ant-Man | The Shrinker | preprocessing: lowercasing, stopwords, lemmatization shrink words |
+| Hulk | The Counter | counting and Zipf's law ("HULK COUNT FIRST") |
+| Nick Fury | The Hapax | words seen exactly once; one eye, one appearance |
+| Spider-Man | The N-gram | n-grams and context; "New York" is one place |
+| Loki | The Bag of Words | keeps the counts, scrambles the order |
+| Iron Man | The Cosine | cosine similarity; direction, not length |
+
+The heroes are fan-art drawings made for a non-commercial course exercise. Marvel
+characters belong to Marvel.
 
 ## Files
 
 - `lessons.js`: all units, lessons, exercises and the guidebook glossary. Edit content here.
-- `characters.js`: the SVG cast and their expressions (idle, happy, sad, think).
+- `characters.js`: the SVG heroes and their expressions (idle, happy, sad, think).
 - `app.js`: path, lesson runner, exercise types, XP, streak and daily quests.
 - `styles.css`: light and dark themes.
 

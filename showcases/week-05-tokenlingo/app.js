@@ -108,12 +108,12 @@
   }
 
   const FACTS = [
-    ["hapax", "36% of the ~27,000 word types in the full Marvel pages occur exactly once.", "Section 3"],
-    ["zipfy", "In a 28-token corpus about Iron Man, the top two types are 'the' and '.'. That's English, not superheroes.", "Section 3"],
-    ["toki", "Kuuk Thaayorre speakers lay out time from east to west, whichever way they sit.", "Section 1"],
-    ["cosi", "With raw counts, Quicksilver is Wolverine's second-closest page. Blame 'the', 'and' and 'of'.", "Section 5"],
-    ["baggy", "The full Marvel document-term matrix has ~27,000 columns, and almost every cell is zero.", "Section 4"],
-    ["gramps", "'New York' means more than 'New' and 'York' counted separately. That's what n-grams keep.", "Section 3"],
+    ["fury", "36% of the ~27,000 word types in the full Marvel pages occur exactly once.", "Section 3"],
+    ["hulk", "In a 28-token corpus about Iron Man, the top two types are 'the' and '.'. That's English, not superheroes.", "Section 3"],
+    ["wolverine", "Kuuk Thaayorre speakers lay out time from east to west, whichever way they sit.", "Section 1"],
+    ["ironman", "With raw counts, Quicksilver is Wolverine's second-closest page. Blame 'the', 'and' and 'of'.", "Section 5"],
+    ["loki", "The full Marvel document-term matrix has ~27,000 columns, and almost every cell is zero.", "Section 4"],
+    ["spidey", "'New York' means more than 'New' and 'York' counted separately. That's what n-grams keep.", "Section 3"],
   ];
   function renderFact() {
     const [c, text, sec] = pick(FACTS);
@@ -182,10 +182,10 @@
   });
 
   // ---------- cast ----------
-  const CAST_ORDER = ["toki", "stoppy", "zipfy", "hapax", "gramps", "baggy", "cosi"];
+  const CAST_ORDER = ["wolverine", "antman", "hulk", "fury", "spidey", "loki", "ironman"];
   function renderCast() {
     const v = $("#view-cast");
-    v.innerHTML = `<div class="page-head"><h1>Meet the cast</h1><p>Seven characters, seven Week 5 ideas. Tap one to see how it feels about your answers.</p></div><div class="cast-grid"></div>`;
+    v.innerHTML = `<div class="page-head"><h1>Meet the cast</h1><p>Seven heroes from the Marvel network you have studied since week 1, each standing for one Week 5 idea. Tap a hero to see how they react to your answers.</p></div><div class="cast-grid"></div>`;
     const grid = $(".cast-grid", v);
     const moods = ["idle", "happy", "think", "sad"];
     CAST_ORDER.forEach((id) => {
@@ -381,7 +381,7 @@
 
   function outOfHearts() {
     L.done = true;
-    $("#l-body").innerHTML = `<div class="finish sad">${CHARS.stoppy.svg("sad", "react-sad")}
+    $("#l-body").innerHTML = `<div class="finish sad">${CHARS.hulk.svg("sad", "react-sad")}
       <h2>Out of hearts</h2><p>Mistakes are how this works. Every one you made comes back as a question, so try again with five fresh hearts.</p></div>`;
     $("#l-foot").className = "l-foot";
     $("#l-feedback").innerHTML = `<button class="btn btn-ghost" type="button" id="l-retry">Try again</button>`;
@@ -628,7 +628,7 @@
 
   // ---------- boot ----------
   $$("[data-icon]").forEach((n) => (n.innerHTML = icon(n.dataset.icon)));
-  $("#logo-mark").innerHTML = CHARS.toki.svg("happy");
+  $("#logo-mark").innerHTML = CHARS.spidey.svg("happy");
   $("#sound-toggle").addEventListener("click", () => { state.muted = !state.muted; save(); renderStats(); SFX.tap(); });
   renderStats();
   renderFact();
