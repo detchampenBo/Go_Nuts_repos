@@ -343,6 +343,60 @@ button { font: inherit; color: inherit; }
 .sheet-card .btn { width: min(420px, 100%); }
 .sheet-card .btn-text { color: var(--red); background: none; border: 0; font-weight: 900; letter-spacing: .07em; text-transform: uppercase; padding: 12px; cursor: pointer; }
 
+/* ---------- living characters ---------- */
+.char .eyes { transform-box: fill-box; transform-origin: center; }
+.char:not(.expr-happy) .eyes { animation: blink 5.2s var(--blink, 0s) infinite; }
+@keyframes blink { 0%, 93%, 100% { transform: scaleY(1); } 95.5% { transform: scaleY(.1); } }
+.alive { display: inline-block; line-height: 0; transform-origin: 50% 100%; animation: breathe 3.2s ease-in-out infinite; }
+@keyframes breathe { 50% { transform: translateY(-3px) scaleY(1.018); } }
+
+/* ---------- opening stage ---------- */
+.stage { position: relative; overflow: hidden; margin-top: 18px; padding: 16px 16px 14px; background: var(--panel); border: 2px solid var(--line); border-bottom-width: 5px; border-radius: var(--radius); }
+.stage-kicker { color: var(--muted); font-size: .76rem; font-weight: 900; letter-spacing: .1em; text-align: center; text-transform: uppercase; }
+.stage-text { display: flex; flex-wrap: wrap; align-content: center; align-items: center; justify-content: center; gap: .3em; min-height: 70px; margin: 10px 0 2px; color: var(--heading); font-size: clamp(1.25rem, 4.6vw, 1.7rem); font-weight: 900; transition: gap .35s; }
+.stage-text.cut { gap: .5em .4em; }
+.tok { display: inline-block; padding: 2px 0; border: 2px solid transparent; border-radius: 12px; transition: padding .35s, background-color .35s, border-color .35s, transform .45s cubic-bezier(.3, 1.6, .5, 1); }
+.stage-text.cut .tok { padding: 3px 11px; background: var(--panel); border-color: var(--line); border-bottom-width: 4px; }
+.stage-floor { display: grid; grid-template-columns: 112px minmax(0, 1fr) 112px; align-items: end; gap: 6px; }
+.stage-hero { transition: transform .55s cubic-bezier(.3, 1.5, .5, 1), opacity .3s; }
+.stage-hero .char { display: block; width: 112px; height: 112px; }
+.stage-wolverine.off { transform: translateX(-170%); opacity: 0; }
+.stage-loki.off { transform: translateX(170%); opacity: 0; }
+.stage-mid { display: grid; place-items: center; min-height: 112px; }
+.stage-bag, .stage-vec { grid-area: 1 / 1; }
+.stage-bag { width: 84px; transform: scale(0); transition: transform .4s cubic-bezier(.3, 1.6, .5, 1); }
+.stage-bag.show { transform: scale(1); }
+.stage-bag svg { display: block; width: 100%; height: auto; }
+.stage-vec { display: flex; align-items: center; gap: 4px; opacity: 0; transform: scale(.5) translateY(12px); transition: opacity .3s, transform .45s cubic-bezier(.3, 1.6, .5, 1); }
+.stage-vec.show { opacity: 1; transform: none; }
+.stage-vec .br { color: var(--muted); font-size: 2.6rem; font-weight: 600; line-height: 1; }
+.vcell2 { display: grid; justify-items: center; gap: 3px; min-width: 42px; }
+.vcell2 b { color: var(--muted); font-size: .74rem; }
+.vcell2 output { color: var(--blue); font-size: 1.9rem; font-weight: 900; line-height: 1; font-variant-numeric: tabular-nums; }
+.stage-cap { margin-top: 8px; color: var(--heading); font-weight: 800; text-align: center; opacity: 0; transition: opacity .4s; }
+.stage-cap span { color: var(--muted); font-weight: 700; }
+.stage.rest .stage-cap { opacity: 1; }
+.stage-replay { position: absolute; top: 10px; right: 10px; padding: 4px 10px; color: var(--blue); background: var(--panel); border: 2px solid var(--line); border-bottom-width: 3px; border-radius: 10px; font-size: .78rem; font-weight: 900; letter-spacing: .04em; text-transform: uppercase; cursor: pointer; opacity: 0; pointer-events: none; transition: opacity .3s; }
+.stage.rest .stage-replay { opacity: 1; pointer-events: auto; }
+.stage-fx { position: absolute; inset: 0; pointer-events: none; }
+
+/* ---------- effects ---------- */
+.fx { position: absolute; inset: 0; z-index: 60; overflow: hidden; pointer-events: none; }
+.burst { position: absolute; z-index: 5; isolation: isolate; display: grid; place-items: center; width: 118px; height: 84px; margin: -42px 0 0 -59px; color: #fff; font-size: 1.15rem; font-weight: 900; letter-spacing: .03em; text-shadow: 0 2px 0 #0005; pointer-events: none; }
+.burst::before, .burst::after { content: ""; position: absolute; inset: 0; clip-path: var(--star); }
+.burst::before { z-index: -1; background: var(--bc, #ff4b4b); }
+.burst::after { z-index: -2; background: #0003; transform: translate(3px, 4px); }
+.burst span { position: relative; white-space: nowrap; }
+.claw { position: absolute; height: 5px; margin-top: -2.5px; background: linear-gradient(90deg, transparent, #90a4ae 14%, #eceff1 50%, #90a4ae 86%, transparent); border-radius: 4px; box-shadow: 0 0 0 1px #607d8b33, 0 0 12px #ffffffaa; transform-origin: left center; }
+.fx-svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.web-line { fill: none; stroke: #90a4ae; stroke-width: 2.6; stroke-dasharray: 1; stroke-dashoffset: 1; stroke-linecap: round; }
+.web-splat { fill: none; stroke: #90a4ae; stroke-width: 2; stroke-linecap: round; }
+.beam { fill: none; stroke: #d9fbff; stroke-width: 5; stroke-dasharray: 1; stroke-dashoffset: 1; stroke-linecap: round; }
+.beam-glow { stroke: #4dd0e1; stroke-width: 14; opacity: .45; }
+.blast { fill: #d9fbff; stroke: #4dd0e1; stroke-width: 4; }
+.spark { position: absolute; width: 10px; height: 10px; border-radius: 3px; }
+.stamp { position: absolute; padding: 6px 16px; color: #c62828; background: color-mix(in srgb, var(--bg) 80%, transparent); border: 4px solid #c62828; border-radius: 10px; font-size: 1.6rem; font-weight: 900; letter-spacing: .14em; text-transform: uppercase; }
+
 /* ---------- responsive ---------- */
 @media (max-width: 1180px) {
   .app { grid-template-columns: 220px minmax(0, 1fr); }
@@ -363,6 +417,14 @@ button { font: inherit; color: inherit; }
   .unit-banner { padding: 14px 14px 14px 16px; }
   .unit-banner h2 { font-size: 1.15rem; }
   .guide-btn span { display: none; }
+  .stage-floor { grid-template-columns: 66px minmax(0, 1fr) 66px; gap: 4px; }
+  .stage-hero .char { width: 66px; height: 66px; }
+  .stage-mid { min-height: 84px; }
+  .vcell2 { min-width: 30px; }
+  .vcell2 b { font-size: .66rem; }
+  .vcell2 output { font-size: 1.5rem; }
+  .stage-vec .br { font-size: 1.8rem; }
+  .stage-replay { position: static; display: block; margin: 8px auto 0; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }

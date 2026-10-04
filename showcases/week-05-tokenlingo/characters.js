@@ -131,7 +131,7 @@
         <path d="M78 11 Q86 18 86 36 L86 41 L80.5 42.6 Q82 24 78 11 Z" fill="#e5a800"/>
         <path d="M37.5 34 Q42 22 56.5 28.5 L57.5 40 Q45 43 37.5 34 Z M82.5 34 Q78 22 63.5 28.5 L62.5 40 Q75 43 82.5 34 Z" fill="#1d1d1d"/>
         <path d="M34 40 Q33 54 44 59 L42 46 Z M86 40 Q87 54 76 59 L78 46 Z" fill="#3e2a1e"/>
-        ${maskEye(48.5, 34, -1, e)}${maskEye(71.5, 34, 1, e)}
+        <g class="eyes">${maskEye(48.5, 34, -1, e)}${maskEye(71.5, 34, 1, e)}</g>
         <ellipse cx="60" cy="48" rx="3" ry="2.2" fill="#d99a6c"/>
         ${mouth(60, 53, e, 0.8)}`,
     }),
@@ -150,7 +150,7 @@
         <path d="M77 47.5 Q80 47 83 45 Q81 57 70 59.5 Q77 54 77 47.5 Z" fill="#a7b6bd"/>
         <circle cx="49" cy="33" r="9.5" fill="#263238"/><circle cx="71" cy="33" r="9.5" fill="#263238"/>
         <circle cx="45.5" cy="29.5" r="2.2" fill="#fff" opacity=".35"/><circle cx="67.5" cy="29.5" r="2.2" fill="#fff" opacity=".35"/>
-        ${dotEye(49, 34, e, "#fff", false)}${dotEye(71, 34, e, "#fff", false)}
+        <g class="eyes">${dotEye(49, 34, e, "#fff", false)}${dotEye(71, 34, e, "#fff", false)}</g>
         ${e === "sad" || e === "think" ? brow(49, 33, -1, e, "#fff", 2.6) + brow(71, 33, 1, e, "#fff", 2.6) : ""}
         ${mouth(60, 53, e, 0.7, "#546e7a")}`,
       front: () => `<g fill="#1d1d1d"><ellipse cx="86" cy="61" rx="3.4" ry="2.6"/><circle cx="81" cy="62" r="2"/><circle cx="90.5" cy="59.5" r="2.2"/></g>
@@ -172,7 +172,7 @@
       face: (e) => `
         <path d="M29 30 Q28 4 60 4 Q92 4 91 30 L85 20 L81 27 L75 15 L69 24 L61 13 L54 24 L47 15 L41 26 L36 19 Z" fill="#1d1d1d"/>
         ${brow(50, 37, -1, e, "#1d1d1d", 4.8)}${brow(70, 37, 1, e, "#1d1d1d", 4.8)}
-        ${dotEye(50, 37, e)}${dotEye(70, 37, e)}
+        <g class="eyes">${dotEye(50, 37, e)}${dotEye(70, 37, e)}</g>
         <ellipse cx="60" cy="45" rx="5" ry="3.2" fill="#4f9e35"/>
         ${mouth(60, 52, e, 1.15)}`,
     }),
@@ -190,7 +190,7 @@
         <ellipse cx="50" cy="15.5" rx="9" ry="4" fill="#a8714f" opacity=".7"/>
         <path d="M34 31 L86 24" stroke="#111" stroke-width="2.4"/>
         <ellipse cx="50" cy="35" rx="7" ry="6.5" fill="#111"/>
-        ${brow(70, 35, 1, e, "#1d1d1d")}${dotEye(70, 35, e)}
+        ${brow(70, 35, 1, e, "#1d1d1d")}<g class="eyes">${dotEye(70, 35, e)}</g>
         <ellipse cx="60" cy="43" rx="3.2" ry="2.4" fill="#6b4129"/>
         <path d="M51 48.5 Q60 45 69 48.5 Q65.5 50.2 60 49.2 Q54.5 50.2 51 48.5 Z" fill="#241811"/>
         <path d="M51.5 49 Q50 56 55 60 M68.5 49 Q70 56 65 60" fill="none" stroke="#241811" stroke-width="2.2" stroke-linecap="round"/>
@@ -209,7 +209,7 @@
         <g fill="none" stroke="#8e1b1b" stroke-width="1.1" opacity=".45">
           <path d="M60 8 V60 M47 9.5 Q42 34 47 59 M73 9.5 Q78 34 73 59 M35 26 Q60 32 80 26 M34 44 Q60 50 80 44"/>
         </g>
-        ${spideyLenses(e)}
+        <g class="eyes">${spideyLenses(e)}</g>
         ${mouth(60, 51, e, 0.8, "#7f1010")}`,
     }),
 
@@ -228,7 +228,7 @@
         <path d="M78 12 Q86 19 86 31 Q83 28 79.5 25.5 Q81 18 78 12 Z" fill="#e0a800"/>
         <path d="M34 29 Q32 47 39 57 L41 33 Z M86 29 Q88 47 81 57 L79 33 Z" fill="#1d1d1d"/>
         ${brow(51, 39, -1, e)}${brow(69, 39, 1, e === "idle" ? "think" : e)}
-        ${dotEye(51, 39, e)}${dotEye(69, 39, e)}
+        <g class="eyes">${dotEye(51, 39, e)}${dotEye(69, 39, e)}</g>
         <ellipse cx="60" cy="46" rx="2.8" ry="2.1" fill="#e3bfa5"/>
         ${e === "idle" ? `<path d="M54 52 Q62 56 67 50" fill="none" stroke="${INK}" stroke-width="2.8" stroke-linecap="round"/>` : mouth(60, 52, e, 0.9)}`,
       front: (e) => {
@@ -261,7 +261,7 @@
           <path d="M40 23 Q60 19 80 23 L80 44 Q78 56 68 60 H52 Q42 56 40 44 Z" fill="#ffc107"/>
           <path d="M74 21.5 Q80 22 80 30 V44 Q78 56 68 60 H65 Q75 51 75 37 Z" fill="#e0a000"/>
           <path d="M44 44 L50 48 M76 44 L70 48" stroke="#d4a000" stroke-width="1.8" stroke-linecap="round"/>
-          ${slit(50, -1)}${slit(70, 1)}${m}`;
+          <g class="eyes">${slit(50, -1)}${slit(70, 1)}</g>${m}`;
       },
     }),
   };
@@ -314,7 +314,7 @@
   for (const [id, c] of Object.entries(CHARS)) {
     c.id = id;
     c.svg = (expr = "idle", cls = "") =>
-      `<svg class="char ${cls}" viewBox="0 -2 120 122" role="img" aria-label="${c.name}, ${c.role}">${drawings[id](expr)}</svg>`;
+      `<svg class="char expr-${expr} ${cls}" style="--blink:${(Math.random() * 4).toFixed(2)}s" viewBox="0 -2 120 122" role="img" aria-label="${c.name}, ${c.role}">${drawings[id](expr)}</svg>`;
   }
 
   window.TL_CHARS = CHARS;

@@ -55,9 +55,11 @@
     try {
       audio = audio || new (window.AudioContext || window.webkitAudioContext)();
       const t0 = audio.currentTime + 0.01;
-      for (const [f, at, dur, type = "sine", vol = 0.16] of seq) {
+      for (const [f, at, dur, type = "sine", vol = 0.16, f2] of seq) {
         const o = audio.createOscillator(), g = audio.createGain();
-        o.type = type; o.frequency.value = f;
+        o.type = type;
+        o.frequency.setValueAtTime(f, t0 + at);
+        if (f2) o.frequency.exponentialRampToValueAtTime(f2, t0 + at + dur);
         g.gain.setValueAtTime(0.0001, t0 + at);
         g.gain.exponentialRampToValueAtTime(vol, t0 + at + 0.02);
         g.gain.exponentialRampToValueAtTime(0.0001, t0 + at + dur);
@@ -71,6 +73,13 @@
     bad: () => tone([[240, 0, 0.16, "square", 0.06], [190, 0.12, 0.26, "square", 0.06]]),
     win: () => tone([[523, 0, 0.16], [659, 0.13, 0.16], [784, 0.26, 0.16], [1047, 0.39, 0.5]]),
     tap: () => tone([[520, 0, 0.05, "triangle", 0.05]]),
+    slash: () => tone([[1800, 0, 0.14, "sawtooth", 0.05, 300], [1500, 0.06, 0.14, "sawtooth", 0.04, 250]]),
+    thwip: () => tone([[500, 0, 0.12, "triangle", 0.1, 1800]]),
+    smash: () => tone([[110, 0, 0.3, "square", 0.08, 50], [70, 0.02, 0.35, "sawtooth", 0.06, 40]]),
+    pew: () => tone([[1600, 0, 0.2, "sawtooth", 0.06, 180]]),
+    sparkle: () => tone([[1320, 0, 0.08, "sine", 0.1], [1760, 0.07, 0.08, "sine", 0.1], [2093, 0.14, 0.14, "sine", 0.1]]),
+    shrink: () => tone([[900, 0, 0.25, "sine", 0.1, 180], [180, 0.32, 0.25, "sine", 0.1, 1100]]),
+    stamp: () => tone([[140, 0, 0.14, "triangle", 0.22, 60]]),
   };
 
   // ---------- lesson order ----------
@@ -117,7 +126,178 @@
   ];
   function renderFact() {
     const [c, text, sec] = pick(FACTS);
-    $("#fact").innerHTML = `<h3>Did you know?</h3><div class="fact">${CHARS[c].svg("happy")}<p>${text}<small>${CHARS[c].name} · Week 5, ${sec}</small></p></div>`;
+    $("#fact").innerHTML = `<h3>Did you know?</h3><div class="fact"><div class="alive">${CHARS[c].svg("happy")}</div><p>${text}<small>${CHARS[c].name} · Week 5, ${sec}</small></p></div>`;
+  }
+
+  // ---------- comic bursts ----------
+  const STAR = "polygon(" + Array.from({ length: 24 }, (_, k) => {
+    const a = (k / 24) * Math.PI * 2, r = k % 2 ? 35 : 50;
+    return `${(50 + r * Math.cos(a)).toFixed(1)}% ${(50 + r * Math.sin(a)).toFixed(1)}%`;
+  }).join(",") + ")";
+  document.documentElement.style.setProperty("--star", STAR);
+  const reducedMotion = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // A starburst with a sound-effect word, centred on (x, y) inside `box`.
+  function burst(box, text, x, y, color, rot = -8) {
+    const b = el(`<div class="burst" style="left:${x}px;top:${y}px;--bc:${color}"><span>${text}</span></div>`);
+    box.append(b);
+    b.animate([
+      { transform: `scale(0) rotate(${rot - 30}deg)`, opacity: 0 },
+      { transform: `scale(1.2) rotate(${rot}deg)`, opacity: 1, offset: 0.22 },
+      { transform: `scale(1) rotate(${rot}deg)`, opacity: 1, offset: 0.36 },
+      { transform: `scale(1) rotate(${rot}deg)`, opacity: 1, offset: 0.82 },
+      { transform: `scale(.85) rotate(${rot}deg)`, opacity: 0 },
+    ], { duration: 1150, easing: "ease-out", fill: "forwards" });
+    setTimeout(() => b.remove(), 1200);
+  }
+
+  // Three claw marks that rip across a point.
+  function claws3(box, x, y, len) {
+    [-20, 0, 20].forEach((off, i) => {
+      const c = el(`<div class="claw" style="left:${x - len / 2}px;top:${y + off}px;width:${len}px"></div>`);
+      box.append(c);
+      c.animate([
+        { transform: "rotate(-18deg) scaleX(0)", opacity: 1 },
+        { transform: "rotate(-18deg) scaleX(1)", opacity: 1, offset: 0.45 },
+        { transform: "rotate(-18deg) scaleX(1)", opacity: 0 },
+      ], { duration: 480, delay: i * 55, easing: "ease-out", fill: "both" });
+      setTimeout(() => c.remove(), 700);
+    });
+  }
+
+  // ---------- opening stage: text → tokens → numbers ----------
+  const STAGE_TOKENS = ["Loki", "tricks", "Thor", "and", "Thor", "tricks", "Loki"];
+  const STAGE_VOCAB = ["and", "loki", "thor", "tricks"];
+  const STAGE_COUNTS = STAGE_VOCAB.map((v) => STAGE_TOKENS.filter((t) => t.toLowerCase() === v).length);
+  const BAG = `<svg viewBox="0 0 80 80" role="img" aria-label="A bag of words"><path d="M17 30 Q6 77 40 77 Q74 77 63 30 Z" fill="#43a047"/><path d="M57 31 Q66 60 58 72 Q70 66 70 50 Q69 38 63 30 Z" fill="#2e7d32"/><ellipse cx="40" cy="29" rx="24" ry="6.5" fill="#1b5e20"/><path d="M20 36 Q40 45 60 36" fill="none" stroke="#ffc800" stroke-width="3.2" stroke-linecap="round"/><text x="40" y="63" text-anchor="middle" font-family="Nunito, system-ui, sans-serif" font-weight="900" font-size="13" fill="#fff">BoW</text></svg>`;
+  let introStarted = false, introRun = 0;
+
+  function stageEl() {
+    const s = el(`<section class="stage" aria-label="Week 5 in one sentence">
+      <p class="stage-kicker">Week 5 · From language to numbers</p>
+      <div class="stage-text">${STAGE_TOKENS.map((t) => `<span class="tok">${t}</span>`).join("")}</div>
+      <div class="stage-floor">
+        <div class="stage-hero stage-wolverine"></div>
+        <div class="stage-mid">
+          <div class="stage-bag">${BAG}</div>
+          <div class="stage-vec" aria-label="Count vector: ${STAGE_VOCAB.map((v, i) => `${v} ${STAGE_COUNTS[i]}`).join(", ")}"><span class="br">[</span>${STAGE_VOCAB.map((v) => `<span class="vcell2"><b>${v}</b><output>0</output></span>`).join("")}<span class="br">]</span></div>
+        </div>
+        <div class="stage-hero stage-loki"></div>
+      </div>
+      <p class="stage-cap">Text → tokens → numbers. <span>Word order didn't survive the bag.</span></p>
+      <button class="stage-replay" type="button">↻ Replay</button>
+      <div class="stage-fx" aria-hidden="true"></div>
+    </section>`);
+    $(".stage-replay", s).addEventListener("click", () => playIntro(s));
+    return s;
+  }
+
+  function setStageHero(s, who, expr) {
+    $(`.stage-${who}`, s).innerHTML = `<div class="alive">${CHARS[who].svg(expr)}</div>`;
+  }
+
+  function stageRest(s) {
+    s.classList.add("rest");
+    $(".stage-text", s).classList.add("cut");
+    $$(".tok", s).forEach((t) => { t.getAnimations().forEach((a) => a.cancel()); t.style.transform = ""; });
+    $(".stage-wolverine", s).classList.remove("off");
+    $(".stage-loki", s).classList.remove("off");
+    $(".stage-bag", s).classList.remove("show");
+    $(".stage-vec", s).classList.add("show");
+    $$(".vcell2 output", s).forEach((o, i) => (o.textContent = STAGE_COUNTS[i]));
+    setStageHero(s, "wolverine", "idle");
+    setStageHero(s, "loki", "idle");
+  }
+
+  async function playIntro(s) {
+    introStarted = true;
+    const run = ++introRun;
+    if (reducedMotion()) return stageRest(s);
+    const live = () => run === introRun && s.isConnected && !s.closest("[hidden]");
+    const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+    const text = $(".stage-text", s), bag = $(".stage-bag", s), vec = $(".stage-vec", s), fx = $(".stage-fx", s);
+    const toks = $$(".tok", s), outs = $$(".vcell2 output", s);
+    const wolv = $(".stage-wolverine", s), loki = $(".stage-loki", s);
+
+    // Start: one plain sentence, heroes off stage.
+    s.classList.remove("rest");
+    text.classList.remove("cut");
+    toks.forEach((t) => { t.getAnimations().forEach((a) => a.cancel()); t.style.transform = ""; });
+    vec.classList.remove("show");
+    bag.classList.remove("show");
+    outs.forEach((o) => (o.textContent = "0"));
+    fx.innerHTML = "";
+    setStageHero(s, "wolverine", "idle");
+    setStageHero(s, "loki", "idle");
+    wolv.classList.add("off");
+    loki.classList.add("off");
+
+    // Wolverine runs in and slices the sentence into tokens.
+    await wait(450); if (!live()) return;
+    wolv.classList.remove("off");
+    await wait(620); if (!live()) return;
+    setStageHero(s, "wolverine", "happy");
+    const sr = s.getBoundingClientRect(), tr = text.getBoundingClientRect();
+    claws3(fx, tr.left - sr.left + tr.width / 2, tr.top - sr.top + tr.height / 2, tr.width + 40);
+    burst(fx, "SNIKT!", Math.min(tr.right - sr.left + 10, sr.width - 64), tr.top - sr.top + 6, "#1f4fbf", -10);
+    SFX.slash();
+    await wait(330); if (!live()) return;
+    text.classList.add("cut");
+    toks.forEach((t) => (t.style.transform = `rotate(${(Math.random() * 12 - 6).toFixed(1)}deg) translateY(${(Math.random() * 6 - 3).toFixed(1)}px)`));
+    await wait(950); if (!live()) return;
+
+    // Loki arrives with the bag and every token flies in.
+    loki.classList.remove("off");
+    await wait(450); if (!live()) return;
+    bag.classList.add("show");
+    setStageHero(s, "loki", "happy");
+    await wait(480); if (!live()) return;
+    const b = bag.getBoundingClientRect();
+    const bx = b.left + b.width / 2, by = b.top + b.height * 0.36;
+    toks.forEach((t, i) => {
+      const r = t.getBoundingClientRect();
+      const dx = bx - (r.left + r.width / 2), dy = by - (r.top + r.height / 2);
+      const base = t.style.transform || "none", spin = i % 2 ? 1 : -1;
+      t.animate([
+        { transform: base, opacity: 1 },
+        { transform: `translate(${dx * 0.45}px, ${dy * 0.45 - 46}px) rotate(${160 * spin}deg) scale(.75)`, opacity: 1, offset: 0.55 },
+        { transform: `translate(${dx}px, ${dy}px) rotate(${320 * spin}deg) scale(.15)`, opacity: 0 },
+      ], { duration: 640, delay: i * 120, easing: "ease-in", fill: "forwards" });
+      setTimeout(() => {
+        if (!live()) return;
+        bag.animate([{ transform: "scale(1)" }, { transform: "scale(1.14, .88) rotate(-6deg)" }, { transform: "scale(1)" }], { duration: 220 });
+        SFX.tap();
+      }, 600 + i * 120);
+    });
+    await wait(640 + toks.length * 120 + 120); if (!live()) return;
+    bag.animate([{ transform: "scale(1)" }, { transform: "scale(1.15) rotate(9deg)" }, { transform: "scale(1.15) rotate(-9deg)" }, { transform: "scale(1)" }], { duration: 420 });
+    await wait(440); if (!live()) return;
+
+    // Out comes a count vector.
+    bag.classList.remove("show");
+    vec.classList.add("show");
+    SFX.good();
+    for (let k = 1; k <= Math.max(...STAGE_COUNTS); k++) {
+      await wait(280); if (!live()) return;
+      outs.forEach((o, i) => {
+        if (STAGE_COUNTS[i] < k) return;
+        o.textContent = k;
+        o.animate([{ transform: "scale(1.6)" }, { transform: "scale(1)" }], { duration: 260, easing: "ease-out" });
+      });
+      SFX.tap();
+    }
+    await wait(300); if (!live()) return;
+
+    // Rest: tokens back on top, vector below, caption and replay.
+    toks.forEach((t) => {
+      t.getAnimations().forEach((a) => a.cancel());
+      t.style.transform = "";
+      t.animate([{ opacity: 0, transform: "translateY(-8px)" }, { opacity: 1, transform: "none" }], { duration: 360, easing: "ease-out" });
+    });
+    s.classList.add("rest");
+    await wait(1700); if (!live()) return;
+    setStageHero(s, "wolverine", "idle");
+    setStageHero(s, "loki", "idle");
   }
 
   // ---------- learn path ----------
@@ -125,6 +305,8 @@
   function renderPath() {
     const view = $("#view-learn");
     view.innerHTML = "";
+    const stage = stageEl();
+    view.append(stage);
     const nk = nextKey();
     let flatIndex = 0;
     UNITS.forEach((u, ui) => {
@@ -139,7 +321,7 @@
       </section>`);
       const path = $(".unit-path", sec);
       const cast = [u.char, ...new Set(u.lessons.map((l) => l.char).filter(Boolean))];
-      path.append(el(`<div class="unit-char ${flip > 0 ? "left" : "right"}">${CHARS[cast[0]].svg(isDone(`${u.id}.${u.lessons[0].id}`) ? "happy" : "idle")}</div>`));
+      path.append(el(`<div class="unit-char alive ${flip > 0 ? "left" : "right"}" style="animation-delay:-${(Math.random() * 3).toFixed(2)}s">${CHARS[cast[0]].svg(isDone(`${u.id}.${u.lessons[0].id}`) ? "happy" : "idle")}</div>`));
       u.lessons.forEach((l, li) => {
         const i = flatIndex++;
         const key = `${u.id}.${l.id}`;
@@ -157,6 +339,7 @@
       view.append(sec);
     });
     $$("[data-guide]", view).forEach((b) => b.addEventListener("click", () => go("guide", b.dataset.guide)));
+    if (introStarted) stageRest(stage); else playIntro(stage);
   }
 
   function togglePop(row, u, l, info) {
@@ -191,11 +374,11 @@
     CAST_ORDER.forEach((id) => {
       const c = CHARS[id];
       const card = el(`<button type="button" class="cast-card" style="--cc:${c.color};--cd:${c.dark}">
-        <div class="cast-art">${c.svg("idle")}</div>
+        <div class="cast-art"><div class="alive" style="animation-delay:-${(Math.random() * 3).toFixed(2)}s">${c.svg("idle")}</div></div>
         <div class="cast-info"><span class="cast-role">${c.role}</span><h2>${c.name}</h2><p>${c.teaches}</p><blockquote>${esc(c.quote)}</blockquote></div>
       </button>`);
       let m = 0;
-      card.addEventListener("click", () => { m = (m + 1) % moods.length; $(".cast-art", card).innerHTML = c.svg(moods[m]); SFX.tap(); });
+      card.addEventListener("click", () => { m = (m + 1) % moods.length; $(".cast-art .alive", card).innerHTML = c.svg(moods[m]); SFX.tap(); });
       grid.append(card);
     });
   }
@@ -285,7 +468,7 @@
     body.innerHTML = `
       ${cur.retry ? `<p style="color:var(--orange);font-weight:900;letter-spacing:.06em;text-transform:uppercase;font-size:.85rem;margin-bottom:8px">Previous mistake</p>` : ""}
       <h2 class="l-q">${esc(cur.q)}</h2>
-      <div class="speaker"><div class="speaker-art">${ch.svg("idle")}</div><div class="bubble">${esc(say)}</div></div>
+      <div class="speaker"><div class="speaker-art alive">${ch.svg("idle")}</div><div class="bubble">${esc(say)}</div></div>
       ${cur.visual || ""}
       <div class="answer" id="answer"></div>`;
     const foot = $("#l-foot");
@@ -296,6 +479,118 @@
     check.disabled = true;
     L.handler = TYPES[cur.type](cur, $("#answer"), (ok) => { if (!L.answered) check.disabled = !ok; });
     $(".l-scroll").scrollTop = 0;
+    fxBox().innerHTML = "";
+  }
+
+  // ---------- signature moves ----------
+  const fxBox = () => $("#fx");
+  function addFx(html) { const n = el(html); fxBox().append(n); return n; }
+  function handPoint() {
+    const r = $(".speaker-art").getBoundingClientRect();
+    return [r.left + r.width * 0.81, r.top + r.height * 0.37];
+  }
+  function targetPoint() {
+    const t = $("#answer .opt.right") || $("#answer");
+    const r = t.getBoundingClientRect();
+    const y = Math.min(Math.max(r.top + Math.min(r.height / 2, 60), 90), innerHeight - 170);
+    return [Math.min(Math.max(r.left + r.width / 2, 70), innerWidth - 70), y];
+  }
+  function beam(cls, d, fade = 900) {
+    const svg = addFx(`<svg class="fx-svg" aria-hidden="true">${d}</svg>`);
+    $$(`.${cls}`, svg).forEach((p) => p.animate([{ strokeDashoffset: 1 }, { strokeDashoffset: 0 }], { duration: 230, easing: "ease-out", fill: "forwards" }));
+    setTimeout(() => svg.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 380, fill: "forwards" }), fade);
+    setTimeout(() => svg.remove(), fade + 420);
+    return svg;
+  }
+
+  const MOVES = {
+    spidey() {
+      const [x1, y1] = handPoint(), [x2, y2] = targetPoint();
+      const ring = (r) => Array.from({ length: 9 }, (_, k) => `${k ? "L" : "M"}${(x2 + Math.cos(k * Math.PI / 4) * r).toFixed(1)} ${(y2 + Math.sin(k * Math.PI / 4) * r).toFixed(1)}`).join(" ");
+      const spokes = Array.from({ length: 8 }, (_, k) => `M${x2} ${y2} L${(x2 + Math.cos(k * Math.PI / 4) * 20).toFixed(1)} ${(y2 + Math.sin(k * Math.PI / 4) * 20).toFixed(1)}`).join(" ");
+      const svg = beam("web-line", `<path class="web-line" pathLength="1" d="M${x1} ${y1} Q${(x1 + x2) / 2} ${Math.max(y1, y2) + 36} ${x2} ${y2}"/><path class="web-splat" style="transform-origin:${x2}px ${y2}px" d="${spokes} ${ring(9)} ${ring(16)}"/>`);
+      $(".web-splat", svg).animate([{ transform: "scale(0)" }, { transform: "scale(1)" }], { duration: 220, delay: 200, fill: "backwards", easing: "cubic-bezier(.3,1.6,.5,1)" });
+      burst(fxBox(), "THWIP!", Math.min(x2 + 90, innerWidth - 64), y2 - 34, "#e23636", 8);
+      SFX.thwip();
+    },
+    hulk() {
+      const bar = $(".l-progress"), r = bar.getBoundingClientRect();
+      burst(fxBox(), "SMASH!", r.left + r.width * 0.5, r.bottom + 46, "#7b3fa0", -6);
+      bar.animate([{ transform: "none" }, { transform: "translateY(6px) scaleY(1.6)" }, { transform: "translateY(-3px)" }, { transform: "none" }], { duration: 380 });
+      $(".l-scroll").animate([{ transform: "none" }, { transform: "translate(-6px, 3px)" }, { transform: "translate(6px, -3px)" }, { transform: "translate(-3px, 2px)" }, { transform: "none" }], { duration: 330 });
+      SFX.smash();
+    },
+    wolverine() {
+      const [x, y] = targetPoint();
+      claws3(fxBox(), x, y, Math.min(340, innerWidth * 0.8));
+      burst(fxBox(), "SNIKT!", Math.min(x + 120, innerWidth - 64), y - 54, "#1f4fbf", -10);
+      SFX.slash();
+    },
+    ironman() {
+      const [x1, y1] = handPoint(), [x2, y2] = targetPoint();
+      const line = `x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" pathLength="1"`;
+      const svg = beam("beam", `<line class="beam beam-glow" ${line}/><line class="beam" ${line}/><circle class="blast" cx="${x2}" cy="${y2}" r="24" style="transform-origin:${x2}px ${y2}px"/>`, 520);
+      $(".blast", svg).animate([{ transform: "scale(0)", opacity: 1 }, { transform: "scale(1.4)", opacity: 0 }], { duration: 480, delay: 200, fill: "both", easing: "ease-out" });
+      burst(fxBox(), "PEW!", Math.min(x2 + 90, innerWidth - 64), y2 - 36, "#c62828", 7);
+      SFX.pew();
+    },
+    loki() {
+      const [x, y] = targetPoint();
+      for (let i = 0; i < 18; i++) {
+        const a = (i / 18) * Math.PI * 2 + Math.random() * 0.3, d = 50 + Math.random() * 70;
+        const sp = addFx(`<i class="spark" style="left:${x}px;top:${y}px;background:${i % 3 ? "#43a047" : "#ffc800"}"></i>`);
+        sp.animate([
+          { transform: "translate(-50%,-50%) scale(.4) rotate(0deg)", opacity: 1 },
+          { transform: `translate(calc(-50% + ${Math.cos(a) * d}px), calc(-50% + ${Math.sin(a) * d}px)) scale(1) rotate(180deg)`, opacity: 1, offset: 0.6 },
+          { transform: `translate(calc(-50% + ${Math.cos(a) * d * 1.2}px), calc(-50% + ${Math.sin(a) * d * 1.2 + 12}px)) scale(.3) rotate(270deg)`, opacity: 0 },
+        ], { duration: 900, easing: "ease-out", fill: "forwards" });
+        setTimeout(() => sp.remove(), 950);
+      }
+      burst(fxBox(), "TA-DA!", Math.min(x + 100, innerWidth - 64), y - 40, "#43a047", 8);
+      SFX.sparkle();
+    },
+    antman() {
+      $(".speaker-art").animate([
+        { transform: "scale(1)" }, { transform: "scale(.22)", offset: 0.35 }, { transform: "scale(.22)", offset: 0.55 },
+        { transform: "scale(1.18)", offset: 0.8 }, { transform: "scale(1)" },
+      ], { duration: 950, easing: "ease-in-out" });
+      const [x, y] = targetPoint();
+      burst(fxBox(), "TINY!", Math.min(x + 100, innerWidth - 64), y - 40, "#e53935", 6);
+      SFX.shrink();
+    },
+    fury() {
+      const [x, y] = targetPoint();
+      const st = addFx(`<div class="stamp" style="left:${x}px;top:${y}px">Cleared</div>`);
+      st.animate([
+        { transform: "translate(-50%,-50%) rotate(-12deg) scale(2.6)", opacity: 0 },
+        { transform: "translate(-50%,-50%) rotate(-12deg) scale(.94)", opacity: 1, offset: 0.25 },
+        { transform: "translate(-50%,-50%) rotate(-12deg) scale(1)", opacity: 1, offset: 0.82 },
+        { transform: "translate(-50%,-50%) rotate(-12deg) scale(1)", opacity: 0 },
+      ], { duration: 1300, easing: "ease-out", fill: "forwards" });
+      setTimeout(() => st.remove(), 1350);
+      SFX.stamp();
+    },
+  };
+
+  function signature(id) {
+    if (reducedMotion() || !MOVES[id]) return;
+    try { MOVES[id](); } catch (e) { /* effects are decoration; never block the lesson */ }
+  }
+
+  // Loki taunts a wrong answer by shuffling the options in place.
+  function lokiTaunt() {
+    if (reducedMotion()) return;
+    const list = $("#answer .options");
+    if (!list) return;
+    const items = $$(".opt", list);
+    const before = new Map(items.map((o) => [o, o.getBoundingClientRect().top]));
+    shuffle(items).forEach((o) => list.append(o));
+    items.forEach((o) => {
+      const dy = before.get(o) - o.getBoundingClientRect().top;
+      if (dy) o.animate([{ transform: `translateY(${dy}px)` }, { transform: "none" }], { duration: 460, easing: "cubic-bezier(.3,1.3,.5,1)" });
+    });
+    const r = list.getBoundingClientRect();
+    burst(fxBox(), "HA!", Math.min(r.right - 30, innerWidth - 64), r.top - 6, "#43a047", 10);
   }
 
   function setExpr(expr) {
@@ -313,12 +608,14 @@
     if (res.ok) {
       L.right++; L.combo++; L.best = Math.max(L.best, L.combo);
       SFX.good(); setExpr("happy");
+      signature(speakerChar(cur).id);
       foot.className = "l-foot ok";
       const praise = L.combo >= 5 ? `${L.combo} in a row!` : pick(["Nice!", "Great job!", "Correct!", "Amazing!", "You got it!"]);
       $("#l-feedback").innerHTML = `<span class="fb-ico">${icon("check")}</span><div><h3>${praise}</h3>${cur.why ? `<p>${esc(cur.why)}</p>` : ""}</div>`;
     } else {
       L.hearts--; L.mistakes++; L.combo = 0;
       SFX.bad(); setExpr("sad");
+      if (speakerChar(cur).id === "loki") lokiTaunt();
       $("#l-hearts").classList.remove("hit"); void $("#l-hearts").offsetWidth; $("#l-hearts").classList.add("hit");
       L.queue.push({ ...cur, retry: true });
       foot.className = "l-foot bad";
@@ -539,7 +836,10 @@
         if (a.dataset.i === c.dataset.i) {
           SFX.good(); matched++;
           [a, c].forEach((x) => { x.classList.add("right"); setTimeout(() => { x.classList.remove("right"); x.classList.add("done"); }, 380); });
-          if (matched === cur.pairs.length) setTimeout(() => resolve({ ok: true }), 450);
+          if (matched === cur.pairs.length) {
+            const run = L, pos = L.pos;
+            setTimeout(() => { if (L === run && L.pos === pos && !L.answered) resolve({ ok: true }); }, 450);
+          }
         } else {
           SFX.bad(); slips++;
           [a, c].forEach((x) => { x.classList.add("wrong"); setTimeout(() => x.classList.remove("wrong"), 450); });
@@ -629,11 +929,12 @@
   // ---------- boot ----------
   $$("[data-icon]").forEach((n) => (n.innerHTML = icon(n.dataset.icon)));
   $("#logo-mark").innerHTML = CHARS.spidey.svg("happy");
+  $("#lesson").append(el(`<div class="fx" id="fx" aria-hidden="true"></div>`));
   $("#sound-toggle").addEventListener("click", () => { state.muted = !state.muted; save(); renderStats(); SFX.tap(); });
   renderStats();
   renderFact();
   const start = (location.hash || "#learn").slice(1);
   go(["learn", "cast", "guide"].includes(start) ? start : "learn");
   const n = $(".node.next");
-  if (n && start === "learn") n.scrollIntoView({ block: "center" });
+  if (n && start === "learn" && Object.keys(state.done).length) n.scrollIntoView({ block: "center" });
 })();
