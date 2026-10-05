@@ -22,6 +22,7 @@
     heart: '<svg class="ico" viewBox="0 0 24 24"><path fill="currentColor" d="M12 21s-8.5-5.3-8.5-11.4A4.8 4.8 0 0112 6.8a4.8 4.8 0 018.5 2.8C20.5 15.7 12 21 12 21z"/></svg>',
     target: '<svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="#ff4b4b"/><circle cx="12" cy="12" r="6" fill="#fff"/><circle cx="12" cy="12" r="3" fill="#ff4b4b"/></svg>',
     book: '<svg class="ico" viewBox="0 0 24 24"><path fill="currentColor" d="M4 4.5A2.5 2.5 0 016.5 2H20v16H6.5a1 1 0 000 2H20v2H6.5A2.5 2.5 0 014 19.5z"/></svg>',
+    chart: '<svg class="ico" viewBox="0 0 24 24"><rect x="3" y="12" width="4.5" height="9" rx="1.5" fill="currentColor"/><rect x="9.75" y="7" width="4.5" height="14" rx="1.5" fill="currentColor"/><rect x="16.5" y="3" width="4.5" height="18" rx="1.5" fill="currentColor"/></svg>',
     home: '<svg class="ico" viewBox="0 0 24 24"><path fill="currentColor" d="M12 3l9 7.5V21h-6v-6H9v6H3V10.5z"/></svg>',
     cast: '<svg class="ico" viewBox="0 0 24 24"><circle cx="8" cy="9" r="4" fill="currentColor"/><circle cx="17" cy="10" r="3" fill="currentColor" opacity=".7"/><path fill="currentColor" d="M1.5 20a6.5 6.5 0 0113 0zM14 20a5 5 0 0110 0z"/></svg>',
     sound: '<svg class="ico" viewBox="0 0 24 24"><path fill="currentColor" d="M4 9h4l5-4v14l-5-4H4z"/><path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" d="M16 8.5a5 5 0 010 7M18.5 6a8.5 8.5 0 010 12"/></svg>',
@@ -123,10 +124,13 @@
     ["ironman", "With raw counts, Quicksilver is Wolverine's second-closest page. Blame 'the', 'and' and 'of'.", "Section 5"],
     ["loki", "The full Marvel document-term matrix has ~27,000 columns, and almost every cell is zero.", "Section 4"],
     ["spidey", "'New York' means more than 'New' and 'York' counted separately. That's what n-grams keep.", "Section 3"],
+    ["wolverine", "95% of the 'men' tokens in Marvel's Wikipedia pages are names, and 1,500 of them are X-Men.", "Our finding"],
+    ["hulk", "After 'she', the second most common word in the Marvel pages is 'hulk'. Blame She-Hulk's hyphen.", "Our finding"],
+    ["ironman", "The rarest half of Marvel's vocabulary is only 2.4% of the text. The top 50 words are 39.5%.", "Our finding"],
   ];
   function renderFact() {
     const [c, text, sec] = pick(FACTS);
-    $("#fact").innerHTML = `<h3>Did you know?</h3><div class="fact"><div class="alive">${CHARS[c].svg("happy")}</div><p>${text}<small>${CHARS[c].name} · Week 5, ${sec}</small></p></div>`;
+    $("#fact").innerHTML = `<h3>Did you know?</h3><div class="fact"><div class="alive">${CHARS[c].svg("happy")}</div><p>${text}<small>${CHARS[c].name} · ${sec.startsWith("Section") ? `Week 5, ${sec}` : sec}</small></p></div>`;
   }
 
   // ---------- comic bursts ----------
@@ -642,6 +646,7 @@
   }
 
   function finish() {
+    fxBox().innerHTML = "";
     rollDay();
     const key = `${L.unit.id}.${L.lesson.id}`;
     const first = !isDone(key);
@@ -663,6 +668,7 @@
         <div class="stat-tile" style="--tc:var(--green)"><b>${acc === 100 ? "Perfect" : "Accuracy"}</b><span>${icon("target")}${acc}%</span></div>
         <div class="stat-tile" style="--tc:var(--orange)"><b>Best streak</b><span>${icon("flame")}${L.best}</span></div>
       </div>
+      ${L.lesson.link ? `<a class="btn btn-blue finish-link" href="${L.lesson.link.href}" target="_blank" rel="noopener">${esc(L.lesson.link.label)} ↗</a>` : ""}
     </div>`;
     confetti();
     $("#l-foot").className = "l-foot";
@@ -677,6 +683,7 @@
   }
 
   function outOfHearts() {
+    fxBox().innerHTML = "";
     L.done = true;
     $("#l-body").innerHTML = `<div class="finish sad">${CHARS.hulk.svg("sad", "react-sad")}
       <h2>Out of hearts</h2><p>Mistakes are how this works. Every one you made comes back as a question, so try again with five fresh hearts.</p></div>`;

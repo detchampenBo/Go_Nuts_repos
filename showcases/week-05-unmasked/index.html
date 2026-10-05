@@ -102,6 +102,11 @@ circle.dot.hot { stroke: var(--ink); stroke-width: 2; }
 .tip q { display: block; margin-top: 6px; color: var(--muted); font-style: normal; quotes: none; }
 .tip q b { color: var(--ink); }
 
+.cta { display: flex; align-items: center; gap: 12px; margin-top: 18px; padding: 10px 16px 10px 10px; color: var(--fg); text-decoration: none; border: 2px solid var(--line); border-bottom-width: 5px; border-radius: 16px; }
+.cta:hover { border-color: var(--btn); }
+.cta b { color: var(--ink); }
+.cta .char { width: 60px; height: 60px; flex: none; }
+
 /* ---------- she-hulk bars ---------- */
 .bars { display: grid; gap: 6px; margin-top: 4px; }
 .bar { display: grid; grid-template-columns: 56px 1fr; align-items: center; gap: 10px; }
@@ -184,6 +189,8 @@ footer { margin-top: 48px; padding-top: 16px; color: var(--muted); border-top: 1
     <p class="caption" id="fig-caption">One dot = 10 mentions. Counts are what scikit-learn's CountVectorizer finds in the 303 pages of the course's <code>marvel_pages.zip</code>. Hover or tap a dot to see what it stands for.</p>
   </div>
 
+  <a class="cta" href="../week-05-tokenlingo/#learn"><span id="cta-hero"></span><span><b>Think you'd have caught it?</b> Play the "Most men are X-Men" lesson in Tokenlingo, our Week 5 game. ▸</span></a>
+
   <section aria-labelledby="she-h">
     <h2 id="she-h">The pronoun trap: "she hulk"</h2>
     <p>The same thing happens to pronouns. A tokenizer that splits on hyphens turns every She-Hulk into the pronoun "she" followed by the word "hulk". Ask what usually comes after "she" in these pages, and "hulk" is the second answer.</p>
@@ -242,7 +249,10 @@ footer { margin-top: 48px; padding-top: 16px; color: var(--muted); border-top: 1
   const fig = $("#fig");
   let step = 1;
 
-  if (window.TL_CHARS) $("#wolverine").outerHTML = window.TL_CHARS.wolverine.svg("happy");
+  if (window.TL_CHARS) {
+    $("#wolverine").outerHTML = window.TL_CHARS.wolverine.svg("happy");
+    $("#cta-hero").outerHTML = window.TL_CHARS.hulk.svg("happy");
+  }
 
   const shown = (w, s) => (s === 3 ? D.words[w].real : D.words[w].total);
   const ratio = (a, b, s) => shown(a, s) / shown(b, s);

@@ -234,6 +234,34 @@
       ],
     },
     {
+      id: "data", title: "Real Marvel data", section: "Our finding", char: "wolverine", color: "#ff9600", dark: "#cd7900",
+      lessons: [
+        {
+          id: "xmen", title: "Most men are X-Men", desc: "We counted gender words in all 303 Marvel pages. The tokenizer had other plans.",
+          link: { href: "../week-05-unmasked/", label: "See the full visualization" },
+          ex: [
+            { type: "choice", say: "We counted gender words in all 303 Marvel pages with CountVectorizer.", q: "As counted, 'man' appears about how many times as often as 'woman'?", options: ["About 7 times as often", "About as often", "About twice as often", "About 100 times as often"], answer: 0, why: "3,545 'man' against 479 'woman': 7.4 to 1. Before believing it, read the matches." },
+            { type: "choice", say: "Now look at the 'men' tokens one by one, bub.", q: "Of the 1,630 'men' tokens, how many are part of 'X-Men'?", options: ["1,500", "76", "About 800", "None"], answer: 0, why: "1,500 are X-Men, a few more are other names and titles, and only 76 are the real word 'men'." },
+            { type: "build", say: "Here's what a hyphen-splitting tokenizer does to a hero.", visual: code(`from sklearn.feature_extraction.text import CountVectorizer\nCountVectorizer().build_analyzer()("Spider-Man's")`), q: "What does the analyzer return?", tiles: ["spider", "man", "spider-man", "s", "'s", "spiderman"], answer: ["spider", "man"], why: "It lowercases, splits at the hyphen and the apostrophe, and drops tokens shorter than two letters, so the 's' disappears. Every Spider-Man becomes one more 'man'." },
+            { type: "choice", char: "hulk", say: "HULK SMASH THE NAMES. NOW COUNT AGAIN.", q: "Counting only the real words, man : woman becomes…", options: ["About 1.9 : 1", "Still 7.4 : 1", "Exactly 1 : 1", "Women outnumber men"], answer: 0, why: "224 real 'man' against 121 real 'woman'. The rest were Spider-Man, Iron Man, Spider-Woman and friends." },
+            { type: "choice", char: "hulk", say: "Hulk's cousin causes trouble too.", q: "With the same tokenizer, which word is the 2nd most common after 'she'?", options: ["hulk", "was", "can", "has"], answer: 0, why: "'is' comes first (501), then 'hulk' (406): She-Hulk split at the hyphen. 11% of all 'she' tokens are really hero names." },
+            { type: "choice", q: "Which tokenizer would have kept 'Spider-Man' as one token?", options: ["A plain split() on spaces", "CountVectorizer with default settings", "spaCy", "Any tokenizer, after lowercasing"], answer: 0, why: "split() only cuts at spaces, so 'Spider-Man' survives whole. CountVectorizer and spaCy both split at the hyphen." },
+            { type: "multi", q: "Which steps made this finding trustworthy?", options: ["Reading the matches in context", "Checking our counts against CountVectorizer", "Stating which tokenizer we used", "Trusting the first ratio we saw"], answer: [0, 1, 2], why: "The course's habits: state your preprocessing, check the counts, and read the text before you believe the number." },
+          ],
+        },
+        {
+          id: "snap", title: "The Snap", char: "ironman", desc: "Wipe out half of Marvel's vocabulary. How much text survives?",
+          ex: [
+            { type: "choice", say: "I've done a snap before. Let's do one to the vocabulary.", q: "The 50 most common words (the, and, of…) make up what share of all Marvel text?", options: ["About 40%", "About 5%", "About 15%", "About 90%"], answer: 0, why: "39.5%. Zipf's law: a handful of words do most of the work. 'the' alone is 6.3%." },
+            { type: "choice", q: "Snap away the rarest half of the vocabulary, about 13,500 word types. How much text disappears?", options: ["About 2%", "About 25%", "About 50%", "About 75%"], answer: 0, why: "Only 2.4% of the text. Rare words are many, but each one almost never appears." },
+            { type: "choice", char: "fury", say: "I'm a hapax. 36% of the vocabulary is like me.", q: "Snap every word that appears exactly once. How much text vanishes?", options: ["About 1%", "About 36%", "About 10%", "About half"], answer: 0, why: "9,598 hapax types, but each appears once: 1.3% of the 727,440 tokens." },
+            { type: "choice", q: "Now a random snap: half of all word types vanish at random. How much text survives?", options: ["Anything from about 36% to 64%, depending on luck", "Exactly 50%, every time", "About 98%", "Nothing at all"], answer: 0, why: "In 2,000 simulated snaps, survival ran from 36% to 64%. Whether 'the', 'and' and 'of' survive decides most of it. Zipf turns a fair snap into a gamble." },
+            { type: "number", q: "'the' is 6.3% of all Marvel text. In 1,000 tokens, about how many are 'the'?", answer: 63, tol: 1, why: "6.3% of 1,000 is 63. One word, one in sixteen tokens." },
+          ],
+        },
+      ],
+    },
+    {
       id: "u5", title: "Week 5 Legendary", section: "Review", char: "fury", color: "#ffc800", dark: "#e0a800",
       lessons: [
         { id: "legend", title: "Legendary challenge", legend: true, desc: "Ten questions drawn from the whole week. Every hero shows up." },
@@ -242,6 +270,11 @@
   ];
 
   const GLOSSARY = {
+    data: [
+      ["Tokenizer trap", "A preprocessing choice that silently changes the answer to a research question, like splitting 'Spider-Man' into 'spider' and 'man'."],
+      ["CountVectorizer's default tokens", "Lower-cased runs of two or more letters or digits. Hyphens and apostrophes split words, and single letters are dropped."],
+      ["Random snap", "Removing a random half of the vocabulary. Because of Zipf's law, the share of text that survives depends on luck: 36% to 64% for Marvel."],
+    ],
     u1: [
       ["NLP", "Methods for turning language into representations a computer can work with, then using them to perform a task."],
       ["Token", "One occurrence produced by a tokenizer. The same type can appear as many tokens."],
