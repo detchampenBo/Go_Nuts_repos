@@ -88,7 +88,7 @@
   UNITS.forEach((u, ui) => u.lessons.forEach((l, li) => FLAT.push({ u, l, ui, li, key: `${u.id}.${l.id}` })));
   const isDone = (key) => !!state.done[key];
   const nextKey = () => (FLAT.find((f) => !isDone(f.key)) || {}).key;
-  const unlocked = (i) => i === 0 || FLAT[i].u.id === "data" || isDone(FLAT[i - 1].key) || isDone(FLAT[i].key);
+  const unlocked = (i) => i === 0 || isDone(FLAT[i - 1].key) || isDone(FLAT[i].key);
 
   // ---------- header stats ----------
   function renderStats() {
@@ -400,8 +400,9 @@
   }
 
   // ---------- views ----------
+  const VIEWS = ["learn", "cast", "guide", "findings"];
   function go(view, anchor) {
-    for (const name of ["learn", "cast", "guide"]) $(`#view-${name}`).hidden = name !== view;
+    for (const name of VIEWS) $(`#view-${name}`).hidden = name !== view;
     $$(".nav-item").forEach((a) => a.classList.toggle("active", a.dataset.view === view));
     if (view === "cast") renderCast();
     if (view === "guide") renderGuide();
@@ -941,7 +942,7 @@
   renderStats();
   renderFact();
   const start = (location.hash || "#learn").slice(1);
-  go(["learn", "cast", "guide"].includes(start) ? start : "learn");
+  go(VIEWS.includes(start) ? start : "learn");
   const n = $(".node.next");
   if (n && start === "learn" && Object.keys(state.done).length) n.scrollIntoView({ block: "center" });
 })();
