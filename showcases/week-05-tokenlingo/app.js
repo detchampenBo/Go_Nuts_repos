@@ -88,7 +88,7 @@
   UNITS.forEach((u, ui) => u.lessons.forEach((l, li) => FLAT.push({ u, l, ui, li, key: `${u.id}.${l.id}` })));
   const isDone = (key) => !!state.done[key];
   const nextKey = () => (FLAT.find((f) => !isDone(f.key)) || {}).key;
-  const unlocked = (i) => i === 0 || isDone(FLAT[i - 1].key) || isDone(FLAT[i].key);
+  const unlocked = (i) => i === 0 || FLAT[i].u.id === "data" || isDone(FLAT[i - 1].key) || isDone(FLAT[i].key);
 
   // ---------- header stats ----------
   function renderStats() {
