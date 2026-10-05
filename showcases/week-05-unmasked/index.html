@@ -1,0 +1,461 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Most Men Are X-Men</title>
+<meta name="description" content="Count gender words in 303 Marvel Wikipedia pages and men outnumber women seven to one. Most of those men are X-Men.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap">
+<style>
+/* Layout: one reading column, the unmasking figure as the single loud object, everything else quiet. */
+:root {
+  --bg: #ffffff; --sunk: #f7f7f5; --line: #e5e5e5; --hair: #e1e0d9;
+  --ink: #2f2f2f; --fg: #4b4b4b; --muted: #777672;
+  --real: #2a78d6; --name: #eb6834; --unknown: #8f8e89; --ghost: #ebeae5;
+  --btn: #1cb0f6; --btn-dark: #1899d6;
+  --font: "Nunito", "Varela Round", ui-rounded, system-ui, sans-serif;
+  --mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #131f24; --sunk: #1b2a31; --line: #37464f; --hair: #2c3b42;
+    --ink: #f1f7fb; --fg: #dce6eb; --muted: #8fa3ad;
+    --real: #3987e5; --name: #d95926; --unknown: #6f8691; --ghost: #22323a;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #131f24; --sunk: #1b2a31; --line: #37464f; --hair: #2c3b42;
+  --ink: #f1f7fb; --fg: #dce6eb; --muted: #8fa3ad;
+  --real: #3987e5; --name: #d95926; --unknown: #6f8691; --ghost: #22323a;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 700 17px/1.55 var(--font); -webkit-font-smoothing: antialiased; }
+.page { max-width: 760px; margin: 0 auto; padding-inline: 16px; padding-block: 28px 64px; }
+h1, h2, h3 { color: var(--ink); font-weight: 900; line-height: 1.15; margin: 0; text-wrap: balance; }
+p { margin: 0; }
+a { color: var(--btn-dark); }
+:focus-visible { outline: 3px solid var(--btn); outline-offset: 3px; border-radius: 10px; }
+.kicker { color: var(--muted); font-size: .78rem; font-weight: 900; letter-spacing: .1em; text-transform: uppercase; }
+.lede { display: grid; gap: 14px; }
+.lede h1 { font-size: clamp(2rem, 6.2vw, 3.3rem); letter-spacing: -.02em; }
+.dek { max-width: 60ch; font-size: 1.12rem; }
+.speaker { display: flex; align-items: flex-end; gap: 10px; margin-top: 6px; }
+.speaker .char { width: 104px; height: 104px; flex: none; }
+.bubble { position: relative; margin-bottom: 22px; padding: 10px 14px; color: var(--ink); border: 2px solid var(--line); border-radius: 16px; }
+.bubble::before { content: ""; position: absolute; left: -9px; bottom: 14px; width: 14px; height: 14px; background: var(--bg); border-left: 2px solid var(--line); border-bottom: 2px solid var(--line); transform: rotate(45deg); }
+section { margin-top: 44px; display: grid; gap: 14px; }
+section > h2 { font-size: 1.55rem; }
+section > p { max-width: 65ch; }
+
+/* ---------- the figure ---------- */
+.figure { margin-top: 26px; padding: 18px 18px 14px; border: 2px solid var(--line); border-bottom-width: 5px; border-radius: 18px; }
+.steps { display: flex; flex-wrap: wrap; gap: 8px; }
+.step { display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; color: var(--muted); background: var(--bg); border: 2px solid var(--line); border-bottom-width: 4px; border-radius: 14px; font: 800 .9rem var(--font); cursor: pointer; }
+.step b { display: grid; place-items: center; width: 22px; height: 22px; color: var(--muted); border: 2px solid var(--line); border-radius: 50%; font-size: .75rem; }
+.step[aria-pressed="true"] { color: var(--btn-dark); border-color: var(--btn); background: color-mix(in srgb, var(--btn) 12%, var(--bg)); }
+.step[aria-pressed="true"] b { color: #fff; background: var(--btn); border-color: var(--btn); }
+.next { margin-left: auto; padding: 9px 16px; color: #fff; background: var(--btn); border: 0; border-radius: 14px; box-shadow: 0 4px 0 var(--btn-dark); font: 900 .9rem var(--font); letter-spacing: .06em; text-transform: uppercase; cursor: pointer; }
+.next:active { transform: translateY(4px); box-shadow: none; }
+.next.pulse { animation: pulse 1.6s ease-in-out infinite; }
+@keyframes pulse { 50% { box-shadow: 0 4px 0 var(--btn-dark), 0 0 0 6px color-mix(in srgb, var(--btn) 25%, transparent); } }
+.hero { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px; margin: 16px 0 4px; }
+.hero .big { color: var(--ink); font-size: clamp(2.8rem, 9vw, 4.2rem); font-weight: 900; line-height: 1; letter-spacing: -.02em; }
+.hero .what { color: var(--muted); font-size: 1rem; }
+.hero .what b { color: var(--ink); }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; margin: 6px 0 12px; color: var(--muted); font-size: .86rem; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { width: 10px; height: 10px; border-radius: 50%; }
+.legend .k-unknown { background: var(--unknown); }
+.legend .k-real { background: var(--real); }
+.legend .k-name { background: var(--name); }
+.legend .k-ghost { background: var(--ghost); box-shadow: inset 0 0 0 1.5px var(--hair); }
+.fig.step-1 .legend .s23, .fig:not(.step-1) .legend .s1 { display: none; }
+.fig:not(.step-3) .legend .s3 { display: none; }
+.fig.step-3 .legend .s2only { display: none; }
+.pair { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; padding-block: 12px; border-top: 1px solid var(--hair); }
+.cell { min-width: 0; display: grid; gap: 6px; align-content: start; }
+.cell header { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+.cell .w { color: var(--ink); font-size: 1.35rem; font-weight: 900; }
+.cell .n { color: var(--ink); font-size: 1.05rem; font-weight: 900; font-variant-numeric: tabular-nums; }
+.cell .n small { color: var(--muted); font-weight: 700; font-size: .78rem; }
+.cell svg { display: block; width: 100%; overflow: visible; touch-action: manipulation; }
+.cell .names { min-height: 2.6em; color: var(--muted); font-size: .8rem; line-height: 1.35; }
+.cell .names b { color: var(--fg); }
+.fig.step-1 .names .s23 { display: none; }
+.fig:not(.step-1) .names .s1 { display: none; }
+.pair-ratio { grid-column: 1 / -1; color: var(--muted); font-size: .82rem; }
+.pair-ratio b { color: var(--ink); }
+circle.dot { fill: var(--unknown); transform-box: fill-box; transform-origin: center; transition: fill .35s ease var(--d, 0s), transform .4s ease var(--d, 0s); }
+.fig.step-2 circle.real, .fig.step-3 circle.real { fill: var(--real); }
+.fig.step-2 circle.nm { fill: var(--name); }
+.fig.step-3 circle.nm { fill: var(--ghost); transform: scale(.6); }
+circle.dot.hot { stroke: var(--ink); stroke-width: 2; }
+.caption { margin-top: 10px; color: var(--muted); font-size: .8rem; }
+.tip { position: fixed; z-index: 20; max-width: min(340px, calc(100vw - 32px)); padding: 10px 12px; color: var(--fg); background: var(--bg); border: 2px solid var(--line); border-radius: 12px; box-shadow: 0 6px 18px #0002; font-size: .85rem; pointer-events: none; }
+.tip strong { display: block; color: var(--ink); font-size: 1.05rem; }
+.tip .key { display: inline-block; width: 14px; height: 3px; margin-right: 6px; vertical-align: middle; border-radius: 2px; }
+.tip q { display: block; margin-top: 6px; color: var(--muted); font-style: normal; quotes: none; }
+.tip q b { color: var(--ink); }
+
+/* ---------- she-hulk bars ---------- */
+.bars { display: grid; gap: 6px; margin-top: 4px; }
+.bar { display: grid; grid-template-columns: 56px 1fr; align-items: center; gap: 10px; }
+.bar span { color: var(--fg); font-weight: 800; text-align: right; }
+.bar .track { position: relative; height: 22px; }
+.bar .fill { height: 100%; background: var(--unknown); border-radius: 0 4px 4px 0; }
+.bar.hl .fill { background: var(--name); }
+.bar .val { position: absolute; top: 50%; transform: translate(6px, -50%); color: var(--fg); font-size: .85rem; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.bar.hl span, .bar.hl .val { color: var(--ink); font-weight: 900; }
+.stat-row { display: flex; flex-wrap: wrap; gap: 10px; }
+.stat { flex: 1 1 200px; padding: 12px 14px; border: 2px solid var(--line); border-radius: 14px; }
+.stat .v { color: var(--ink); font-size: 1.9rem; font-weight: 900; line-height: 1.1; }
+.stat .l { color: var(--muted); font-size: .85rem; }
+
+/* ---------- evidence ---------- */
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { padding: 6px 12px; color: var(--fg); background: var(--bg); border: 2px solid var(--line); border-bottom-width: 4px; border-radius: 12px; font: 800 .92rem var(--font); cursor: pointer; }
+.chip[aria-pressed="true"] { color: var(--btn-dark); border-color: var(--btn); }
+.kwic { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.kwic h3 { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; font-size: 1rem; }
+.kwic h3 i { width: 10px; height: 10px; border-radius: 50%; }
+.kwic ol { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.kwic li { padding: 8px 10px; background: var(--sunk); border-radius: 10px; font-size: .86rem; line-height: 1.45; }
+.kwic li b { color: var(--ink); text-decoration: underline 2px; text-underline-offset: 3px; }
+.kwic li small { display: block; margin-top: 2px; color: var(--muted); font-size: .74rem; letter-spacing: .02em; }
+.kwic li em { font-style: normal; color: var(--muted); }
+
+/* ---------- table + notes ---------- */
+details { border: 2px solid var(--line); border-radius: 14px; }
+summary { padding: 12px 14px; color: var(--ink); font-weight: 900; cursor: pointer; }
+.tablewrap { overflow-x: auto; padding: 0 14px 14px; }
+table { border-collapse: collapse; width: 100%; font-size: .88rem; }
+th, td { padding: 7px 8px; border-bottom: 1px solid var(--hair); text-align: right; font-variant-numeric: tabular-nums; }
+th:first-child, td:first-child, th:last-child, td:last-child { text-align: left; }
+th { color: var(--muted); font-size: .76rem; letter-spacing: .05em; text-transform: uppercase; }
+td { color: var(--fg); }
+.notes { display: grid; gap: 10px; margin: 0; padding-left: 1.1em; max-width: 65ch; }
+.notes li::marker { color: var(--muted); }
+footer { margin-top: 48px; padding-top: 16px; color: var(--muted); border-top: 1px solid var(--hair); font-size: .85rem; }
+
+@media (max-width: 560px) {
+  .kwic { grid-template-columns: 1fr; }
+  .speaker .char { width: 84px; height: 84px; }
+  .next { margin-left: 0; }
+  .figure { padding: 14px 12px 12px; }
+  .cell .w { font-size: 1.1rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+</style>
+</head>
+<body>
+<main class="page">
+  <header class="lede">
+    <p class="kicker">Week 5 · From language to numbers · Go Nuts</p>
+    <h1>Most of Marvel's men are X-Men</h1>
+    <p class="dek">Count the gender words in 303 Marvel Wikipedia pages with an ordinary tokenizer, and men outnumber women more than seven to one. Then look at what the tokenizer actually counted.</p>
+    <div class="speaker"><div id="wolverine"></div><p class="bubble">Bub, most of the "men" on these pages are us.</p></div>
+  </header>
+
+  <div class="figure fig step-1" id="fig" aria-describedby="fig-caption">
+    <div class="steps" role="group" aria-label="Figure step">
+      <button class="step" type="button" data-step="1" aria-pressed="true"><b>1</b>What the tokenizer counts</button>
+      <button class="step" type="button" data-step="2" aria-pressed="false"><b>2</b>Unmask the names</button>
+      <button class="step" type="button" data-step="3" aria-pressed="false"><b>3</b>Only the real words</button>
+      <button class="next pulse" type="button" id="next">Unmask ▸</button>
+    </div>
+    <div class="hero" aria-live="polite">
+      <span class="big" id="ratio">7.4 : 1</span>
+      <span class="what" id="ratio-what"><b>man : woman</b>, as counted by the tokenizer</span>
+    </div>
+    <div class="legend">
+      <span class="s1"><i class="k-unknown"></i>10 mentions of the word</span>
+      <span class="s23"><i class="k-real"></i>10 mentions of the real word</span>
+      <span class="s23 s2only"><i class="k-name"></i>10 mentions inside a hero name or a title</span>
+      <span class="s3"><i class="k-ghost"></i>names set aside</span>
+    </div>
+    <div id="pairs"></div>
+    <p class="caption" id="fig-caption">One dot = 10 mentions. Counts are what scikit-learn's CountVectorizer finds in the 303 pages of the course's <code>marvel_pages.zip</code>. Hover or tap a dot to see what it stands for.</p>
+  </div>
+
+  <section aria-labelledby="she-h">
+    <h2 id="she-h">The pronoun trap: "she hulk"</h2>
+    <p>The same thing happens to pronouns. A tokenizer that splits on hyphens turns every She-Hulk into the pronoun "she" followed by the word "hulk". Ask what usually comes after "she" in these pages, and "hulk" is the second answer.</p>
+    <div class="bars" id="she-bars" role="img" aria-label="Most common words after she"></div>
+    <div class="stat-row">
+      <div class="stat"><div class="v" id="she-glued"></div><div class="l" id="she-glued-l"></div></div>
+      <div class="stat"><div class="v" id="she-share"></div><div class="l">of all "she" tokens are a hero's name, not a woman being described</div></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="ev-h">
+    <h2 id="ev-h">Read it in context</h2>
+    <p>Counts can lie, the text can't. Pick a word to see real sentences from the pages, sorted by how we classified them.</p>
+    <div class="chips" id="chips" role="group" aria-label="Word"></div>
+    <div class="kwic">
+      <div><h3><i style="background:var(--real)"></i>The real word</h3><ol id="kwic-real"></ol></div>
+      <div><h3><i style="background:var(--name)"></i>Inside a name or title</h3><ol id="kwic-name"></ol></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="num-h">
+    <h2 id="num-h">The numbers</h2>
+    <details>
+      <summary>Show the counts as a table</summary>
+      <div class="tablewrap"><table id="table"></table></div>
+    </details>
+  </section>
+
+  <section aria-labelledby="how-h">
+    <h2 id="how-h">How we did it, and what it doesn't show</h2>
+    <ul class="notes">
+      <li><b>Tokenizer.</b> We counted with scikit-learn's CountVectorizer, the tool from exercise 5.7. Like spaCy, it splits "Spider-Man" into "spider" and "man". A plain <code>split()</code> on spaces would keep "Spider-Man" whole and avoid this particular trap.</li>
+      <li><b>What counts as a name.</b> A mention is a name when it is glued to a hyphen (X-Men, She-Hulk) or capitalised right after another capitalised word (Iron Man, Moon Girl). Lower-case uses are real words. That rule also sweeps in a few titles, such as "Sexiest Women", which is why the bucket says "names or titles".</li>
+      <li><b>What we checked by hand.</b> We read samples of both kinds in context (the panel above) before trusting the rule.</li>
+      <li><b>Limitation.</b> The real-word counts are small: 224 "man" against 121 "woman". The corrected ratio of 1.9 to 1 is a rough figure, and a word like "man" says nothing about which characters are men. This is a warning about measurement, not a census of Marvel's gender balance.</li>
+      <li><b>What didn't hold up.</b> We also tested whether women's pages are longer (they are, but women in this list are more linked, and the gap disappears once you account for links) and whether women's pages talk more about death and resurrection (per word, they don't).</li>
+    </ul>
+  </section>
+
+  <footer>
+    Made for Week 5 of DTU 02805 Social Graphs and Interactions. Data: the course's 303 Marvel Wikipedia pages. Rebuild the numbers with <code>prepare_unmasked.py</code>.
+    <span class="foot-links">See also <a href="../week-05-tokenlingo/">Tokenlingo</a>, our Week 5 game.</span>
+  </footer>
+</main>
+<div class="tip" id="tip" hidden></div>
+
+<script src="../week-05-tokenlingo/characters.js"></script>
+<script src="unmasked-data.js"></script>
+<script>
+(function () {
+  const D = window.UNMASKED;
+  const $ = (s, el = document) => el.querySelector(s);
+  const fmt = (n) => n.toLocaleString("en-US");
+  const PAIRS = [["man", "woman"], ["men", "women"], ["boy", "girl"]];
+  const R = 4, PITCH = 11;
+  const fig = $("#fig");
+  let step = 1;
+
+  if (window.TL_CHARS) $("#wolverine").outerHTML = window.TL_CHARS.wolverine.svg("happy");
+
+  const shown = (w, s) => (s === 3 ? D.words[w].real : D.words[w].total);
+  const ratio = (a, b, s) => shown(a, s) / shown(b, s);
+  const nameLabel = (l) => (l === "other names" ? "other names" : l === "other caps" ? "other capitalised uses" : l);
+
+  // ---------- dot grids ----------
+  const cells = {};
+  function buildCell(w) {
+    const d = D.words[w];
+    const el = document.createElement("div");
+    el.className = "cell";
+    const names = d.parts.filter((p) => p.label !== "real");
+    const top = names.filter((p) => !p.label.startsWith("other")).slice(0, 3);
+    const rest = names.reduce((s, p) => s + p.count, 0) - top.reduce((s, p) => s + p.count, 0);
+    el.innerHTML = `<header><span class="w"></span><span class="n" aria-live="polite"></span></header><svg role="img"></svg><p class="names"><span class="s1"></span><span class="s23"></span></p>`;
+    $(".w", el).textContent = w;
+    $("svg", el).setAttribute("aria-label", `${w}: ${fmt(d.total)} tokenizer mentions, ${fmt(d.real)} real word, ${fmt(d.total - d.real)} inside names or titles`);
+    $(".names .s1", el).textContent = `Every "${w}" token, whatever it belongs to.`;
+    const s23 = $(".names .s23", el);
+    top.forEach((p, i) => { const b = document.createElement("b"); b.textContent = p.label; s23.append(i ? " · " : "", b, ` ${fmt(p.count)}`); });
+    if (rest > 0) s23.append(` · ${fmt(rest)} more`);
+    // dot order: real words first, then the name groups, biggest first
+    const order = d.dots.filter((x) => x.label === "real").concat(d.dots.filter((x) => x.label !== "real"));
+    const list = [];
+    order.forEach((g) => { for (let i = 0; i < g.n; i++) list.push(g.label); });
+    cells[w] = { el, list, d };
+    return el;
+  }
+  function layout() {
+    Object.values(cells).forEach(({ el, list }) => {
+      const svg = $("svg", el);
+      const width = el.clientWidth || 300;
+      const cols = Math.max(8, Math.floor((width + (PITCH - 2 * R)) / PITCH));
+      const rows = Math.ceil(list.length / cols);
+      svg.setAttribute("viewBox", `0 0 ${cols * PITCH} ${Math.max(1, rows) * PITCH}`);
+      svg.style.height = `${Math.max(1, rows) * PITCH}px`;
+      svg.style.width = `${cols * PITCH}px`;
+      svg.innerHTML = list.map((label, i) => {
+        const cls = label === "real" ? "real" : "nm";
+        return `<circle class="dot ${cls}" data-i="${i}" cx="${(i % cols) * PITCH + R}" cy="${Math.floor(i / cols) * PITCH + R}" r="${R}" style="--d:${(i * 1.6).toFixed(0)}ms"></circle>`;
+      }).join("");
+      svg.dataset.cols = cols;
+    });
+  }
+  const pairsEl = $("#pairs");
+  PAIRS.forEach(([a, b]) => {
+    const row = document.createElement("div");
+    row.className = "pair";
+    row.append(buildCell(a), buildCell(b));
+    const r = document.createElement("p");
+    r.className = "pair-ratio";
+    r.dataset.a = a; r.dataset.b = b;
+    row.append(r);
+    pairsEl.append(row);
+  });
+
+  // ---------- steps ----------
+  function tween(el, from, to, fmtFn) {
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches || from === to) { el.textContent = fmtFn(to); return; }
+    const t0 = performance.now(), dur = 700;
+    const tick = (t) => {
+      const k = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - k, 3);
+      el.textContent = fmtFn(from + (to - from) * e);
+      if (k < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  }
+  let shownRatio = ratio("man", "woman", 1);
+  function setStep(s) {
+    const prev = step;
+    step = s;
+    fig.className = `figure fig step-${s}`;
+    document.querySelectorAll(".step").forEach((b) => b.setAttribute("aria-pressed", String(Number(b.dataset.step) === s)));
+    const next = $("#next");
+    next.textContent = s === 1 ? "Unmask ▸" : s === 2 ? "Drop the names ▸" : "↺ Start over";
+    next.classList.toggle("pulse", s === 1);
+    const target = ratio("man", "woman", s);
+    tween($("#ratio"), shownRatio, target, (v) => `${v.toFixed(1)} : 1`);
+    shownRatio = target;
+    $("#ratio-what").innerHTML = s === 3 ? "<b>man : woman</b>, counting only the real words" : s === 2 ? "<b>man : woman</b>, but look what the counts are made of" : "<b>man : woman</b>, as counted by the tokenizer";
+    Object.entries(cells).forEach(([w, c]) => {
+      const n = $(".n", c.el);
+      const from = shown(w, prev), to = shown(w, s);
+      if (s === 2) n.innerHTML = `${fmt(c.d.total)} <small>· ${Math.round(100 * (c.d.total - c.d.real) / c.d.total)}% names</small>`;
+      else tween(n, from, to, (v) => fmt(Math.round(v)));
+    });
+    document.querySelectorAll(".pair-ratio").forEach((r) => {
+      const a = r.dataset.a, b = r.dataset.b;
+      const naive = ratio(a, b, 1), real = ratio(a, b, 3);
+      r.innerHTML = s === 3
+        ? `<b>${a} : ${b}</b> drops from ${naive.toFixed(1)} : 1 to <b>${real.toFixed(1)} : 1</b>`
+        : `<b>${a} : ${b}</b> = ${naive.toFixed(1)} : 1 as counted`;
+    });
+  }
+  document.querySelectorAll(".step").forEach((b) => b.addEventListener("click", () => setStep(Number(b.dataset.step))));
+  $("#next").addEventListener("click", () => setStep(step === 3 ? 1 : step + 1));
+
+  // ---------- tooltip ----------
+  const tip = $("#tip");
+  function showTip(x, y, build) {
+    tip.replaceChildren(); build(tip); tip.hidden = false;
+    const r = tip.getBoundingClientRect();
+    let left = x + 14, top = y + 14;
+    if (left + r.width > innerWidth - 8) left = x - r.width - 14;
+    if (top + r.height > innerHeight - 8) top = y - r.height - 14;
+    tip.style.left = `${Math.max(8, left)}px`; tip.style.top = `${Math.max(8, top)}px`;
+  }
+  function hideTip() { tip.hidden = true; document.querySelectorAll(".dot.hot").forEach((d) => d.classList.remove("hot")); }
+  function kwicNode(ex) {
+    const q = document.createElement("q");
+    const b = document.createElement("b"); b.textContent = ex.match;
+    q.append(ex.left, b, ex.right);
+    return q;
+  }
+  Object.entries(cells).forEach(([w, c]) => {
+    const svg = $("svg", c.el);
+    const pick = (e) => {
+      const rect = svg.getBoundingClientRect(), cols = Number(svg.dataset.cols);
+      const col = Math.floor((e.clientX - rect.left) / PITCH), row = Math.floor((e.clientY - rect.top) / PITCH);
+      const i = row * cols + col;
+      return col >= 0 && col < cols && i >= 0 && i < c.list.length ? i : -1;
+    };
+    svg.addEventListener("pointermove", (e) => {
+      const i = pick(e);
+      if (i < 0) return hideTip();
+      document.querySelectorAll(".dot.hot").forEach((d) => d.classList.remove("hot"));
+      svg.querySelector(`[data-i="${i}"]`).classList.add("hot");
+      const label = c.list[i], part = c.d.parts.find((p) => p.label === label);
+      showTip(e.clientX, e.clientY, (t) => {
+        const s = document.createElement("strong");
+        if (step === 1) {
+          s.textContent = `about 10 of ${fmt(c.d.total)}`;
+          t.append(s, `mentions of "${w}" counted by the tokenizer. Press Unmask to see what they are.`);
+          return;
+        }
+        const key = document.createElement("span");
+        key.className = "key";
+        key.style.background = label === "real" ? "var(--real)" : "var(--name)";
+        s.textContent = fmt(part.count);
+        t.append(s, key, label === "real" ? `times the real word "${w}"` : `times inside "${nameLabel(label)}"`);
+        const ex = (c.d.examples[label] || [])[0];
+        if (ex) {
+          const q = kwicNode(ex);
+          const pg = document.createElement("small"); pg.textContent = ` (${ex.page})`;
+          q.append(pg);
+          t.append(q);
+        }
+      });
+    });
+    svg.addEventListener("pointerleave", hideTip);
+  });
+  addEventListener("scroll", hideTip, { passive: true });
+
+  // ---------- she bars ----------
+  const she = D.she, max = she.next[0][1];
+  $("#she-bars").innerHTML = she.next.slice(0, 6).map(([w, n]) => `
+    <div class="bar ${w === "hulk" ? "hl" : ""}"><span>${w}</span>
+      <div class="track"><div class="fill" style="width:calc(${(100 * n / max).toFixed(1)}% - 52px)"></div><span class="val" style="left:calc(${(100 * n / max).toFixed(1)}% - 52px)">${fmt(n)}</span></div></div>`).join("");
+  $("#she-glued").textContent = fmt(she.glued);
+  $("#she-glued-l").textContent = `"she" tokens are really She-Hulk (${fmt(she.glued_forms[0][1])}), She-Venom, She-Devil and friends`;
+  $("#she-share").textContent = `${Math.round(100 * she.glued / she.tokenizer_total)}%`;
+  document.querySelectorAll(".bar").forEach((bar) => {
+    bar.addEventListener("pointermove", (e) => {
+      const w = $("span", bar).textContent, n = she.next.find((x) => x[0] === w)[1];
+      showTip(e.clientX, e.clientY, (t) => {
+        const s = document.createElement("strong"); s.textContent = fmt(n);
+        t.append(s, w === "hulk" ? `times "she" is followed by "hulk". Almost all of them are She-Hulk, split at the hyphen.` : `times "she" is followed by "${w}"`);
+      });
+    });
+    bar.addEventListener("pointerleave", hideTip);
+  });
+
+  // ---------- evidence ----------
+  const WORDS = ["man", "men", "woman", "women", "girl", "boy"];
+  let chosen = "men";
+  function renderKwic() {
+    const d = D.words[chosen];
+    const fill = (ol, items) => {
+      ol.replaceChildren();
+      items.forEach(([label, ex]) => {
+        const li = document.createElement("li");
+        const em = document.createElement("em"); em.textContent = ex.left;
+        const b = document.createElement("b"); b.textContent = ex.match;
+        const em2 = document.createElement("em"); em2.textContent = ex.right;
+        const small = document.createElement("small"); small.textContent = label ? `${label} · ${ex.page}` : ex.page;
+        li.append(em, b, em2, small);
+        ol.append(li);
+      });
+    };
+    fill($("#kwic-real"), (d.examples.real || []).slice(0, 3).map((ex) => [null, ex]));
+    const nameGroups = d.parts.filter((p) => p.label !== "real" && d.examples[p.label]);
+    const named = nameGroups.slice(0, 3).map((p) => [nameLabel(p.label), d.examples[p.label][0]]);
+    fill($("#kwic-name"), named);
+    document.querySelectorAll(".chip").forEach((c) => c.setAttribute("aria-pressed", String(c.dataset.w === chosen)));
+  }
+  $("#chips").innerHTML = WORDS.map((w) => `<button class="chip" type="button" data-w="${w}" aria-pressed="false">${w}</button>`).join("");
+  document.querySelectorAll(".chip").forEach((c) => c.addEventListener("click", () => { chosen = c.dataset.w; renderKwic(); }));
+  renderKwic();
+
+  // ---------- table ----------
+  const rows = WORDS.map((w) => {
+    const d = D.words[w];
+    const top = d.parts.filter((p) => p.label !== "real" && !p.label.startsWith("other")).slice(0, 2).map((p) => `${p.label} ${fmt(p.count)}`).join(", ");
+    return `<tr><td>${w}</td><td>${fmt(d.total)}</td><td>${fmt(d.real)}</td><td>${fmt(d.total - d.real)}</td><td>${Math.round(100 * (d.total - d.real) / d.total)}%</td><td>${top}</td></tr>`;
+  }).join("");
+  $("#table").innerHTML = `<thead><tr><th>Word</th><th>Tokenizer count</th><th>Real word</th><th>Names or titles</th><th>Share names</th><th>Biggest names</th></tr></thead><tbody>${rows}
+    <tr><td>she</td><td>${fmt(she.tokenizer_total)}</td><td>${fmt(she.tokenizer_total - she.glued)}</td><td>${fmt(she.glued)}</td><td>${Math.round(100 * she.glued / she.tokenizer_total)}%</td><td>She-Hulk ${fmt(she.glued_forms[0][1])}</td></tr></tbody>`;
+
+  layout();
+  setStep(1);
+  let rt;
+  addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(layout, 120); });
+})();
+</script>
+</body>
+</html>
