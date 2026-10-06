@@ -8,7 +8,7 @@ https://detchampenbo.github.io/Go_Nuts_repos/index.html
 
 ## Visual course library
 
-The root `index.html` is a static GitHub Pages gallery. Visual experiments are linked
+The root aka `index.html` is a static GitHub Pages gallery. Visual experiments are linked
 from that page; the Marvel project lives in
 `showcases/week-01-network-questions/claude/`. Read
 [`docs/HOW_THE_SITE_WORKS.md`](docs/HOW_THE_SITE_WORKS.md) for a plain-language map of
