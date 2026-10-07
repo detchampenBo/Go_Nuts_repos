@@ -1,0 +1,669 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Her Husband, His Armor</title>
+<meta name="description" content="In 303 Marvel Wikipedia pages, the words after 'her' are family, hair and mind powers. After 'his': body parts, gear and plans.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600;700&display=swap">
+<style>
+/* Three parts: a scroll story over a pinned mirrored chart, an explorer with the same chart and controls,
+   and a "hero exam" that compares two pages. her/his are the validated categorical slots 2 and 1. */
+:root {
+  --plane: #f9f9f7; --surface: #fcfcfb; --ink: #0b0b0b; --ink-2: #52514e; --muted: #7a7873; --hair: #e1e0d9;
+  --her: #eb6834; --his: #2a78d6;
+  --font: "Familjen Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) {
+    --plane: #0d0d0d; --surface: #1a1a19; --ink: #f4f3ef; --ink-2: #c3c2b7; --muted: #959389; --hair: #2c2c2a;
+    --her: #d95926; --his: #3987e5;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --plane: #0d0d0d; --surface: #1a1a19; --ink: #f4f3ef; --ink-2: #c3c2b7; --muted: #959389; --hair: #2c2c2a;
+  --her: #d95926; --his: #3987e5;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--plane); color: var(--ink-2); font: 400 17px/1.55 var(--font); -webkit-font-smoothing: antialiased; }
+.page { max-width: 760px; margin: 0 auto; padding-inline: 16px; padding-block: 40px 72px; }
+.wide { width: min(1160px, calc(100vw - 32px)); margin-left: 50%; transform: translateX(-50%); }
+h1, h2, h3 { color: var(--ink); margin: 0; font-weight: 700; letter-spacing: -.02em; line-height: 1.1; text-wrap: balance; }
+p { margin: 0; }
+code { font-size: .9em; }
+button, input { font: inherit; }
+:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; border-radius: 6px; }
+.panel { background: var(--surface); border-radius: 16px; box-shadow: 0 0 0 1px var(--hair); }
+
+/* ---------- hero ---------- */
+.lede { display: grid; gap: 14px; }
+.lede h1 { font-size: clamp(2.6rem, 8vw, 4.6rem); letter-spacing: -.035em; line-height: .98; }
+.dek { max-width: 50ch; font-size: 1.2rem; }
+
+/* ---------- textscape: every phrase, crawling slowly ---------- */
+.wall { margin-top: 28px; padding: 18px 20px 14px; }
+.wall-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+.wall-col header { display: flex; align-items: baseline; gap: 10px; padding-bottom: 8px; border-bottom: 3px solid var(--c); }
+.wall-col .wh { color: var(--ink); font-size: 1.8rem; font-weight: 700; letter-spacing: -.03em; line-height: 1; }
+.wall-col header span:last-child { color: var(--muted); font-size: .88rem; font-variant-numeric: tabular-nums; }
+.wall-win { position: relative; height: min(46vh, 440px); margin-top: 8px; overflow: hidden; -webkit-mask-image: linear-gradient(transparent, #000 7%, #000 90%, transparent); mask-image: linear-gradient(transparent, #000 7%, #000 90%, transparent); }
+.wall-text { margin: 0; color: color-mix(in srgb, var(--ink-2) 72%, transparent); font-size: 12.5px; line-height: 1.8; animation: crawl var(--dur, 300s) linear 1.2s infinite alternate; will-change: transform; }
+.wall-text span { padding: 1px 2px; border-radius: 3px; }
+.wall-text span:hover { color: var(--ink); background: color-mix(in srgb, var(--ink) 10%, transparent); }
+.wall-text span.hl { color: var(--ink); font-weight: 600; background: color-mix(in srgb, var(--c) 32%, transparent); cursor: pointer; }
+@keyframes crawl { to { transform: translateY(var(--dist, 0px)); } }
+.wall.paused .wall-text, .wall-win:hover .wall-text { animation-play-state: paused; }
+.wall-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; margin-top: 12px; color: var(--muted); font-size: .84rem; }
+.wall-foot b { color: var(--ink); font-weight: 600; }
+.tip .pg { display: block; color: var(--muted); font-size: .8rem; }
+
+/* ---------- the mirrored chart (shared by story and explorer) ---------- */
+.heads, .row, .divider { display: grid; grid-template-columns: 1fr var(--spine, 150px) 1fr; align-items: center; }
+.heads .h { color: var(--ink); font-size: var(--hsize, clamp(2rem, 5vw, 3rem)); font-weight: 700; letter-spacing: -.04em; line-height: 1; }
+.heads .h.her { text-align: right; }
+.heads .h::after { content: ""; display: block; width: 60%; height: 6px; margin-top: 8px; border-radius: 3px; }
+.heads .h.her::after { margin-left: auto; background: var(--her); }
+.heads .h.his::after { background: var(--his); }
+.unit { margin-top: 10px; color: var(--muted); font-size: .8rem; text-align: center; }
+.rows { margin: 10px 0 0; padding: 0; list-style: none; }
+.rows li { transition: opacity .35s ease; }
+.rows li.dim { opacity: .16; }
+.rows li.enter { animation: enter .45s ease both; }
+@keyframes enter { from { opacity: 0; } }
+.row { width: 100%; min-height: var(--rowh, 40px); padding: 2px 0; color: inherit; background: none; border: 0; border-radius: 8px; text-align: left; }
+button.row { cursor: pointer; transition: background-color .15s ease; }
+button.row:hover { background: color-mix(in srgb, var(--ink) 4%, transparent); }
+button.row[aria-pressed="true"] { background: color-mix(in srgb, var(--ink) 8%, transparent); }
+.row.pinned { outline: 1px dashed var(--muted); outline-offset: -1px; }
+.cell { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.cell.her { justify-content: flex-end; }
+.word { color: var(--ink); font-size: var(--wsize, 1.2rem); font-weight: 600; letter-spacing: -.01em; text-align: center; }
+.bar { flex: none; height: var(--barh, 24px); width: calc(var(--p) * 1%); transition: transform .9s cubic-bezier(.16, 1, .3, 1) calc(var(--i) * 35ms), width .5s cubic-bezier(.16, 1, .3, 1); }
+.cell.her .bar { background: var(--her); border-radius: 4px 0 0 4px; transform-origin: right center; }
+.cell.his .bar { background: var(--his); border-radius: 0 4px 4px 0; transform-origin: left center; }
+.rows.pre .bar { transform: scaleX(0); }
+.n { flex: none; color: var(--ink-2); font-size: .86rem; font-variant-numeric: tabular-nums; }
+.note { min-width: 0; color: var(--muted); font-size: .84rem; line-height: 1.3; }
+.cell.her .note { text-align: right; }
+.note-m { display: none; }
+.divider { margin: 10px 0; color: var(--muted); font-size: .8rem; }
+.divider span:first-child { text-align: right; }
+.divider span:nth-child(2) { height: 1px; margin: 0 12px; background: var(--hair); }
+.caption { margin-top: 16px; color: var(--muted); font-size: .84rem; max-width: 90ch; }
+.tip { position: fixed; z-index: 20; max-width: min(360px, calc(100vw - 32px)); padding: 10px 12px; color: var(--ink-2); background: var(--surface); border-radius: 10px; box-shadow: 0 0 0 1px var(--hair), 0 8px 24px rgb(20 20 18 / .14); font-size: .84rem; line-height: 1.45; pointer-events: none; }
+.tip p + p { margin-top: 6px; }
+.tip b { color: var(--ink); font-weight: 600; }
+.tip i { display: inline-block; width: 12px; height: 5px; margin-right: 6px; border-radius: 3px; vertical-align: middle; background: var(--c); }
+
+/* ---------- story: pinned chart, steps scroll past ---------- */
+.story { margin-top: 40px; display: grid; grid-template-columns: minmax(280px, 360px) 1fr; gap: 48px; }
+.story .sticky { grid-column: 2; grid-row: 1; position: sticky; top: max(16px, calc(50vh - 330px)); align-self: start; padding: 20px 22px 14px; --spine: 120px; --rowh: 26px; --barh: 15px; --wsize: .98rem; --hsize: 2rem; }
+.story .row { cursor: default; }
+.story .rows li.dim { opacity: .12; }
+.steps { grid-column: 1; grid-row: 1; padding-block: 8vh 30vh; }
+.step { min-height: 78vh; display: flex; align-items: center; }
+.step .card { padding: 20px 22px; transition: opacity .3s ease; opacity: .35; }
+.step.active .card { opacity: 1; }
+.step p { color: var(--ink); font-size: 1.08rem; line-height: 1.5; }
+.step q { display: block; margin-top: 12px; padding-left: 12px; border-left: 2px solid var(--c, var(--hair)); color: var(--ink-2); font-size: .9rem; quotes: none; }
+.step q b { color: var(--ink); font-weight: 600; }
+.step q small { display: block; margin-top: 3px; color: var(--muted); font-size: .78rem; }
+.step .pagebars { display: grid; gap: 5px; margin-top: 12px; }
+.pagebars .r { display: grid; grid-template-columns: 112px 1fr; align-items: center; gap: 10px; font-size: .84rem; }
+.pagebars .r span { color: var(--ink); text-align: right; }
+.pagebars .r.rest span { color: var(--muted); }
+.pagebars .t { display: flex; align-items: center; gap: 6px; }
+.pagebars .t i { height: 12px; width: calc(var(--p) * 1%); background: var(--her); border-radius: 0 3px 3px 0; }
+.pagebars .r.rest .t i { background: color-mix(in srgb, var(--her) 35%, var(--surface)); }
+.pagebars .t b { color: var(--ink-2); font-weight: 400; font-variant-numeric: tabular-nums; }
+.jump { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.btn { display: inline-block; padding: 8px 16px; color: var(--surface); background: var(--ink); border: 0; border-radius: 999px; font-size: .9rem; font-weight: 600; text-decoration: none; cursor: pointer; }
+.btn.ghost { color: var(--ink); background: transparent; box-shadow: inset 0 0 0 1px var(--hair); }
+.btn:active, .key:active { transform: scale(.98); }
+
+/* ---------- explorer ---------- */
+section { margin-top: 72px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; scroll-margin-top: 16px; }
+section > h2 { font-size: clamp(1.7rem, 4.4vw, 2.3rem); }
+section > p { max-width: 64ch; }
+.explorer { padding: 26px 26px 20px; }
+.controls { display: grid; gap: 16px; margin-bottom: 18px; padding-bottom: 18px; border-bottom: 1px solid var(--hair); }
+.themes { display: flex; flex-wrap: wrap; gap: 6px; }
+.key { padding: 6px 12px; color: var(--ink); background: transparent; border: 1px solid var(--hair); border-radius: 999px; font-size: .88rem; font-weight: 500; cursor: pointer; transition: background-color .15s ease, color .15s ease; }
+.key:hover { border-color: var(--muted); }
+.key[aria-pressed="true"] { color: var(--surface); background: var(--ink); border-color: var(--ink); }
+.key small { margin-left: 5px; opacity: .65; font-size: .8rem; font-variant-numeric: tabular-nums; }
+.tune { display: grid; grid-template-columns: 1fr 1fr 1.25fr; gap: 14px 28px; align-items: start; }
+.tune label, .field-l { display: grid; gap: 6px; color: var(--ink); font-size: .88rem; font-weight: 500; }
+.tune output { color: var(--ink-2); font-weight: 600; font-variant-numeric: tabular-nums; }
+.tune input[type=range] { width: 100%; margin: 4px 0 0; accent-color: var(--ink); }
+.find { display: flex; gap: 6px; }
+.textin { flex: 1; width: 100%; min-width: 0; padding: 8px 14px; color: var(--ink); background: var(--plane); border: 1px solid var(--hair); border-radius: 999px; font-size: .92rem; }
+.textin::placeholder { color: var(--muted); }
+.find-msg { min-height: 1.3em; margin-top: 6px; color: var(--muted); font-size: .8rem; }
+.pins { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.pin { padding: 3px 10px; color: var(--ink); background: none; border: 1px dashed var(--muted); border-radius: 999px; font-size: .8rem; cursor: pointer; }
+.status { min-height: 1.6em; color: var(--ink-2); font-size: .92rem; }
+.status b { color: var(--ink); font-weight: 600; }
+.evidence { padding: 20px 22px; display: grid; gap: 12px; scroll-margin-top: 16px; }
+.evidence h3 { font-size: 1.5rem; }
+.evidence .meta { color: var(--muted); font-size: .9rem; }
+.kwic { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.kwic h4 { display: flex; align-items: center; gap: 8px; margin: 0 0 8px; color: var(--ink); font-size: .95rem; font-weight: 600; }
+.kwic h4 i { width: 14px; height: 6px; border-radius: 3px; background: var(--c); }
+.kwic ol { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
+.kwic li { padding-left: 12px; border-left: 2px solid var(--hair); font-size: .9rem; line-height: 1.5; }
+.kwic li b { color: var(--ink); font-weight: 600; }
+.kwic li small { display: block; margin-top: 2px; color: var(--muted); font-size: .78rem; }
+.kwic .none { color: var(--muted); font-size: .9rem; }
+
+/* ---------- hero exam ---------- */
+.exam { padding: 26px; }
+.exam-controls { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 24px; }
+.presets { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 6px; }
+.exam-head { margin: 30px 0 22px; color: var(--ink); font-size: clamp(2.2rem, 6.4vw, 3.8rem); font-weight: 700; letter-spacing: -.04em; line-height: 1.02; text-wrap: balance; }
+.exam-head span { box-shadow: inset 0 -.2em 0 color-mix(in srgb, var(--c) 40%, transparent); }
+.exam-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 34px; }
+.hcard h3 { font-size: 1.55rem; }
+.hcard .sub { margin-top: 4px; color: var(--muted); font-size: .88rem; }
+.hcard ol { display: grid; margin: 14px 0 0; padding: 0; list-style: none; }
+.hcard ol li { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; padding: 5px 0; border-bottom: 1px solid var(--hair); }
+.hcard ol li .w { color: var(--ink); font-size: 1.2rem; font-weight: 600; }
+.hcard ol li:first-child .w { font-size: 2rem; letter-spacing: -.03em; }
+.hcard ol li .c { color: var(--muted); font-size: .88rem; font-variant-numeric: tabular-nums; }
+.hcard .empty { margin-top: 14px; color: var(--muted); }
+.tm-wrap { display: grid; gap: 7px; margin-top: 18px; }
+.tm-head { color: var(--muted); font-size: .78rem; }
+.tm { display: grid; grid-template-columns: 118px 1fr 44px; align-items: center; gap: 10px; font-size: .84rem; }
+.tm > span:first-child { color: var(--ink); }
+.tm .track { position: relative; height: 14px; }
+.tm .avg { position: absolute; inset: 0 auto 0 0; width: calc(var(--a) * 1%); background: color-mix(in srgb, var(--c) 22%, transparent); border-radius: 0 4px 4px 0; transition: width .5s cubic-bezier(.16, 1, .3, 1); }
+.tm .fill { position: relative; top: 4px; height: 6px; width: calc(var(--p) * 1%); background: var(--c); border-radius: 0 3px 3px 0; transition: width .5s cubic-bezier(.16, 1, .3, 1); }
+.tm .v { color: var(--ink-2); font-variant-numeric: tabular-nums; text-align: right; }
+.exam-note { margin-top: 20px; color: var(--muted); font-size: .84rem; max-width: 90ch; }
+
+/* ---------- notes ---------- */
+.formula { padding: 12px 16px; color: var(--ink); overflow-x: auto; white-space: nowrap; font-size: .95rem; }
+.notes { display: grid; gap: 12px; margin: 0; padding-left: 1.1em; max-width: 64ch; }
+.notes li::marker { color: var(--muted); }
+.notes b { color: var(--ink); font-weight: 600; }
+footer { margin-top: 64px; padding-top: 18px; color: var(--muted); border-top: 1px solid var(--hair); font-size: .86rem; }
+footer a { color: var(--ink); text-underline-offset: 3px; }
+
+@media (max-width: 900px) {
+  /* chart pinned to the top, step cards scroll over its lower part */
+  .story { display: block; }
+  .story .sticky { top: 0; z-index: 0; padding: 12px 10px 10px; border-radius: 0 0 16px 16px; --spine: 92px; --rowh: 21px; --barh: 11px; --wsize: .82rem; --hsize: 1.5rem; }
+  .story .unit { display: none; }
+  .steps { position: relative; z-index: 1; margin-top: -42svh; padding-block: 0 20svh; }
+  .step { min-height: 92svh; align-items: flex-end; padding-bottom: 4svh; }
+  .step .card { opacity: 1; box-shadow: 0 0 0 1px var(--hair), 0 10px 30px rgb(20 20 18 / .14); }
+}
+@media (max-width: 640px) {
+  .explorer, .evidence, .exam { padding: 16px 12px; }
+  .explorer { --spine: 92px; --wsize: .98rem; --barh: 18px; }
+  .cell .note { display: none; }
+  .note-m { display: block; grid-column: 1 / -1; padding: 2px 8px 6px; color: var(--muted); font-size: .8rem; text-align: center; }
+  .kwic, .tune, .exam-controls, .exam-grid { grid-template-columns: 1fr; }
+  .wall { padding: 14px 10px 12px; }
+  .wall-cols { gap: 14px; }
+  .wall-text { font-size: 10.5px; }
+  .tm { grid-template-columns: 104px 1fr 40px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+}
+</style>
+</head>
+<body>
+<main class="page">
+  <header class="lede">
+    <h1>Her husband,<br>his armor</h1>
+    <p class="dek">In 303 Marvel Wikipedia pages, the words after “her” are family, hair and mind powers. After “his”: body parts, gear and plans.</p>
+  </header>
+
+  <figure class="wall panel wide" id="wall" aria-label="A wall of every phrase that starts with her or his in the 303 pages, slowly scrolling. The words this story is about are highlighted.">
+    <div class="wall-cols">
+      <div class="wall-col" style="--c:var(--her)"><header><span class="wh">her</span><span id="wall-n-her"></span></header><div class="wall-win"><p class="wall-text" id="wall-her" aria-hidden="true"></p></div></div>
+      <div class="wall-col" style="--c:var(--his)"><header><span class="wh">his</span><span id="wall-n-his"></span></header><div class="wall-win"><p class="wall-text" id="wall-his" aria-hidden="true"></p></div></div>
+    </div>
+    <div class="wall-foot"><p>Every “her ___” and “his ___” in the 303 pages, in page order. <b>Highlighted:</b> the words this story is about. Hover a phrase to see its page; click a highlighted one to read it in context.</p><button class="btn ghost" id="wall-pause" type="button" aria-pressed="false">Pause</button></div>
+  </figure>
+
+  <!-- ---------- 1. the story ---------- -->
+  <div class="story wide">
+    <figure class="sticky panel" id="story-fig" role="img" aria-label="The ten words that lean most to her and to his. Each scroll step highlights a few of them.">
+      <div class="heads" aria-hidden="true"><span class="h her">her</span><span></span><span class="h his">his</span></div>
+      <p class="unit">uses per 1,000 words after each pronoun</p>
+      <ol class="rows pre" id="story-rows" aria-hidden="true"></ol>
+    </figure>
+    <div class="steps" id="steps">
+      <div class="step" data-focus=""><div class="card panel"><p id="s0"></p></div></div>
+      <div class="step" data-focus="husband wife"><div class="card panel"><p id="s1"></p></div></div>
+      <div class="step" data-focus="husband children cousin hair"><div class="card panel"><p id="s2"></p></div></div>
+      <div class="step" data-focus="hands head chest blood legs healing"><div class="card panel"><p id="s3"></p></div></div>
+      <div class="step" data-focus="armor criminal"><div class="card panel"><p id="s4"></p></div></div>
+      <div class="step" data-focus="telepathy telepathic psychic telekinesis"><div class="card panel"><p id="s5"></p></div></div>
+      <div class="step" data-focus="telepathy telepathic psychic telekinesis"><div class="card panel"><p id="s6"></p><div class="pagebars" id="pagebars"></div></div></div>
+      <div class="step" data-focus="comic full"><div class="card panel"><p id="s7"></p></div></div>
+      <div class="step" data-focus=""><div class="card panel"><p id="s8"></p><div class="jump"><a class="btn" href="#explore">Explore every word</a><a class="btn ghost" href="#exam">Compare two heroes</a></div></div></div>
+    </div>
+  </div>
+
+  <!-- ---------- 2. the explorer ---------- -->
+  <section id="explore" aria-labelledby="explore-h">
+    <h2 id="explore-h">Every word, your way</h2>
+    <p>The story used ten words a side. Here you can change how many words are shown and how common a word must be, highlight a theme, or pin your own word.</p>
+    <figure class="explorer panel wide" aria-labelledby="chart-cap">
+      <div class="controls">
+        <div class="themes" id="themes" role="group" aria-label="Highlight a theme"></div>
+        <div class="tune">
+          <label><span>Words per side: <output id="o-per"></output></span><input type="range" id="s-per" min="6" max="20" step="1"></label>
+          <label><span>Only words used at least <output id="o-min"></output> times</span><input type="range" id="s-min" min="12" max="40" step="1"></label>
+          <form id="find" autocomplete="off">
+            <label class="field-l" for="find-in">Try your own word</label>
+            <div class="find" style="margin-top:6px"><input class="textin" id="find-in" list="vocab" placeholder="mother, power, costume…"><button class="btn" type="submit">Pin</button></div>
+            <p class="find-msg" id="find-msg" aria-live="polite"></p>
+            <div class="pins" id="pins"></div>
+            <datalist id="vocab"></datalist>
+          </form>
+        </div>
+        <p class="status" id="status" aria-live="polite"></p>
+      </div>
+      <div class="heads" aria-hidden="true"><span class="h her">her</span><span></span><span class="h his">his</span></div>
+      <p class="unit">Bars: uses per 1,000 words after each pronoun · numbers: raw counts</p>
+      <ol class="rows pre" id="rows"></ol>
+      <p class="caption" id="chart-cap">Hover a row for a sentence; click it to read more below.</p>
+    </figure>
+    <div class="evidence panel wide" id="evidence" aria-live="polite">
+      <h3 id="ev-title"></h3>
+      <p class="meta" id="ev-meta"></p>
+      <div class="kwic">
+        <div><h4 style="--c:var(--her)"><i></i>After “her”</h4><ol id="ev-her"></ol></div>
+        <div><h4 style="--c:var(--his)"><i></i>After “his”</h4><ol id="ev-his"></ol></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ---------- 3. the hero exam ---------- -->
+  <section id="exam" aria-labelledby="exam-h">
+    <h2 id="exam-h">The hero exam</h2>
+    <p>Pick any two of the 303 heroes. We read their own page and list the words that follow “her” or “his”, whichever the page uses more, next to the average for that pronoun.</p>
+    <div class="exam panel wide">
+      <div class="exam-controls">
+        <label class="field-l" for="hero-a">First hero<input class="textin" id="hero-a" list="hero-list" autocomplete="off"></label>
+        <label class="field-l" for="hero-b">Second hero<input class="textin" id="hero-b" list="hero-list" autocomplete="off"></label>
+        <div class="presets" id="presets"></div>
+        <datalist id="hero-list"></datalist>
+      </div>
+      <p class="exam-head" id="exam-head" aria-live="polite"></p>
+      <div class="exam-grid">
+        <article class="hcard" id="card-a"></article>
+        <article class="hcard" id="card-b"></article>
+      </div>
+      <p class="exam-note" id="exam-note"></p>
+    </div>
+  </section>
+
+  <!-- ---------- 4. method ---------- -->
+  <section aria-labelledby="how-h">
+    <h2 id="how-h">How we did it, with Week 6 tools</h2>
+    <p class="formula panel">lean(w) = log₂ P(w | her) / P(w | his) = PMI(her, w) − PMI(his, w)</p>
+    <ul class="notes">
+      <li><b>Context window of 1.</b> For each “her” and “his” we keep the single next word, the narrowest window from exercise 6.6. Narrow windows capture how a word is used grammatically, which is what we want here.</li>
+      <li><b>PMI to choose the words.</b> A word’s lean is its PMI with “her” minus its PMI with “his”, with add-one smoothing so words that never follow one side still get a score. The charts show the words leaning hardest each way among words used often enough; the explorer’s sliders change both cut-offs.</li>
+      <li><b>Rates, not counts.</b> “His” is <span id="ratio"></span>× as common as “her”, so bars show uses per 1,000 words after each pronoun. The numbers next to the bars are raw counts.</li>
+      <li><b>Two groups of text, as in Scattertext.</b> The “her” contexts and the “his” contexts are the two groups being compared. The themes (family, body, gear, mind, career) are our own labels, like topic labels in exercise 6.4.</li>
+      <li><b>What we checked by hand.</b> We read the sentences behind every word in the charts. That is how we found that “her telepathy” sits on a handful of pages, that “his healing” is almost always a healing factor, and that “comic” and “full” are artefacts of Wikipedia’s style.</li>
+      <li><b>Limitations.</b> Dropping function words removes most cases where “her” is an object (“saved her from”), but not all. Adjectives count too (“her telepathic”). In the hero exam, “his” on a man’s page sometimes refers to another man. And this is how Wikipedia editors summarise the comics, not the comics themselves.</li>
+    </ul>
+  </section>
+
+  <footer>
+    Made for Week 6 of DTU 02805 Social Graphs and Interactions. Data: the course’s 303 Marvel Wikipedia pages. Rebuild the numbers with <code>prepare_possessives.py</code>.
+    See also last week’s <a href="../week-05-unmasked/">Most men are X-Men</a>.
+  </footer>
+</main>
+<div class="tip" id="tip" hidden></div>
+
+<script src="possessives-data.js"></script>
+<script>
+(function () {
+  const D = window.POSSESSIVES;
+  const $ = (s) => document.querySelector(s);
+  const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+  const fmt = (n) => n.toLocaleString("en-US");
+  const pct = (x) => `${(100 * x).toFixed(1)}%`;
+  const cap = (s) => s[0].toUpperCase() + s.slice(1);
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const rate = (d, side) => 1000 * d[side] / D[`${side}_total`];
+  const byWord = new Map(D.words.map((d) => [d.w, d]));
+  const W = (w) => byWord.get(w);
+  const THEMES = ["family", "mind", "body", "gear", "career"];
+  let selected = "husband";
+
+  // notes sit in the empty half of a row; facts come from the data
+  const NOTES = {
+    husband: (d) => `Two of the ${d.his} “his husband” are Northstar, Marvel’s first openly gay hero`,
+    telepathy: (d) => `${d.her} uses, but on only ${d.her_pages} pages`,
+    wife: (d) => `${d.his} uses on ${d.his_pages} pages. “Her wife” never appears`,
+    legs: () => "“Her legs” never appears",
+  };
+
+  // ---------- tooltip: one real sentence per side ----------
+  const tip = $("#tip");
+  function line(side, d) {
+    const p = el("p"), key = el("i"); key.style.setProperty("--c", `var(--${side})`);
+    const ex = d[`ex_${side}`][0];
+    if (!ex) p.append(key, el("b", null, `${side} ${d.w}`), " never appears");
+    else p.append(key, ex.left, el("b", null, ex.match), ex.right);
+    return p;
+  }
+  function showTip(e, d) { tipAt(e, line("her", d), line("his", d)); }
+  function tipAt(e, ...content) {
+    tip.replaceChildren(...content);
+    tip.hidden = false;
+    const r = tip.getBoundingClientRect();
+    let left = e.clientX + 16, top = e.clientY + 16;
+    if (left + r.width > innerWidth - 8) left = e.clientX - r.width - 16;
+    if (top + r.height > innerHeight - 8) top = e.clientY - r.height - 16;
+    tip.style.left = `${Math.max(8, left)}px`; tip.style.top = `${Math.max(8, top)}px`;
+  }
+  addEventListener("scroll", () => { tip.hidden = true; }, { passive: true });
+
+  // ---------- one mirrored chart; rows are kept between renders so they can slide ----------
+  function Chart(rowsEl, opts) {
+    const st = { perSide: opts.perSide, minUses: opts.minUses, theme: null, focus: null, pinned: new Set() };
+    const nodes = new Map();
+    const divider = el("li", "divider"); divider.setAttribute("aria-hidden", "true");
+    divider.append(el("span", null, "leans to her ↑"), el("span"), el("span", null, "↓ leans to his"));
+
+    function makeRow(d) {
+      const li = el("li"), b = el(opts.interactive ? "button" : "div", "row");
+      b.dataset.w = d.w;
+      const note = opts.notes && NOTES[d.w] ? NOTES[d.w](d) : "";
+      li.bars = {};
+      const side = (who) => {
+        const c = el("span", `cell ${who}`), bar = el("span", "bar");
+        li.bars[who] = bar;
+        const parts = [bar, el("span", "n", d[who])];
+        if (note && (who === "her" ? d.lr < 0 : d.lr > 0)) parts.push(el("span", "note", note));
+        c.append(...(who === "her" ? parts.reverse() : parts));
+        return c;
+      };
+      b.append(side("her"), el("span", "word", d.w), side("his"));
+      if (note) b.append(el("span", "note-m", note));
+      if (opts.interactive) {
+        b.type = "button";
+        b.setAttribute("aria-label", `${d.w}: ${d.her} times after her, ${d.his} times after his`);
+        b.addEventListener("click", () => select(d.w, true));
+      }
+      b.addEventListener("pointermove", (e) => { if (e.pointerType === "mouse") showTip(e, d); });
+      b.addEventListener("pointerleave", () => { tip.hidden = true; });
+      li.append(b);
+      return li;
+    }
+
+    function pick() {
+      const pool = D.words.filter((d) => d.her + d.his >= st.minUses); // sorted by lean, "her" first
+      const her = pool.filter((d) => d.lr > 0).slice(0, st.perSide);
+      const his = pool.filter((d) => d.lr < 0).slice(-st.perSide);
+      st.pinned.forEach((w) => { const d = W(w); if (!her.includes(d) && !his.includes(d)) (d.lr > 0 ? her : his).push(d); });
+      her.sort((a, b) => b.lr - a.lr); his.sort((a, b) => b.lr - a.lr); // strongest "his" at the bottom
+      return { pool, her, his };
+    }
+
+    function render(animate) {
+      const res = pick(), { her, his } = res, shown = her.concat(his);
+      const maxRate = Math.max(...shown.flatMap((d) => [rate(d, "her"), rate(d, "his")]));
+      const slide = animate && !reduce, first = new Map();
+      if (slide) nodes.forEach((li, w) => first.set(w, li.getBoundingClientRect().top));
+      const keep = new Set(shown.map((d) => d.w));
+      nodes.forEach((li, w) => { if (!keep.has(w)) { li.remove(); nodes.delete(w); } });
+      her.concat(null, his).forEach((d, i) => {
+        if (!d) { rowsEl.append(divider); return; }
+        let li = nodes.get(d.w);
+        if (!li) { li = makeRow(d); nodes.set(d.w, li); if (animate) li.classList.add("enter"); }
+        const row = li.firstChild;
+        row.style.setProperty("--i", i);
+        li.bars.her.style.setProperty("--p", (86 * rate(d, "her") / maxRate).toFixed(2));
+        li.bars.his.style.setProperty("--p", (86 * rate(d, "his") / maxRate).toFixed(2));
+        li.classList.toggle("dim", (!!st.theme && d.group !== st.theme) || (!!st.focus && !st.focus.has(d.w)));
+        row.classList.toggle("pinned", st.pinned.has(d.w));
+        if (opts.interactive) row.setAttribute("aria-pressed", String(d.w === selected));
+        rowsEl.append(li); // appending an existing node moves it into the new order
+      });
+      if (slide) first.forEach((top, w) => {
+        const li = nodes.get(w); if (!li) return;
+        const dy = top - li.getBoundingClientRect().top;
+        if (dy) li.animate([{ transform: `translateY(${dy}px)` }, { transform: "none" }], { duration: 480, easing: "cubic-bezier(.16, 1, .3, 1)" });
+      });
+      return { ...res, shown };
+    }
+
+    // grow the bars out from the spine the first time the chart is seen
+    if (reduce || !("IntersectionObserver" in window)) rowsEl.classList.remove("pre");
+    else {
+      const io = new IntersectionObserver((es) => { if (es.some((e) => e.isIntersecting)) { rowsEl.classList.remove("pre"); io.disconnect(); } }, { threshold: 0.15 });
+      io.observe(rowsEl);
+    }
+    return { st, render, nodes };
+  }
+
+  // =============== 0. textscape ===============
+  const HL = {
+    her: new Set(["husband", "hair", "children", "cousin", "telepathy", "telepathic", "psychic", "telekinesis"]),
+    his: new Set(["wife", "hands", "head", "chest", "blood", "legs", "healing", "armor", "criminal"]),
+  };
+  ["her", "his"].forEach((side) => {
+    const flat = D.wall[side], box = $(`#wall-${side}`), frag = document.createDocumentFragment();
+    for (let i = 0; i < flat.length; i += 2) {
+      const w = D.vocab[flat[i]], sp = el("span", HL[side].has(w) ? "hl" : null, `${side} ${w}`);
+      sp.dataset.i = i;
+      frag.append(sp, " ");
+    }
+    box.append(frag);
+    $(`#wall-n-${side}`).textContent = fmt(flat.length / 2);
+    box.addEventListener("pointermove", (e) => {
+      const sp = e.target.closest("span"); if (!sp) { tip.hidden = true; return; }
+      const i = +sp.dataset.i;
+      tipAt(e, el("b", null, sp.textContent), el("span", "pg", D.titles[flat[i + 1]]));
+    });
+    box.addEventListener("pointerleave", () => { tip.hidden = true; });
+    box.addEventListener("click", (e) => {
+      const sp = e.target.closest("span.hl"); if (!sp) return;
+      select(D.vocab[flat[+sp.dataset.i]], true);
+    });
+  });
+  // crawl distance and duration depend on rendered height: about 22 px per second
+  function measureWall() {
+    document.querySelectorAll(".wall-text").forEach((t) => {
+      const dist = Math.max(0, t.scrollHeight - t.parentElement.clientHeight);
+      t.style.setProperty("--dist", `${-dist}px`);
+      t.style.setProperty("--dur", `${Math.max(20, dist / 22).toFixed(0)}s`);
+    });
+  }
+  (document.fonts ? document.fonts.ready : Promise.resolve()).then(measureWall);
+  let wt; addEventListener("resize", () => { clearTimeout(wt); wt = setTimeout(measureWall, 200); });
+  $("#wall-pause").addEventListener("click", (e) => {
+    const paused = $("#wall").classList.toggle("paused");
+    e.currentTarget.setAttribute("aria-pressed", String(paused));
+    e.currentTarget.textContent = paused ? "Play" : "Pause";
+  });
+
+  // =============== 1. story ===============
+  const story = Chart($("#story-rows"), { perSide: 10, minUses: 15, interactive: false, notes: false });
+  story.render(false);
+
+  function quote(word, side, pageStart) {
+    const d = W(word), list = d[`ex_${side}`];
+    const ex = list.find((x) => !pageStart || x.page.startsWith(pageStart)) || list[0];
+    const q = el("q"); q.style.setProperty("--c", `var(--${side})`);
+    q.append(ex.left, el("b", null, ex.match), ex.right, el("small", null, ex.page));
+    return q;
+  }
+  const say = (id, text, q) => { $(id).textContent = text; if (q) $(id).after(q); };
+  const hw = (w) => `${W(w).her} to ${W(w).his}`;
+  say("#s0", `Every time a Marvel hero’s Wikipedia page says “her” or “his”, we looked at the very next word: ${fmt(D.her_total)} times after “her”, ${fmt(D.his_total)} after “his”. These are the ten words that lean hardest each way.`);
+  say("#s1", `Start with marriage. “Her husband” appears ${W("husband").her} times. “His wife” appears ${W("wife").his} times; “her wife”, never. Two of the ${W("husband").his} “his husband” are Northstar:`, quote("husband", "his", "Northstar"));
+  say("#s2", `The “her” side fills with family and looks: “her children” ${hw("children")}, “her cousin” ${hw("cousin")}, and “her hair” ${hw("hair")}.`, quote("hair", "her"));
+  say("#s3", `The “his” side is a body: hands ${W("hands").his}, head ${W("head").his}, chest ${W("chest").his}, blood ${W("blood").his}, legs ${W("legs").his} (“her legs”: never). And 19 of the ${W("healing").his} “his healing” are a healing factor.`, quote("legs", "his"));
+  say("#s4", `Then equipment and a past: “his armor” ${W("armor").his} times to ${W("armor").her}, and “his criminal”, as in his criminal career, ${W("criminal").his} to ${W("criminal").her}.`, quote("armor", "his"));
+  say("#s5", `The mind powers lean to “her”: telepathy ${hw("telepathy")}, telepathic ${hw("telepathic")}, psychic ${hw("psychic")}, telekinesis ${hw("telekinesis")}.`, quote("telepathy", "her"));
+  const m = D.groups.mind, top = m.her_top5, rest = m.her - top.reduce((s, [, c]) => s + c, 0);
+  say("#s6", `But look at where they come from. Of the ${m.her} “her” mind words, ${Math.round(100 * m.her_top5_share)}% sit on five pages. The ${m.his} “his” mind words are spread over ${m.his_pages} pages.`);
+  const maxC = Math.max(top[0][1], rest), bars = $("#pagebars");
+  top.concat([[`${m.her_pages - top.length} other pages`, rest]]).forEach(([t, c], i) => {
+    const r = el("div", i === top.length ? "r rest" : "r"), t2 = el("div", "t"), fill = el("i");
+    fill.style.setProperty("--p", (86 * c / maxC).toFixed(1));
+    t2.append(fill, el("b", null, c)); r.append(el("span", null, t), t2); bars.append(r);
+  });
+  say("#s7", "Not every lean means something. “Her comic” is mostly “her comic book” debut or death; “her full” is “her full name” or “full potential”. That is Wikipedia’s style, not the characters.", quote("comic", "her"));
+  say("#s8", "That is the pattern. Now test it: change the cut-offs, pin your own word, or put two heroes side by side.");
+
+  const steps = [...document.querySelectorAll(".step")];
+  function activate(step) {
+    steps.forEach((s) => s.classList.toggle("active", s === step));
+    const f = step.dataset.focus.trim();
+    story.st.focus = f ? new Set(f.split(/\s+/)) : null;
+    story.render(false);
+  }
+  activate(steps[0]);
+  if ("IntersectionObserver" in window) {
+    // a step turns on when its card crosses a line 60% down the screen (works for side-by-side and overlaid cards)
+    const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) activate(e.target.closest(".step")); }), { rootMargin: "-60% 0px -39% 0px" });
+    steps.forEach((s) => io.observe(s.querySelector(".card")));
+  }
+
+  // =============== 2. explorer ===============
+  const explore = Chart($("#rows"), { perSide: 12, minUses: 15, interactive: true, notes: true });
+  function renderExplore(animate) {
+    const { pool, her, his, shown } = explore.render(animate), st = explore.st;
+    const S = $("#status"); S.replaceChildren();
+    S.append("Showing ", el("b", null, `${her.length} words`), " that lean to “her” and ", el("b", null, `${his.length}`), ` that lean to “his”, out of ${pool.length} words used at least ${st.minUses} times.`);
+    if (st.theme) { const g = D.groups[st.theme]; S.append(" ", el("b", null, g.label), `: ${pct(g.her_share)} of all words after “her”, ${pct(g.his_share)} after “his”.`); }
+    $("#themes").querySelectorAll(".key").forEach((k) => {
+      k.setAttribute("aria-pressed", String(k.dataset.g === st.theme));
+      k.querySelector("small").textContent = shown.filter((d) => d.group === k.dataset.g).length;
+    });
+    $("#o-per").textContent = st.perSide; $("#o-min").textContent = st.minUses;
+    const pins = $("#pins"); pins.replaceChildren();
+    st.pinned.forEach((w) => {
+      const b = el("button", "pin", `${w} ×`); b.type = "button"; b.setAttribute("aria-label", `Unpin ${w}`);
+      b.addEventListener("click", () => { st.pinned.delete(w); renderExplore(true); });
+      pins.append(b);
+    });
+  }
+  THEMES.forEach((g) => {
+    const b = el("button", "key", D.groups[g].label); b.type = "button"; b.dataset.g = g; b.append(el("small"));
+    b.addEventListener("click", () => { explore.st.theme = explore.st.theme === g ? null : g; renderExplore(false); });
+    $("#themes").append(b);
+  });
+  const sPer = $("#s-per"), sMin = $("#s-min");
+  sPer.value = explore.st.perSide; sMin.value = explore.st.minUses;
+  sPer.addEventListener("input", () => { explore.st.perSide = +sPer.value; renderExplore(true); });
+  sMin.addEventListener("input", () => { explore.st.minUses = +sMin.value; renderExplore(true); });
+  [...D.words].sort((a, b) => a.w.localeCompare(b.w)).forEach((d) => { const o = el("option"); o.value = d.w; $("#vocab").append(o); });
+  $("#find").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const v = $("#find-in").value.trim().toLowerCase(), msg = $("#find-msg");
+    if (!v) return;
+    const d = W(v);
+    if (!d) { msg.textContent = `“${v}” is not among the ${D.words.length} words used at least ${D.min_count} times after “her” or “his”.`; return; }
+    explore.st.pinned.add(v); $("#find-in").value = "";
+    msg.textContent = `“${v}”: ${d.her} after “her”, ${d.his} after “his”.`;
+    renderExplore(true); select(v, false);
+    explore.nodes.get(v).scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "nearest" });
+  });
+
+  function fillKwic(ol, list) {
+    ol.replaceChildren();
+    if (!list.length) { ol.append(el("p", "none", "Never in these pages.")); return; }
+    list.forEach((ex) => { const li = el("li"); li.append(ex.left, el("b", null, ex.match), ex.right, el("small", null, ex.page)); ol.append(li); });
+  }
+  function select(word, scroll) {
+    selected = word;
+    const d = W(word), a = Math.abs(d.lr);
+    $("#ev-title").textContent = `her ${d.w} ${d.her} · his ${d.w} ${d.his}`;
+    $("#ev-meta").textContent = `${(2 ** a).toFixed(a < 1 ? 1 : 0)}× more often after “${d.lr > 0 ? "her" : "his"}”, once “his” being more common is accounted for. “her ${d.w}” is on ${d.her_pages} page${d.her_pages === 1 ? "" : "s"}, “his ${d.w}” on ${d.his_pages}.`;
+    fillKwic($("#ev-her"), d.ex_her); fillKwic($("#ev-his"), d.ex_his);
+    explore.nodes.forEach((li, w) => li.firstChild.setAttribute("aria-pressed", String(w === word)));
+    if (scroll) $("#evidence").scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "nearest" });
+  }
+  renderExplore(false);
+  select(selected, false);
+
+  // =============== 3. hero exam ===============
+  const GENERIC = new Set(["first", "former", "early", "previous", "original", "current", "name", "character", "time", "role", "comic", "full", "later", "last", "second", "final", "new"]);
+  const clean = (t) => t.replace(/ \((Marvel Comics|character|characters|comics|Marvel)\)$/, "");
+  const nameCount = new Map();
+  D.heroes.forEach((h) => nameCount.set(clean(h.t), (nameCount.get(clean(h.t)) || 0) + 1));
+  const label = (h) => (nameCount.get(clean(h.t)) > 1 ? h.t : clean(h.t));
+  const byName = new Map(D.heroes.map((h) => [label(h).toLowerCase(), h]));
+  [...D.heroes].sort((a, b) => label(a).localeCompare(label(b))).forEach((h) => { const o = el("option"); o.value = label(h); $("#hero-list").append(o); });
+  const findHero = (v) => byName.get(v.trim().toLowerCase());
+  const headWord = (h) => (h.top.find(([w]) => !GENERIC.has(w)) || h.top[0] || ["nothing"])[0];
+
+  function card(elc, h, scale) {
+    elc.replaceChildren();
+    if (!h) { elc.append(el("p", "empty", "No hero by that name among the 303 pages.")); return; }
+    elc.append(el("h3", null, label(h)), el("p", "sub", `${h.n} words follow “${h.p}” on this page`));
+    if (!h.n) { elc.append(el("p", "empty", "This page never puts a word after “her” or “his”.")); return; }
+    const ol = el("ol");
+    h.top.slice(0, 6).forEach(([w, c]) => { const li = el("li"); li.append(el("span", "w", `${h.p} ${w}`), el("span", "c", c)); ol.append(li); });
+    const wrap = el("div", "tm-wrap");
+    wrap.append(el("p", "tm-head", `Share of the page’s “${h.p}” words. Solid bar: this page. Pale bar: all “${h.p}” words in the 303 pages.`));
+    THEMES.forEach((g) => {
+      const share = h.g[g] / h.n, avg = D.groups[g][`${h.p}_share`];
+      const r = el("div", "tm"), track = el("div", "track"), fill = el("div", "fill"), mark = el("div", "avg");
+      r.style.setProperty("--c", `var(--${h.p})`);
+      fill.style.setProperty("--p", (100 * share / scale).toFixed(1));
+      mark.style.setProperty("--a", (100 * avg / scale).toFixed(1));
+      r.title = `${D.groups[g].label}: ${Math.round(100 * share)}% on this page, ${pct(avg)} across all pages`;
+      track.append(mark, fill);
+      r.append(el("span", null, D.groups[g].label), track, el("span", "v", `${Math.round(100 * share)}%`));
+      wrap.append(r);
+    });
+    elc.append(ol, wrap);
+  }
+  function exam() {
+    const a = findHero($("#hero-a").value), b = findHero($("#hero-b").value);
+    const shares = [a, b].filter((h) => h && h.n).flatMap((h) => THEMES.flatMap((g) => [h.g[g] / h.n, D.groups[g][`${h.p}_share`]]));
+    const scale = Math.max(0.05, ...shares) * 1.08;
+    card($("#card-a"), a, scale); card($("#card-b"), b, scale);
+    const H = $("#exam-head"); H.replaceChildren();
+    [a, b].forEach((h, i) => {
+      if (!h || !h.n) return;
+      const s = el("span", null, `${cap(h.p)} ${headWord(h)}.`); s.style.setProperty("--c", `var(--${h.p})`);
+      H.append(i && H.childNodes.length ? " " : "", s);
+    });
+    $("#exam-note").textContent = a && b ? `One page is a small sample: ${a.n} and ${b.n} words here. Read this as a close-up of two pages, not a statistic; the charts above are the evidence.` : "";
+  }
+  const PRESETS = [["Jessica Jones", "Luke Cage", "married"], ["Jean Grey", "Cyclops", "married"], ["Scarlet Witch", "Quicksilver", "twins"]];
+  PRESETS.forEach(([x, y, why]) => {
+    const b = el("button", "key", `${x} & ${y}`); b.type = "button"; b.append(el("small", null, why));
+    b.addEventListener("click", () => { $("#hero-a").value = x; $("#hero-b").value = y; exam(); });
+    $("#presets").append(b);
+  });
+  const shuffle = el("button", "key", "Shuffle"); shuffle.type = "button";
+  shuffle.addEventListener("click", () => {
+    const pool = (p) => D.heroes.filter((h) => h.p === p && h.n >= 30);
+    const any = (arr) => arr[Math.floor(Math.random() * arr.length)];
+    $("#hero-a").value = label(any(pool("her"))); $("#hero-b").value = label(any(pool("his"))); exam();
+  });
+  $("#presets").append(shuffle);
+  ["#hero-a", "#hero-b"].forEach((id) => $(id).addEventListener("change", exam));
+  $("#hero-a").value = PRESETS[0][0]; $("#hero-b").value = PRESETS[0][1];
+  exam();
+
+  $("#ratio").textContent = (D.his_total / D.her_total).toFixed(1);
+})();
+</script>
+</body>
+</html>
