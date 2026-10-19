@@ -5,10 +5,10 @@ and which come right after "his"? Is a Marvel woman written through her family
 and her mind, and a Marvel man through his body, his gear and his plans?
 
 Input:  notebooks/data/marvel_pages.zip   (one plain-text page per character)
-Output: showcases/week-06-her-husband-his-armor/possessives-data.js
+Output: showcases/week-06-marvel-words/possessives-data.js
 
 Run from the repository root:
-    python showcases/week-06-her-husband-his-armor/prepare_possessives.py
+    python showcases/week-06-marvel-words/prepare_possessives.py
 
 Only the Python standard library is used.
 

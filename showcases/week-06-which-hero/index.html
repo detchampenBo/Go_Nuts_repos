@@ -1,0 +1,409 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Which Hero.exe</title>
+<meta name="description" content="A rave-flyer, early-web quiz: answer 10 questions and find the Marvel hero whose Wikipedia page reads most like you, scored with TF-IDF and cosine similarity.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Michroma&family=Pixelify+Sans:wght@400;600;700&display=swap">
+<style>
+/* Rave flyer x early web (GeoCities, antidesign): black flyer stock with a faint grid, acid lime / magenta / cyan,
+   chrome headline type, Windows 98 dialogs floating at angles, a marquee, a hit counter, Times and Arial left in on purpose.
+   Dark by design: a rave flyer has no daytime edition. */
+:root {
+  --bg: #07060b; --grid: rgb(255 255 255 / .06); --text: #e9e6f2; --dim: #9d98ad;
+  --lime: #c8ff00; --mag: #ff2bd6; --cyan: #19f0ff;
+  --win: #c0c0c0; --win-hi: #ffffff; --win-lo: #808080; --win-dk: #0a0a0a; --navy: #000080; --navy-2: #1084d0;
+  --chrome: linear-gradient(180deg, #ffffff 0%, #c9d0d8 38%, #5b636d 50%, #eef3f8 64%, #9aa4ae 100%);
+  --flyer: "Michroma", "Eurostile", "Arial Black", sans-serif;
+  --pixel: "Pixelify Sans", "VT323", monospace;
+  --times: "Times New Roman", Times, serif;
+  --arial: Arial, Helvetica, sans-serif;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { margin: 0; color: var(--text); font: 400 16px/1.5 var(--arial); -webkit-font-smoothing: antialiased; overflow-x: hidden;
+  background: var(--bg) linear-gradient(var(--grid) 1px, transparent 1px) 0 0 / 32px 32px, linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0 / 32px 32px; background-color: var(--bg); }
+.page { max-width: 1100px; margin: 0 auto; padding: 0 18px 80px; }
+p { margin: 0; }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px dashed var(--lime); outline-offset: 3px; }
+.chrome { color: #fff; background: var(--chrome); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 1px #000) drop-shadow(3px 3px 0 var(--mag)); }
+
+/* ---------- early-web furniture ---------- */
+.ticker { overflow: hidden; width: 100vw; margin-left: calc(50% - 50vw); padding: 6px 0; color: #000; background: var(--lime); font: 600 .95rem var(--pixel); white-space: nowrap; }
+.ticker span { display: inline-block; padding-left: 100%; animation: tick 38s linear infinite; }
+@keyframes tick { to { transform: translateX(-100%); } }
+.construction { height: 14px; margin: 26px 0 0; background: repeating-linear-gradient(-45deg, var(--lime) 0 14px, #000 14px 28px); }
+.counter { display: inline-flex; align-items: center; gap: 8px; color: var(--dim); font: 400 .9rem var(--pixel); }
+.counter b { padding: 2px 6px; color: var(--lime); background: #000; border: 1px solid var(--win-lo); font-weight: 400; letter-spacing: .18em; }
+
+/* ---------- Windows 98 dialog ---------- */
+.win { background: var(--win); color: #000; box-shadow: inset -1px -1px var(--win-dk), inset 1px 1px var(--win-hi), inset -2px -2px var(--win-lo), inset 2px 2px #dfdfdf, 8px 8px 0 rgb(255 43 214 / .35); padding: 3px; }
+.win .bar { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 3px 4px 3px 6px; color: #fff; background: linear-gradient(90deg, var(--navy), var(--navy-2)); font: 700 .82rem var(--arial); }
+.win .bar i { display: flex; gap: 2px; font-style: normal; }
+.win .bar i b { display: grid; place-items: center; width: 16px; height: 14px; color: #000; background: var(--win); box-shadow: inset -1px -1px var(--win-dk), inset 1px 1px var(--win-hi); font: 700 .65rem var(--arial); }
+.win .body { padding: 12px 12px 10px; }
+.sunken { background: #fff; box-shadow: inset 1px 1px var(--win-lo), inset -1px -1px var(--win-hi), inset 2px 2px var(--win-dk); }
+.btn98 { padding: 6px 16px; color: #000; background: var(--win); border: 0; box-shadow: inset -1px -1px var(--win-dk), inset 1px 1px var(--win-hi), inset -2px -2px var(--win-lo), inset 2px 2px #dfdfdf; font: 700 .9rem var(--arial); cursor: pointer; }
+.btn98:active { box-shadow: inset 1px 1px var(--win-dk), inset -1px -1px var(--win-hi), inset 2px 2px var(--win-lo); }
+.btn98[disabled] { color: var(--win-lo); text-shadow: 1px 1px var(--win-hi); cursor: not-allowed; }
+
+/* ---------- flyer cover ---------- */
+.cover { position: relative; display: grid; grid-template-columns: 1fr 260px; gap: 20px; align-items: end; margin-top: 34px; }
+.presents { color: var(--cyan); font: 400 .78rem var(--flyer); letter-spacing: .4em; text-transform: uppercase; }
+.cover h1 { margin: 12px 0 0; font: 400 clamp(2.6rem, 9.6vw, 7rem)/.92 var(--flyer); letter-spacing: -.02em; text-transform: uppercase; }
+.cover .times { display: block; margin-top: 10px; color: var(--mag); font: italic 400 clamp(1.6rem, 4.4vw, 2.8rem)/1 var(--times); }
+.lineup-info { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: 20px; color: var(--lime); font: 400 .78rem var(--flyer); letter-spacing: .14em; text-transform: uppercase; }
+.dek { max-width: 54ch; margin-top: 16px; color: var(--text); font: 400 1.02rem/1.55 var(--arial); }
+.dek u { color: var(--cyan); text-decoration-color: var(--mag); }
+.smiley { justify-self: end; display: grid; place-items: center; width: 210px; aspect-ratio: 1; color: #000; background: var(--lime); border-radius: 50%; font: 400 1rem/1.2 var(--flyer); text-align: center; text-transform: uppercase; transform: rotate(12deg); box-shadow: 0 0 0 6px #000, 0 0 0 9px var(--mag), 0 0 40px rgb(200 255 0 / .4); }
+.smiley span { padding: 0 28px; }
+
+/* ---------- quiz: dialogs scattered over the flyer ---------- */
+.spread { display: grid; grid-template-columns: 1fr 1fr; gap: 26px 34px; margin-top: 40px; }
+.qq { margin: 0; border: 0; min-inline-size: 0; }
+.qq:nth-child(4n + 1) { transform: rotate(-1.1deg); }
+.qq:nth-child(4n + 2) { transform: rotate(.9deg) translateY(14px); }
+.qq:nth-child(4n + 3) { transform: rotate(.6deg); }
+.qq:nth-child(4n) { transform: rotate(-.8deg) translateY(10px); }
+.qq legend { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+.qtext { margin-bottom: 10px; font: 700 1.05rem/1.3 var(--arial); }
+.qq .opts { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.opt { display: flex; align-items: center; gap: 8px; padding: 6px 8px; color: #000; background: transparent; border: 1px dotted transparent; text-align: left; font: 400 .95rem var(--arial); cursor: pointer; }
+.opt:hover { border-color: #000; }
+.opt .box { flex: none; position: relative; width: 14px; height: 14px; background: #fff; border-radius: 50%; box-shadow: inset 1px 1px var(--win-lo), inset -1px -1px var(--win-hi), inset 2px 2px var(--win-dk); font-size: 0; }
+.opt[aria-pressed="true"] { color: #fff; background: var(--navy); }
+.opt[aria-pressed="true"] .box::after { content: ""; position: absolute; inset: 4px; background: #000; border-radius: 50%; }
+
+/* taskbar = score bar */
+.scorebar { position: sticky; bottom: 0; z-index: 5; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; width: 100vw; margin: 34px 0 0 calc(50% - 50vw); padding: 5px 8px; color: #000; background: var(--win); box-shadow: inset 0 1px var(--win-hi), inset 0 2px #dfdfdf; }
+.go { padding: 5px 12px; font-weight: 700; }
+.go.start { display: inline-flex; align-items: center; gap: 6px; }
+.go.start::before { content: ""; width: 14px; height: 14px; background: conic-gradient(var(--mag) 0 25%, var(--lime) 0 50%, var(--cyan) 0 75%, #ffb000 0); }
+.scorebar p { flex: 1; min-width: 200px; padding: 4px 8px; font: 400 .88rem var(--arial); }
+.scorebar p b { color: var(--navy); }
+.tray { padding: 4px 10px; font: 400 .85rem var(--pixel); }
+
+/* ---------- result: tonight's headliner ---------- */
+.result { margin-top: 64px; scroll-margin-top: 10px; }
+.result[hidden] { display: none; }
+.poster { position: relative; padding: 34px 26px 30px; text-align: center; background: radial-gradient(ellipse at 50% 0%, rgb(255 43 214 / .28), transparent 60%), radial-gradient(ellipse at 50% 100%, rgb(25 240 255 / .18), transparent 60%); border: 2px solid var(--mag); }
+.poster .tonight { color: var(--lime); font: 400 .9rem var(--flyer); letter-spacing: .4em; text-transform: uppercase; }
+.poster h2 { margin: 14px 0 0; font: 400 clamp(2.4rem, 8.4vw, 6rem)/.95 var(--flyer); text-transform: uppercase; overflow-wrap: anywhere; }
+.poster .why { max-width: 62ch; margin: 16px auto 0; color: var(--text); font: 400 1rem var(--arial); }
+.support { margin: 26px 0 0; padding: 0; list-style: none; }
+.support .lbl { color: var(--cyan); font: 400 .78rem var(--flyer); letter-spacing: .3em; text-transform: uppercase; }
+.support li { margin-top: 6px; font: 400 clamp(1rem, 2.6vw, 1.5rem)/1.25 var(--flyer); text-transform: uppercase; }
+.support li:nth-child(3n) { color: var(--mag); }
+.support li:nth-child(3n + 1) { color: var(--lime); }
+.support li:nth-child(3n + 2) { color: var(--cyan); }
+.support li small { color: var(--dim); font: 400 .8rem var(--pixel); letter-spacing: 0; }
+.doors { margin-top: 22px; color: var(--dim); font: 400 .72rem var(--flyer); letter-spacing: .2em; text-transform: uppercase; }
+
+.grid2 { display: grid; grid-template-columns: 1.1fr .9fr; gap: 30px; margin-top: 36px; align-items: start; }
+.result .win:nth-of-type(odd) { transform: rotate(-.6deg); }
+.result .win:nth-of-type(even) { transform: rotate(.5deg); }
+.sub { color: #333; font: 400 .82rem var(--arial); }
+.quote { padding: 10px 12px; font: 400 1rem/1.5 var(--times); }
+.quote mark { color: #fff; background: var(--navy); }
+.quote small { display: block; margin-top: 6px; color: #444; font: italic 400 .8rem var(--times); }
+.meter { display: grid; gap: 6px; margin-top: 10px; }
+.mrow { display: grid; grid-template-columns: 110px 1fr; align-items: center; gap: 8px; font: 400 .84rem var(--arial); }
+.mrow > span { text-align: right; font-weight: 700; }
+.mrow .b { display: flex; align-items: center; gap: 8px; min-width: 0; height: 18px; padding: 2px; }
+.mrow .b i { height: 100%; width: calc(var(--p) * 1%); background: repeating-linear-gradient(90deg, var(--c, var(--navy)) 0 9px, transparent 9px 11px); transition: width .5s steps(8); }
+.mrow .b em { flex: none; color: #333; font-style: normal; font-size: .76rem; white-space: nowrap; }
+.mrow.off > span { color: var(--win-lo); font-weight: 400; text-decoration: line-through; }
+.strip { margin-top: 8px; padding: 6px; background: #000; }
+.strip svg { display: block; width: 100%; overflow: visible; font-family: var(--pixel); }
+.strip .d { fill: #3b3650; }
+.strip .d.top { fill: var(--cyan); }
+.strip .d.me { fill: var(--lime); stroke: var(--mag); stroke-width: 2; }
+.strip .axis { stroke: #3b3650; stroke-width: 2; }
+.strip text { fill: var(--dim); font-size: 12px; }
+.strip text.lab { fill: var(--lime); font-size: 14px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.chips span { padding: 2px 8px; color: var(--lime); background: #000; font: 400 .95rem var(--pixel); }
+.chips span:nth-child(2n) { color: var(--mag); }
+.ps { margin-top: 10px; font: 400 .88rem/1.45 var(--arial); }
+.ps b { color: var(--navy); }
+
+/* ---------- README.TXT ---------- */
+.readme { margin-top: 56px; max-width: 820px; }
+.readme .sunken { padding: 14px 16px; color: #000; font: 400 .92rem/1.6 "Courier New", Courier, monospace; white-space: pre-wrap; }
+.readme .sunken b { font-weight: 700; }
+.again { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; justify-content: center; }
+.tip { position: fixed; z-index: 20; padding: 2px 6px; color: #000; background: #ffffe1; border: 1px solid #000; font: 400 .8rem var(--arial); pointer-events: none; }
+footer { margin-top: 56px; text-align: center; color: var(--dim); font: 400 .85rem var(--times); }
+footer .ring { margin-top: 8px; font: 400 .9rem var(--pixel); }
+footer a { color: var(--cyan); }
+
+@media (max-width: 820px) {
+  .cover { grid-template-columns: 1fr; }
+  .smiley { width: 140px; margin-top: -10px; font-size: .7rem; }
+  .spread, .grid2 { grid-template-columns: 1fr; }
+  .qq:nth-child(n) { transform: none; }
+  .mrow { grid-template-columns: 92px 1fr; }
+}
+@media (max-width: 420px) { .qq .opts { grid-template-columns: 1fr; } }
+@media (prefers-reduced-motion: reduce) {
+  .ticker span { animation: none; padding-left: 0; }
+  *, *::before, *::after { transition: none !important; }
+}
+</style>
+</head>
+<body>
+<main class="page">
+  <div class="ticker" aria-hidden="true"><span>★ WHICH HERO.EXE ★ 303 HEROES ★ 10 QUESTIONS ★ 1 MATCH ★ TF-IDF ALL NIGHT LONG ★ COSINE SIMILARITY ON THE MAIN STAGE ★ NO NAMES, NO CHEATING ★ GO NUTS WEEK 6 ★</span></div>
+
+  <!-- ---------- flyer cover ---------- -->
+  <header class="cover">
+    <div>
+      <p class="presents">Go Nuts presents · week 6</p>
+      <h1 class="chrome">Which hero.exe</h1>
+      <span class="times">are you, really?</span>
+      <p class="lineup-info"><span>10 questions</span><span>303 heroes</span><span>1 match</span><span>TF-IDF all night long</span></p>
+      <p class="dek">Pick one answer in each window. We turn your answers into a word vector and compare it with the Wikipedia pages of all 303 Marvel heroes. <u>The page that points the same way is you.</u></p>
+    </div>
+    <div class="smiley" aria-hidden="true"><span>No sign-up · no names · just math</span></div>
+  </header>
+  <div class="construction" aria-hidden="true"></div>
+
+  <!-- ---------- the quiz ---------- -->
+  <section class="spread" id="quiz" aria-label="Quiz questions"></section>
+  <div class="scorebar" id="scorebar">
+    <button class="btn98 go start" id="score" type="button" disabled>Score me</button>
+    <p class="sunken" id="progress" aria-live="polite"></p>
+    <span class="tray sunken" id="tray"></span>
+  </div>
+
+  <!-- ---------- result: tonight's headliner ---------- -->
+  <section class="result" id="result" hidden aria-live="polite">
+    <div class="poster">
+      <p class="tonight">Tonight’s headliner</p>
+      <h2 class="chrome" id="r-name"></h2>
+      <p class="why" id="r-why"></p>
+      <ol class="support" id="r-also"></ol>
+      <p class="doors" id="r-doors"></p>
+    </div>
+
+    <div class="grid2">
+      <div class="win">
+        <div class="bar"><span>evidence.txt</span><i><b>_</b><b>□</b><b>×</b></i></div>
+        <div class="body"><p class="quote sunken" id="r-quote"></p></div>
+      </div>
+      <div class="win">
+        <div class="bar"><span>match-o-meter.exe</span><i><b>_</b><b>□</b><b>×</b></i></div>
+        <div class="body"><p class="sub" id="r-meter-sub"></p><div class="meter" id="r-meter"></div></div>
+      </div>
+    </div>
+
+    <div class="win" style="margin-top:30px">
+      <div class="bar"><span>where_you_rank.gif</span><i><b>_</b><b>□</b><b>×</b></i></div>
+      <div class="body">
+        <p class="sub">Every dot is one hero’s page, placed by how much it sounds like you. Hover a dot for the name.</p>
+        <div class="strip" id="r-strip"></div>
+        <p class="sub" id="r-none" style="margin-top:6px"></p>
+      </div>
+    </div>
+
+    <div class="grid2">
+      <div class="win">
+        <div class="bar"><span>rarity.exe</span><i><b>_</b><b>□</b><b>×</b></i></div>
+        <div class="body"><p class="sub">A word on few pages says a lot about you; a word on every page says nothing. That is the IDF.</p><div class="meter" id="r-idf"></div></div>
+      </div>
+      <div class="win">
+        <div class="bar"><span id="r-top-h"></span><i><b>_</b><b>□</b><b>×</b></i></div>
+        <div class="body"><p class="sub">The words with the highest TF-IDF on that page.</p><div class="chips" id="r-top"></div><p class="ps" id="r-trap"></p></div>
+      </div>
+    </div>
+
+    <div class="again">
+      <button class="btn98" id="retake" type="button">Take it again</button>
+      <button class="btn98" id="random" type="button">I’m feeling lucky</button>
+    </div>
+  </section>
+
+  <!-- ---------- README.TXT ---------- -->
+  <div class="win readme" aria-labelledby="readme-h">
+    <div class="bar"><span id="readme-h">README.TXT - Notepad</span><i><b>_</b><b>□</b><b>×</b></i></div>
+    <div class="body"><p class="sunken"><b>HOW THE MATCHING WORKS</b>
+
+<b>1. Every page is a list of numbers.</b> Each word on a hero’s page gets a score: how often it appears there (TF) times how rare it is across all 303 pages (IDF). “the” gets almost nothing; “adamantium” gets a lot, on the pages that use it.
+   tfidf = (1 + log count) × log(303 / pages with the word)
+
+<b>2. So are you.</b> Each answer is one word, weighted by how rare it is. Then we measure the angle between your list and every page’s list: cosine similarity. It cares which words a page leans on, not how long the page is.
+   cos(you, page) = you · page / (|you| |page|)
+
+<b>3. What it gets wrong.</b> Names are rare, so TF-IDF loves them: two pages can look alike just because two heroes share a surname. One rare answer can carry a whole match, and short pages can win on a single word. And you are compared with Wikipedia’s summaries, not the comics.</p></div>
+  </div>
+
+  <footer>
+    <p>Made for Week 6 of DTU 02805 Social Graphs and Interactions with TF-IDF and cosine similarity. Data: the course’s 303 Marvel Wikipedia pages; rebuild with <code>prepare_quiz.py</code>.</p>
+    <p class="ring">« <a href="../week-06-her-husband-his-armor/">prev</a> | Go Nuts webring | <a href="../../">home</a> » &nbsp; <span class="counter">visitors <b>000303</b></span></p>
+  </footer>
+</main>
+<div class="tip" id="tip" hidden></div>
+
+<script src="quiz-data.js"></script>
+<script>
+(function () {
+  const D = window.QUIZ;
+  const $ = (s) => document.querySelector(s);
+  const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+  const clean = (t) => t.replace(/ \((Marvel Comics|character|characters|comics|Marvel)\)$/, "");
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const Q = D.questions, answers = new Array(Q.length).fill(null);
+  const pad2 = (n) => String(n).padStart(2, "0");
+
+  // ---------- scoring: cosine between your IDF-weighted answers and each normalised page vector ----------
+  function score(ans) {
+    const words = ans.filter(Boolean);
+    const norm = Math.sqrt(words.reduce((s, w) => s + D.idf[w] ** 2, 0)) || 1;
+    return D.heroes.map((h) => {
+      const parts = words.map((w) => [w, h.q[w] ? D.idf[w] * h.q[w][0] / norm : 0]);
+      return { h, s: parts.reduce((a, [, v]) => a + v, 0), parts };
+    }).sort((a, b) => b.s - a.s);
+  }
+  const label = (w) => { for (const q of Q) for (const o of q.options) if (o.w === w) return o.label; return w; };
+  const win = (title) => {
+    const w = el("div", "win"), bar = el("div", "bar"), btns = el("i");
+    btns.append(el("b", null, "_"), el("b", null, "□"), el("b", null, "×"));
+    bar.append(el("span", null, title), btns);
+    const body = el("div", "body"); w.append(bar, body);
+    return [w, body];
+  };
+
+  // ---------- the quiz: one dialog per question ----------
+  const quiz = $("#quiz");
+  Q.forEach((q, qi) => {
+    const fs = el("fieldset", "qq");
+    const [w, body] = win(`question_${pad2(qi + 1)}.txt`);
+    fs.append(el("legend", null, `Question ${qi + 1}: ${q.q}`), w);
+    body.append(el("p", "qtext", q.q));
+    const opts = el("div", "opts");
+    q.options.forEach((o) => {
+      const b = el("button", "opt"); b.type = "button"; b.dataset.q = qi; b.dataset.w = o.w;
+      b.setAttribute("aria-pressed", "false");
+      b.append(el("span", "box"), o.label);
+      b.addEventListener("click", () => { answers[qi] = o.w; sync(); });
+      opts.append(b);
+    });
+    body.append(opts); quiz.append(fs);
+  });
+  function sync() {
+    quiz.querySelectorAll(".opt").forEach((b) => b.setAttribute("aria-pressed", String(answers[+b.dataset.q] === b.dataset.w)));
+    const done = answers.filter(Boolean).length, P = $("#progress");
+    P.replaceChildren();
+    if (!done) P.append("Pick one answer in each window.");
+    else P.append("Loading… so far you sound like ", el("b", null, clean(score(answers)[0].h.t)));
+    $("#tray").textContent = `${done}/10`;
+    $("#score").disabled = done < Q.length;
+  }
+
+  // ---------- result ----------
+  const tip = $("#tip");
+  function finish() {
+    const ranked = score(answers), me = ranked[0], max = me.s || 1;
+    $("#result").hidden = false;
+    $("#r-name").textContent = clean(me.h.t);
+
+    const parts = [...me.parts].sort((a, b) => b[1] - a[1]);
+    const lead = parts.filter(([, v]) => v > 0);
+    let why = lead.length
+      ? `Their page leans on ${lead.slice(0, 3).map(([w]) => `“${label(w)}”`).join(", ")}${lead.length > 3 ? " and more" : ""}, just like your answers.`
+      : "None of your answers appear on any page. This one is pure noise.";
+    if (lead.length && lead[0][1] / me.s > 0.6) why += ` Most of it is “${label(lead[0][0])}”, which only ${D.df[lead[0][0]]} of ${D.pages} pages mention. Rare words count most.`;
+    $("#r-why").textContent = why;
+
+    const also = $("#r-also"); also.replaceChildren(el("li", "lbl", "Support acts"));
+    ranked.slice(1, 6).forEach((r) => { const li = el("li"); li.append(clean(r.h.t), " ", el("small", null, `${Math.round(100 * r.s / max)}`)); also.append(li); });
+    $("#r-doors").textContent = `Doors open at cosine ${me.s.toFixed(3)} · ${D.pages} pages compared · scores relative to your headliner (100)`;
+
+    const Qt = $("#r-quote"); Qt.replaceChildren();
+    const hit = lead.find(([w]) => me.h.q[w] && me.h.q[w][1]);
+    if (hit) { const [l, m, r] = me.h.q[hit[0]][1]; Qt.append("“", l, el("mark", null, m), r, "”", el("small", null, `From the Wikipedia page “${me.h.t}”`)); }
+    else Qt.textContent = "No sentence on this page uses any of your answers.";
+
+    $("#r-meter-sub").textContent = `How much each answer added to your match with ${clean(me.h.t)}. Crossed-out answers never appear on their page.`;
+    const meter = $("#r-meter"); meter.replaceChildren();
+    const maxPart = Math.max(...parts.map(([, v]) => v), 1e-9);
+    parts.forEach(([w, v]) => meter.append(row(label(w), v / maxPart, v ? `${Math.round(100 * v / me.s)}%` : "not there", !v)));
+
+    drawStrip(ranked);
+
+    const idf = $("#r-idf"); idf.replaceChildren();
+    const maxIdf = Math.max(...answers.map((w) => D.idf[w]));
+    [...answers].sort((a, b) => D.idf[b] - D.idf[a]).forEach((w) => idf.append(row(label(w), D.idf[w] / maxIdf, `${D.df[w]}/${D.pages} pages`, false, "#8a0f7c")));
+
+    $("#r-top-h").textContent = `${clean(me.h.t).toLowerCase().replace(/[^a-z0-9]+/g, "_")}_page.dat`;
+    $("#r-top").replaceChildren(...me.h.top.map((w) => el("span", null, w)));
+    const torch = D.heroes.find((h) => h.t === "Human Torch");
+    $("#r-trap").replaceChildren(el("b", null, "Spot the names? "), "Names are rare, so TF-IDF loves them. The Human Torch’s page has ",
+      el("b", null, `“${torch.top.includes("storm") ? "storm" : torch.top[0]}”`), " in its top words because he is Johnny Storm, so a lazy search would pair him with Storm of the X-Men. Same word, different story.");
+
+    $("#result").scrollIntoView({ behavior: reduce ? "auto" : "smooth" });
+  }
+  function row(name, frac, note, off, color) {
+    const r = el("div", off ? "mrow off" : "mrow"), b = el("div", "b sunken"), i = el("i");
+    i.style.setProperty("--p", (82 * Math.max(0, frac)).toFixed(1));
+    if (color) i.style.setProperty("--c", color);
+    b.append(i, el("em", null, note)); r.append(el("span", null, name), b);
+    return r;
+  }
+
+  // strip plot: heroes that share at least one answer, stacked so dots never overlap
+  function drawStrip(all) {
+    const ranked = all.filter((d) => d.s > 0), none = all.length - ranked.length;
+    $("#r-none").textContent = none ? `${none} of ${all.length} pages share none of your answers and are left off.` : "";
+    const box = $("#r-strip"), W = box.clientWidth - 12 || 600, pad = 8, r = 4.5, max = ranked[0].s || 1;
+    const x = (s) => pad + (W - 2 * pad) * (s / max);
+    const placed = [];
+    const ys = ranked.map((d) => {
+      const cx = x(d.s); let y = 0;
+      for (let k = 0; k < 80; k++) {
+        const cand = (k % 2 ? 1 : -1) * Math.ceil(k / 2) * (2 * r + 1);
+        if (!placed.some((p) => Math.abs(p.x - cx) < 2 * r + 1 && Math.abs(p.y - cand) < 2 * r + 1)) { y = cand; break; }
+      }
+      placed.push({ x: cx, y }); return y;
+    });
+    const minY = Math.min(...ys), maxY = Math.max(...ys), top = 28, H = top + (maxY - minY) + 2 * r + 28, axisY = H - 20;
+    const ns = "http://www.w3.org/2000/svg", svg = document.createElementNS(ns, "svg");
+    svg.setAttribute("viewBox", `0 0 ${W} ${H}`); svg.setAttribute("height", H); svg.setAttribute("role", "img");
+    svg.setAttribute("aria-label", `Heroes by similarity to your answers. Closest: ${ranked.slice(0, 3).map((d) => clean(d.h.t)).join(", ")}.`);
+    svg.innerHTML = `<line class="axis" x1="${pad}" x2="${W - pad}" y1="${axisY}" y2="${axisY}"/><text x="${pad}" y="${H - 4}">not you</text><text x="${W - pad}" y="${H - 4}" text-anchor="end">you</text>`;
+    ranked.forEach((d, i) => {
+      const c = document.createElementNS(ns, "circle");
+      c.setAttribute("cx", x(d.s)); c.setAttribute("cy", top + (ys[i] - minY) + r); c.setAttribute("r", i === 0 ? r + 2 : r);
+      c.setAttribute("class", i === 0 ? "d me" : i < 6 ? "d top" : "d");
+      c.addEventListener("pointermove", (e) => {
+        tip.textContent = `${clean(d.h.t)} (${Math.round(100 * d.s / max)})`; tip.hidden = false;
+        tip.style.left = `${Math.min(innerWidth - 220, e.clientX + 12)}px`; tip.style.top = `${e.clientY + 14}px`;
+      });
+      c.addEventListener("pointerleave", () => { tip.hidden = true; });
+      svg.append(c);
+    });
+    const lab = document.createElementNS(ns, "text");
+    lab.setAttribute("class", "lab"); lab.setAttribute("x", W - pad); lab.setAttribute("y", 14); lab.setAttribute("text-anchor", "end");
+    lab.textContent = `${clean(ranked[0].h.t)} ▼`;
+    svg.append(lab); box.replaceChildren(svg);
+  }
+  addEventListener("scroll", () => { tip.hidden = true; }, { passive: true });
+
+  $("#score").addEventListener("click", finish);
+  $("#retake").addEventListener("click", () => {
+    answers.fill(null); sync(); $("#result").hidden = true;
+    $("#quiz").scrollIntoView({ behavior: reduce ? "auto" : "smooth" });
+  });
+  $("#random").addEventListener("click", () => {
+    Q.forEach((q, i) => { answers[i] = q.options[Math.floor(Math.random() * q.options.length)].w; });
+    sync(); finish();
+  });
+  sync();
+})();
+</script>
+</body>
+</html>

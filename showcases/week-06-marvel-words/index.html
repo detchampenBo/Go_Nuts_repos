@@ -1,0 +1,1250 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Marvel in Wikipedia's Words</title>
+<meta name="description" content="Two Week 6 experiments on 303 Marvel Wikipedia pages: the words after 'her' and 'his' (PMI), and a map of heroes built from word-group axes (TF-IDF).">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<style>
+
+/* One page, two chapters. Shared tokens and base styles live here; each chapter's own styles are
+   scoped under #ch1 / #ch2 so the two pieces cannot restyle each other. */
+:root {
+  --page: #fbfaf7; --card: #ffffff; --ink: #17151c; --ink-2: #4a4652; --muted: #807b88; --hair: #e7e4dd; --soft: #f2efe9;
+  --plane: var(--page); --surface: var(--card);
+  --her: #eb6834; --his: #2a78d6;
+  --orbital: #2a78d6; --astral: #6a54d8; --wired: #eb6834; --haunted: #1baf7a;
+  --agree: #2a78d6; --disagree: #eb6834;
+  --born: #c0398a; --forged: #2a9d8f; --ens: #d99a00; --lone: #3d3a48;
+  --ui: "Outfit", system-ui, sans-serif; --font: var(--ui);
+  --read: "Source Serif 4", Georgia, serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) {
+    --page: #121115; --card: #1b1a20; --ink: #f3f1f6; --ink-2: #cdc8d4; --muted: #948e9c; --hair: #2c2a32; --soft: #222027;
+    --her: #d95926; --his: #3987e5;
+    --orbital: #3987e5; --astral: #9085e9; --wired: #d95926; --haunted: #199e70; --agree: #3987e5; --disagree: #d95926;
+    --born: #e05aa8; --forged: #3cb8a9; --ens: #e8b230; --lone: #b9b4c4;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --page: #121115; --card: #1b1a20; --ink: #f3f1f6; --ink-2: #cdc8d4; --muted: #948e9c; --hair: #2c2a32; --soft: #222027;
+  --her: #d95926; --his: #3987e5;
+  --orbital: #3987e5; --astral: #9085e9; --wired: #d95926; --haunted: #199e70; --agree: #3987e5; --disagree: #d95926;
+  --born: #e05aa8; --forged: #3cb8a9; --ens: #e8b230; --lone: #b9b4c4;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--page); color: var(--ink-2); font: 400 17px/1.55 var(--ui); -webkit-font-smoothing: antialiased; }
+.page { max-width: 860px; margin: 0 auto; padding: 0 18px 80px; }
+.wide { width: min(1140px, calc(100vw - 36px)); margin-left: 50%; transform: translateX(-50%); }
+h1, h2, h3, h4 { margin: 0; color: var(--ink); font-weight: 700; line-height: 1.12; letter-spacing: -.015em; text-wrap: balance; }
+p { margin: 0; }
+:focus-visible { outline: 3px solid var(--orbital); outline-offset: 2px; border-radius: 8px; }
+[hidden] { display: none !important; }
+.top { display: flex; align-items: center; justify-content: space-between; padding: 18px 0; color: var(--muted); font-size: .9rem; }
+.top a { color: var(--ink-2); text-decoration: none; }
+.cover { padding: 40px 0 10px; }
+.cover h1 { max-width: 16ch; font-size: clamp(2.6rem, 6.6vw, 4.6rem); font-weight: 800; letter-spacing: -.035em; line-height: 1.0; }
+.cover .dek { max-width: 54ch; margin-top: 18px; font-size: 1.18rem; }
+.toc { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 34px; }
+.toc a { display: grid; gap: 6px; padding: 20px 22px; color: inherit; text-decoration: none; background: var(--card); border-radius: 18px; box-shadow: 0 0 0 1px var(--hair); transition: transform .15s ease, box-shadow .15s ease; }
+.toc a:hover { transform: translateY(-2px); box-shadow: 0 0 0 1.5px var(--ink); }
+.toc .k { color: var(--muted); font-size: .82rem; font-weight: 600; }
+.toc b { color: var(--ink); font-size: 1.3rem; }
+.toc span { font-size: .95rem; }
+.chapter { margin-top: 110px; scroll-margin-top: 10px; }
+.ch-head { padding-top: 26px; border-top: 3px solid var(--ink); }
+.ch-head .k { color: var(--muted); font-size: .9rem; font-weight: 600; }
+.ch-head h2 { margin-top: 6px; font-size: clamp(2.2rem, 5.6vw, 3.6rem); font-weight: 800; letter-spacing: -.03em; }
+.ch-head p.d { max-width: 58ch; margin-top: 12px; font-size: 1.1rem; }
+.site-foot { margin-top: 90px; padding-top: 16px; border-top: 1px solid var(--hair); color: var(--muted); font-size: .84rem; }
+.site-foot a { color: var(--ink); }
+@media (max-width: 760px) { .toc { grid-template-columns: 1fr; } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+/* ================= chapter 1: her husband, his armor ================= */
+#ch1 * { box-sizing: border-box; }
+#ch1 .page { max-width: 760px; margin: 0 auto; padding-inline: 16px; padding-block: 40px 72px; }
+#ch1 .wide { width: min(1160px, calc(100vw - 32px)); margin-left: 50%; transform: translateX(-50%); }
+#ch1 h1, #ch1 h2, #ch1 h3 { color: var(--ink); margin: 0; font-weight: 700; letter-spacing: -.02em; line-height: 1.1; text-wrap: balance; }
+#ch1 p { margin: 0; }
+#ch1 code { font-size: .9em; }
+#ch1 button, #ch1 input { font: inherit; }
+#ch1 :focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; border-radius: 6px; }
+#ch1 .panel { background: var(--surface); border-radius: 16px; box-shadow: 0 0 0 1px var(--hair); }
+#ch1 .lede { display: grid; gap: 14px; }
+#ch1 .lede h1 { font-size: clamp(2.6rem, 8vw, 4.6rem); letter-spacing: -.035em; line-height: .98; }
+#ch1 .dek { max-width: 50ch; font-size: 1.2rem; }
+#ch1 .wall { margin-top: 28px; padding: 18px 20px 14px; }
+#ch1 .wall-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+#ch1 .wall-col header { display: flex; align-items: baseline; gap: 10px; padding-bottom: 8px; border-bottom: 3px solid var(--c); }
+#ch1 .wall-col .wh { color: var(--ink); font-size: 1.8rem; font-weight: 700; letter-spacing: -.03em; line-height: 1; }
+#ch1 .wall-col header span:last-child { color: var(--muted); font-size: .88rem; font-variant-numeric: tabular-nums; }
+#ch1 .wall-win { position: relative; height: min(46vh, 440px); margin-top: 8px; overflow: hidden; -webkit-mask-image: linear-gradient(transparent, #000 7%, #000 90%, transparent); mask-image: linear-gradient(transparent, #000 7%, #000 90%, transparent); }
+#ch1 .wall-text { margin: 0; color: color-mix(in srgb, var(--ink-2) 72%, transparent); font-size: 12.5px; line-height: 1.8; animation: crawl var(--dur, 300s) linear 1.2s infinite alternate; will-change: transform; }
+#ch1 .wall-text span { padding: 1px 2px; border-radius: 3px; }
+#ch1 .wall-text span:hover { color: var(--ink); background: color-mix(in srgb, var(--ink) 10%, transparent); }
+#ch1 .wall-text span.hl { color: var(--ink); font-weight: 600; background: color-mix(in srgb, var(--c) 32%, transparent); cursor: pointer; }
+@keyframes crawl { to { transform: translateY(var(--dist, 0px)); } }
+#ch1 .wall.paused .wall-text, #ch1 .wall-win:hover .wall-text { animation-play-state: paused; }
+#ch1 .wall-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; margin-top: 12px; color: var(--muted); font-size: .84rem; }
+#ch1 .wall-foot b { color: var(--ink); font-weight: 600; }
+#ch1 .tip .pg { display: block; color: var(--muted); font-size: .8rem; }
+#ch1 .heads, #ch1 .row, #ch1 .divider { display: grid; grid-template-columns: 1fr var(--spine, 150px) 1fr; align-items: center; }
+#ch1 .heads .h { color: var(--ink); font-size: var(--hsize, clamp(2rem, 5vw, 3rem)); font-weight: 700; letter-spacing: -.04em; line-height: 1; }
+#ch1 .heads .h.her { text-align: right; }
+#ch1 .heads .h::after { content: ""; display: block; width: 60%; height: 6px; margin-top: 8px; border-radius: 3px; }
+#ch1 .heads .h.her::after { margin-left: auto; background: var(--her); }
+#ch1 .heads .h.his::after { background: var(--his); }
+#ch1 .unit { margin-top: 10px; color: var(--muted); font-size: .8rem; text-align: center; }
+#ch1 .rows { margin: 10px 0 0; padding: 0; list-style: none; }
+#ch1 .rows li { transition: opacity .35s ease; }
+#ch1 .rows li.dim { opacity: .16; }
+#ch1 .rows li.enter { animation: enter .45s ease both; }
+@keyframes enter { from { opacity: 0; } }
+#ch1 .row { width: 100%; min-height: var(--rowh, 40px); padding: 2px 0; color: inherit; background: none; border: 0; border-radius: 8px; text-align: left; }
+#ch1 button.row { cursor: pointer; transition: background-color .15s ease; }
+#ch1 button.row:hover { background: color-mix(in srgb, var(--ink) 4%, transparent); }
+#ch1 button.row[aria-pressed="true"] { background: color-mix(in srgb, var(--ink) 8%, transparent); }
+#ch1 .row.pinned { outline: 1px dashed var(--muted); outline-offset: -1px; }
+#ch1 .cell { display: flex; align-items: center; gap: 8px; min-width: 0; }
+#ch1 .cell.her { justify-content: flex-end; }
+#ch1 .word { color: var(--ink); font-size: var(--wsize, 1.2rem); font-weight: 600; letter-spacing: -.01em; text-align: center; }
+#ch1 .bar { flex: none; height: var(--barh, 24px); width: calc(var(--p) * 1%); transition: transform .9s cubic-bezier(.16, 1, .3, 1) calc(var(--i) * 35ms), width .5s cubic-bezier(.16, 1, .3, 1); }
+#ch1 .cell.her .bar { background: var(--her); border-radius: 4px 0 0 4px; transform-origin: right center; }
+#ch1 .cell.his .bar { background: var(--his); border-radius: 0 4px 4px 0; transform-origin: left center; }
+#ch1 .rows.pre .bar { transform: scaleX(0); }
+#ch1 .n { flex: none; color: var(--ink-2); font-size: .86rem; font-variant-numeric: tabular-nums; }
+#ch1 .note { min-width: 0; color: var(--muted); font-size: .84rem; line-height: 1.3; }
+#ch1 .cell.her .note { text-align: right; }
+#ch1 .note-m { display: none; }
+#ch1 .divider { margin: 10px 0; color: var(--muted); font-size: .8rem; }
+#ch1 .divider span:first-child { text-align: right; }
+#ch1 .divider span:nth-child(2) { height: 1px; margin: 0 12px; background: var(--hair); }
+#ch1 .caption { margin-top: 16px; color: var(--muted); font-size: .84rem; max-width: 90ch; }
+#ch1 .tip { position: fixed; z-index: 20; max-width: min(360px, calc(100vw - 32px)); padding: 10px 12px; color: var(--ink-2); background: var(--surface); border-radius: 10px; box-shadow: 0 0 0 1px var(--hair), 0 8px 24px rgb(20 20 18 / .14); font-size: .84rem; line-height: 1.45; pointer-events: none; }
+#ch1 .tip p + p { margin-top: 6px; }
+#ch1 .tip b { color: var(--ink); font-weight: 600; }
+#ch1 .tip i { display: inline-block; width: 12px; height: 5px; margin-right: 6px; border-radius: 3px; vertical-align: middle; background: var(--c); }
+#ch1 .story { margin-top: 40px; display: grid; grid-template-columns: minmax(280px, 360px) 1fr; gap: 48px; }
+#ch1 .story .sticky { grid-column: 2; grid-row: 1; position: sticky; top: max(16px, calc(50vh - 330px)); align-self: start; padding: 20px 22px 14px; --spine: 120px; --rowh: 26px; --barh: 15px; --wsize: .98rem; --hsize: 2rem; }
+#ch1 .story .row { cursor: default; }
+#ch1 .story .rows li.dim { opacity: .12; }
+#ch1 .steps { grid-column: 1; grid-row: 1; padding-block: 8vh 30vh; }
+#ch1 .step { min-height: 78vh; display: flex; align-items: center; }
+#ch1 .step .card { padding: 20px 22px; transition: opacity .3s ease; opacity: .35; }
+#ch1 .step.active .card { opacity: 1; }
+#ch1 .step p { color: var(--ink); font-size: 1.08rem; line-height: 1.5; }
+#ch1 .step q { display: block; margin-top: 12px; padding-left: 12px; border-left: 2px solid var(--c, var(--hair)); color: var(--ink-2); font-size: .9rem; quotes: none; }
+#ch1 .step q b { color: var(--ink); font-weight: 600; }
+#ch1 .step q small { display: block; margin-top: 3px; color: var(--muted); font-size: .78rem; }
+#ch1 .step .pagebars { display: grid; gap: 5px; margin-top: 12px; }
+#ch1 .pagebars .r { display: grid; grid-template-columns: 112px 1fr; align-items: center; gap: 10px; font-size: .84rem; }
+#ch1 .pagebars .r span { color: var(--ink); text-align: right; }
+#ch1 .pagebars .r.rest span { color: var(--muted); }
+#ch1 .pagebars .t { display: flex; align-items: center; gap: 6px; }
+#ch1 .pagebars .t i { height: 12px; width: calc(var(--p) * 1%); background: var(--her); border-radius: 0 3px 3px 0; }
+#ch1 .pagebars .r.rest .t i { background: color-mix(in srgb, var(--her) 35%, var(--surface)); }
+#ch1 .pagebars .t b { color: var(--ink-2); font-weight: 400; font-variant-numeric: tabular-nums; }
+#ch1 .jump { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+#ch1 .btn { display: inline-block; padding: 8px 16px; color: var(--surface); background: var(--ink); border: 0; border-radius: 999px; font-size: .9rem; font-weight: 600; text-decoration: none; cursor: pointer; }
+#ch1 .btn.ghost { color: var(--ink); background: transparent; box-shadow: inset 0 0 0 1px var(--hair); }
+#ch1 .btn:active, #ch1 .key:active { transform: scale(.98); }
+#ch1 section { margin-top: 72px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; scroll-margin-top: 16px; }
+#ch1 section > h2 { font-size: clamp(1.7rem, 4.4vw, 2.3rem); }
+#ch1 section > p { max-width: 64ch; }
+#ch1 .explorer { padding: 26px 26px 20px; }
+#ch1 .controls { display: grid; gap: 16px; margin-bottom: 18px; padding-bottom: 18px; border-bottom: 1px solid var(--hair); }
+#ch1 .themes { display: flex; flex-wrap: wrap; gap: 6px; }
+#ch1 .key { padding: 6px 12px; color: var(--ink); background: transparent; border: 1px solid var(--hair); border-radius: 999px; font-size: .88rem; font-weight: 500; cursor: pointer; transition: background-color .15s ease, color .15s ease; }
+#ch1 .key:hover { border-color: var(--muted); }
+#ch1 .key[aria-pressed="true"] { color: var(--surface); background: var(--ink); border-color: var(--ink); }
+#ch1 .key small { margin-left: 5px; opacity: .65; font-size: .8rem; font-variant-numeric: tabular-nums; }
+#ch1 .tune { display: grid; grid-template-columns: 1fr 1fr 1.25fr; gap: 14px 28px; align-items: start; }
+#ch1 .tune label, #ch1 .field-l { display: grid; gap: 6px; color: var(--ink); font-size: .88rem; font-weight: 500; }
+#ch1 .tune output { color: var(--ink-2); font-weight: 600; font-variant-numeric: tabular-nums; }
+#ch1 .tune input[type=range] { width: 100%; margin: 4px 0 0; accent-color: var(--ink); }
+#ch1 .find { display: flex; gap: 6px; }
+#ch1 .textin { flex: 1; width: 100%; min-width: 0; padding: 8px 14px; color: var(--ink); background: var(--plane); border: 1px solid var(--hair); border-radius: 999px; font-size: .92rem; }
+#ch1 .textin::placeholder { color: var(--muted); }
+#ch1 .find-msg { min-height: 1.3em; margin-top: 6px; color: var(--muted); font-size: .8rem; }
+#ch1 .pins { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+#ch1 .pin { padding: 3px 10px; color: var(--ink); background: none; border: 1px dashed var(--muted); border-radius: 999px; font-size: .8rem; cursor: pointer; }
+#ch1 .status { min-height: 1.6em; color: var(--ink-2); font-size: .92rem; }
+#ch1 .status b { color: var(--ink); font-weight: 600; }
+#ch1 .evidence { padding: 20px 22px; display: grid; gap: 12px; scroll-margin-top: 16px; }
+#ch1 .evidence h3 { font-size: 1.5rem; }
+#ch1 .evidence .meta { color: var(--muted); font-size: .9rem; }
+#ch1 .kwic { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+#ch1 .kwic h4 { display: flex; align-items: center; gap: 8px; margin: 0 0 8px; color: var(--ink); font-size: .95rem; font-weight: 600; }
+#ch1 .kwic h4 i { width: 14px; height: 6px; border-radius: 3px; background: var(--c); }
+#ch1 .kwic ol { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
+#ch1 .kwic li { padding-left: 12px; border-left: 2px solid var(--hair); font-size: .9rem; line-height: 1.5; }
+#ch1 .kwic li b { color: var(--ink); font-weight: 600; }
+#ch1 .kwic li small { display: block; margin-top: 2px; color: var(--muted); font-size: .78rem; }
+#ch1 .kwic .none { color: var(--muted); font-size: .9rem; }
+#ch1 .exam { padding: 26px; }
+#ch1 .exam-controls { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 24px; }
+#ch1 .presets { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 6px; }
+#ch1 .exam-head { margin: 30px 0 22px; color: var(--ink); font-size: clamp(2.2rem, 6.4vw, 3.8rem); font-weight: 700; letter-spacing: -.04em; line-height: 1.02; text-wrap: balance; }
+#ch1 .exam-head span { box-shadow: inset 0 -.2em 0 color-mix(in srgb, var(--c) 40%, transparent); }
+#ch1 .exam-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 34px; }
+#ch1 .hcard h3 { font-size: 1.55rem; }
+#ch1 .hcard .sub { margin-top: 4px; color: var(--muted); font-size: .88rem; }
+#ch1 .hcard ol { display: grid; margin: 14px 0 0; padding: 0; list-style: none; }
+#ch1 .hcard ol li { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; padding: 5px 0; border-bottom: 1px solid var(--hair); }
+#ch1 .hcard ol li .w { color: var(--ink); font-size: 1.2rem; font-weight: 600; }
+#ch1 .hcard ol li:first-child .w { font-size: 2rem; letter-spacing: -.03em; }
+#ch1 .hcard ol li .c { color: var(--muted); font-size: .88rem; font-variant-numeric: tabular-nums; }
+#ch1 .hcard .empty { margin-top: 14px; color: var(--muted); }
+#ch1 .tm-wrap { display: grid; gap: 7px; margin-top: 18px; }
+#ch1 .tm-head { color: var(--muted); font-size: .78rem; }
+#ch1 .tm { display: grid; grid-template-columns: 118px 1fr 44px; align-items: center; gap: 10px; font-size: .84rem; }
+#ch1 .tm > span:first-child { color: var(--ink); }
+#ch1 .tm .track { position: relative; height: 14px; }
+#ch1 .tm .avg { position: absolute; inset: 0 auto 0 0; width: calc(var(--a) * 1%); background: color-mix(in srgb, var(--c) 22%, transparent); border-radius: 0 4px 4px 0; transition: width .5s cubic-bezier(.16, 1, .3, 1); }
+#ch1 .tm .fill { position: relative; top: 4px; height: 6px; width: calc(var(--p) * 1%); background: var(--c); border-radius: 0 3px 3px 0; transition: width .5s cubic-bezier(.16, 1, .3, 1); }
+#ch1 .tm .v { color: var(--ink-2); font-variant-numeric: tabular-nums; text-align: right; }
+#ch1 .exam-note { margin-top: 20px; color: var(--muted); font-size: .84rem; max-width: 90ch; }
+#ch1 .formula { padding: 12px 16px; color: var(--ink); overflow-x: auto; white-space: nowrap; font-size: .95rem; }
+#ch1 .notes { display: grid; gap: 12px; margin: 0; padding-left: 1.1em; max-width: 64ch; }
+#ch1 .notes li::marker { color: var(--muted); }
+#ch1 .notes b { color: var(--ink); font-weight: 600; }
+#ch1 footer { margin-top: 64px; padding-top: 18px; color: var(--muted); border-top: 1px solid var(--hair); font-size: .86rem; }
+#ch1 footer a { color: var(--ink); text-underline-offset: 3px; }
+@media (max-width: 900px) {
+#ch1 .story { display: block; }
+#ch1 .story .sticky { top: 0; z-index: 0; padding: 12px 10px 10px; border-radius: 0 0 16px 16px; --spine: 92px; --rowh: 21px; --barh: 11px; --wsize: .82rem; --hsize: 1.5rem; }
+#ch1 .story .unit { display: none; }
+#ch1 .steps { position: relative; z-index: 1; margin-top: -42svh; padding-block: 0 20svh; }
+#ch1 .step { min-height: 92svh; align-items: flex-end; padding-bottom: 4svh; }
+#ch1 .step .card { opacity: 1; box-shadow: 0 0 0 1px var(--hair), 0 10px 30px rgb(20 20 18 / .14); }
+}
+@media (max-width: 640px) {
+#ch1 .explorer, #ch1 .evidence, #ch1 .exam { padding: 16px 12px; }
+#ch1 .explorer { --spine: 92px; --wsize: .98rem; --barh: 18px; }
+#ch1 .cell .note { display: none; }
+#ch1 .note-m { display: block; grid-column: 1 / -1; padding: 2px 8px 6px; color: var(--muted); font-size: .8rem; text-align: center; }
+#ch1 .kwic, #ch1 .tune, #ch1 .exam-controls, #ch1 .exam-grid { grid-template-columns: 1fr; }
+#ch1 .wall { padding: 14px 10px 12px; }
+#ch1 .wall-cols { gap: 14px; }
+#ch1 .wall-text { font-size: 10.5px; }
+#ch1 .tm { grid-template-columns: 104px 1fr 40px; }
+}
+@media (prefers-reduced-motion: reduce) {
+#ch1 *, #ch1 *::before, #ch1 *::after { transition: none !important; animation: none !important; }
+}
+/* ================= chapter 2: the map ================= */
+#ch2 * { box-sizing: border-box; }
+#ch2 .page { max-width: 860px; margin: 0 auto; padding: 0 18px 80px; }
+#ch2 .wide { width: min(1140px, calc(100vw - 36px)); margin-left: 50%; transform: translateX(-50%); }
+#ch2 h1, #ch2 h2, #ch2 h3, #ch2 h4 { margin: 0; color: var(--ink); font-weight: 700; line-height: 1.12; letter-spacing: -.015em; text-wrap: balance; }
+#ch2 p { margin: 0; }
+#ch2 button, #ch2 input { font: inherit; color: inherit; }
+#ch2 :focus-visible { outline: 3px solid var(--orbital); outline-offset: 2px; border-radius: 8px; }
+#ch2 .card { background: var(--card); border-radius: 18px; box-shadow: 0 0 0 1px var(--hair), 0 12px 30px rgb(23 21 28 / .05); }
+#ch2 [hidden] { display: none !important; }
+#ch2 .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 22px; color: var(--page); background: var(--ink); border: 0; border-radius: 999px; font-weight: 600; text-decoration: none; cursor: pointer; transition: transform .15s ease; }
+#ch2 .btn:hover { transform: translateY(-1px); }
+#ch2 .btn[disabled] { opacity: .35; cursor: not-allowed; transform: none; }
+#ch2 .btn.ghost { color: var(--ink); background: transparent; box-shadow: inset 0 0 0 1.5px var(--hair); }
+#ch2 .top { display: flex; align-items: center; justify-content: space-between; padding: 18px 0; color: var(--muted); font-size: .9rem; }
+#ch2 .top a { color: var(--ink-2); text-decoration: none; }
+#ch2 .hero { display: grid; grid-template-columns: minmax(0, 1fr) 520px; gap: 36px; align-items: center; padding: 22px 0 10px; }
+#ch2 .hero h1 { font-size: clamp(2.4rem, 5.4vw, 3.9rem); font-weight: 800; letter-spacing: -.035em; line-height: 1.02; }
+#ch2 .hero p { max-width: 46ch; margin-top: 18px; font-size: 1.15rem; }
+#ch2 .hero .meta { margin-top: 14px; color: var(--muted); font-size: .92rem; }
+#ch2 .fan { display: flex; justify-content: center; padding: 24px 0 30px; }
+#ch2 .fan .fc { width: 160px; margin-left: -36px; border-radius: 22px; overflow: hidden; box-shadow: 0 0 0 4px var(--page), 0 18px 36px rgb(23 21 28 / .2); transition: transform .4s cubic-bezier(.16, 1, .3, 1); }
+#ch2 .fan .fc:first-child { margin-left: 0; }
+#ch2 .fan .fc:nth-child(1) { transform: rotate(-7deg) translateY(14px); }
+#ch2 .fan .fc:nth-child(2) { transform: rotate(-2.5deg) translateY(-6px); }
+#ch2 .fan .fc:nth-child(3) { transform: rotate(2.5deg) translateY(8px); }
+#ch2 .fan .fc:nth-child(4) { transform: rotate(7deg) translateY(-8px); }
+#ch2 .fan:hover .fc:nth-child(n) { transform: none; }
+#ch2 .map svg { display: block; width: 100%; height: auto; overflow: visible; font-family: var(--ui); }
+#ch2 .map .quad { transition: opacity .6s ease; }
+#ch2 .map .mid { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 3 5; }
+#ch2 .map .frame { fill: none; stroke: var(--hair); stroke-width: 1; }
+#ch2 .map .axl { fill: var(--muted); font-size: 13px; font-weight: 600; letter-spacing: .02em; }
+#ch2 .map .famname { font-size: 16px; font-weight: 800; letter-spacing: .01em; paint-order: stroke; stroke: var(--card); stroke-width: 4px; }
+#ch2 .map .dot { transition: transform .9s cubic-bezier(.16, 1, .3, 1), fill .4s ease, opacity .4s ease; }
+#ch2 .map .dot.fam { stroke: var(--ink); stroke-width: 1.6; }
+#ch2 .map.clickable .dot { cursor: pointer; }
+#ch2 .map .dot.sel { stroke: var(--ink); stroke-width: 3; }
+#ch2 .map .lab { fill: var(--ink); font-size: 12.5px; font-weight: 600; paint-order: stroke; stroke: var(--page); stroke-width: 4px; stroke-linejoin: round; pointer-events: none; transition: opacity .3s ease; }
+#ch2 .map .you circle { fill: var(--ink); stroke: var(--page); stroke-width: 3; }
+#ch2 .map .you text { fill: var(--ink); font-size: 14px; font-weight: 800; paint-order: stroke; stroke: var(--page); stroke-width: 4px; }
+#ch2 .legend { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 10px; color: var(--muted); font-size: .84rem; }
+#ch2 .legend span { display: inline-flex; align-items: center; gap: 6px; }
+#ch2 .legend i { width: 10px; height: 10px; border-radius: 50%; background: var(--c); }
+#ch2 .tip { position: fixed; z-index: 30; padding: 6px 10px; color: var(--page); background: var(--ink); border-radius: 8px; font-size: .82rem; pointer-events: none; }
+#ch2 .story { display: grid; grid-template-columns: minmax(280px, 360px) 1fr; gap: 44px; margin-top: 50px; }
+#ch2 .story .sticky { grid-column: 2; grid-row: 1; position: sticky; top: 14px; align-self: start; padding: 14px 16px 12px; }
+#ch2 .story .sticky .map { width: min(100%, calc(100vh - 110px)); margin: 0 auto; }
+#ch2 .steps { grid-column: 1; grid-row: 1; padding-block: 10vh 36vh; }
+#ch2 .step { min-height: 82vh; display: flex; align-items: center; }
+#ch2 .step .sc { padding: 20px 22px; opacity: .35; transition: opacity .3s ease; }
+#ch2 .step.active .sc { opacity: 1; }
+#ch2 .step h3 { font-size: 1.3rem; }
+#ch2 .step p { margin-top: 8px; color: var(--ink); font: 400 1.04rem/1.55 var(--read); }
+#ch2 .step .words { margin-top: 10px; font-size: .86rem; line-height: 1.6; }
+#ch2 .step .words b { color: var(--ink); }
+#ch2 .step .chipline { display: inline-block; margin: 2px 4px 2px 0; padding: 1px 9px; color: #fff; background: var(--c); border-radius: 999px; font-size: .8rem; font-weight: 600; }
+#ch2 .step .jump { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+#ch2 section.block { margin-top: 110px; scroll-margin-top: 16px; }
+#ch2 section.block > h2 { font-size: clamp(1.8rem, 4.4vw, 2.6rem); }
+#ch2 section.block > .intro { max-width: 62ch; margin-top: 12px; font-size: 1.05rem; }
+#ch2 .explore { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 20px; margin-top: 22px; align-items: start; }
+#ch2 .explore .mapcard { padding: 16px; }
+#ch2 .controls { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 8px; }
+#ch2 .seg { display: inline-flex; padding: 3px; background: var(--soft); border-radius: 999px; }
+#ch2 .seg button { padding: 6px 12px; background: none; border: 0; border-radius: 999px; font-size: .86rem; font-weight: 600; color: var(--muted); cursor: pointer; }
+#ch2 .seg button[aria-pressed="true"] { color: var(--ink); background: var(--card); box-shadow: 0 1px 3px rgb(0 0 0 / .1); }
+#ch2 .find { display: flex; gap: 6px; }
+#ch2 .find input { width: 200px; padding: 7px 14px; background: var(--page); border: 1px solid var(--hair); border-radius: 999px; font-size: .9rem; }
+#ch2 .panel { position: sticky; top: 14px; padding: 18px; }
+#ch2 .panel .empty { color: var(--muted); font-size: .95rem; }
+#ch2 .panel .ph { display: block; }
+#ch2 .panel h3 { font-size: 1.3rem; }
+#ch2 .panel .tn { margin-top: 2px; color: var(--muted); font-size: .9rem; }
+#ch2 .tiles { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+#ch2 .tiles span { display: inline-flex; align-items: baseline; gap: 5px; padding: 3px 10px; color: #fff; background: var(--g); border-radius: 9px; font-size: .74rem; font-weight: 600; }
+#ch2 .tiles b { font-size: 1.05rem; font-weight: 800; }
+#ch2 .ev { display: grid; gap: 12px; margin-top: 16px; }
+#ch2 .ev .row b { display: block; color: var(--ink); font-size: .86rem; }
+#ch2 .ev .bar { position: relative; height: 6px; margin: 5px 0 6px; background: var(--soft); border-radius: 3px; }
+#ch2 .ev .bar i { position: absolute; top: -3px; width: 12px; height: 12px; margin-left: -6px; background: var(--g); border-radius: 50%; }
+#ch2 .ev q { display: block; color: var(--ink-2); font: italic 400 .9rem/1.45 var(--read); quotes: none; }
+#ch2 .ev q mark { color: var(--ink); background: color-mix(in srgb, var(--g) 22%, transparent); font-style: normal; font-weight: 600; border-radius: 3px; padding: 0 2px; }
+#ch2 .ev .none { color: var(--muted); font-size: .84rem; }
+#ch2 .lab-axis { margin-top: 18px; padding: 22px 24px 18px; --pos: var(--agree); --neg: var(--disagree); }
+#ch2 .lab-axis .row1 { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 16px; }
+#ch2 .lab-axis h3 { font-size: 1.25rem; }
+#ch2 .lab-axis h3 .p { color: var(--pos); }
+#ch2 .lab-axis h3 .n { color: var(--neg); }
+#ch2 .lab-axis .changed { color: var(--muted); font-size: .88rem; }
+#ch2 .lab-axis .changed b { color: var(--ink); }
+#ch2 .wordsets { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 12px; }
+#ch2 .wordsets h4 { margin-bottom: 6px; color: var(--muted); font-size: .82rem; font-weight: 600; }
+#ch2 .chip { display: inline-flex; align-items: baseline; gap: 5px; margin: 0 5px 6px 0; padding: 4px 10px; color: #fff; background: var(--side); border: 0; border-radius: 999px; font-size: .84rem; font-weight: 600; cursor: pointer; }
+#ch2 .chip small { font-weight: 400; opacity: .85; }
+#ch2 .chip[aria-pressed="false"] { color: var(--muted); background: var(--soft); text-decoration: line-through; }
+#ch2 .reset { padding: 0; background: none; border: 0; font-size: .85rem; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+#ch2 .tgrid { display: grid; grid-template-columns: 150px repeat(4, 1fr); gap: 10px; margin-top: 26px; }
+#ch2 .tgrid .rowh { display: flex; flex-direction: column; justify-content: center; }
+#ch2 .tgrid .rowh b { color: var(--g); font-size: 1.05rem; }
+#ch2 .tgrid .rowh span, #ch2 .tgrid .colh { color: var(--muted); font-size: .8rem; line-height: 1.35; }
+#ch2 .tgrid .colh { text-align: center; }
+#ch2 .tgrid .colh b { display: block; color: var(--ink); font-size: .95rem; }
+#ch2 .tcard { display: grid; gap: 4px; padding: 16px 16px 14px; border-top: 5px solid var(--g) !important; text-align: left; background: var(--card); border: 0; border-radius: 16px; box-shadow: 0 0 0 1px var(--hair); cursor: pointer; transition: transform .15s ease, box-shadow .15s ease; }
+#ch2 .tcard:hover { transform: translateY(-2px); box-shadow: 0 0 0 1.5px var(--g); }
+#ch2 .tcard .c { color: var(--g); font-weight: 800; letter-spacing: .06em; font-size: 2rem; line-height: 1; }
+#ch2 .tcard .n { color: var(--ink); font-weight: 700; line-height: 1.2; }
+#ch2 .tcard .h { color: var(--muted); font-size: .76rem; line-height: 1.35; }
+#ch2 .tcard[aria-pressed="true"] { box-shadow: 0 0 0 2.5px var(--g); }
+#ch2 .tdetail { margin-top: 16px; padding: 20px 24px; }
+#ch2 .members { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+#ch2 .members button { padding: 5px 12px; color: var(--ink); background: var(--soft); border: 0; border-radius: 999px; font-size: .88rem; font-weight: 500; cursor: pointer; }
+#ch2 .members button:hover { background: color-mix(in srgb, var(--g) 18%, var(--soft)); }
+#ch2 .land { margin-top: 22px; padding: 24px 28px; }
+#ch2 .item { padding: 18px 0; border-bottom: 1px solid var(--hair); }
+#ch2 .item p { color: var(--ink); font: 400 1.12rem/1.4 var(--read); }
+#ch2 .scale { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 12px; max-width: 520px; margin-top: 12px; }
+#ch2 .scale > span { font-size: .84rem; font-weight: 600; }
+#ch2 .scale > span:first-child { color: var(--disagree); }
+#ch2 .scale > span:last-child { color: var(--agree); }
+#ch2 .dots { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+#ch2 .dotb { display: grid; place-items: center; width: var(--s); height: var(--s); padding: 0; background: transparent; border: 2.5px solid var(--c); border-radius: 50%; cursor: pointer; transition: background-color .15s ease; }
+#ch2 .dotb:hover { background: color-mix(in srgb, var(--c) 18%, transparent); }
+#ch2 .dotb[aria-checked="true"] { background: var(--c); }
+#ch2 .dotb[aria-checked="true"]::after { content: ""; width: 34%; height: 34%; background: #fff; border-radius: 50%; }
+#ch2 .land .go { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 18px; }
+#ch2 .land .go p { color: var(--muted); font-size: .9rem; }
+#ch2 .you-card { margin-top: 20px; padding: 24px; border-top: 6px solid var(--g); }
+#ch2 .you-card h3 { font-size: 1.8rem; }
+#ch2 .you-card .near { margin-top: 10px; font-size: .95rem; }
+#ch2 .you-card .near b { color: var(--ink); }
+#ch2 footer { margin-top: 80px; padding-top: 16px; border-top: 1px solid var(--hair); color: var(--muted); font-size: .84rem; }
+#ch2 footer a { color: var(--ink); }
+@media (max-width: 900px) {
+#ch2 .hero { grid-template-columns: 1fr; gap: 6px; }
+#ch2 .fan .fc { width: 92px; margin-left: -22px; border-radius: 16px; }
+#ch2 .story { display: block; }
+#ch2 .story .sticky { top: 0; z-index: 0; border-radius: 0 0 18px 18px; padding: 8px; }
+#ch2 .story .sticky .map { width: min(100%, 58svh); }
+#ch2 .steps { position: relative; z-index: 1; margin-top: -30svh; padding-block: 0 20svh; }
+#ch2 .step { min-height: 90svh; align-items: flex-end; padding-bottom: 4svh; }
+#ch2 .step .sc { opacity: 1; box-shadow: 0 0 0 1px var(--hair), 0 10px 30px rgb(23 21 28 / .16); }
+#ch2 .explore { grid-template-columns: 1fr; }
+#ch2 .panel { position: static; }
+#ch2 .wordsets { grid-template-columns: 1fr; }
+#ch2 .tgrid { grid-template-columns: repeat(2, 1fr); }
+#ch2 .tgrid .rowh, #ch2 .tgrid .colh, #ch2 .tgrid .corner { display: none; }
+#ch2 .you-card { grid-template-columns: 1fr; }
+#ch2 .scale { grid-template-columns: 1fr; }
+#ch2 .scale > span { display: none; }
+#ch2 .find input { width: 150px; }
+}
+@media (prefers-reduced-motion: reduce) {
+#ch2 *, #ch2 *::before, #ch2 *::after { transition: none !important; }
+}
+
+</style>
+</head>
+<body>
+<main class="page">
+  <nav class="top wide" aria-label="Site"><a href="../../">Go Nuts</a><span>Week 6 · From counts to meaning</span></nav>
+
+  <header class="cover">
+    <h1>Marvel in Wikipedia’s words</h1>
+    <p class="dek">Two experiments with the words on 303 Marvel heroes’ Wikipedia pages. The first reads the single word after “her” and “his”. The second builds a map out of word groups and places every hero on it.</p>
+    <nav class="toc" aria-label="Chapters">
+      <a href="#ch1"><span class="k">Chapter 1 · PMI and context windows</span><b>Her husband, his armor</b><span>What follows “her” and what follows “his”, and whose pages carry it.</span></a>
+      <a href="#ch2"><span class="k">Chapter 2 · word-group axes and TF-IDF</span><b>A map made of words</b><span>Four axes, four families, sixteen types, and where you would land.</span></a>
+    </nav>
+  </header>
+
+  <section class="chapter" id="ch1" aria-labelledby="ch1-h">
+    <header class="ch-head"><p class="k">Chapter 1</p><h2 id="ch1-h">Her husband, his armor</h2><p class="d">In 303 Marvel Wikipedia pages, the words after “her” are family, hair and mind powers. After “his”: body parts, gear and plans.</p></header>
+
+
+  <figure class="wall panel wide" id="wall" aria-label="A wall of every phrase that starts with her or his in the 303 pages, slowly scrolling. The words this story is about are highlighted.">
+    <div class="wall-cols">
+      <div class="wall-col" style="--c:var(--her)"><header><span class="wh">her</span><span id="wall-n-her"></span></header><div class="wall-win"><p class="wall-text" id="wall-her" aria-hidden="true"></p></div></div>
+      <div class="wall-col" style="--c:var(--his)"><header><span class="wh">his</span><span id="wall-n-his"></span></header><div class="wall-win"><p class="wall-text" id="wall-his" aria-hidden="true"></p></div></div>
+    </div>
+    <div class="wall-foot"><p>Every “her ___” and “his ___” in the 303 pages, in page order. <b>Highlighted:</b> the words this story is about. Hover a phrase to see its page; click a highlighted one to read it in context.</p><button class="btn ghost" id="wall-pause" type="button" aria-pressed="false">Pause</button></div>
+  </figure>
+
+  <!-- ---------- 1. the story ---------- -->
+  <div class="story wide">
+    <figure class="sticky panel" id="story-fig" role="img" aria-label="The ten words that lean most to her and to his. Each scroll step highlights a few of them.">
+      <div class="heads" aria-hidden="true"><span class="h her">her</span><span></span><span class="h his">his</span></div>
+      <p class="unit">uses per 1,000 words after each pronoun</p>
+      <ol class="rows pre" id="story-rows" aria-hidden="true"></ol>
+    </figure>
+    <div class="steps" id="h-steps">
+      <div class="step" data-focus=""><div class="card panel"><p id="s0"></p></div></div>
+      <div class="step" data-focus="husband wife"><div class="card panel"><p id="s1"></p></div></div>
+      <div class="step" data-focus="husband children cousin hair"><div class="card panel"><p id="s2"></p></div></div>
+      <div class="step" data-focus="hands head chest blood legs healing"><div class="card panel"><p id="s3"></p></div></div>
+      <div class="step" data-focus="armor criminal"><div class="card panel"><p id="s4"></p></div></div>
+      <div class="step" data-focus="telepathy telepathic psychic telekinesis"><div class="card panel"><p id="s5"></p></div></div>
+      <div class="step" data-focus="telepathy telepathic psychic telekinesis"><div class="card panel"><p id="s6"></p><div class="pagebars" id="pagebars"></div></div></div>
+      <div class="step" data-focus="comic full"><div class="card panel"><p id="s7"></p></div></div>
+      <div class="step" data-focus=""><div class="card panel"><p id="s8"></p><div class="jump"><a class="btn" href="#h-explore">Explore every word</a><a class="btn ghost" href="#exam">Compare two heroes</a></div></div></div>
+    </div>
+  </div>
+
+  <!-- ---------- 2. the explorer ---------- -->
+  <section id="h-explore" aria-labelledby="h-explore-h">
+    <h2 id="h-explore-h">Every word, your way</h2>
+    <p>The story used ten words a side. Here you can change how many words are shown and how common a word must be, highlight a theme, or pin your own word.</p>
+    <figure class="explorer panel wide" aria-labelledby="chart-cap">
+      <div class="controls">
+        <div class="themes" id="themes" role="group" aria-label="Highlight a theme"></div>
+        <div class="tune">
+          <label><span>Words per side: <output id="o-per"></output></span><input type="range" id="s-per" min="6" max="20" step="1"></label>
+          <label><span>Only words used at least <output id="o-min"></output> times</span><input type="range" id="s-min" min="12" max="40" step="1"></label>
+          <form id="h-find" autocomplete="off">
+            <label class="field-l" for="h-find-in">Try your own word</label>
+            <div class="find" style="margin-top:6px"><input class="textin" id="h-find-in" list="vocab" placeholder="mother, power, costume…"><button class="btn" type="submit">Pin</button></div>
+            <p class="find-msg" id="find-msg" aria-live="polite"></p>
+            <div class="pins" id="pins"></div>
+            <datalist id="vocab"></datalist>
+          </form>
+        </div>
+        <p class="status" id="status" aria-live="polite"></p>
+      </div>
+      <div class="heads" aria-hidden="true"><span class="h her">her</span><span></span><span class="h his">his</span></div>
+      <p class="unit">Bars: uses per 1,000 words after each pronoun · numbers: raw counts</p>
+      <ol class="rows pre" id="rows"></ol>
+      <p class="caption" id="chart-cap">Hover a row for a sentence; click it to read more below.</p>
+    </figure>
+    <div class="evidence panel wide" id="evidence" aria-live="polite">
+      <h3 id="ev-title"></h3>
+      <p class="meta" id="ev-meta"></p>
+      <div class="kwic">
+        <div><h4 style="--c:var(--her)"><i></i>After “her”</h4><ol id="ev-her"></ol></div>
+        <div><h4 style="--c:var(--his)"><i></i>After “his”</h4><ol id="ev-his"></ol></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ---------- 3. the hero exam ---------- -->
+  <section id="exam" aria-labelledby="exam-h">
+    <h2 id="exam-h">The hero exam</h2>
+    <p>Pick any two of the 303 heroes. We read their own page and list the words that follow “her” or “his”, whichever the page uses more, next to the average for that pronoun.</p>
+    <div class="exam panel wide">
+      <div class="exam-controls">
+        <label class="field-l" for="hero-a">First hero<input class="textin" id="hero-a" list="h-hero-list" autocomplete="off"></label>
+        <label class="field-l" for="hero-b">Second hero<input class="textin" id="hero-b" list="h-hero-list" autocomplete="off"></label>
+        <div class="presets" id="presets"></div>
+        <datalist id="h-hero-list"></datalist>
+      </div>
+      <p class="exam-head" id="exam-head" aria-live="polite"></p>
+      <div class="exam-grid">
+        <article class="hcard" id="card-a"></article>
+        <article class="hcard" id="card-b"></article>
+      </div>
+      <p class="exam-note" id="exam-note"></p>
+    </div>
+  </section>
+
+  <!-- ---------- 4. method ---------- -->
+  <section aria-labelledby="how-h">
+    <h2 id="how-h">How we did it, with Week 6 tools</h2>
+    <p class="formula panel">lean(w) = log₂ P(w | her) / P(w | his) = PMI(her, w) − PMI(his, w)</p>
+    <ul class="notes">
+      <li><b>Context window of 1.</b> For each “her” and “his” we keep the single next word, the narrowest window from exercise 6.6. Narrow windows capture how a word is used grammatically, which is what we want here.</li>
+      <li><b>PMI to choose the words.</b> A word’s lean is its PMI with “her” minus its PMI with “his”, with add-one smoothing so words that never follow one side still get a score. The charts show the words leaning hardest each way among words used often enough; the explorer’s sliders change both cut-offs.</li>
+      <li><b>Rates, not counts.</b> “His” is <span id="ratio"></span>× as common as “her”, so bars show uses per 1,000 words after each pronoun. The numbers next to the bars are raw counts.</li>
+      <li><b>Two groups of text, as in Scattertext.</b> The “her” contexts and the “his” contexts are the two groups being compared. The themes (family, body, gear, mind, career) are our own labels, like topic labels in exercise 6.4.</li>
+      <li><b>What we checked by hand.</b> We read the sentences behind every word in the charts. That is how we found that “her telepathy” sits on a handful of pages, that “his healing” is almost always a healing factor, and that “comic” and “full” are artefacts of Wikipedia’s style.</li>
+      <li><b>Limitations.</b> Dropping function words removes most cases where “her” is an object (“saved her from”), but not all. Adjectives count too (“her telepathic”). In the hero exam, “his” on a man’s page sometimes refers to another man. And this is how Wikipedia editors summarise the comics, not the comics themselves.</li>
+    </ul>
+  </section>
+
+<div class="tip" id="h-tip" hidden></div>
+  </section>
+
+  <section class="chapter" id="ch2" aria-labelledby="ch2-h">
+    <header class="ch-head"><p class="k">Chapter 2</p><h2 id="ch2-h">A map made of words</h2><p class="d">303 heroes, placed by nothing but the words on their pages. Two word-group axes make a map, four make a type. Scroll to see how it is built, then find out where you would land.</p></header>
+
+
+  <!-- ---------- 1. the story over a pinned map ---------- -->
+  <div class="story wide">
+    <figure class="sticky card" aria-label="Map of 303 Marvel heroes">
+      <div class="map" id="story-map"></div>
+      <div class="legend" id="story-legend"></div>
+    </figure>
+    <div class="steps" id="steps"></div>
+  </div>
+
+  <!-- ---------- 2. explore ---------- -->
+  <section class="block" id="explore" aria-labelledby="explore-h">
+    <h2 id="explore-h">Explore the map</h2>
+    <p class="intro">Click any dot to see the hero’s four letters and the sentences on their page that put them there. Change the colouring to see the other two axes.</p>
+    <div class="explore wide">
+      <div class="mapcard card">
+        <div class="controls">
+          <div class="seg" role="group" aria-label="Colour the dots by">
+            <button type="button" data-c="family" aria-pressed="true">Family</button>
+            <button type="button" data-c="BF" aria-pressed="false">Born or Forged</button>
+            <button type="button" data-c="EL" aria-pressed="false">Ensemble or Lone</button>
+          </div>
+          <form class="find" id="find" autocomplete="off"><input id="find-in" list="hero-list" placeholder="Find a hero…" aria-label="Find a hero"><datalist id="hero-list"></datalist></form>
+        </div>
+        <div class="map clickable" id="ex-map"></div>
+        <div class="legend" id="ex-legend"></div>
+      </div>
+      <aside class="panel card" id="panel" aria-live="polite"><p class="empty">Click a dot on the map, or find a hero by name.</p></aside>
+    </div>
+  </section>
+
+  <!-- ---------- 3. axis lab ---------- -->
+  <section class="block" id="lab-sec" aria-labelledby="lab-h">
+    <h2 id="lab-h">Build the axes yourself</h2>
+    <p class="intro">Every axis is two word groups we picked. Switch a word off and the heroes on the map above move. Each word is weighted by TF-IDF: (A − B) / (A + B + K), with A and B the sum of count × log(303 / pages with the word).</p>
+    <div id="lab"></div>
+  </section>
+
+  <!-- ---------- 4. 16 types ---------- -->
+  <section class="block" id="types" aria-labelledby="types-h">
+    <h2 id="types-h">Four axes, sixteen types</h2>
+    <p class="intro">Split each axis at the middle and every hero gets four letters. The map shows the first two (the family); the third and fourth decide the role. Click a type to list its heroes.</p>
+    <div class="tgrid wide" id="tgrid"></div>
+    <div class="tdetail card wide" id="tdetail" hidden></div>
+  </section>
+
+  <!-- ---------- 5. where would you land ---------- -->
+  <section class="block" id="land" aria-labelledby="land-h">
+    <h2 id="land-h">Where would you land?</h2>
+    <p class="intro">Eight statements, two per axis. Your answers drop a dot on the map next to the heroes who sound like you.</p>
+    <div class="land card">
+      <div id="items"></div>
+      <div class="go"><p id="go-hint"></p><button class="btn" id="go" type="button" disabled>Place me on the map</button></div>
+    </div>
+    <div class="you-card card" id="you-card" hidden></div>
+  </section>
+
+<div class="tip" id="tip" hidden></div>
+  </section>
+
+  <footer class="site-foot">Made for Week 6 of DTU 02805 Social Graphs and Interactions. Data: the course’s 303 Marvel Wikipedia pages. Rebuild the numbers with <code>prepare_possessives.py</code> (chapter 1) and <code>prepare_types.py</code> (chapter 2). See also last week’s <a href="../week-05-unmasked/">Most men are X-Men</a>.</footer>
+</main>
+
+<script src="possessives-data.js"></script>
+<script>
+(function () {
+  const root = document.getElementById("ch1");
+  const D = window.POSSESSIVES;
+  const $ = (s) => root.querySelector(s);
+  const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+  const fmt = (n) => n.toLocaleString("en-US");
+  const pct = (x) => `${(100 * x).toFixed(1)}%`;
+  const cap = (s) => s[0].toUpperCase() + s.slice(1);
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const rate = (d, side) => 1000 * d[side] / D[`${side}_total`];
+  const byWord = new Map(D.words.map((d) => [d.w, d]));
+  const W = (w) => byWord.get(w);
+  const THEMES = ["family", "mind", "body", "gear", "career"];
+  let selected = "husband";
+
+  // notes sit in the empty half of a row; facts come from the data
+  const NOTES = {
+    husband: (d) => `Two of the ${d.his} “his husband” are Northstar, Marvel’s first openly gay hero`,
+    telepathy: (d) => `${d.her} uses, but on only ${d.her_pages} pages`,
+    wife: (d) => `${d.his} uses on ${d.his_pages} pages. “Her wife” never appears`,
+    legs: () => "“Her legs” never appears",
+  };
+
+  // ---------- tooltip: one real sentence per side ----------
+  const tip = $("#h-tip");
+  function line(side, d) {
+    const p = el("p"), key = el("i"); key.style.setProperty("--c", `var(--${side})`);
+    const ex = d[`ex_${side}`][0];
+    if (!ex) p.append(key, el("b", null, `${side} ${d.w}`), " never appears");
+    else p.append(key, ex.left, el("b", null, ex.match), ex.right);
+    return p;
+  }
+  function showTip(e, d) { tipAt(e, line("her", d), line("his", d)); }
+  function tipAt(e, ...content) {
+    tip.replaceChildren(...content);
+    tip.hidden = false;
+    const r = tip.getBoundingClientRect();
+    let left = e.clientX + 16, top = e.clientY + 16;
+    if (left + r.width > innerWidth - 8) left = e.clientX - r.width - 16;
+    if (top + r.height > innerHeight - 8) top = e.clientY - r.height - 16;
+    tip.style.left = `${Math.max(8, left)}px`; tip.style.top = `${Math.max(8, top)}px`;
+  }
+  addEventListener("scroll", () => { tip.hidden = true; }, { passive: true });
+
+  // ---------- one mirrored chart; rows are kept between renders so they can slide ----------
+  function Chart(rowsEl, opts) {
+    const st = { perSide: opts.perSide, minUses: opts.minUses, theme: null, focus: null, pinned: new Set() };
+    const nodes = new Map();
+    const divider = el("li", "divider"); divider.setAttribute("aria-hidden", "true");
+    divider.append(el("span", null, "leans to her ↑"), el("span"), el("span", null, "↓ leans to his"));
+
+    function makeRow(d) {
+      const li = el("li"), b = el(opts.interactive ? "button" : "div", "row");
+      b.dataset.w = d.w;
+      const note = opts.notes && NOTES[d.w] ? NOTES[d.w](d) : "";
+      li.bars = {};
+      const side = (who) => {
+        const c = el("span", `cell ${who}`), bar = el("span", "bar");
+        li.bars[who] = bar;
+        const parts = [bar, el("span", "n", d[who])];
+        if (note && (who === "her" ? d.lr < 0 : d.lr > 0)) parts.push(el("span", "note", note));
+        c.append(...(who === "her" ? parts.reverse() : parts));
+        return c;
+      };
+      b.append(side("her"), el("span", "word", d.w), side("his"));
+      if (note) b.append(el("span", "note-m", note));
+      if (opts.interactive) {
+        b.type = "button";
+        b.setAttribute("aria-label", `${d.w}: ${d.her} times after her, ${d.his} times after his`);
+        b.addEventListener("click", () => select(d.w, true));
+      }
+      b.addEventListener("pointermove", (e) => { if (e.pointerType === "mouse") showTip(e, d); });
+      b.addEventListener("pointerleave", () => { tip.hidden = true; });
+      li.append(b);
+      return li;
+    }
+
+    function pick() {
+      const pool = D.words.filter((d) => d.her + d.his >= st.minUses); // sorted by lean, "her" first
+      const her = pool.filter((d) => d.lr > 0).slice(0, st.perSide);
+      const his = pool.filter((d) => d.lr < 0).slice(-st.perSide);
+      st.pinned.forEach((w) => { const d = W(w); if (!her.includes(d) && !his.includes(d)) (d.lr > 0 ? her : his).push(d); });
+      her.sort((a, b) => b.lr - a.lr); his.sort((a, b) => b.lr - a.lr); // strongest "his" at the bottom
+      return { pool, her, his };
+    }
+
+    function render(animate) {
+      const res = pick(), { her, his } = res, shown = her.concat(his);
+      const maxRate = Math.max(...shown.flatMap((d) => [rate(d, "her"), rate(d, "his")]));
+      const slide = animate && !reduce, first = new Map();
+      if (slide) nodes.forEach((li, w) => first.set(w, li.getBoundingClientRect().top));
+      const keep = new Set(shown.map((d) => d.w));
+      nodes.forEach((li, w) => { if (!keep.has(w)) { li.remove(); nodes.delete(w); } });
+      her.concat(null, his).forEach((d, i) => {
+        if (!d) { rowsEl.append(divider); return; }
+        let li = nodes.get(d.w);
+        if (!li) { li = makeRow(d); nodes.set(d.w, li); if (animate) li.classList.add("enter"); }
+        const row = li.firstChild;
+        row.style.setProperty("--i", i);
+        li.bars.her.style.setProperty("--p", (86 * rate(d, "her") / maxRate).toFixed(2));
+        li.bars.his.style.setProperty("--p", (86 * rate(d, "his") / maxRate).toFixed(2));
+        li.classList.toggle("dim", (!!st.theme && d.group !== st.theme) || (!!st.focus && !st.focus.has(d.w)));
+        row.classList.toggle("pinned", st.pinned.has(d.w));
+        if (opts.interactive) row.setAttribute("aria-pressed", String(d.w === selected));
+        rowsEl.append(li); // appending an existing node moves it into the new order
+      });
+      if (slide) first.forEach((top, w) => {
+        const li = nodes.get(w); if (!li) return;
+        const dy = top - li.getBoundingClientRect().top;
+        if (dy) li.animate([{ transform: `translateY(${dy}px)` }, { transform: "none" }], { duration: 480, easing: "cubic-bezier(.16, 1, .3, 1)" });
+      });
+      return { ...res, shown };
+    }
+
+    // grow the bars out from the spine the first time the chart is seen
+    if (reduce || !("IntersectionObserver" in window)) rowsEl.classList.remove("pre");
+    else {
+      const io = new IntersectionObserver((es) => { if (es.some((e) => e.isIntersecting)) { rowsEl.classList.remove("pre"); io.disconnect(); } }, { threshold: 0.15 });
+      io.observe(rowsEl);
+    }
+    return { st, render, nodes };
+  }
+
+  // =============== 0. textscape ===============
+  const HL = {
+    her: new Set(["husband", "hair", "children", "cousin", "telepathy", "telepathic", "psychic", "telekinesis"]),
+    his: new Set(["wife", "hands", "head", "chest", "blood", "legs", "healing", "armor", "criminal"]),
+  };
+  ["her", "his"].forEach((side) => {
+    const flat = D.wall[side], box = $(`#wall-${side}`), frag = document.createDocumentFragment();
+    for (let i = 0; i < flat.length; i += 2) {
+      const w = D.vocab[flat[i]], sp = el("span", HL[side].has(w) ? "hl" : null, `${side} ${w}`);
+      sp.dataset.i = i;
+      frag.append(sp, " ");
+    }
+    box.append(frag);
+    $(`#wall-n-${side}`).textContent = fmt(flat.length / 2);
+    box.addEventListener("pointermove", (e) => {
+      const sp = e.target.closest("span"); if (!sp) { tip.hidden = true; return; }
+      const i = +sp.dataset.i;
+      tipAt(e, el("b", null, sp.textContent), el("span", "pg", D.titles[flat[i + 1]]));
+    });
+    box.addEventListener("pointerleave", () => { tip.hidden = true; });
+    box.addEventListener("click", (e) => {
+      const sp = e.target.closest("span.hl"); if (!sp) return;
+      select(D.vocab[flat[+sp.dataset.i]], true);
+    });
+  });
+  // crawl distance and duration depend on rendered height: about 22 px per second
+  function measureWall() {
+    root.querySelectorAll(".wall-text").forEach((t) => {
+      const dist = Math.max(0, t.scrollHeight - t.parentElement.clientHeight);
+      t.style.setProperty("--dist", `${-dist}px`);
+      t.style.setProperty("--dur", `${Math.max(20, dist / 22).toFixed(0)}s`);
+    });
+  }
+  (document.fonts ? document.fonts.ready : Promise.resolve()).then(measureWall);
+  let wt; addEventListener("resize", () => { clearTimeout(wt); wt = setTimeout(measureWall, 200); });
+  $("#wall-pause").addEventListener("click", (e) => {
+    const paused = $("#wall").classList.toggle("paused");
+    e.currentTarget.setAttribute("aria-pressed", String(paused));
+    e.currentTarget.textContent = paused ? "Play" : "Pause";
+  });
+
+  // =============== 1. story ===============
+  const story = Chart($("#story-rows"), { perSide: 10, minUses: 15, interactive: false, notes: false });
+  story.render(false);
+
+  function quote(word, side, pageStart) {
+    const d = W(word), list = d[`ex_${side}`];
+    const ex = list.find((x) => !pageStart || x.page.startsWith(pageStart)) || list[0];
+    const q = el("q"); q.style.setProperty("--c", `var(--${side})`);
+    q.append(ex.left, el("b", null, ex.match), ex.right, el("small", null, ex.page));
+    return q;
+  }
+  const say = (id, text, q) => { $(id).textContent = text; if (q) $(id).after(q); };
+  const hw = (w) => `${W(w).her} to ${W(w).his}`;
+  say("#s0", `Every time a Marvel hero’s Wikipedia page says “her” or “his”, we looked at the very next word: ${fmt(D.her_total)} times after “her”, ${fmt(D.his_total)} after “his”. These are the ten words that lean hardest each way.`);
+  say("#s1", `Start with marriage. “Her husband” appears ${W("husband").her} times. “His wife” appears ${W("wife").his} times; “her wife”, never. Two of the ${W("husband").his} “his husband” are Northstar:`, quote("husband", "his", "Northstar"));
+  say("#s2", `The “her” side fills with family and looks: “her children” ${hw("children")}, “her cousin” ${hw("cousin")}, and “her hair” ${hw("hair")}.`, quote("hair", "her"));
+  say("#s3", `The “his” side is a body: hands ${W("hands").his}, head ${W("head").his}, chest ${W("chest").his}, blood ${W("blood").his}, legs ${W("legs").his} (“her legs”: never). And 19 of the ${W("healing").his} “his healing” are a healing factor.`, quote("legs", "his"));
+  say("#s4", `Then equipment and a past: “his armor” ${W("armor").his} times to ${W("armor").her}, and “his criminal”, as in his criminal career, ${W("criminal").his} to ${W("criminal").her}.`, quote("armor", "his"));
+  say("#s5", `The mind powers lean to “her”: telepathy ${hw("telepathy")}, telepathic ${hw("telepathic")}, psychic ${hw("psychic")}, telekinesis ${hw("telekinesis")}.`, quote("telepathy", "her"));
+  const m = D.groups.mind, top = m.her_top5, rest = m.her - top.reduce((s, [, c]) => s + c, 0);
+  say("#s6", `But look at where they come from. Of the ${m.her} “her” mind words, ${Math.round(100 * m.her_top5_share)}% sit on five pages. The ${m.his} “his” mind words are spread over ${m.his_pages} pages.`);
+  const maxC = Math.max(top[0][1], rest), bars = $("#pagebars");
+  top.concat([[`${m.her_pages - top.length} other pages`, rest]]).forEach(([t, c], i) => {
+    const r = el("div", i === top.length ? "r rest" : "r"), t2 = el("div", "t"), fill = el("i");
+    fill.style.setProperty("--p", (86 * c / maxC).toFixed(1));
+    t2.append(fill, el("b", null, c)); r.append(el("span", null, t), t2); bars.append(r);
+  });
+  say("#s7", "Not every lean means something. “Her comic” is mostly “her comic book” debut or death; “her full” is “her full name” or “full potential”. That is Wikipedia’s style, not the characters.", quote("comic", "her"));
+  say("#s8", "That is the pattern. Now test it: change the cut-offs, pin your own word, or put two heroes side by side.");
+
+  const steps = [...root.querySelectorAll(".step")];
+  function activate(step) {
+    steps.forEach((s) => s.classList.toggle("active", s === step));
+    const f = step.dataset.focus.trim();
+    story.st.focus = f ? new Set(f.split(/\s+/)) : null;
+    story.render(false);
+  }
+  activate(steps[0]);
+  if ("IntersectionObserver" in window) {
+    // a step turns on when its card crosses a line 60% down the screen (works for side-by-side and overlaid cards)
+    const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) activate(e.target.closest(".step")); }), { rootMargin: "-60% 0px -39% 0px" });
+    steps.forEach((s) => io.observe(s.querySelector(".card")));
+  }
+
+  // =============== 2. explorer ===============
+  const explore = Chart($("#rows"), { perSide: 12, minUses: 15, interactive: true, notes: true });
+  function renderExplore(animate) {
+    const { pool, her, his, shown } = explore.render(animate), st = explore.st;
+    const S = $("#status"); S.replaceChildren();
+    S.append("Showing ", el("b", null, `${her.length} words`), " that lean to “her” and ", el("b", null, `${his.length}`), ` that lean to “his”, out of ${pool.length} words used at least ${st.minUses} times.`);
+    if (st.theme) { const g = D.groups[st.theme]; S.append(" ", el("b", null, g.label), `: ${pct(g.her_share)} of all words after “her”, ${pct(g.his_share)} after “his”.`); }
+    $("#themes").querySelectorAll(".key").forEach((k) => {
+      k.setAttribute("aria-pressed", String(k.dataset.g === st.theme));
+      k.querySelector("small").textContent = shown.filter((d) => d.group === k.dataset.g).length;
+    });
+    $("#o-per").textContent = st.perSide; $("#o-min").textContent = st.minUses;
+    const pins = $("#pins"); pins.replaceChildren();
+    st.pinned.forEach((w) => {
+      const b = el("button", "pin", `${w} ×`); b.type = "button"; b.setAttribute("aria-label", `Unpin ${w}`);
+      b.addEventListener("click", () => { st.pinned.delete(w); renderExplore(true); });
+      pins.append(b);
+    });
+  }
+  THEMES.forEach((g) => {
+    const b = el("button", "key", D.groups[g].label); b.type = "button"; b.dataset.g = g; b.append(el("small"));
+    b.addEventListener("click", () => { explore.st.theme = explore.st.theme === g ? null : g; renderExplore(false); });
+    $("#themes").append(b);
+  });
+  const sPer = $("#s-per"), sMin = $("#s-min");
+  sPer.value = explore.st.perSide; sMin.value = explore.st.minUses;
+  sPer.addEventListener("input", () => { explore.st.perSide = +sPer.value; renderExplore(true); });
+  sMin.addEventListener("input", () => { explore.st.minUses = +sMin.value; renderExplore(true); });
+  [...D.words].sort((a, b) => a.w.localeCompare(b.w)).forEach((d) => { const o = el("option"); o.value = d.w; $("#vocab").append(o); });
+  $("#h-find").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const v = $("#h-find-in").value.trim().toLowerCase(), msg = $("#find-msg");
+    if (!v) return;
+    const d = W(v);
+    if (!d) { msg.textContent = `“${v}” is not among the ${D.words.length} words used at least ${D.min_count} times after “her” or “his”.`; return; }
+    explore.st.pinned.add(v); $("#h-find-in").value = "";
+    msg.textContent = `“${v}”: ${d.her} after “her”, ${d.his} after “his”.`;
+    renderExplore(true); select(v, false);
+    explore.nodes.get(v).scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "nearest" });
+  });
+
+  function fillKwic(ol, list) {
+    ol.replaceChildren();
+    if (!list.length) { ol.append(el("p", "none", "Never in these pages.")); return; }
+    list.forEach((ex) => { const li = el("li"); li.append(ex.left, el("b", null, ex.match), ex.right, el("small", null, ex.page)); ol.append(li); });
+  }
+  function select(word, scroll) {
+    selected = word;
+    const d = W(word), a = Math.abs(d.lr);
+    $("#ev-title").textContent = `her ${d.w} ${d.her} · his ${d.w} ${d.his}`;
+    $("#ev-meta").textContent = `${(2 ** a).toFixed(a < 1 ? 1 : 0)}× more often after “${d.lr > 0 ? "her" : "his"}”, once “his” being more common is accounted for. “her ${d.w}” is on ${d.her_pages} page${d.her_pages === 1 ? "" : "s"}, “his ${d.w}” on ${d.his_pages}.`;
+    fillKwic($("#ev-her"), d.ex_her); fillKwic($("#ev-his"), d.ex_his);
+    explore.nodes.forEach((li, w) => li.firstChild.setAttribute("aria-pressed", String(w === word)));
+    if (scroll) $("#evidence").scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "nearest" });
+  }
+  renderExplore(false);
+  select(selected, false);
+
+  // =============== 3. hero exam ===============
+  const GENERIC = new Set(["first", "former", "early", "previous", "original", "current", "name", "character", "time", "role", "comic", "full", "later", "last", "second", "final", "new"]);
+  const clean = (t) => t.replace(/ \((Marvel Comics|character|characters|comics|Marvel)\)$/, "");
+  const nameCount = new Map();
+  D.heroes.forEach((h) => nameCount.set(clean(h.t), (nameCount.get(clean(h.t)) || 0) + 1));
+  const label = (h) => (nameCount.get(clean(h.t)) > 1 ? h.t : clean(h.t));
+  const byName = new Map(D.heroes.map((h) => [label(h).toLowerCase(), h]));
+  [...D.heroes].sort((a, b) => label(a).localeCompare(label(b))).forEach((h) => { const o = el("option"); o.value = label(h); $("#h-hero-list").append(o); });
+  const findHero = (v) => byName.get(v.trim().toLowerCase());
+  const headWord = (h) => (h.top.find(([w]) => !GENERIC.has(w)) || h.top[0] || ["nothing"])[0];
+
+  function card(elc, h, scale) {
+    elc.replaceChildren();
+    if (!h) { elc.append(el("p", "empty", "No hero by that name among the 303 pages.")); return; }
+    elc.append(el("h3", null, label(h)), el("p", "sub", `${h.n} words follow “${h.p}” on this page`));
+    if (!h.n) { elc.append(el("p", "empty", "This page never puts a word after “her” or “his”.")); return; }
+    const ol = el("ol");
+    h.top.slice(0, 6).forEach(([w, c]) => { const li = el("li"); li.append(el("span", "w", `${h.p} ${w}`), el("span", "c", c)); ol.append(li); });
+    const wrap = el("div", "tm-wrap");
+    wrap.append(el("p", "tm-head", `Share of the page’s “${h.p}” words. Solid bar: this page. Pale bar: all “${h.p}” words in the 303 pages.`));
+    THEMES.forEach((g) => {
+      const share = h.g[g] / h.n, avg = D.groups[g][`${h.p}_share`];
+      const r = el("div", "tm"), track = el("div", "track"), fill = el("div", "fill"), mark = el("div", "avg");
+      r.style.setProperty("--c", `var(--${h.p})`);
+      fill.style.setProperty("--p", (100 * share / scale).toFixed(1));
+      mark.style.setProperty("--a", (100 * avg / scale).toFixed(1));
+      r.title = `${D.groups[g].label}: ${Math.round(100 * share)}% on this page, ${pct(avg)} across all pages`;
+      track.append(mark, fill);
+      r.append(el("span", null, D.groups[g].label), track, el("span", "v", `${Math.round(100 * share)}%`));
+      wrap.append(r);
+    });
+    elc.append(ol, wrap);
+  }
+  function exam() {
+    const a = findHero($("#hero-a").value), b = findHero($("#hero-b").value);
+    const shares = [a, b].filter((h) => h && h.n).flatMap((h) => THEMES.flatMap((g) => [h.g[g] / h.n, D.groups[g][`${h.p}_share`]]));
+    const scale = Math.max(0.05, ...shares) * 1.08;
+    card($("#card-a"), a, scale); card($("#card-b"), b, scale);
+    const H = $("#exam-head"); H.replaceChildren();
+    [a, b].forEach((h, i) => {
+      if (!h || !h.n) return;
+      const s = el("span", null, `${cap(h.p)} ${headWord(h)}.`); s.style.setProperty("--c", `var(--${h.p})`);
+      H.append(i && H.childNodes.length ? " " : "", s);
+    });
+    $("#exam-note").textContent = a && b ? `One page is a small sample: ${a.n} and ${b.n} words here. Read this as a close-up of two pages, not a statistic; the charts above are the evidence.` : "";
+  }
+  const PRESETS = [["Jessica Jones", "Luke Cage", "married"], ["Jean Grey", "Cyclops", "married"], ["Scarlet Witch", "Quicksilver", "twins"]];
+  PRESETS.forEach(([x, y, why]) => {
+    const b = el("button", "key", `${x} & ${y}`); b.type = "button"; b.append(el("small", null, why));
+    b.addEventListener("click", () => { $("#hero-a").value = x; $("#hero-b").value = y; exam(); });
+    $("#presets").append(b);
+  });
+  const shuffle = el("button", "key", "Shuffle"); shuffle.type = "button";
+  shuffle.addEventListener("click", () => {
+    const pool = (p) => D.heroes.filter((h) => h.p === p && h.n >= 30);
+    const any = (arr) => arr[Math.floor(Math.random() * arr.length)];
+    $("#hero-a").value = label(any(pool("her"))); $("#hero-b").value = label(any(pool("his"))); exam();
+  });
+  $("#presets").append(shuffle);
+  ["#hero-a", "#hero-b"].forEach((id) => $(id).addEventListener("change", exam));
+  $("#hero-a").value = PRESETS[0][0]; $("#hero-b").value = PRESETS[0][1];
+  exam();
+
+  $("#ratio").textContent = (D.his_total / D.her_total).toFixed(1);
+})();
+</script>
+<script src="types-data.js"></script>
+<script>
+(function () {
+  const root = document.getElementById("ch2");
+  const D = window.TYPES, A = D.axes, H = D.heroes, N = H.length;
+  const $ = (s) => root.querySelector(s);
+  const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+  const clean = (t) => t.replace(/ \((Marvel Comics|character|characters|comics|Marvel)\)$/, "");
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const go = (node) => node.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+  const byTitle = new Map(H.map((h, i) => [h.t, i]));
+
+  // ---------- vocabulary ----------
+  const FAMILY = {
+    CT: { name: "Orbital", color: "var(--orbital)", blurb: "big-sky scientists: space, ships and machines" },
+    CA: { name: "Astral", color: "var(--astral)", blurb: "cosmic and arcane: gods, dimensions, very old powers" },
+    ST: { name: "Wired", color: "var(--wired)", blurb: "street-level tinkerers: suits, gadgets and city blocks" },
+    SA: { name: "Haunted", color: "var(--haunted)", blurb: "street-level supernatural: curses, demons, dark alleys" },
+  };
+  const ROLE = {
+    BE: { name: "Heir", blurb: "born with it, part of a team" },
+    BL: { name: "Wanderer", blurb: "born with it, on their own" },
+    FE: { name: "Recruit", blurb: "made by something that happened, part of a team" },
+    FL: { name: "Experiment", blurb: "made by something that happened, on their own" },
+  };
+  const typeName = (c) => `The ${FAMILY[c.slice(0, 2)].name} ${ROLE[c.slice(2)].name}`;
+  const famColor = (c) => FAMILY[c.slice(0, 2)].color;
+  const poleName = (k, l) => (A[k].pos === l ? A[k].posName : A[k].negName);
+
+  // ---------- scoring: the same formula as prepare_types.py, so the defaults match the data exactly ----------
+  const ALL = A.map((a) => new Set([...a.posWords, ...a.negWords]));
+  function rankPct(vals) {
+    const order = vals.map((v, i) => [v, i]).sort((x, y) => x[0] - y[0] || x[1] - y[1]), out = new Array(vals.length);
+    for (let i = 0; i < vals.length;) {
+      let j = i; while (j + 1 < vals.length && order[j + 1][0] === order[i][0]) j++;
+      for (let q = i; q <= j; q++) out[order[q][1]] = Math.round(100 * ((i + j) / 2) / (vals.length - 1));
+      i = j + 1;
+    }
+    return out;
+  }
+  // opts: { tfidf: bool, universe: bool, on: [Set x4] }
+  function score(opts) {
+    const raws = A.map(() => []), any = A.map(() => []);
+    A.forEach((a, k) => {
+      const w = (word) => (opts.tfidf ? D.idf[word] : 1), on = opts.on[k];
+      H.forEach((h) => {
+        let P = 0, Q = 0, hit = 0;
+        a.posWords.forEach((x) => { if (on.has(x) && h.wc[x]) { P += h.wc[x] * w(x); hit++; } });
+        a.negWords.forEach((x) => { if (on.has(x) && h.wc[x]) { Q += h.wc[x] * w(x); hit++; } });
+        if (k === 0 && opts.universe && h.uni) { P += h.uni * (opts.tfidf ? D.uniIdf : 1); hit++; }
+        raws[k].push((P - Q) / (P + Q + (opts.tfidf ? D.k[k] : 3)));
+        any[k].push(hit > 0);
+      });
+    });
+    const pcts = raws.map(rankPct);
+    return { raws, pct: H.map((_, i) => pcts.map((p) => p[i])), any: H.map((_, i) => any.map((a) => a[i])) };
+  }
+  const codeOf = (p) => p.map((v, k) => (v >= 50 ? A[k].pos : A[k].neg)).join("");
+  const DEFAULT = score({ tfidf: true, universe: false, on: ALL });
+  const RAW = score({ tfidf: false, universe: false, on: ALL });
+  const UNI = score({ tfidf: true, universe: true, on: ALL });
+
+  // ---------- the map ----------
+  const tip = $("#tip");
+  const FAMOUS = ["Spider-Man", "Wolverine (character)", "Doctor Strange", "Storm (Marvel Comics)", "Hulk", "Luke Cage", "Scarlet Witch", "Deadpool", "Blade (character)", "Adam Warlock", "War Machine", "Jean Grey"];
+  const hsh = (s, m) => [...s].reduce((h, c) => (h * 33 + c.charCodeAt(0)) >>> 0, m);
+  const JX = H.map((h) => ((hsh(h.t, 5) % 1000) / 1000 - .5) * 9), JY = H.map((h) => ((hsh(h.t, 11) % 1000) / 1000 - .5) * 9);
+  function makeMap(box, { clickable = false, onPick = null } = {}) {
+    const S = 600, pad = 40, inner = S - 2 * pad, ns = "http://www.w3.org/2000/svg";
+    const svg = document.createElementNS(ns, "svg");
+    svg.setAttribute("viewBox", `0 0 ${S} ${S}`); svg.setAttribute("role", "img");
+    svg.setAttribute("aria-label", "Map: left to right from Street to Cosmic, top to bottom from Arcane to Tech. Each dot is a hero.");
+    const half = inner / 2;
+    const quads = [["SA", pad, pad], ["CA", pad + half, pad], ["ST", pad, pad + half], ["CT", pad + half, pad + half]];
+    let h = "";
+    quads.forEach(([f, x, y]) => { h += `<rect class="quad" data-f="${f}" x="${x}" y="${y}" width="${half}" height="${half}" style="fill:${FAMILY[f].color}"/>`; });
+    h += `<rect class="frame" x="${pad}" y="${pad}" width="${inner}" height="${inner}" rx="6"/>`;
+    h += `<line class="mid" x1="${S / 2}" x2="${S / 2}" y1="${pad}" y2="${S - pad}"/><line class="mid" y1="${S / 2}" y2="${S / 2}" x1="${pad}" x2="${S - pad}"/>`;
+    h += `<text class="axl" x="${S / 2}" y="24" text-anchor="middle">Arcane ↑</text><text class="axl" x="${S / 2}" y="${S - 12}" text-anchor="middle">↓ Tech</text>`;
+    h += `<text class="axl" x="16" y="${S / 2}" text-anchor="middle" transform="rotate(-90 16 ${S / 2})">← Street</text><text class="axl" x="${S - 16}" y="${S / 2}" text-anchor="middle" transform="rotate(90 ${S - 16} ${S / 2})">Cosmic →</text>`;
+    const corner = { SA: [pad + 12, pad + 24, "start"], CA: [S - pad - 12, pad + 24, "end"], ST: [pad + 12, S - pad - 14, "start"], CT: [S - pad - 12, S - pad - 14, "end"] };
+    Object.entries(corner).forEach(([f, [x, y, anchor]]) => { h += `<text class="famname" x="${x}" y="${y}" text-anchor="${anchor}" style="fill:${FAMILY[f].color}">${FAMILY[f].name}</text>`; });
+    svg.innerHTML = h;
+    const gd = document.createElementNS(ns, "g"), gl = document.createElementNS(ns, "g"), gy = document.createElementNS(ns, "g");
+    gy.setAttribute("class", "you");
+    svg.append(gd, gl, gy);
+    const dots = H.map((hero, i) => {
+      const c = document.createElementNS(ns, "circle");
+      c.setAttribute("r", 5); c.setAttribute("class", FAMOUS.includes(hero.t) ? "dot fam" : "dot");
+      c.addEventListener("pointermove", (e) => { tip.textContent = c.dataset.tip; tip.hidden = false; tip.style.left = `${Math.min(innerWidth - 220, e.clientX + 12)}px`; tip.style.top = `${e.clientY + 14}px`; });
+      c.addEventListener("pointerleave", () => { tip.hidden = true; });
+      if (clickable) c.addEventListener("click", () => onPick && onPick(i));
+      gd.append(c); return c;
+    });
+    box.append(svg);
+    const pos = (p, i) => [pad + inner * (p[0] / 100) + JX[i], pad + inner * (p[1] / 100) + JY[i]];
+    return {
+      draw(st) {
+        quads.forEach(([f]) => { svg.querySelector(`.quad[data-f="${f}"]`).style.opacity = st.colorBy === "family" ? st.tint : .03; });
+        const hl = st.highlight ? new Set(st.highlight) : null;
+        H.forEach((hero, i) => {
+          const p = st.data.pct[i], [x, y] = pos(p, i), c = dots[i], code = codeOf(p);
+          c.style.transform = `translate(${x}px, ${y}px)`;
+          c.style.fill = st.colorBy === "BF" ? (p[2] >= 50 ? "var(--born)" : "var(--forged)") : st.colorBy === "EL" ? (p[3] >= 50 ? "var(--ens)" : "var(--lone)") : famColor(code);
+          const faded = !st.data.any[i][0] || !st.data.any[i][1]; // a guess on at least one of the two axes
+          c.style.opacity = hl ? (hl.has(hero.t) ? 1 : .12) : faded ? .22 : .9;
+          c.classList.toggle("sel", st.selected === i);
+          c.dataset.tip = `${clean(hero.t)} · ${code}`;
+        });
+        gl.innerHTML = "";
+        (st.labels || []).forEach((t) => {
+          const i = byTitle.get(t); if (i == null) return;
+          const [x, y] = pos(st.data.pct[i], i), right = x < S - 150;
+          const tx = document.createElementNS(ns, "text");
+          tx.setAttribute("class", "lab"); tx.setAttribute("x", right ? x + 9 : x - 9); tx.setAttribute("y", y + 4);
+          tx.setAttribute("text-anchor", right ? "start" : "end"); tx.textContent = clean(t);
+          gl.append(tx);
+        });
+        gy.innerHTML = "";
+        if (st.you) {
+          const x = pad + inner * (st.you[0] / 100), y = pad + inner * (st.you[1] / 100);
+          gy.innerHTML = `<circle cx="${x}" cy="${y}" r="9"/><text x="${x + 13}" y="${y + 5}">You</text>`;
+        }
+      },
+    };
+  }
+  function legend(box, colorBy) {
+    box.replaceChildren();
+    const items = colorBy === "BF" ? [["Born", "var(--born)"], ["Forged", "var(--forged)"]] : colorBy === "EL" ? [["Ensemble", "var(--ens)"], ["Lone", "var(--lone)"]] : Object.values(FAMILY).map((f) => [f.name, f.color]);
+    items.forEach(([t, c]) => { const s = el("span"), i = el("i"); i.style.setProperty("--c", c); s.append(i, t); box.append(s); });
+    const f = el("span", null, "Outlined: well-known heroes. Faded: no words from one of the two axes on the page, so its position there is a guess."); box.append(f);
+  }
+
+  // ---------- hero fan ----------
+
+  // ---------- 1. story ----------
+  const storyMap = makeMap($("#story-map"));
+  const movers = (from, to, n) => H.map((h, i) => [Math.abs(from.pct[i][0] - to.pct[i][0]) + Math.abs(from.pct[i][1] - to.pct[i][1]), h.t]).sort((a, b) => b[0] - a[0]).slice(0, n).map((x) => x[1]);
+  const ends = (k, side, n) => H.map((h, i) => [DEFAULT.pct[i][k], h.t]).sort((a, b) => (side ? b[0] - a[0] : a[0] - b[0])).slice(0, n).map((x) => x[1]);
+  const flipped = H.filter((_, i) => (UNI.pct[i][0] >= 50) !== (DEFAULT.pct[i][0] >= 50)).length;
+  const famCount = (f) => H.filter((_, i) => codeOf(DEFAULT.pct[i]).startsWith(f)).length;
+  const share = (k) => H.filter((_, i) => DEFAULT.pct[i][k] >= 50).length;
+  const uniTotal = H.reduce((s, h) => s + h.uni, 0);
+  const chips = (words, color, n = 8) => words.slice(0, n).map((w) => `<span class="chipline" style="--c:${color}">${w}</span>`).join("");
+  const dp = H[byTitle.get("Deadpool")], wv = H[byTitle.get("Wolverine (character)")];
+  const STEPS = [
+    { h: "303 heroes, one map", p: `Every dot is one Marvel hero’s Wikipedia page. Left to right: does the page talk about the street or about space? Top to bottom: magic or technology? Nothing else goes in: no powers list, no team rosters, only words.`,
+      st: { data: DEFAULT, colorBy: "family", tint: .06, labels: ["Spider-Man", "Doctor Strange", "Hulk", "Storm (Marvel Comics)", "Luke Cage", "War Machine"] } },
+    { h: "An axis is two lists of words", p: `Each axis is two word groups we chose. For Street against Cosmic, we count these words on every page. Here every word counts the same: a plain count.`,
+      extra: `<div class="words"><b>Street:</b> ${chips(A[0].negWords, "var(--wired)")}<br><b>Cosmic:</b> ${chips(A[0].posWords, "var(--orbital)")}</div>`,
+      st: { data: RAW, colorBy: "family", tint: .06, labels: [...ends(0, 1, 2), ...ends(0, 0, 2)] } },
+    { h: "Rare words count more", p: `With TF-IDF, each word is weighted by how rare it is across the 303 pages. “Galactus” appears on few pages, so one mention says a lot; “city” is everywhere, so it says little. Watch the dots shift as the weighting switches on. The heroes labelled moved the most.`,
+      st: { data: DEFAULT, colorBy: "family", tint: .06, labels: movers(RAW, DEFAULT, 5), highlight: null } },
+    { h: "The word that lied", p: `We first put “universe” on the Cosmic side. It is the most common word of the lot, ${uniTotal.toLocaleString("en-US")} uses, but most of them are franchise names like “Marvel Cinematic Universe” or “Ultimate Universe”, not outer space. With it back in, ${flipped} heroes jump to Cosmic. We only caught it by reading the sentences, so we took it out.`,
+      st: { data: UNI, colorBy: "family", tint: .06, labels: movers(DEFAULT, UNI, 5) } },
+    { h: "Check the heroes at the ends", p: `An axis is only believable if its extremes make sense, which is what exercise 6.9 asks you to check. The most Arcane pages are Blade, Doctor Strange and Satana; the most Tech are War Machine and Deathlok. The far Street side is Spider-Man Noir and Luke Cage.`,
+      st: { data: DEFAULT, colorBy: "family", tint: .06, highlight: [...ends(1, 0, 3), ...ends(1, 1, 3), ...ends(0, 0, 2), ...ends(0, 1, 2)], labels: [...ends(1, 0, 3), ...ends(1, 1, 2), ...ends(0, 0, 2), ...ends(0, 1, 2)] } },
+    { h: "Four families", p: `Split both axes at the middle and the map falls into four families: Orbital (${famCount("CT")} heroes), Astral (${famCount("CA")}), Wired (${famCount("ST")}) and Haunted (${famCount("SA")}). The split is at the median, so every letter compares a hero with the others, not with an absolute.`,
+      st: { data: DEFAULT, colorBy: "family", tint: .2, labels: [] } },
+    { h: "A third letter: Born or Forged", p: `The same recipe makes two more axes. Born counts “mutant”, “heritage”, “bloodline”; Forged counts “accident”, “experiment”, “serum”. ${share(2)} heroes come out Born, ${N - share(2)} Forged. Same map, recoloured.`,
+      st: { data: DEFAULT, colorBy: "BF", tint: .06, labels: ["Storm (Marvel Comics)", "Spider-Man", "Hulk", "Jean Grey"] } },
+    { h: "A fourth: Ensemble or Lone", p: `Ensemble counts “team”, “members”, “joined”; Lone counts “alone”, “vigilante”, “mercenary”. Four letters make sixteen types.`,
+      st: { data: DEFAULT, colorBy: "EL", tint: .06, labels: ["Wolverine (character)", "Adam Warlock", "Luke Cage", "Deadpool"] } },
+    { h: "Where it goes wrong", p: `Words measure how Wikipedia writes about a hero, not what is true. Deadpool comes out ${dp.code} because his page says “mutant” more than “experiment”, though he was made in a lab. Wolverine’s page says team words ${wv.hits[3][0]} times and still lands on Lone, because most pages say them even more. And the dots near the middle lines can flip on a single word.`,
+      st: { data: DEFAULT, colorBy: "family", tint: .06, highlight: ["Deadpool", "Wolverine (character)", "Black Panther (character)"], labels: ["Deadpool", "Wolverine (character)", "Black Panther (character)"] } },
+    { h: "Your turn", p: `Explore the map, rebuild the axes word by word, or answer eight statements and see where you would land.`,
+      jump: true, st: { data: DEFAULT, colorBy: "family", tint: .12, labels: FAMOUS.slice(0, 8) } },
+  ];
+  const stepsBox = $("#steps");
+  STEPS.forEach((s, i) => {
+    const step = el("div", "step"), sc = el("div", "sc card");
+    step.dataset.i = i;
+    sc.append(el("h3", null, s.h), el("p", null, s.p));
+    if (s.extra) sc.insertAdjacentHTML("beforeend", s.extra);
+    if (s.jump) sc.insertAdjacentHTML("beforeend", `<div class="jump"><a class="btn" href="#explore">Explore the map</a><a class="btn ghost" href="#land">Where would I land?</a></div>`);
+    step.append(sc); stepsBox.append(step);
+  });
+  const stepEls = [...stepsBox.children];
+  function activate(i) {
+    stepEls.forEach((s, j) => s.classList.toggle("active", j === i));
+    const st = STEPS[i].st;
+    storyMap.draw(st); legend($("#story-legend"), st.colorBy);
+  }
+  activate(0);
+  if ("IntersectionObserver" in window) {
+    const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) activate(+e.target.closest(".step").dataset.i); }), { rootMargin: "-58% 0px -41% 0px" });
+    stepEls.forEach((s) => io.observe(s.querySelector(".sc")));
+  }
+
+  // ---------- 2. explore ----------
+  const ex = { data: DEFAULT, colorBy: "family", tint: .1, labels: FAMOUS.slice(0, 8), selected: null, you: null, on: A.map((a) => new Set([...a.posWords, ...a.negWords])) };
+  const exMap = makeMap($("#ex-map"), { clickable: true, onPick: (i) => pick(i) });
+  const redraw = () => { exMap.draw(ex); legend($("#ex-legend"), ex.colorBy); };
+  root.querySelectorAll(".seg button").forEach((b) => b.addEventListener("click", () => {
+    ex.colorBy = b.dataset.c;
+    root.querySelectorAll(".seg button").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+    redraw();
+  }));
+  [...H].sort((a, b) => clean(a.t).localeCompare(clean(b.t))).forEach((h) => { const o = el("option"); o.value = clean(h.t); $("#hero-list").append(o); });
+  const findHero = (v) => H.findIndex((h) => clean(h.t).toLowerCase() === v.trim().toLowerCase());
+  $("#find").addEventListener("submit", (e) => { e.preventDefault(); const i = findHero($("#find-in").value); if (i >= 0) pick(i); });
+  $("#find-in").addEventListener("change", () => { const i = findHero($("#find-in").value); if (i >= 0) pick(i); });
+  function pick(i) {
+    ex.selected = i; ex.labels = [...new Set([...FAMOUS.slice(0, 6), H[i].t])]; redraw();
+    const h = H[i], p = ex.data.pct[i], code = codeOf(p), P = $("#panel");
+    P.style.setProperty("--g", famColor(code));
+    P.replaceChildren();
+    const ph = el("div", "ph"), tx = el("div");
+    tx.append(el("h3", null, clean(h.t)), el("p", "tn", typeName(code)));
+    const tiles = el("div", "tiles"); code.split("").forEach((l, k) => { const s = el("span"); s.append(el("b", null, l), poleName(k, l)); tiles.append(s); });
+    tx.append(tiles); ph.append(tx);
+    const ev = el("div", "ev");
+    A.forEach((a, k) => {
+      const r = el("div", "row"), letter = code[k];
+      r.append(el("b", null, `${a.posName} or ${a.negName}: ${poleName(k, letter)}`));
+      const bar = el("div", "bar"), dot = el("i"); dot.style.left = `${100 - p[k]}%`; bar.append(dot); r.append(bar);
+      const e = h.ev[k];
+      if (!ex.data.any[i][k]) r.append(el("p", "none", "No words from either group on this page: the letter is a guess."));
+      else if (e && code === h.code) { const q = el("q"); q.append(e[0], el("mark", null, e[1]), e[2]); r.append(q); }
+      else r.append(el("p", "none", `${h.hits[k][0]} ${a.posName} words, ${h.hits[k][1]} ${a.negName} words on the page.`));
+      ev.append(r);
+    });
+    P.append(ph, ev);
+  }
+  redraw();
+
+  // ---------- 3. axis lab (drives the explore map) ----------
+  const corpus = (w) => H.reduce((s, h) => s + (h.wc[w] || 0), 0);
+  function relab() {
+    ex.data = score({ tfidf: true, universe: false, on: ex.on });
+    labCards.forEach((L, k) => {
+      const flips = H.filter((h, i) => (ex.data.pct[i][k] >= 50 ? A[k].pos : A[k].neg) !== h.code[k]).length;
+      L.changed.replaceChildren();
+      if (flips) L.changed.append(el("b", null, `${flips} heroes`), " changed letter. Scroll up to see them move.");
+      else L.changed.append("Default words.");
+    });
+    redraw();
+    if (ex.selected != null) pick(ex.selected);
+  }
+  const labCards = A.map((a, k) => {
+    const card = el("div", "lab-axis card"), r1 = el("div", "row1"), h = el("h3"), changed = el("p", "changed");
+    h.append(el("span", "p", a.posName), " or ", el("span", "n", a.negName)); r1.append(h, changed);
+    const sets = el("div", "wordsets");
+    [[a.posWords, a.posName, "var(--pos)"], [a.negWords, a.negName, "var(--neg)"]].forEach(([words, name, col]) => {
+      const box = el("div"); box.append(el("h4", null, `${name} words (uses in all pages)`));
+      words.map((w) => [w, corpus(w)]).sort((x, y) => y[1] - x[1]).forEach(([w, c]) => {
+        const b = el("button", "chip"); b.type = "button"; b.style.setProperty("--side", col); b.setAttribute("aria-pressed", "true");
+        b.append(w, el("small", null, c));
+        b.addEventListener("click", () => { ex.on[k].has(w) ? ex.on[k].delete(w) : ex.on[k].add(w); b.setAttribute("aria-pressed", String(ex.on[k].has(w))); relab(); });
+        box.append(b);
+      });
+      sets.append(box);
+    });
+    const reset = el("button", "reset", "Reset this axis"); reset.type = "button";
+    reset.addEventListener("click", () => { ex.on[k] = new Set([...a.posWords, ...a.negWords]); card.querySelectorAll(".chip").forEach((c) => c.setAttribute("aria-pressed", "true")); relab(); });
+    card.append(r1, sets, reset); $("#lab").append(card);
+    return { changed };
+  });
+  relab();
+
+  // ---------- 4. sixteen types ----------
+  const strength = (h) => h.pct.reduce((s, p) => s + Math.abs(p - 50), 0);
+  const membersOf = (code) => H.filter((h) => h.code === code).sort((a, b) => strength(b) - strength(a));
+  const grid = $("#tgrid"); grid.append(el("div", "corner"));
+  ["BE", "BL", "FE", "FL"].forEach((c) => { const h = el("div", "colh"); h.append(el("b", null, ROLE[c].name), ROLE[c].blurb); grid.append(h); });
+  ["CT", "CA", "ST", "SA"].forEach((r) => {
+    const rh = el("div", "rowh"); rh.style.setProperty("--g", FAMILY[r].color); rh.append(el("b", null, FAMILY[r].name), el("span", null, FAMILY[r].blurb)); grid.append(rh);
+    ["BE", "BL", "FE", "FL"].forEach((c) => {
+      const code = r + c, mem = membersOf(code), b = el("button", "tcard"); b.type = "button"; b.style.setProperty("--g", famColor(code)); b.setAttribute("aria-pressed", "false");
+      b.append(el("span", "c", code), el("span", "n", typeName(code)), el("span", "h", `${mem.length} heroes · ${mem.slice(0, 2).map((h) => clean(h.t)).join(", ")}`));
+      b.addEventListener("click", () => {
+        grid.querySelectorAll(".tcard").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+        const box = $("#tdetail"); box.hidden = false; box.style.setProperty("--g", famColor(code)); box.replaceChildren();
+        const hh = el("h3", null, `${typeName(code)} · ${code}`), list = el("div", "members");
+        mem.forEach((m) => { const mb = el("button", null, clean(m.t)); mb.type = "button"; mb.addEventListener("click", () => { pick(byTitle.get(m.t)); go($("#explore")); }); list.append(mb); });
+        box.append(hh, el("p", "tn", `${mem.length} heroes. Click one to see it on the map.`), list);
+      });
+      grid.append(b);
+    });
+  });
+
+  // ---------- 5. where would you land ----------
+  const ITEMS = [
+    [0, +1, "You’d rather protect a whole planet than one neighborhood."],
+    [1, +1, "When something breaks, you open it up and rebuild it."],
+    [2, +1, "You were different from everyone else long before anything happened to you."],
+    [3, +1, "You do your best work with a team around you."],
+    [0, -1, "Your problems usually start on your own street."],
+    [1, -1, "Some things can’t be explained by science, and that’s fine with you."],
+    [2, -1, "One day, one accident, changed everything about you."],
+    [3, -1, "You’d rather handle it yourself than wait for backup."],
+  ];
+  const answers = new Array(ITEMS.length).fill(null), SIZES = [40, 33, 27, 22, 27, 33, 40];
+  function renderItems() {
+    const box = $("#items"); box.replaceChildren();
+    ITEMS.forEach(([, , text], i) => {
+      const it = el("div", "item"), q = el("p", null, text); q.id = `q${i}`;
+      const sc = el("div", "scale"), dots = el("div", "dots"); dots.setAttribute("role", "radiogroup"); dots.setAttribute("aria-labelledby", q.id);
+      SIZES.forEach((s, v) => {
+        const val = v - 3, b = el("button", "dotb"); b.type = "button"; b.setAttribute("role", "radio"); b.setAttribute("aria-checked", String(answers[i] === val));
+        b.setAttribute("aria-label", ["Strongly disagree", "Disagree", "Slightly disagree", "Neutral", "Slightly agree", "Agree", "Strongly agree"][v]);
+        b.style.setProperty("--s", `${s}px`); b.style.setProperty("--c", val < 0 ? "var(--disagree)" : val > 0 ? "var(--agree)" : "var(--muted)");
+        b.addEventListener("click", () => { answers[i] = val; renderItems(); });
+        dots.append(b);
+      });
+      sc.append(el("span", null, "Disagree"), dots, el("span", null, "Agree"));
+      it.append(q, sc); box.append(it);
+    });
+    const done = answers.filter((x) => x !== null).length;
+    $("#go").disabled = done < ITEMS.length;
+    $("#go-hint").textContent = done < ITEMS.length ? `${done} of ${ITEMS.length} answered` : "Ready.";
+  }
+  renderItems();
+  $("#go").addEventListener("click", () => {
+    // your position on each axis, in the same 0-100 "toward the first pole" scale as the heroes
+    const you = A.map((_, k) => {
+      const xs = ITEMS.filter((it) => it[0] === k).map((it) => it[1] * answers[ITEMS.indexOf(it)]);
+      return Math.round(50 + 50 * (xs.reduce((s, x) => s + x, 0) / xs.length) / 3);
+    });
+    const code = codeOf(you);
+    const near = H.map((h, i) => [DEFAULT.pct[i].reduce((s, x, k) => s + Math.abs(x - you[k]), 0), i]).sort((a, b) => a[0] - b[0]).slice(0, 3).map((x) => x[1]);
+    const card = $("#you-card"); card.hidden = false; card.style.setProperty("--g", famColor(code)); card.replaceChildren();
+    const tx = el("div"); tx.append(el("p", "tn", "You land among"), el("h3", null, typeName(code)));
+    const tiles = el("div", "tiles"); code.split("").forEach((l, k) => { const s = el("span"); s.append(el("b", null, l), poleName(k, l)); tiles.append(s); });
+    const nearP = el("p", "near"); nearP.append("Your nearest heroes: ", ...near.flatMap((i, j) => [j ? ", " : "", el("b", null, clean(H[i].t))]), ".");
+    const b = el("a", "btn", "See yourself on the map"); b.href = "#explore"; b.style.marginTop = "14px";
+    tx.append(tiles, nearP, b); card.append(tx);
+    ex.you = [you[0], you[1]]; ex.labels = near.map((i) => H[i].t); redraw();
+  });
+})();
+</script>
+</body>
+</html>
