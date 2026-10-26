@@ -1,64 +1,67 @@
 # Pass it on
 
-A drawing game for Week 7. A real corpus passage becomes a sketch, and a CLIP
-vision model tries to recover its source directly from the pixels. An optional
-two-person route passes the drawing to a friend, then compares TF-IDF and MiniLM
-retrieval on their description. Worked examples use authored drawings and live
-inference; they are labeled as examples.
+A word-squeezing game for Week 7. A player reads a real corpus passage and squeezes
+it into 30 words, then 10, then 3. After every edit, TF-IDF and MiniLM retrieval
+rank all 303 articles live, so the player sees which cut loses the source article.
+The reveal draws the round over the same squeeze run automatically on every
+article. The worked example is an authored round with live rankings; it is labeled.
 
 Serve this repository with `python3 -m http.server 8047` and open
 `http://localhost:8047/showcases/week-07-pass-it-on/dist/`.
 The complete static application is in `dist/`, suitable for GitHub Pages or Sites.
 No build, API key, backend, external CDN, or multiplayer service is required.
-The human route is hot-seat play: the original passage leaves the DOM before handoff, but this
-is a friendly game, not a security boundary against developer tools.
 
 ## Behavior
 
 - Five checked passage prompts from the frozen course Wikipedia snapshot.
-- Five-minute drawing round with pointer/touch/stylus input, five colors, brush
-  widths, eraser, undo, and clear. An empty drawing cannot be submitted.
-- "Let the model guess" reads the drawing pixels with CLIP and ranks all 303
-  articles. "Pass to a human instead" keeps the original telephone route.
-- A handoff screen hides the original; the description round has five minutes and
-  a configurable 30-, 10-, or 3-word budget. Overtime permits completing an empty
-  description or trimming one that exceeds the budget.
-- The reveal compares original-article rank and top-five results. Click results
-  for text evidence and lexical contributions. Change only the retrieval unit
-  between whole-page means and 180-/60-word passage maxima. Switch back to the
-  original drawing prompt to inspect retrieval without the human handoffs.
-- Save the drawing, messages, attribution, and current top-five rankings as JSON.
+- Three squeeze rounds: 30, 10 and 3 words. Each round starts from the previous
+  round's text. The source passage stays visible.
+- Live ranks for both searches (debounced), with the previous round's rank for
+  comparison. A keyword query with no indexed word in common shows "—", not a tied rank.
+- Word chips show each word's share of the source article's TF-IDF score, with its
+  IDF on hover. Stop words and words outside the vocabulary are marked as ignored.
+- Taboo mode bans the passage's five highest-weight TF-IDF query terms; a round
+  cannot be locked in while it uses one.
+- The reveal shows the four slips with their ranks, the corpus-wide evidence chart,
+  and the original top-five results. Switch the searched text between the 3-, 10-
+  and 30-word versions and the original passage; change the retrieval unit between
+  whole-page means and 180-/60-word passage maxima.
+- Save the squeeze, ranks, attribution and current top-five rankings as JSON.
   Everything stays in memory until the player explicitly downloads it.
 
-## Drawing-only recognition
+## Corpus-wide evidence
 
-`vision-worker.js` runs the quantized CLIP ViT-B/32 image encoder in a Web Worker.
-Its per-guess input contains only the drawing image, a request ID, and a message
-type. It receives neither the target article ID nor the secret passage as a hint.
-The drawing is white-padded to a square, resized to 224 × 224, and processed into
-a normalized 512-dimensional image embedding. The reveal reconstructs the actual
-model input pixels and optionally overlays its 7 × 7 image-patch grid.
+`prepare_squeeze.py` reads only `dist/data`, so it uses the same vocabulary, IDF
+and stored passage vectors as the browser. For each article it takes the first
+sentence of 18–45 words, replaces the title with "someone", and squeezes it to 30,
+20, 10, 5, 3, 2 and 1 words by three rules: keep the first N words; keep the N
+highest-weight TF-IDF words; or ban the five highest-weight words and keep the
+rarest N of the rest. It records the source article's rank under TF-IDF and under
+MiniLM best-60-word-passage retrieval, and writes median, quartiles and top-5 share
+to `dist/data/squeeze-evidence.json`. A zero-overlap keyword query counts as rank 303.
 
-`prepare_vision.py` freezes exactly three text prototypes per article before any
-drawings are seen: an article-name prompt and two early source sentences selected
-with a fixed visual-word rule from the first 800 words. The matching quantized
-CLIP text encoder embeds all 909 prototypes with a 77-token limit. Its weights
-and tokenizer are used only during preparation; they are not needed at runtime.
-Each article gets its maximum candidate cosine. These are corpus-restricted
-guesses, not generated captions, probabilities, or general recognition accuracy.
+What it found: deleting words favours keyword search. Keeping only the single
+rarest word, TF-IDF still ranks the source in the top five for 91% of articles,
+MiniLM for 39%. Even in taboo mode at three words it is 57% against 18%. The robot
+never paraphrases, and a human player can; the worked example is a paraphrase in which
+keyword search slips (#2 → #8 → #13) while meaning search holds (#1 → #1 → #7).
 
-The vision and text encoders share the pinned model revision
-`d15189d7028b43f1d3e65039190477f6af591c2a`. The image encoder's 89,117,001 bytes
-are distributed in five static parts, each at most 20 MiB. The worker verifies
-each part's SHA-256 before reassembling the exact model. The build remains a
-static site; drawings never leave the browser. The 512D image/text space is
-separate from MiniLM's 384D text space. The reveal inspects all 512 actual
-coordinate products for a selected article's winning prototype.
+The same script measures the explanations shown on the "What we found" page:
 
-Rebuild with `.venv/bin/python showcases/week-07-pass-it-on/prepare_vision.py`.
-It needs NumPy, Transformers, and ONNX Runtime. It downloads pinned ONNX weights
-and tokenizer files into `/tmp/pass-it-on-clip-analysis` for preparation. CLIP's
-MIT license is in `dist/models/clip-vit-base-patch32/LICENSE`.
+- Fingerprints: 42% of the 25,882 indexed words occur on exactly one page; all 303
+  pages have at least one (median 21); 44% of them are names.
+- Favourite wrong answers (first-N rule): keyword search's wrong first results are
+  short pages (at 1 word, 87% land on the shortest tenth; Bird-Brain alone takes 50
+  of 103), meaning search's are long pages (median 4,070 words against 1,234). At 1
+  word, 138 of 289 meaning misses go to Cable through a one-word passage, "traveler.";
+  7 such splitter leftovers (3 words or fewer) win 61% of one-word misses, 5% at 3
+  words and none at 10. They are kept in the data and reported as a finding.
+- Network drift: at 10 words, 15% of keyword and 20% of meaning misses are hyperlink
+  neighbours of the source, against 3.1% for a random pair; at 3 words, 4% and 8%.
+
+Rebuild with `.venv/bin/python showcases/week-07-pass-it-on/prepare_squeeze.py`
+after `prepare_data.py`. Queries are embedded with the original Sentence
+Transformers model; live browser ranks use the quantized copy and can differ by a few places.
 
 ## Open the machine
 
@@ -118,22 +121,19 @@ ONNX `Xenova/all-MiniLM-L6-v2` checkpoint at revision
 the original Sentence Transformers encoder and quantized to signed bytes for
 storage; the browser renormalizes them. Model and storage quantization introduce
 small approximations. Cosines are not calibrated probabilities, and a result is
-not proof of semantic preservation. Drawings are interpreted by humans; the
-model never reads the image. This is a case-study tool, not an accuracy benchmark.
+not proof of semantic preservation. This is a case-study tool, not an accuracy benchmark.
 
 `download_models.py` vendors the model, pinned runtime, fonts, and licenses.
 Run with `python3 showcases/week-07-pass-it-on/download_models.py` if rebuilding
-assets. About 161 MB is available across the complete app; representations load
-on demand. The image model warms in a worker when a game starts; the first load
-reads about 89 MB. The optional text route uses the smaller MiniLM model.
+assets. Representations load on demand; the MiniLM model warms when a game starts.
 
 ## Visual direction
 
-A cobalt drawing table, yellow source paper, white sketch paper, and pink
-description slips. Bricolage Grotesque carries the playful headings; Caveat
-carries handwritten notes. Each folded paper represents one actual handoff.
-The source text and players' drawings supply the visual material. The reveal
-unfolds the chain and keeps the analytical evidence directly accessible.
+A cobalt table, yellow source paper, and one slip per squeeze: white for 30
+words, pink for 10, mint for 3. Bricolage Grotesque carries the playful headings;
+Caveat carries handwritten notes. Pink is keyword search and blue is meaning search
+throughout, from the live rank tiles to the evidence chart. The reveal lays out the
+slips and keeps the analytical evidence directly accessible.
 
 Wikipedia text: CC BY-SA 4.0, with per-article links and unedited prompt sources
 in the reveal. Font and library licenses are in `dist/vendor/`; the model's
