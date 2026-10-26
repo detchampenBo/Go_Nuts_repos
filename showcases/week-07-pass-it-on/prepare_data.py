@@ -19,6 +19,7 @@ HERE = Path(__file__).resolve().parent
 OUT = HERE / "dist" / "data"
 ROOT = HERE.parents[1]
 MODEL = "sentence-transformers/all-MiniLM-L6-v2"
+MIN_WORDS = 8  # shorter passages are splitter leftovers; see split()
 
 # Exact source excerpts. Names are masked only in the drawing prompt.
 SEEDS = [
@@ -67,7 +68,23 @@ def main():
                         chunks.append(" ".join(part[:count])); part = part[count:]
         if current:
             chunks.append(" ".join(current))
-        return chunks
+        # A sentence longer than the budget is cut at the budget, which can leave a one-word remainder
+        # ("traveler.") as its own passage. Merge any passage under MIN_WORDS into the previous one, or
+        # re-split the pair into two balanced halves when together they exceed the limits.
+        def fits(words):
+            return len(words) <= budget and len(model.tokenizer.encode(" ".join(words), add_special_tokens=False)) <= max_tokens
+        merged = []
+        for chunk in chunks:
+            words = chunk.split()
+            if merged and len(words) < MIN_WORDS:
+                both = merged[-1].split() + words
+                if fits(both):
+                    merged[-1] = " ".join(both); continue
+                half = (len(both) + 1) // 2
+                if fits(both[:half]) and fits(both[half:]):
+                    merged[-1] = " ".join(both[:half]); merged.append(" ".join(both[half:])); continue
+            merged.append(chunk)
+        return merged
 
     docs = [{"id": i, "title": re.sub(r"\s*\((?:character|Marvel Comics|comics)\)$", "", i.replace("_", " ")),
              "text": t, "url": "https://en.wikipedia.org/wiki/" + urllib.parse.quote(i)} for i, t in zip(ids, texts)]
