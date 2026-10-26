@@ -1,4 +1,7 @@
 import { Retrieval, loadCorpus } from './retrieval.js';
+import { Mechanics } from './mechanics.js';
+import { DrawingVision } from './vision.js';
+import { DrawingReveal } from './vision-reveal.js';
 
 const $ = selector => document.querySelector(selector);
 const app = $('#app');
@@ -10,19 +13,22 @@ const doodle = `<svg viewBox="0 0 300 210" role="img" aria-label="An example doo
 let corpus, engine, budget = 10, promptIndex = 1, state = 'home', timer, timerEnd = 0, roundGeneration = 0;
 let strokes = [], currentStroke = null, color = '#3444df', width = 4, eraser = false, drawing = '', description = '', descriptionTimedOut = false;
 let unit = '60', querySource = 'description', lastResult, activeQuery = '', busy = false, revealSequence = 0;
-let canvas, ctx, paintFrame;
+let canvas, ctx, paintFrame, mechanics;
+const drawingVision = new DrawingVision();
+let visionResult = null, visionSequence = 0;
 
 $('#about-open').addEventListener('click', () => $('#about').showModal());
 $('.dialog-close').addEventListener('click', () => $('#about').close());
 $('#about').addEventListener('click', event => { if (event.target === $('#about')) { const r = event.target.getBoundingClientRect(); if (event.clientX < r.left || event.clientX > r.right || event.clientY < r.top || event.clientY > r.bottom) event.target.close(); } });
 
 function mount(html, next) {
+  mechanics?.destroy(); mechanics = null;
   clearInterval(timer); timer = null; state = next; app.innerHTML = html;
   window.scrollTo({ top: 0, behavior: 'instant' });
   app.focus({ preventScroll: true });
 }
-function progress(active) {
-  return `<ol class="progress" aria-label="Game progress">${['Read', 'Draw', 'Pass', 'Describe', 'Reveal'].map((label, i) => `<li class="${i === active ? 'active' : i < active ? 'done' : ''}"${i === active ? ' aria-current="step"' : ''}><span class="num">${i < active ? '✓' : i + 1}</span>${label}</li>`).join('')}</ol>`;
+function progress(active, imageMode = false) {
+  return `<ol class="progress" aria-label="Game progress">${(imageMode ? ['Read', 'Draw', 'Guess'] : ['Read', 'Draw', 'Pass', 'Describe', 'Reveal']).map((label, i) => `<li class="${i === active ? 'active' : i < active ? 'done' : ''}"${i === active ? ' aria-current="step"' : ''}><span class="num">${i < active ? '✓' : i + 1}</span>${label}</li>`).join('')}</ol>`;
 }
 function startTimer(seconds, done) {
   timerEnd = performance.now() + seconds * 1000;
@@ -37,30 +43,33 @@ function startTimer(seconds, done) {
 function prompt() { return corpus.prompts[promptIndex]; }
 
 function home() {
+  visionResult = null; visionSequence++;
   roundGeneration++; revealSequence++; busy = false; strokes = []; drawing = ''; description = ''; currentStroke = null;
-  mount(`<div class="landing"><section class="hero" aria-labelledby="title"><div class="hero-copy"><span class="handwritten title-doodle">meaning gets<br>a little messy ↴</span><h1 id="title">Pass<br>it on.</h1><p>A passage becomes a picture.<br>A picture becomes a few words.<br>Can a machine find its way back?</p></div><div class="hero-stage" aria-label="An illustrated example of the game"><div class="demo-source"><div class="paper-label"><span class="round">1</span>Read a passage</div><p>“She is able to control the weather and atmosphere…”</p></div><div class="demo-drawing"><div class="paper-label"><span class="round">2</span>Draw what you mean</div>${doodle}</div><span class="stage-arrow">no words,<br>just scribbles ↗</span><div class="hero-note">Somewhere along<br>the way…</div><div class="demo-description"><small>3 &nbsp; Someone else describes it</small>“someone having a very bad hair day”</div></div></section><section class="setup" aria-label="Set up a game"><div class="setup-intro"><h2>Two humans. One screen.</h2><p>One draws. One describes. Two search engines guess.<br>About three minutes. Absolutely no artistic talent needed.</p></div><fieldset class="budget-group"><legend>Your partner’s word budget</legend><div class="budget-options">${[30, 10, 3].map(n => `<button type="button" data-budget="${n}" aria-label="${n} words" aria-pressed="${budget === n}"><strong>${n}</strong><span>${n === 30 ? 'roomy' : n === 10 ? 'tricky' : 'brutal'}</span></button>`).join('')}</div></fieldset><div><button id="start" class="primary" ${corpus ? '' : 'disabled'}>Let’s play ${arrow}</button><p id="load-state" class="load-label" role="status">${corpus ? '<span class="status-dot"></span>303 real articles. Your drawing stays here.' : 'Opening the box of passages…'}</p></div></section><div class="landing-bottom"><span>Read → draw → pass → describe → the big reveal</span><button id="demo" class="demo-button" ${corpus ? '' : 'disabled'}>Just me? Open a worked example ↗</button></div></div>`, 'home');
+  mount(`<div class="landing"><section class="hero" aria-labelledby="title"><div class="hero-copy"><span class="handwritten title-doodle">meaning gets<br>a little messy ↴</span><h1 id="title">Pass<br>it on.</h1><p>A passage becomes a picture.<br>A vision model takes a guess.<br>Does the meaning make it through?</p></div><div class="hero-stage" aria-label="An illustrated example of the game"><div class="demo-source"><div class="paper-label"><span class="round">1</span>Read a passage</div><p>“She is able to control the weather and atmosphere…”</p></div><div class="demo-drawing"><div class="paper-label"><span class="round">2</span>Draw what you mean</div>${doodle}</div><span class="stage-arrow">no words,<br>just scribbles ↗</span><div class="hero-note">Somewhere along<br>the way…</div><div class="demo-description"><small>3 &nbsp; What will the model see?</small>“someone having a very bad hair day”</div></div></section><section class="setup" aria-label="Set up a game"><div class="setup-intro"><h2>You draw. The machine guesses.</h2><p>A real vision model reads your sketch.<br>Five minutes to draw. Or pass it to a friend.</p></div><fieldset class="budget-group"><legend>If a friend describes it: word budget</legend><div class="budget-options">${[30, 10, 3].map(n => `<button type="button" data-budget="${n}" aria-label="${n} words" aria-pressed="${budget === n}"><strong>${n}</strong><span>${n === 30 ? 'roomy' : n === 10 ? 'tricky' : 'brutal'}</span></button>`).join('')}</div></fieldset><div><button id="start" class="primary" ${corpus ? '' : 'disabled'}>Let’s play ${arrow}</button><p id="load-state" class="load-label" role="status">${corpus ? '<span class="status-dot"></span>303 real articles. Your drawing stays here.' : 'Opening the box of passages…'}</p></div></section><div class="landing-bottom"><span>Read → draw → model guesses → open the machine</span><button id="demo" class="demo-button" ${corpus ? '' : 'disabled'}>Open an example drawing ↗</button><button id="text-demo" class="demo-button" ${corpus ? "" : "disabled"}>Explore the text-search example ↗</button></div></div>`, 'home');
   document.querySelectorAll('[data-budget]').forEach(button => button.addEventListener('click', () => {
     budget = Number(button.dataset.budget);
     document.querySelectorAll('[data-budget]').forEach(b => b.setAttribute('aria-pressed', b === button));
   }));
   $('#start').addEventListener('click', begin);
-  $('#demo').addEventListener('click', demo);
+  $('#demo').addEventListener('click', () => demo(true));
+  $('#text-demo').addEventListener('click', () => demo(false));
 }
 
 function begin() {
   if (!corpus) return;
   promptIndex = Math.floor(Math.random() * corpus.prompts.length);
   engine.warmup();
+  drawingVision.warmup();
   read();
 }
 function read() {
-  mount(`<div class="game-shell">${progress(0)}<div class="round-header"><div><h1>Keep the picture in your head.</h1><p>Player one: read this passage. You’ll draw it next. Keep it secret from your partner.</p></div></div><section class="game-panel read-panel"><div class="source-number">Your secret passage</div><p class="source-passage">${escape(prompt().prompt)}</p><div class="source-tip"><span aria-hidden="true">✳</span><span>From one of 303 real Wikipedia articles. Some names may be hidden. Draw the idea, not the words. Your partner gets just <strong>${budget} words</strong> to describe your picture.</span></div></section><div class="panel-actions"><p>You can still peek at this passage while drawing.</p><button id="to-draw" class="primary">I’ve got a picture ${arrow}</button></div></div>`, 'read');
+  mount(`<div class="game-shell">${progress(0, true)}<div class="round-header"><div><h1>Keep the picture in your head.</h1><p>Read this passage. You’ll draw it next. Keep it secret if you’re playing with a friend.</p></div></div><section class="game-panel read-panel"><div class="source-number">Your secret passage</div><p class="source-passage">${escape(prompt().prompt)}</p><div class="source-tip"><span aria-hidden="true">✳</span><span>From one of 303 real Wikipedia articles. Some names may be hidden. Draw the idea, not the words. The model sees only pixels. If you pass it to a friend, they get <strong>${budget} words</strong> to describe it.</span></div></section><div class="panel-actions"><p>You can still peek at this passage while drawing.</p><button id="to-draw" class="primary">I’ve got a picture ${arrow}</button></div></div>`, 'read');
   $('#to-draw').addEventListener('click', draw);
 }
 
 function draw() {
   strokes = []; currentStroke = null; descriptionTimedOut = false;
-  mount(`<div class="game-shell">${progress(1)}<div class="round-header"><div><h1>Make a beautiful mess.</h1><p>Player one: draw the passage. No letters, names, or numbers. You have 90 seconds.</p></div><div class="timer" id="timer" aria-label="Drawing time remaining"></div></div><section class="game-panel draw-layout"><div class="canvas-wrap"><canvas id="drawing" class="drawing-canvas" width="1000" height="750" tabindex="0" aria-label="Drawing area. Use your mouse, pen, or finger to draw. Press Control or Command Z to undo."></canvas><span class="canvas-hint">Your masterpiece goes here.</span></div><aside class="draw-sidebar"><div class="prompt-note"><span class="handwritten">Psst. The passage.</span><p>${escape(prompt().prompt)}</p></div><div class="tool-settings"><div><span class="tool-label">Ink</span><div class="colors">${['#3444df', '#202142', '#ed6d88', '#e6ab23', '#2a9a69'].map(c => `<button class="color" data-color="${c}" style="--color:${c}" aria-label="${({ '#3444df': 'Blue', '#202142': 'Black', '#ed6d88': 'Pink', '#e6ab23': 'Yellow', '#2a9a69': 'Green' })[c]} ink" aria-pressed="${c === color}"></button>`).join('')}</div></div><div class="brush-control"><label class="tool-label" for="brush">Stroke width</label><input id="brush" class="brush-range" type="range" min="2" max="16" value="${width}" aria-label="Brush width"></div></div><div class="toolrow"><button class="tool" id="eraser" aria-label="Eraser" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 13 10-10 7 7-10 10H7l-3-3zM10 7l7 7M11 20h10"/></svg></button><button class="tool" id="undo" aria-label="Undo last stroke"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 4-6 6 6 6M3 10h10a7 7 0 0 1 7 7v3"/></svg></button><button class="tool" id="clear">Clear</button></div><p class="small">Mouse, finger, or stylus.<br>A stick figure is a valid artistic choice.</p></aside></section><div class="panel-actions"><p id="draw-status" role="status">A drawing is needed before you can pass it on.</p><button class="primary" id="finish-draw" disabled>Fold it & pass it ${arrow}</button></div></div>`, 'draw');
+  mount(`<div class="game-shell">${progress(1, true)}<div class="round-header"><div><h1>Make a beautiful mess.</h1><p>Draw the passage. No letters, names, or numbers. You have five minutes.</p></div><div class="timer" id="timer" aria-label="Drawing time remaining"></div></div><section class="game-panel draw-layout"><div class="canvas-wrap"><canvas id="drawing" class="drawing-canvas" width="1000" height="750" tabindex="0" aria-label="Drawing area. Use your mouse, pen, or finger to draw. Press Control or Command Z to undo."></canvas><span class="canvas-hint">Your masterpiece goes here.</span></div><aside class="draw-sidebar"><div class="prompt-note"><span class="handwritten">Psst. The passage.</span><p>${escape(prompt().prompt)}</p></div><div class="tool-settings"><div><span class="tool-label">Ink</span><div class="colors">${['#3444df', '#202142', '#ed6d88', '#e6ab23', '#2a9a69'].map(c => `<button class="color" data-color="${c}" style="--color:${c}" aria-label="${({ '#3444df': 'Blue', '#202142': 'Black', '#ed6d88': 'Pink', '#e6ab23': 'Yellow', '#2a9a69': 'Green' })[c]} ink" aria-pressed="${c === color}"></button>`).join('')}</div></div><div class="brush-control"><label class="tool-label" for="brush">Stroke width</label><input id="brush" class="brush-range" type="range" min="2" max="16" value="${width}" aria-label="Brush width"></div></div><div class="toolrow"><button class="tool" id="eraser" aria-label="Eraser" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 13 10-10 7 7-10 10H7l-3-3zM10 7l7 7M11 20h10"/></svg></button><button class="tool" id="undo" aria-label="Undo last stroke"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 4-6 6 6 6M3 10h10a7 7 0 0 1 7 7v3"/></svg></button><button class="tool" id="clear">Clear</button></div><p class="small">Mouse, finger, or stylus.<br>A stick figure is a valid artistic choice.</p></aside></section><div class="panel-actions"><p id="draw-status" role="status">Add a sketch before the model can guess.</p><div class="drawing-actions"><button class="primary" id="finish-draw" disabled>Let the model guess ${arrow}</button><button class="secondary" id="finish-human" disabled>Pass to a human instead</button></div></div></div>`, 'draw');
   canvas = $('#drawing'); ctx = canvas.getContext('2d'); eraser = false;
   const bounds = canvas.getBoundingClientRect(); canvas.height = Math.round(1000 * bounds.height / bounds.width);
   function point(event) { const rect = canvas.getBoundingClientRect(); return [(event.clientX - rect.left) * canvas.width / rect.width, (event.clientY - rect.top) * canvas.height / rect.height]; }
@@ -86,11 +95,12 @@ function draw() {
   $('#eraser').addEventListener('click', event => { eraser = !eraser; event.currentTarget.setAttribute('aria-pressed', eraser); });
   $('#undo').addEventListener('click', () => { strokes.pop(); redraw(); updateDrawingState(); });
   $('#clear').addEventListener('click', () => { strokes = []; currentStroke = null; redraw(); updateDrawingState(); });
-  $('#finish-draw').addEventListener('click', finishDrawing);
+  $('#finish-draw').addEventListener('click', () => finishDrawing('vision'));
+  $('#finish-human').addEventListener('click', () => finishDrawing('human'));
   redraw();
-  startTimer(90, () => {
+  startTimer(300, () => {
     if (strokes.some(stroke => !stroke.erase)) finishDrawing();
-    else { $('#draw-status').textContent = 'Time’s up. Add a quick sketch, then pass it on.'; $('#timer').setAttribute('aria-label', 'Drawing time ended'); }
+    else { $('#draw-status').textContent = 'Time’s up. Add a quick sketch, then let the model guess.'; $('#timer').setAttribute('aria-label', 'Drawing time ended'); }
   });
 }
 function redraw() {
@@ -107,15 +117,17 @@ function updateDrawingState() {
   const hasDrawing = strokes.some(stroke => !stroke.erase);
   if ($('.canvas-hint')) $('.canvas-hint').hidden = hasDrawing;
   if ($('#finish-draw')) $('#finish-draw').disabled = !hasDrawing;
-  if ($('#draw-status')) $('#draw-status').textContent = hasDrawing ? 'Happy accidents count. Ready when you are.' : 'A drawing is needed before you can pass it on.';
+  if ($('#finish-human')) $('#finish-human').disabled = !hasDrawing;
+  if ($('#draw-status')) $('#draw-status').textContent = hasDrawing ? 'Happy accidents count. Ready when you are.' : 'Add a sketch before the model can guess.';
 }
-function finishDrawing() {
+function finishDrawing(route = 'vision') {
   if (!strokes.some(stroke => !stroke.erase)) return;
-  currentStroke = null; redraw(); drawing = canvas.toDataURL('image/png'); handoff();
+  currentStroke = null; redraw(); drawing = canvas.toDataURL('image/png');
+  if (route === 'human') handoff(); else visionGuess();
 }
 function handoff() {
   // The original passage and drawing tools leave the DOM before the next player sees the screen.
-  mount(`<div class="game-shell">${progress(2)}<section class="handoff"><div class="game-panel"><svg class="envelope" viewBox="0 0 160 120" aria-hidden="true"><path d="M10 28h140v82H10z"/><path d="m10 28 70 48 70-48M10 110l49-48m91 48-49-48"/><path d="M25 28 34 6l103 5 3 17" fill="var(--paper)"/></svg><span class="handwritten">No peeking. No explaining.</span><h1>Pass the screen.</h1><p>Player two, it’s your turn. You’ll only see the drawing. Describe what you see in <strong>${budget} words or fewer</strong>. You have 60 seconds.</p><button id="to-describe" class="primary blue">I’m the next player ${arrow}</button></div></section></div>`, 'pass');
+  mount(`<div class="game-shell">${progress(2)}<section class="handoff"><div class="game-panel"><svg class="envelope" viewBox="0 0 160 120" aria-hidden="true"><path d="M10 28h140v82H10z"/><path d="m10 28 70 48 70-48M10 110l49-48m91 48-49-48"/><path d="M25 28 34 6l103 5 3 17" fill="var(--paper)"/></svg><span class="handwritten">No peeking. No explaining.</span><h1>Pass the screen.</h1><p>Player two, it’s your turn. You’ll only see the drawing. Describe what you see in <strong>${budget} words or fewer</strong>. You have five minutes.</p><button id="to-describe" class="primary blue">I’m the next player ${arrow}</button></div></section></div>`, 'pass');
   $('#to-describe').addEventListener('click', describe);
 }
 function describe() {
@@ -123,7 +135,7 @@ function describe() {
   $('#description').addEventListener('input', updateWords);
   $('#reveal').addEventListener('click', () => { description = $('#description').value.trim(); if (words(description).length && words(description).length <= budget) reveal(); });
   $('#description').focus({ preventScroll: true });
-  startTimer(60, () => {
+  startTimer(300, () => {
     descriptionTimedOut = true;
     const count = words($('#description').value).length;
     if (count > 0 && count <= budget) { description = $('#description').value.trim(); reveal(); }
@@ -141,7 +153,7 @@ function updateWords() {
   if (descriptionTimedOut && count > 0 && count <= budget) $('#description-status').textContent = 'Ready to reveal.';
 }
 
-async function demo() {
+async function demo(useVision = true) {
   if (!corpus) return;
   promptIndex = 1; budget = 10; description = 'someone having a very bad hair day';
   // This drawing is an explicitly authored example; rankings are computed live.
@@ -153,7 +165,31 @@ async function demo() {
     const c = document.createElement('canvas'); c.width = 800; c.height = 600;
     const context = c.getContext('2d'); context.fillStyle = 'white'; context.fillRect(0, 0, 800, 600); context.drawImage(image, 0, 20, 800, 560); drawing = c.toDataURL();
   } finally { URL.revokeObjectURL(url); }
-  engine.warmup(); reveal(true);
+  engine.warmup();
+  if (useVision) visionGuess(true); else reveal(true);
+}
+
+async function visionGuess(example = false) {
+  const generation = roundGeneration, sequence = ++visionSequence;
+  mount(`<div class="game-shell">${progress(2, true)}<section class="game-panel loading-panel"><span class="handwritten">No words to help it out.</span><h1>What does the machine<br>see in your drawing?</h1><img class="vision-loading-drawing" src="${drawing}" alt="Your sketch, being read by the image model"><div class="loading-line" aria-hidden="true"><span></span></div><p id="vision-status" role="status">Opening the image model. The first load reads about 89 MB from this site. Your drawing stays in this browser.</p><button class="secondary" id="vision-skip">Pass to a human instead</button></section></div>`, 'vision-loading');
+  $('#vision-skip').addEventListener('click', () => { visionSequence++; handoff(); });
+  try {
+    const result = await drawingVision.guess(drawing, message => {
+      if (generation === roundGeneration && sequence === visionSequence && $('#vision-status')) $('#vision-status').textContent = message;
+    });
+    if (generation !== roundGeneration || sequence !== visionSequence) return;
+    visionResult = result; renderVision(example);
+  } catch (error) {
+    if (generation !== roundGeneration || sequence !== visionSequence) return;
+    $('#vision-status').textContent = `The drawing model couldn’t open: ${error.message}`;
+    const retry = document.createElement('button'); retry.className = 'primary blue'; retry.textContent = 'Retry drawing-only guess';
+    retry.addEventListener('click', () => visionGuess(example)); $('.loading-panel').append(retry);
+  }
+}
+function renderVision(example = false) {
+  mount(`<div class="reveal-shell">${progress(2, true)}<div id="vision-content"></div></div>`, 'vision-reveal');
+  new DrawingReveal($('#vision-content'), { result: visionResult, corpus, source: prompt(), drawing,
+    onAgain: home, onHuman: handoff, example });
 }
 
 async function reveal(isDemo = false) {
@@ -173,7 +209,7 @@ async function reveal(isDemo = false) {
 }
 function renderReveal(isDemo = false) {
   const source = prompt(), doc = corpus.documents[source.doc];
-  mount(`<div class="reveal-shell">${progress(4)}<div class="reveal-heading"><span class="handwritten">${isDemo ? 'A worked example · real search results' : 'Everybody can look now.'}</span><h1>Well, that took a turn.</h1><p>The original was <strong>${escape(doc.title)}</strong>. Here’s what made it through.</p></div><section class="chain" aria-label="The complete message chain"><article class="chain-item"><div class="paper-label"><span class="round">1</span>The passage</div><p>${escape(source.prompt)}</p><details><summary>See the unedited source</summary><p>${escape(source.original)}</p></details><a href="${escape(doc.url)}" target="_blank" rel="noopener">${escape(doc.title)} · Wikipedia ↗</a></article><article class="chain-item"><div class="paper-label"><span class="round">2</span>${isDemo ? 'The example drawing' : 'The drawing'}</div><img src="${drawing}" alt="${isDemo ? 'Authored example drawing of a person beneath a raincloud' : 'Player one’s drawing'}"></article><article class="chain-item"><div class="paper-label"><span class="round">3</span>${isDemo ? 'The example description' : 'The description'}</div><p class="description-quote">“${escape(description)}”</p><p class="small" style="margin-top:15px">${words(description).length} of ${budget} words used</p></article></section><section class="retrieval-panel" aria-labelledby="search-heading"><div class="retrieval-header"><div><h2 id="search-heading">Two ways to find it.</h2><p class="small muted" style="margin-top:7px">Click a result. Read what the machine retrieved.</p></div><div class="query-switch" aria-label="Text to search"><button data-query="description" aria-pressed="true">The description</button><button data-query="original" aria-pressed="false">Original passage</button></div></div><div class="rank-columns"><section class="keyword" aria-label="Keyword retrieval"><div class="rank-heading"><h3>Remembers words.</h3><span class="method-tag">TF-IDF</span></div><div id="keyword-results"></div></section><section class="semantic" aria-label="Semantic retrieval"><div class="rank-heading"><h3>Looks for context.</h3><label class="sr-only" for="unit">Semantic retrieval unit</label><select id="unit"><option value="60">60-word passages</option><option value="180">180-word passages</option><option value="page">Whole-page averages</option></select></div><div id="semantic-results"></div></section></div><p class="retrieval-note">The numbers are cosine similarities, not confidence or “meaning retained.” Compare ranks within a method. Passage search scores each article by its best matching passage. Both systems can return irrelevant results.</p><p id="search-status" class="small muted" role="status" style="margin-top:12px"></p></section><aside class="insight" aria-live="polite"><span class="handwritten">What got lost?</span><div id="insight"></div></aside><div class="reveal-actions"><button id="again" class="primary">Another round ${arrow}</button><div class="toolrow"><button id="save" class="secondary">Save the chain</button><button id="methods" class="secondary">What’s being measured?</button></div></div></div>`, 'reveal');
+  mount(`<div class="reveal-shell">${progress(4)}<div class="reveal-heading"><span class="handwritten">${isDemo ? 'A worked example · real search results' : 'Everybody can look now.'}</span><h1>Well, that took a turn.</h1><p>The original was <strong>${escape(doc.title)}</strong>. Here’s what made it through.</p></div><section class="chain" aria-label="The complete message chain"><article class="chain-item"><div class="paper-label"><span class="round">1</span>The passage</div><p>${escape(source.prompt)}</p><details><summary>See the unedited source</summary><p>${escape(source.original)}</p></details><a href="${escape(doc.url)}" target="_blank" rel="noopener">${escape(doc.title)} · Wikipedia ↗</a></article><article class="chain-item"><div class="paper-label"><span class="round">2</span>${isDemo ? 'The example drawing' : 'The drawing'}</div><img src="${drawing}" alt="${isDemo ? 'Authored example drawing of a person beneath a raincloud' : 'Player one’s drawing'}"></article><article class="chain-item"><div class="paper-label"><span class="round">3</span>${isDemo ? 'The example description' : 'The description'}</div><p class="description-quote">“${escape(description)}”</p><p class="small" style="margin-top:15px">${words(description).length} of ${budget} words used</p></article></section><section class="retrieval-panel" aria-labelledby="search-heading"><div class="retrieval-header"><div><h2 id="search-heading">Two ways to find it.</h2><p class="small muted" style="margin-top:7px">Click a result. Read what the machine retrieved.</p></div><div class="query-switch" aria-label="Text to search"><button data-query="description" aria-pressed="true">The description</button><button data-query="original" aria-pressed="false">Original passage</button></div></div><div class="rank-columns"><section class="keyword" aria-label="Keyword retrieval"><div class="rank-heading"><h3>Remembers words.</h3><span class="method-tag">TF-IDF</span></div><div id="keyword-results"></div></section><section class="semantic" aria-label="Semantic retrieval"><div class="rank-heading"><h3>Looks for context.</h3><label class="sr-only" for="unit">Semantic retrieval unit</label><select id="unit"><option value="60">60-word passages</option><option value="180">180-word passages</option><option value="page">Whole-page averages</option></select></div><div id="semantic-results"></div></section></div><p class="retrieval-note">The numbers are cosine similarities, not confidence or “meaning retained.” Compare ranks within a method. Passage search scores each article by its best matching passage. Both systems can return irrelevant results.</p><p id="search-status" class="small muted" role="status" style="margin-top:12px"></p></section><section id="mechanics" class="mechanics" aria-labelledby="mechanics-title"></section><aside class="insight" aria-live="polite"><span class="handwritten">What got lost?</span><div id="insight"></div></aside><div class="reveal-actions"><button id="again" class="primary">Another round ${arrow}</button><div class="toolrow"><button id="save" class="secondary">Save the chain</button><button id="methods" class="secondary">What’s being measured?</button></div></div></div>`, 'reveal');
   document.querySelectorAll('[data-query]').forEach(button => button.addEventListener('click', () => {
     querySource = button.dataset.query;
     document.querySelectorAll('[data-query]').forEach(b => b.setAttribute('aria-pressed', b === button));
@@ -185,6 +221,12 @@ function renderReveal(isDemo = false) {
   $('#save').addEventListener('click', downloadChain);
   app.addEventListener('click', handleEvidence);
   paintRankings();
+  mechanics = new Mechanics($('#mechanics'), { engine, corpus, target: source.doc,
+    context: () => ({ text: activeQuery, result: lastResult, unit }) });
+  if (visionResult) {
+    const button = document.createElement('button'); button.className = 'secondary'; button.textContent = 'See drawing-only guesses';
+    button.addEventListener('click', () => renderVision()); $('.reveal-actions .toolrow').prepend(button);
+  }
 }
 
 async function updateSearch() {
@@ -242,12 +284,17 @@ function paintRankings() {
     text = `The original ${hasLexical ? `ranks ${kr} in keyword search` : 'has no indexed words in common with your description'} and ranks ${dr} in semantic search. Look at what replaced it. Then switch to the original passage to separate the human handoffs from retrieval behavior.`;
   }
   $('#insight').innerHTML = `<h3>${title}</h3><p>${text}</p>`;
+  mechanics?.update();
 }
 function highlight(text, terms) {
   const set = new Set(terms);
   return text.split(/(\b[a-zA-Z0-9_]{2,}\b)/g).map(token => set.has(token.toLowerCase()) ? `<mark>${escape(token)}</mark>` : escape(token)).join('');
 }
 function handleEvidence(event) {
+  const inspect = event.target.closest('[data-inspect-doc]');
+  if (inspect && mechanics && !busy) {
+    mechanics.inspect(Number(inspect.dataset.inspectDoc), inspect.dataset.inspectStage); return;
+  }
   const button = event.target.closest('[data-evidence]');
   if (!button || busy || state !== 'reveal') return;
   const existing = button.parentElement.querySelector('.evidence');
@@ -268,7 +315,7 @@ function handleEvidence(event) {
     label = `Best matching passage · at most ${unit} words`;
   }
   const evidence = document.createElement('div'); evidence.className = 'evidence';
-  evidence.innerHTML = `<div class="evidence-label">${label}</div>${contributions}<p>${text}</p><a href="${escape(article.url)}" target="_blank" rel="noopener">Read the source article ↗</a>`;
+  evidence.innerHTML = `<div class="evidence-label">${label}</div>${contributions}<p>${text}</p><a href="${escape(article.url)}" target="_blank" rel="noopener">Read the source article ↗</a><button class="inspect-score" data-inspect-doc="${doc}" data-inspect-stage="${method === 'keyword' ? 'words' : 'angle'}">Take apart this score</button>`;
   button.after(evidence); button.setAttribute('aria-expanded', true);
 }
 function downloadChain() {

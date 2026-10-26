@@ -8,6 +8,8 @@
   <title>Pass it on. A game of lost meaning.</title>
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="mechanics.css">
+  <link rel="stylesheet" href="vision.css">
 </head>
 <body>
   <header class="masthead">
@@ -21,8 +23,9 @@
     <button class="dialog-close" aria-label="Close explanation">×</button>
     <span class="handwritten">The science under the scribbles</span>
     <h2 id="about-title">One message.<br>Three translations.</h2>
-    <p>You turn a real Wikipedia passage into a drawing. Another person turns the drawing into a short description. Two search systems try to recover the original article from those words.</p>
+    <p>You turn a real Wikipedia passage into a drawing. The drawing-only route lets a vision model guess directly from its pixels. You can also pass the drawing to a friend, whose short description goes through two text-search systems.</p>
     <dl>
+      <dt>Drawing-only guesses · CLIP</dt><dd>A pretrained image encoder turns the sketch into a normalized 512-dimensional vector. It is compared with vectors from CLIP’s matching text encoder: three fixed descriptions per article, chosen before any drawing is seen. Each article gets its highest candidate cosine. No target ID or human description is supplied to the recognizer. This is retrieval from 303 possibilities, not open-ended caption generation. The image model is 89 MB and runs in a browser worker.</dd>
       <dt>Keyword search · TF-IDF</dt><dd>Compares shared words, giving more weight to terms that are rare in this 303-article corpus. The reveal highlights the actual word contributions.</dd>
       <dt>Semantic search · MiniLM</dt><dd>Encodes your description as a normalized 384-dimensional vector. It ranks articles by cosine similarity to document means or to their best matching passage.</dd>
       <dt>Change the size of the memory</dt><dd>Compare whole-page averages with passages of at most 180 or 60 words. Passage retrieval gives each article the score of its best matching passage. Whole-page vectors average the 180-word passage embeddings, then normalize.</dd>
@@ -30,7 +33,7 @@
       <dt>What this experiment can show</dt><dd>One round is a case study, not a benchmark. Drawings add interpretation; word budgets remove detail. Repeating the game changes more than just word count. Use the same description and switch retrieval units for a controlled comparison.</dd>
     </dl>
     <p class="fineprint">Source: 303 Wikipedia articles from the course’s frozen August 26, 2026 snapshot. Drawing prompts are exact excerpts with selected names replaced by “someone”; originals and attribution appear at the reveal. Wikipedia text is available under <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">CC BY-SA 4.0</a>.</p>
-    <p class="fineprint">Model: all-MiniLM-L6-v2 (Apache 2.0). Article vectors were prepared with Sentence Transformers; live queries use the quantized ONNX version of the same encoder in your browser. Stored vectors use signed-byte quantization and are renormalized for scoring, so rankings are approximate. TF-IDF uses English stop words, sublinear term frequency, unigrams, and L2 normalization. All models and data are served with this page. Drawings and descriptions stay in this tab; there is no upload or online room.</p>
+    <p class="fineprint">Text model: all-MiniLM-L6-v2 (Apache 2.0). Drawing model: CLIP ViT-B/32 (MIT), quantized image and text encoders. Article vectors were prepared with Sentence Transformers; live text queries use the quantized ONNX version of the same encoder in your browser. Stored MiniLM vectors use signed-byte quantization and are renormalized for scoring, so rankings are approximate. TF-IDF uses English stop words, sublinear term frequency, unigrams, and L2 normalization. All models and data are served with this page. Drawings and descriptions stay in this tab; there is no upload or online room.</p>
   </dialog>
   <script type="module" src="app.js"></script>
 </body>
