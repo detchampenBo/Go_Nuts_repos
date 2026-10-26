@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#3444df">
+  <meta name="description" content="A drawing telephone game about what gets lost between a passage, a picture, and a few words. Can keyword and semantic search find the original?">
+  <title>Pass it on. A game of lost meaning.</title>
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="masthead">
+    <a class="wordmark" href="./" aria-label="Pass it on home"><svg viewBox="0 0 46 36" aria-hidden="true"><path d="M4 5 40 14 21 32 18 19 4 5Z M18 19 40 14 M18 19 22 10"/></svg>pass it on<span class="logo-dot">.</span></a>
+    <span class="header-note">A little game of lost meaning</span>
+    <button class="text-button" id="about-open">How it works <span aria-hidden="true">↗</span></button>
+  </header>
+  <main id="app" tabindex="-1"></main>
+  <footer class="footer"><span>Made for curious humans. Bad drawings welcome.</span><a href="https://sunelehmann.com/socialgraphs2026-web/weeks/week7.html" target="_blank" rel="noopener">Social Graphs · Week 7 ↗</a></footer>
+  <dialog id="about" aria-labelledby="about-title">
+    <button class="dialog-close" aria-label="Close explanation">×</button>
+    <span class="handwritten">The science under the scribbles</span>
+    <h2 id="about-title">One message.<br>Three translations.</h2>
+    <p>You turn a real Wikipedia passage into a drawing. Another person turns the drawing into a short description. Two search systems try to recover the original article from those words.</p>
+    <dl>
+      <dt>Keyword search · TF-IDF</dt><dd>Compares shared words, giving more weight to terms that are rare in this 303-article corpus. The reveal highlights the actual word contributions.</dd>
+      <dt>Semantic search · MiniLM</dt><dd>Encodes your description as a normalized 384-dimensional vector. It ranks articles by cosine similarity to document means or to their best matching passage.</dd>
+      <dt>Change the size of the memory</dt><dd>Compare whole-page averages with passages of at most 180 or 60 words. Passage retrieval gives each article the score of its best matching passage. Whole-page vectors average the 180-word passage embeddings, then normalize.</dd>
+      <dt>What the score means</dt><dd>A cosine score compares vectors within one method. It is not confidence, a probability, or a percentage of meaning retained. A high score can still retrieve the wrong article.</dd>
+      <dt>What this experiment can show</dt><dd>One round is a case study, not a benchmark. Drawings add interpretation; word budgets remove detail. Repeating the game changes more than just word count. Use the same description and switch retrieval units for a controlled comparison.</dd>
+    </dl>
+    <p class="fineprint">Source: 303 Wikipedia articles from the course’s frozen August 26, 2026 snapshot. Drawing prompts are exact excerpts with selected names replaced by “someone”; originals and attribution appear at the reveal. Wikipedia text is available under <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">CC BY-SA 4.0</a>.</p>
+    <p class="fineprint">Model: all-MiniLM-L6-v2 (Apache 2.0). Article vectors were prepared with Sentence Transformers; live queries use the quantized ONNX version of the same encoder in your browser. Stored vectors use signed-byte quantization and are renormalized for scoring, so rankings are approximate. TF-IDF uses English stop words, sublinear term frequency, unigrams, and L2 normalization. All models and data are served with this page. Drawings and descriptions stay in this tab; there is no upload or online room.</p>
+  </dialog>
+  <script type="module" src="app.js"></script>
+</body>
+</html>
