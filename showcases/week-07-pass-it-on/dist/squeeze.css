@@ -97,3 +97,4 @@ mark.banned{background:#ffd3d9;color:#b3233b;text-decoration:line-through;text-d
 @media(max-width:800px){.magnet-grid{grid-template-columns:1fr}.teaser-cards{grid-template-columns:1fr}.surprise-index{grid-template-columns:1fr 1fr}}
 @media(max-width:520px){.surprise-index{grid-template-columns:1fr}.magnet-col li{grid-template-columns:1fr 70px 60px}}
 @media(prefers-reduced-motion:reduce){.surprise-index a,.teaser-card{transition:none}}
+.checked q{font-weight:800;quotes:"“" "”"}

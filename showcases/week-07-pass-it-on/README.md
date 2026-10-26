@@ -52,10 +52,14 @@ The same script measures the explanations shown on the "What we found" page:
   pages have at least one (median 21); 44% of them are names.
 - Favourite wrong answers (first-N rule): keyword search's wrong first results are
   short pages (at 1 word, 87% land on the shortest tenth; Bird-Brain alone takes 50
-  of 103), meaning search's are long pages (median 4,070 words against 1,234). At 1
-  word, 138 of 289 meaning misses go to Cable through a one-word passage, "traveler.";
-  7 such splitter leftovers (3 words or fewer) win 61% of one-word misses, 5% at 3
-  words and none at 10. They are kept in the data and reported as a finding.
+  of 103), meaning search's are long pages (median 6,240 words at 10 words, against
+  1,234 for all pages; 49% land on the longest tenth).
+- A bug found by reading the evidence: in an earlier build, 138 of 289 one-word
+  meaning misses went to Cable through a passage consisting of the word "traveler.".
+  The splitter cut over-long sentences at the budget, leaving 1–3-word remainders;
+  seven of them won 61% of one-word misses. `prepare_data.py` now merges passages
+  under 8 words into the previous passage (or re-splits the pair into balanced
+  halves), so no passage is shorter than 8 words.
 - Network drift: at 10 words, 15% of keyword and 20% of meaning misses are hyperlink
   neighbours of the source, against 3.1% for a random pair; at 3 words, 4% and 8%.
 
