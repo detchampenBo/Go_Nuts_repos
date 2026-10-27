@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<!-- saved from url=(0076)https://sunelehmann.com/socialgraphs2026-web/explorables/entity-network.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Explorable · From NER to a text-derived network</title>
+<link rel="stylesheet" href="./tokens.css">
+<link rel="stylesheet" href="./explore.css">
+<link rel="stylesheet" href="./text-explore.css">
+<link rel="stylesheet" href="./prediction-explore.css">
+<link rel="stylesheet" href="./week7-explore.css">
+</head>
+<body>
+<div class="controls">
+  <label>Connect entities that occur in the same
+    <span class="seg" id="co-unit">
+      <button data-unit="sentence" class="on">sentence</button>
+      <button data-unit="paragraph">paragraph</button>
+      <button data-unit="page">page</button>
+    </span>
+  </label>
+</div>
+
+<div class="entity-pipeline">
+  <span>text</span><b>→</b><span>NER</span><b>→</b><span>resolve aliases</span><b>→</b><span>co-occurrence rule</span><b>→</b><span>network</span>
+</div>
+
+<div class="entity-build-layout">
+  <section class="panel">
+    <h2>Text, extracted names, and alias resolution</h2>
+    <div id="source-pages" class="source-pages"><article class="source-page"><div class="mini-k">Passage 1</div><p><mark class="entity-mark" title="NER: PERSON">Iron Man</mark> met <mark class="entity-mark" title="NER: PERSON">Black Widow</mark> before the mission. <mark class="entity-mark" title="NER: PERSON">Tony Stark</mark> later called <mark class="entity-mark" title="NER: PERSON">Spider-Man</mark>.</p><p><mark class="entity-mark" title="NER: PERSON">Spider-Man</mark> found <mark class="entity-mark" title="NER: PERSON">Hulk</mark> near the tower. <mark class="entity-mark" title="NER: PERSON">Bruce Banner</mark> spoke with <mark class="entity-mark" title="NER: PERSON">Black Widow</mark> afterward.</p></article><article class="source-page"><div class="mini-k">Passage 2</div><p><mark class="entity-mark" title="NER: PERSON">Doctor Strange</mark> warned <mark class="entity-mark" title="NER: PERSON">Wolverine</mark> about the portal. <mark class="entity-mark" title="NER: PERSON">Logan</mark> asked <mark class="entity-mark" title="NER: PERSON">Spider-Man</mark> to wait outside.</p><p><mark class="entity-mark" title="NER: PERSON">Natasha Romanoff</mark> briefed <mark class="entity-mark" title="NER: PERSON">Doctor Strange</mark>. <mark class="entity-mark" title="NER: PERSON">Black Widow</mark> then joined <mark class="entity-mark" title="NER: PERSON">Iron Man</mark>.</p></article></div>
+    <div class="alias-box">
+      <div class="mini-k">resolved before the network is built</div>
+      <div class="alias-row"><code>Tony Stark</code><span>→</span><code>Iron Man</code></div>
+      <div class="alias-row"><code>Natasha Romanoff</code><span>→</span><code>Black Widow</code></div>
+      <div class="alias-row"><code>Bruce Banner</code><span>→</span><code>Hulk</code></div>
+      <div class="alias-row"><code>Logan</code><span>→</span><code>Wolverine</code></div>
+    </div>
+  </section>
+  <section class="panel">
+    <h2>Network created by your rule</h2>
+    <div class="entity-rule-readout" id="rule-readout"><span><strong>8</strong> sentences</span><span><strong>7</strong> edges</span><span>edge width = repeated co-occurrence</span></div>
+    <svg id="entity-network" class="entity-net entity-build-net" viewBox="0 0 520 430" aria-label="Network constructed from entity co-occurrence"><line class="entity-edge" x1="255" y1="70" x2="90" y2="95" style="stroke-width:4.7"><title>Black Widow ↔ Iron Man: 2 sentences</title></line><line class="entity-edge" x1="90" y1="95" x2="430" y2="300" style="stroke-width:2.95"><title>Iron Man ↔ Spider-Man: 1 sentence</title></line><line class="entity-edge" x1="255" y1="345" x2="430" y2="300" style="stroke-width:2.95"><title>Hulk ↔ Spider-Man: 1 sentence</title></line><line class="entity-edge" x1="255" y1="70" x2="255" y2="345" style="stroke-width:2.95"><title>Black Widow ↔ Hulk: 1 sentence</title></line><line class="entity-edge" x1="420" y1="105" x2="85" y2="290" style="stroke-width:2.95"><title>Doctor Strange ↔ Wolverine: 1 sentence</title></line><line class="entity-edge" x1="430" y1="300" x2="85" y2="290" style="stroke-width:2.95"><title>Spider-Man ↔ Wolverine: 1 sentence</title></line><line class="entity-edge" x1="255" y1="70" x2="420" y2="105" style="stroke-width:2.95"><title>Black Widow ↔ Doctor Strange: 1 sentence</title></line><g><circle class="entity-node person" cx="90" cy="95" r="14"></circle><text class="entity-label" x="90" y="126" text-anchor="middle">Iron Man</text></g><g><circle class="entity-node person" cx="255" cy="70" r="14"></circle><text class="entity-label" x="255" y="101" text-anchor="middle">Black Widow</text></g><g><circle class="entity-node person" cx="420" cy="105" r="14"></circle><text class="entity-label" x="420" y="136" text-anchor="middle">Doctor Strange</text></g><g><circle class="entity-node person" cx="430" cy="300" r="14"></circle><text class="entity-label" x="430" y="331" text-anchor="middle">Spider-Man</text></g><g><circle class="entity-node person" cx="255" cy="345" r="14"></circle><text class="entity-label" x="255" y="376" text-anchor="middle">Hulk</text></g><g><circle class="entity-node person" cx="85" cy="290" r="14"></circle><text class="entity-label" x="85" y="321" text-anchor="middle">Wolverine</text></g></svg>
+    <p class="note" id="network-note">This is the strictest rule here. Only characters mentioned in the same sentence are connected.</p>
+  </section>
+</div>
+
+<script src="./entity-network.js.download"></script>
+
+
+</body></html>

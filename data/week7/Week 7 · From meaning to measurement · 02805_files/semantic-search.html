@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<!-- saved from url=(0077)https://sunelehmann.com/socialgraphs2026-web/explorables/semantic-search.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Explorable · Sparse and dense search</title>
+<link rel="stylesheet" href="./tokens.css">
+<link rel="stylesheet" href="./explore.css">
+<link rel="stylesheet" href="./week7-explore.css">
+<style>
+  .search-pane h2 { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+  .search-pane h2 .seg { text-transform:none; letter-spacing:0; font-weight:500; }
+  .search-pane h2 .seg button { padding:1px 8px; font-size:11px; }
+  .search-result .matched { font-size:10.5px; color:var(--text-muted); margin-top:2px; }
+  .search-result .matched b { color:var(--text-secondary); font-weight:500; }
+  .search-result .desc.passage { font-style:normal; }
+  .mode-tag { font-size:10.5px; color:var(--text-muted); text-transform:none; letter-spacing:0; font-weight:400; }
+  .mode-tag.live { color:var(--accent); }
+  .search-result.target .name { color:var(--accent); }
+  .search-result.target .name::after { content:" ← the answer"; font-weight:400; font-size:10.5px; color:var(--text-muted); }
+  .scoreboard { color:var(--text-muted); font-size:11px; margin:-4px 0 10px; line-height:1.45; }
+  .scoreboard b { color:var(--text-primary); font-weight:600; }
+</style>
+</head>
+<body>
+<div class="controls">
+  <label>Preset query
+    <select id="preset"><option value="0">a hero who runs faster than sound</option><option value="1">a man who can shrink to the size of an insect</option><option value="2">a scientist who turns into a green giant when he gets angry</option><option value="3">a lawyer who is also a superhero</option><option value="4">a short hairy Canadian with metal claws</option><option value="5">a horse-faced alien worthy of lifting the magic hammer</option><option value="6">a Russian spy who became an Avenger</option><option value="7">a deaf archer who never misses</option><option value="8">the Norse god of thunder</option></select>
+  </label>
+  <label style="flex:1;min-width:220px">or your own words
+    <input id="query" class="query-box" value="" placeholder="sparse only">
+  </label>
+  <button class="primary" id="run">search</button>
+</div>
+
+<div class="scoreboard" id="scoreboard">Where the page each preset is about landed — sparse: 1st in <b>1</b>, top 3 in <b>5</b> of 8 · dense, best passage: 1st in <b>5</b>, top 3 in <b>7</b> of 8 · dense, page mean: 1st in <b>0</b>, top 3 in <b>0</b> of 8 · this query, <b>Quicksilver (Marvel Comics)</b>: sparse #12, best passage #2, page mean #79</div>
+
+<div class="search-layout">
+  <section class="search-pane">
+    <h2>Sparse retrieval <span class="mode-tag" id="sparse-tag">full pages, precomputed</span></h2>
+    <div class="sub" id="sparse-sub">TF-IDF on the full pages, query as one more document · the words it matched are listed</div>
+    <div class="result-list" id="sparse-results"><div class="search-result"><div class="row"><div class="name">1. Thunderclap (comics)</div><div class="score">0.05</div></div><div class="desc">Thunderclap (Stanley George Johnson) is a fictional superhero appearing in American comic books published by Marvel Comics.</div><div class="matched">matched: <b>hero</b>, <b>faster</b>, <b>than</b>, <b>sound</b></div></div><div class="search-result"><div class="row"><div class="name">2. Silencer (comics)</div><div class="score">0.04</div></div><div class="desc">Silencer is the name of several characters appearing in American comic books published by Marvel Comics.</div><div class="matched">matched: <b>who</b>, <b>sound</b></div></div><div class="search-result"><div class="row"><div class="name">3. Black Marvel</div><div class="score">0.03</div></div><div class="desc">The Black Marvel (Daniel Lyons) is a fictional superhero appearing in American comic books published by Marvel Comics.</div><div class="matched">matched: <b>hero</b>, <b>who</b>, <b>faster</b>, <b>than</b></div></div><div class="search-result"><div class="row"><div class="name">4. Outlaw (Marvel Comics)</div><div class="score">0.03</div></div><div class="desc">Outlaw is the name of two characters appearing in American comic books published by Marvel Comics.</div><div class="matched">matched: <b>who</b>, <b>faster</b>, <b>than</b></div></div><div class="search-result"><div class="row"><div class="name">5. Whizzer (Robert Frank)</div><div class="score">0.02</div></div><div class="desc">The Whizzer (Robert L. Frank) is a superhero appearing in American comic books published by Marvel Comics.</div><div class="matched">matched: <b>hero</b>, <b>who</b>, <b>faster</b>, <b>than</b></div></div><div class="search-result"><div class="row"><div class="name">6. Luke Cage</div><div class="score">0.02</div></div><div class="desc">Lucas Cage, born Carl Lucas and also known as Power Man, is a superhero appearing in American comic books published by Marvel Comics.</div><div class="matched">matched: <b>hero</b>, <b>who</b>, <b>runs</b>, <b>than</b></div></div></div>
+  </section>
+  <section class="search-pane">
+    <h2>Dense retrieval
+      <span class="seg" id="dense-mode"><button data-v="passage" class="on">best passage</button><button data-v="mean">page mean</button></span>
+      <span class="mode-tag" id="dense-tag">full pages, precomputed</span>
+    </h2>
+    <div class="sub" id="dense-sub">all-MiniLM-L6-v2 · every 60-word passage scored, each page gets its best one · that passage is shown</div>
+    <div class="result-list" id="dense-results"><div class="search-result"><div class="row"><div class="name">1. Speed (character)</div><div class="score">0.55</div></div><div class="desc passage">Although his top speed is unknown, he can exceed the speed of sound (about 1,225 km/h, or 761 mph) and resist the effects of friction, reduced oxygen, and kinetic impact while moving at those speeds.</div></div><div class="search-result target"><div class="row"><div class="name">2. Quicksilver (Marvel Comics)</div><div class="score">0.50</div></div><div class="desc passage">Powers and abilities Quicksilver is typically depicted as a speedster with the ability to move and think at superhuman speeds, at times exceeding the speed of sound and, in some stories, approaching the speed of light.</div></div><div class="search-result"><div class="row"><div class="name">3. Whizzer (Robert Frank)</div><div class="score">0.48</div></div><div class="desc passage">He can create cyclones by running in circles, and can run up walls and across water. Even in middle age, he could run at approximately 100 mph. The Whizzer learned a unique, self-taught fighting style that exploits the ability to move at…</div></div><div class="search-result"><div class="row"><div class="name">4. Balder the Brave</div><div class="score">0.48</div></div><div class="desc passage">Powers and abilities Balder is said to be the fastest and most agile of all the Asgardian warriors, his speed rivaled only by Hermod.</div></div><div class="search-result"><div class="row"><div class="name">5. Blue Marvel</div><div class="score">0.47</div></div><div class="desc passage">Blue Marvel can easily attain escape velocity (or escape speed, which is about 34 times the speed of sound) and fly far beyond supersonic speeds, but it is not known if he can achieve speeds beyond the speed of light. Blue Marvel…</div></div><div class="search-result"><div class="row"><div class="name">6. Northstar (character)</div><div class="score">0.46</div></div><div class="desc passage">This version is a student at New York City's Stuyvesant High School who was kicked off the school's track team after being suspected of illegally using steroids to enhance his performance. In fact, his unnatural levels of speed are due to…</div></div></div>
+  </section>
+</div>
+
+<div class="pipeline-mini">
+  <span class="step">query</span><span class="arrow">→</span><span class="step">vector</span><span class="arrow">→</span><span class="step">similarity</span><span class="arrow">→</span><span class="step">ranked documents</span>
+</div>
+<div class="note" style="margin-top:8px" id="foot">Preset queries: both columns computed offline over the full Wikipedia pages, the dense one with all-MiniLM-L6-v2 (14.976 passages of at most 60 words, or one mean vector per page). Your own words: the encoder does not run in the page, so only the sparse column answers, over the one-line descriptions.</div>
+<script src="./semantic-search.js.download"></script>
+
+
+</body></html>
