@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#3444df">
+  <meta name="description" content="A word-squeezing game: cut a real Wikipedia passage to 30, 10 and 3 words. Can keyword and semantic search still find the original article?">
+  <title>Pass it on. A game of lost meaning.</title>
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css?v=essay1">
+  <link rel="stylesheet" href="mechanics.css?v=essay1">
+  <link rel="stylesheet" href="squeeze.css?v=essay1">
+  <link rel="stylesheet" href="essay.css?v=essay1">
+</head>
+<body>
+  <header class="masthead">
+    <a class="wordmark" href="./" aria-label="Pass it on home"><svg viewBox="0 0 46 36" aria-hidden="true"><path d="M4 5 40 14 21 32 18 19 4 5Z M18 19 40 14 M18 19 22 10"/></svg>pass it on<span class="logo-dot">.</span></a>
+    <span class="header-note">A little game of lost meaning</span>
+    <button class="text-button" id="about-open">How it works <span aria-hidden="true">↗</span></button>
+  </header>
+  <main id="app" tabindex="-1"></main>
+  <footer class="footer"><span>Made for curious humans. Bad summaries welcome.</span><a href="https://sunelehmann.com/socialgraphs2026-web/weeks/week7.html" target="_blank" rel="noopener">Social Graphs · Week 7 ↗</a></footer>
+  <dialog id="about" aria-labelledby="about-title">
+    <button class="dialog-close" aria-label="Close explanation">×</button>
+    <span class="handwritten">The science under the squeeze</span>
+    <h2 id="about-title">One passage.<br>Three cuts.</h2>
+    <p>You squeeze a real Wikipedia passage into 30 words, then 10, then 3. After every keystroke, two search systems rank all 303 articles, and you watch where the source article lands. At the end your round is drawn over the same squeeze run automatically on every article.</p>
+    <dl>
+      <dt>Keyword search · TF-IDF</dt><dd>Compares shared words, giving more weight to terms that are rare in this 303-article corpus. While you type, each word shows its share of the source article’s score; stop words and words the corpus never uses are ignored.</dd>
+      <dt>Semantic search · MiniLM</dt><dd>Encodes your words as a normalized 384-dimensional vector and ranks articles by cosine similarity to their best matching passage (60 words by default) or to whole-page averages.</dd>
+      <dt>Taboo mode</dt><dd>Bans the passage’s five highest-weight TF-IDF words: the rarest words keyword search would lean on. You have to say it differently, which is the vocabulary mismatch dense retrieval is meant to solve.</dd>
+      <dt>The corpus-wide evidence</dt><dd>For every article, a fixed sentence from its story sections (18–45 words, no “Created by…” boilerplate, title replaced by “someone”) is squeezed automatically to 30, 20, 10, 5, 3, 2 and 1 words by three rules: keep the first N words, keep the rarest N, or ban the rarest five and keep the rarest N of the rest. The chart shows the median rank and the middle half. The robot only deletes words; it never paraphrases.</dd>
+      <dt>What the score means</dt><dd>A cosine score compares vectors within one method. It is not confidence, a probability, or a percentage of meaning retained. A high score can still retrieve the wrong article.</dd>
+      <dt>What one round can show</dt><dd>One round is a case study, not a benchmark. Use the same text and switch retrieval units, or switch between your 30, 10 and 3 words, for controlled comparisons.</dd>
+    </dl>
+    <p class="fineprint">Source: 303 Wikipedia articles from the course’s frozen August 26, 2026 snapshot. Prompts are exact excerpts with selected names replaced by “someone”; originals and attribution appear at the reveal. Wikipedia text is available under <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">CC BY-SA 4.0</a>.</p>
+    <p class="fineprint">Text model: all-MiniLM-L6-v2 (Apache 2.0). Article vectors were prepared with Sentence Transformers; live text queries use the quantized ONNX version of the same encoder in your browser. Stored MiniLM vectors use signed-byte quantization and are renormalized for scoring, so rankings are approximate. TF-IDF uses English stop words, sublinear term frequency, unigrams, and L2 normalization. All models and data are served with this page. Your words stay in this tab; there is no upload or online room.</p>
+  </dialog>
+  <script type="module" src="app.js?v=essay1"></script>
+</body>
+</html>

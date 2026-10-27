@@ -1,0 +1,550 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0f2f40">
+<title>Who Is the Centre?</title>
+<meta name="description" content="Count hyperlinks and Spider-Man is the centre of the Marvel universe. Ask a sentence encoder which pages read most like each other, and the centre is someone else.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230f2f40'/%3E%3Crect x='7' y='16' width='4' height='9' fill='%235ee6ae'/%3E%3Crect x='14' y='7' width='4' height='18' fill='%23f2b705'/%3E%3Crect x='21' y='13' width='4' height='12' fill='%23ecdcae'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Caveat:wght@700&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&display=swap">
+<style>
+/* A sea chart with a skyline on it. Mint is the hyperlink network, gold is the text (who picks whom). */
+:root {
+  --paper: #f2efe6; --surface: #fbfaf5; --ink: #1d2321; --muted: #62675f; --line: #d6d3c6;
+  --deep: #0f2f40; --deep-2: #0b2634; --sea-line: rgba(255, 255, 255, .06); --on-deep: #e9eef0; --on-deep-2: #9fb3bd;
+  --sand: #ecdcae; --mint: #5ee6ae; --gold: #f2b705; --coral: #ff7a59;
+  --mint-ink: #1c7a55; --gold-ink: #a87c00;
+  --display: "Bricolage Grotesque", "Arial Black", sans-serif; --body: "Newsreader", Georgia, serif;
+  --sans: "IBM Plex Sans", system-ui, sans-serif; --mono: "IBM Plex Mono", ui-monospace, monospace; --hand: "Caveat", cursive;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #121619; --surface: #1a1f23; --ink: #eef0ee; --muted: #9aa19c; --line: #2c3338;
+    --deep: #0a2230; --deep-2: #071a25; --mint-ink: #5ee6ae; --gold-ink: #f2b705;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #121619; --surface: #1a1f23; --ink: #eef0ee; --muted: #9aa19c; --line: #2c3338;
+  --deep: #0a2230; --deep-2: #071a25; --mint-ink: #5ee6ae; --gold-ink: #f2b705;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 400 19px/1.55 var(--body); -webkit-font-smoothing: antialiased; }
+h1, h2, h3 { margin: 0; font-family: var(--display); font-weight: 800; line-height: 1.02; letter-spacing: -.045em; text-wrap: balance; }
+p { margin: 0; }
+a { color: inherit; text-underline-offset: 3px; }
+button { font: inherit; color: inherit; cursor: pointer; }
+:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; border-radius: 6px; }
+[hidden] { display: none !important; }
+.wrap { width: min(1220px, calc(100% - 64px)); margin-inline: auto; }
+.gold-t { color: var(--gold-ink); font-weight: 700; } .mint-t { color: var(--mint-ink); font-weight: 700; }
+
+.masthead { display: flex; justify-content: space-between; align-items: center; gap: 16px; height: 76px; border-bottom: 1px solid var(--line); font: 500 12.5px var(--sans); color: var(--muted); }
+.wordmark { font: 800 22px var(--display); letter-spacing: -.04em; color: var(--ink); text-decoration: none; }
+.wordmark span { color: var(--gold); }
+.masthead a:not(.wordmark) { text-decoration: none; } .masthead a:hover { color: var(--ink); }
+
+/* Hero: the question and a guess. */
+.hero { display: grid; grid-template-columns: 1fr 1fr; gap: 52px; align-items: center; padding-block: 54px 70px; }
+.kicker { font: 500 12.5px var(--mono); color: var(--muted); margin-bottom: 18px; }
+.hero h1 { font-size: clamp(48px, 6vw, 90px); }
+.hero h1 em { font-style: normal; color: var(--gold-ink); }
+.dek { margin-top: 24px; font-size: 22px; line-height: 1.42; max-width: 35ch; }
+.hand { font: 700 30px/1.15 var(--hand); color: #c2462a; margin-top: 22px; transform: rotate(-3deg); transform-origin: left; }
+.predict { background: var(--surface); border: 1px solid var(--line); box-shadow: 8px 8px 0 rgba(15, 47, 64, .14); padding: 14px 14px 18px; transform: rotate(1.2deg); }
+.predict svg { display: block; width: 100%; height: auto; border-radius: 4px; }
+.predict-q { font: 800 21px/1.2 var(--display); letter-spacing: -.02em; margin: 14px 2px 12px; }
+.options { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.options button { border: 1.5px solid var(--ink); background: transparent; border-radius: 999px; padding: 9px 6px; font: 700 14px var(--sans); }
+.options button:hover:not(:disabled) { background: var(--ink); color: var(--surface); }
+.options button:disabled { cursor: default; opacity: .45; }
+.options button.picked { opacity: 1; background: var(--ink); color: var(--surface); }
+.options button.answer { opacity: 1; background: var(--gold); border-color: var(--gold); color: #1d2321; }
+.predict-a { margin-top: 14px; font: 500 14.5px/1.5 var(--sans); color: var(--muted); min-height: 3em; }
+.predict-a strong { display: block; font: 800 20px var(--display); letter-spacing: -.02em; color: var(--ink); margin-bottom: 3px; }
+.text-button { border: 0; border-bottom: 1.5px solid currentColor; background: transparent; padding: 3px 0; font: 600 13.5px var(--sans); color: var(--ink); }
+.sea { background-color: var(--deep-2); background-image: linear-gradient(var(--sea-line) 1px, transparent 1px), linear-gradient(90deg, var(--sea-line) 1px, transparent 1px); background-size: 46px 46px; }
+.mdot { fill: rgba(233, 238, 240, .55); transition: r .6s ease, fill .4s; }
+.mdot.hub { fill: var(--gold); }
+.mlabel { font: 700 30px var(--sans); fill: #fff4c9; paint-order: stroke; stroke: var(--deep-2); stroke-width: 8px; }
+
+/* The explorable on a full-bleed band. */
+.lab { background: var(--deep); color: var(--on-deep); padding-block: 64px 70px; }
+.lab-intro { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: end; margin-bottom: 30px; }
+.lab-intro h2 { font-size: clamp(42px, 5vw, 72px); color: var(--on-deep); }
+.lab-intro h2 span { color: var(--gold); }
+.lab-intro p { font-size: 20px; color: var(--on-deep-2); max-width: 48ch; }
+.lab-grid { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 22px; align-items: start; }
+.controls { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center; margin-bottom: 16px; font: 500 13px var(--sans); }
+.group { display: flex; align-items: center; gap: 9px; flex-wrap: wrap; }
+.group > span { color: var(--on-deep-2); font: 500 12px var(--mono); }
+.seg { display: inline-flex; flex-wrap: wrap; border: 1.5px solid var(--on-deep-2); border-radius: 18px; overflow: hidden; }
+.seg button { border: 0; background: transparent; color: var(--on-deep); padding: 7px 14px; font: 600 13px var(--sans); }
+.seg button + button { border-left: 1.5px solid var(--on-deep-2); }
+.seg button[aria-pressed="true"] { background: var(--on-deep); color: var(--deep); }
+.toggle { display: inline-flex; align-items: center; gap: 9px; border: 2px solid var(--c); color: var(--c); background: transparent; border-radius: 999px; padding: 7px 15px; font: 700 13.5px var(--sans); }
+.toggle[aria-pressed="true"] { background: var(--c); color: var(--deep); }
+.toggle i { width: 10px; height: 10px; border-radius: 50%; border: 2px solid currentColor; }
+.toggle[aria-pressed="true"] i { background: currentColor; }
+#t-fans { --c: var(--gold); } #t-links { --c: var(--mint); }
+.readout { font: 600 19px/1.35 var(--sans); color: var(--on-deep); margin-bottom: 14px; min-height: 1.4em; }
+.readout b { font: 800 26px var(--display); letter-spacing: -.03em; color: var(--c, var(--gold)); }
+.readout small { display: block; font: 500 13px var(--mono); color: var(--on-deep-2); margin-top: 3px; }
+
+.map-wrap { position: relative; border: 1.5px solid rgba(233, 238, 240, .22); border-radius: 14px; overflow: hidden; background: var(--deep-2); box-shadow: 0 14px 40px #00131e38; }
+.view-toolbar { display: flex; justify-content: space-between; gap: 12px; align-items: center; padding: 10px 14px; background: #10343d; border-bottom: 1px solid #ffffff20; font: 500 12px var(--sans); }
+.view-modes { display: flex; padding: 3px; border: 1px solid #a3beb44a; border-radius: 5px; }
+.view-toolbar button { border: 0; border-radius: 3px; background: transparent; color: #e7ede5; padding: 7px 10px; font: 500 12px var(--sans); }
+.view-modes button[aria-pressed="true"] { background: #dce7dc; color: #123b40; }
+.view-actions { display: flex; gap: 4px; }
+.view-actions button:hover:not(:disabled) { background: #ffffff12; }
+.view-toolbar button:disabled { opacity: .4; cursor: default; }
+.stage { position: relative; height: clamp(460px, 44vw, 620px); }
+#sky { position: absolute; inset: 0; }
+#sky canvas { display: block; width: 100%; height: 100%; touch-action: none; }
+#sky-labels { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.sky-label { position: absolute; left: 0; top: 0; pointer-events: auto; border: 0; background: #f6f4e6ee; color: #173d3d; padding: 5px 9px; border-radius: 3px; font: 700 12px var(--sans); white-space: nowrap; box-shadow: 0 2px 14px #001c2460; }
+.sky-label span { font: 600 11px var(--mono); color: #6b5a10; margin-left: 4px; }
+.sky-label.selected { background: #fff0b6; }
+#chart { display: none; width: 100%; height: 100%; }
+.map-wrap[data-view="2d"] #sky { display: none; }
+.map-wrap[data-view="2d"] #chart { display: block; }
+.map-wrap[data-view="2d"] .stage { height: auto; }
+.map-wrap[data-view="2d"] #chart { height: auto; }
+.cdot { cursor: pointer; transition: r .6s ease; }
+.clabel { font: 700 14px var(--sans); fill: var(--on-deep); paint-order: stroke; stroke: var(--deep-2); stroke-width: 5px; pointer-events: none; }
+.cline { fill: none; stroke-width: 1.3; opacity: .75; pointer-events: none; }
+.scene-caption { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; padding: 11px 15px; color: #cfddd6; border-top: 1px solid #ffffff17; background: #10343d; font: 400 12px/1.5 var(--sans); }
+#sky-status { color: #d8dfb5; }
+.map-wrap.expanded { position: fixed; inset: 16px; z-index: 100; display: flex; flex-direction: column; box-shadow: 0 0 0 40px #061e2bf0; }
+.map-wrap.expanded .stage { flex: 1; height: auto; min-height: 0; }
+body.expanded { overflow: hidden; }
+.tip { position: absolute; z-index: 4; pointer-events: none; background: var(--surface); color: var(--ink); border: 1.5px solid var(--ink); border-radius: 8px; padding: 6px 10px; font: 600 13px var(--sans); white-space: nowrap; transform: translate(-50%, calc(-100% - 14px)); box-shadow: 3px 3px 0 rgba(0, 0, 0, .25); }
+.tip small { display: block; color: var(--muted); font: 500 11.5px var(--mono); }
+.note-3d { font: 400 12.5px/1.6 var(--sans); color: var(--on-deep-2); margin-top: 12px; max-width: 100ch; }
+
+.panel { --tone: var(--gold); background: var(--surface); color: var(--ink); border-top: 6px solid var(--tone); border-radius: 4px; padding: 22px 22px 18px; font: 400 15.5px/1.55 var(--sans); box-shadow: 8px 8px 0 rgba(0, 0, 0, .28); position: sticky; top: 16px; max-height: calc(100vh - 32px); overflow: auto; }
+.panel[data-tone="links"] { --tone: var(--mint); }
+.panel .eyebrow { font: 500 12px var(--mono); color: var(--muted); margin-bottom: 8px; }
+.panel h3 { font-size: 30px; margin-bottom: 12px; }
+.panel p + p { margin-top: 10px; }
+.panel b { color: var(--ink); }
+.steps { display: flex; justify-content: space-between; align-items: center; margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--line); }
+.steps .dots { display: flex; gap: 6px; }
+.steps .dots i { width: 8px; height: 8px; border-radius: 50%; background: var(--line); }
+.steps .dots i.on { background: var(--ink); }
+.btn { border: 2px solid var(--ink); background: var(--ink); color: var(--surface); border-radius: 999px; padding: 8px 16px; font: 700 13.5px var(--sans); }
+.btn.ghost { background: transparent; color: var(--ink); }
+.btn:disabled { opacity: .3; cursor: default; }
+.stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 4px 0 6px; }
+.stats div { background: var(--paper); border-radius: 6px; padding: 8px 10px; font: 500 12px var(--mono); color: var(--muted); }
+.stats b { display: block; font: 800 26px var(--display); letter-spacing: -.03em; }
+.stats .g b { color: var(--gold-ink); } .stats .m b { color: var(--mint-ink); }
+.small { font-size: 13.5px; color: var(--muted); }
+.panel h4 { margin: 16px 0 4px; font: 600 12px var(--mono); color: var(--muted); }
+.panel blockquote { margin: 6px 0 0; padding: 11px 13px; border-left: 4px solid var(--tone); background: var(--paper); font: 400 15.5px/1.5 var(--body); }
+.names { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 4px; }
+.names button { border: 1px solid var(--line); background: var(--paper); border-radius: 4px; padding: 2px 7px; font: 500 12.5px var(--sans); }
+.names button.linked { border-color: var(--mint-ink); }
+.names button.linked::after { content: " ↔"; color: var(--mint-ink); }
+
+/* The result as giant numbers. */
+.ladder { padding-block: 66px 26px; }
+.ladder h2 { font-size: clamp(34px, 4vw, 54px); max-width: 24ch; margin-bottom: 30px; }
+.big3 { display: grid; grid-template-columns: repeat(3, 1fr); }
+.big3 > div { padding: 6px 26px; }
+.big3 > div + div { border-left: 1px solid var(--line); }
+.big3 .num { display: block; font: 800 clamp(84px, 10vw, 156px)/.86 var(--display); letter-spacing: -.06em; }
+.big3 .m .num { color: var(--mint-ink); } .big3 .g .num { color: var(--gold-ink); } .big3 .r .num { color: var(--muted); }
+.big3 p { margin-top: 10px; font-size: 18.5px; line-height: 1.35; max-width: 24ch; }
+
+/* The essay: a label column and a reading column. */
+.essay section { display: grid; grid-template-columns: 240px minmax(0, 720px); gap: 40px; padding-block: 46px; border-top: 1px solid var(--line); }
+.essay .label-col { font: 500 12.5px var(--mono); color: var(--muted); padding-top: 12px; }
+.essay h2 { font-size: clamp(34px, 4vw, 54px); margin-bottom: 20px; }
+.essay h2 span { color: var(--gold-ink); }
+.essay p + p, .essay p + ul, .essay ul + p, .essay .table-scroll + p, .essay p + .table-scroll, .essay blockquote + p { margin-top: 14px; }
+.essay ul { margin: 0; padding-left: 22px; } .essay li + li { margin-top: 10px; }
+.essay blockquote { margin: 16px 0; padding: 14px 18px; background: var(--surface); border-left: 4px solid var(--gold); font-size: 17.5px; }
+.essay blockquote cite { display: block; margin-top: 6px; font: 500 12.5px var(--mono); color: var(--muted); font-style: normal; }
+.go { border: 0; border-bottom: 2px solid var(--gold-ink); background: transparent; padding: 0; color: var(--gold-ink); font: inherit; font-weight: 600; }
+.go::after { content: " ↑"; font-family: var(--sans); font-size: .8em; }
+.table-scroll { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font: 400 15px var(--sans); }
+th, td { text-align: right; padding: 8px 10px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+th:first-child, td:first-child { text-align: left; }
+th { font: 600 12px var(--mono); color: var(--muted); }
+td.m { color: var(--mint-ink); font-weight: 700; } td.g { color: var(--gold-ink); font-weight: 700; }
+.note { margin-top: 12px; font: 400 14px/1.55 var(--sans); color: var(--muted); }
+.colophon { border-top: 1px solid var(--line); padding-block: 26px 50px; font: 400 13.5px/1.6 var(--sans); color: var(--muted); }
+.colophon p + p { margin-top: 8px; }
+
+@media (max-width: 1000px) {
+  .hero, .lab-intro, .lab-grid { grid-template-columns: 1fr; }
+  .panel { position: static; max-height: none; }
+  .essay section { grid-template-columns: minmax(0, 1fr); gap: 6px; }
+  .essay .label-col { padding-top: 0; }
+}
+@media (max-width: 640px) {
+  body { font-size: 17.5px; }
+  .wrap { width: calc(100% - 32px); }
+  .masthead > span { display: none; }
+  .hero { padding-block: 34px 46px; gap: 34px; }
+  .dek { font-size: 19.5px; }
+  .predict { transform: none; }
+  .options { grid-template-columns: 1fr 1fr; }
+  .seg button { padding: 7px 10px; }
+  .stage { height: 440px; }
+  .view-toolbar { flex-wrap: wrap; padding: 8px; }
+  .big3 { grid-template-columns: 1fr; }
+  .big3 > div { padding: 16px 0; }
+  .big3 > div + div { border-left: 0; border-top: 1px solid var(--line); }
+  .clabel { display: none; }
+  .map-wrap.expanded { inset: 8px; }
+}
+@media (prefers-reduced-motion: reduce) { .mdot, .cdot { transition: none; } html { scroll-behavior: auto; } }
+</style>
+</head>
+<body>
+<header class="masthead wrap"><a class="wordmark" href="./">centre<span>.</span></a><span>Week 7 / 7.13 · embeddings, nearest neighbours and the link network</span><a href="../../index.html">All weeks ↗</a></header>
+
+<header class="hero wrap">
+  <div>
+    <p class="kicker">303 Marvel pages · MiniLM · 1,434 hyperlinks</p>
+    <h1>Who is the centre of the Marvel <em>universe</em>?</h1>
+    <p class="dek">Count the hyperlinks between the 303 Wikipedia pages and you get one answer. Ask the text, by letting every page pick the ten pages it reads most like, and you get another.</p>
+    <p class="hand">Guess first, then scroll.</p>
+  </div>
+  <div class="predict">
+    <svg viewBox="0 0 1000 680" id="mini" class="sea" role="img" aria-label="The 303 pages on a t-SNE map of their text"></svg>
+    <p class="predict-q">Every page picks the 10 pages it reads most like. Which page gets picked most?</p>
+    <div class="options" role="group" aria-label="Your guess">
+      <button type="button" data-guess="Spider-Man">Spider-Man</button><button type="button" data-guess="Wolverine">Wolverine</button><button type="button" data-guess="Hulk">Hulk</button><button type="button" data-guess="Captain Universe">Captain Universe</button>
+    </div>
+    <p class="predict-a" id="predict-a" role="status">Each dot is one page, placed by t-SNE from its text. Pick one answer.</p>
+  </div>
+</header>
+
+<section class="lab" id="lab" aria-label="Interactive skyline">
+  <div class="wrap">
+    <div class="lab-intro">
+      <h2>Two<br><span>skylines</span>.</h2>
+      <p>Same map, same pages. Each pillar is a page, standing where t-SNE puts its text. Choose what the height shows, then click any pillar to see who picks it.</p>
+    </div>
+    <div class="lab-grid">
+      <div>
+        <div class="controls">
+          <div class="group"><span>Height shows</span><div class="seg" role="group" aria-label="What the height shows">
+            <button type="button" data-measure="links">Hyperlinks</button><button type="button" data-measure="picked">Picked by the text</button><button type="button" data-measure="centred">Picked, centred</button><button type="button" data-measure="random">Random vectors</button></div></div>
+          <button type="button" class="toggle" id="t-fans" aria-pressed="true"><i aria-hidden="true"></i>Who picks it</button>
+          <button type="button" class="toggle" id="t-links" aria-pressed="false"><i aria-hidden="true"></i>Its hyperlinks</button>
+        </div>
+        <p class="readout" id="readout" aria-live="polite"></p>
+        <div class="map-wrap" id="map-wrap" data-view="3d">
+          <div class="view-toolbar"><div class="view-modes" role="group" aria-label="Presentation"><button type="button" id="view-3d" aria-pressed="true">3D skyline</button><button type="button" id="view-2d" aria-pressed="false">2D chart</button></div><div class="view-actions"><button type="button" id="reset">Reset view</button><button type="button" id="expand" aria-expanded="false">Enlarge ↗</button></div></div>
+          <div class="stage sea">
+            <div id="sky"><div id="sky-labels"></div></div>
+            <svg id="chart" viewBox="0 0 1000 680" role="img" aria-labelledby="readout"><g id="c-lines"></g><g id="c-dots"></g><g id="c-labels"></g></svg>
+            <div class="tip" id="tip" hidden></div>
+          </div>
+          <div class="scene-caption"><span>Pillars stand where t-SNE places each page's text. Height is the measure you choose.</span><span id="sky-status" role="status">Opening the 3D view…</span></div>
+        </div>
+        <p class="note-3d">Hyperlinks count linked pages (in either direction). "Picked" counts how many of the other 302 pages have this page among their 10 most similar by cosine; the average is exactly 10. Distances on a t-SNE map mean only "near", not "how near".</p>
+      </div>
+      <aside class="panel" id="panel" aria-live="polite"></aside>
+    </div>
+  </div>
+</section>
+
+<section class="ladder wrap" aria-labelledby="ladder-h">
+  <h2 id="ladder-h">The network and the text don't agree on the centre.</h2>
+  <div class="big3">
+    <div class="m"><span class="num" data-stat="linkTop"></span><p><b data-stat="linkTopName"></b> is linked with this many pages, the most of any hero.</p></div>
+    <div class="g"><span class="num" data-stat="hubPicked"></span><p>pages pick <b data-stat="hubName"></b> as one of their 10 closest. Only <span data-stat="hubFansLinked"></span> of them link to it.</p></div>
+    <div class="r"><span class="num" data-stat="randomMax"></span><p>is the most any page is picked when the vectors are random numbers.</p></div>
+  </div>
+</section>
+
+<article class="essay wrap">
+  <section>
+    <p class="label-col">What we asked</p>
+    <div>
+      <h2>Who sits in the middle of Marvel?</h2>
+      <p>The network has a standard answer: the hero with the most links. For the 303 pages, that's <span data-stat="linkTopName"></span>, linked with <span data-stat="linkTop"></span> of them. We wanted the text's answer. Week 7 is about putting documents into a vector space and asking who is near whom: nearest neighbours, dense retrieval, RAG. So we asked the space directly. <b>If every page names the pages it reads most like, whose name comes up most?</b></p>
+    </div>
+  </section>
+
+  <section>
+    <p class="label-col">The representation and the measurement</p>
+    <div>
+      <h2>Pages to vectors, vectors to votes.</h2>
+      <ul>
+        <li><b>Pages to vectors.</b> Each page, up to its references, is cut into ~120-word chunks (<span data-stat="chunks"></span> in all). Each chunk is embedded with all-MiniLM-L6-v2, and a page's vector is the normalised mean of its chunks.</li>
+        <li><b>Votes.</b> Each page picks the 10 other pages with the highest cosine similarity. A page's score is how many pages picked it, its <i>k-occurrence</i>. With 303 pages each casting 10 votes, the average is exactly 10.</li>
+        <li><b>The network.</b> The week-1 hyperlinks, undirected: a page's degree is the number of pages it shares a link with (<span data-stat="links"></span> linked pairs in total).</li>
+        <li><b>The control.</b> The same vote on 303 random unit vectors with the same 384 dimensions. If the text weren't doing anything special, its votes would spread like these.</li>
+        <li><b>The fix.</b> The same vote after <i>centring</i>: subtracting the average page vector from every page before cosine, a standard way to reduce hubs in nearest-neighbour search.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <p class="label-col">The figure</p>
+    <div>
+      <h2>Spider-Man's skyline, and <span>Captain Universe's</span>.</h2>
+      <p>The skyline above is the figure: switch its height between hyperlinks and picks. This table puts the two top fives side by side.</p>
+      <div class="table-scroll"><table id="tops"><thead><tr><th>Most linked</th><th>links</th><th>picked by</th><th></th><th>Most picked</th><th>picked by</th><th>links</th></tr></thead><tbody></tbody></table></div>
+      <p>The two measures aren't unrelated: across all pages, better-linked pages tend to be picked more (Spearman ρ = <span data-stat="rhoDegree"></span>). But the very top doesn't overlap. <span data-stat="overlapText"></span> The votes are also far more lopsided than chance: <span data-stat="noOne"></span> pages are picked by nobody at all, while with random vectors every page is picked at least once and none more than <span data-stat="randomMax"></span> times.</p>
+    </div>
+  </section>
+
+  <section>
+    <p class="label-col">What surprised us</p>
+    <div>
+      <h2>The centre is a hero who is <span>many heroes</span>.</h2>
+      <p>You'd expect the text's centre to be a famous hero with a long page. It's Captain Universe, a minor character with <span data-stat="hubDeg"></span> links. Its page explains why it fits the middle so well:</p>
+      <blockquote>Rather than a character with a single identity, it is a persona that has merged with several hosts during its publication history. … Although the Uni-Power typically empowers normal, non-super-powered humans, it has in the past empowered Doctor Strange, Spider-Man, Commander Arcturus Rann of the Micronauts, a toddler, and a dog, among others.<cite>Wikipedia, "Captain Universe" (course snapshot, 26 August 2026)</cite></blockquote>
+      <p>The general rule behind it: the pages that get picked most are the pages most like the <i>average</i> page (Spearman ρ = <span data-stat="rhoMean"></span> between picks and cosine to the mean vector). In a high-dimensional space, a point near the middle is close to everything, so it lands in everyone's top 10. This is called <i>hubness</i>. A page about a power that has possessed many different heroes is about as close to an average Marvel page as text gets. Captain Universe's page also names <span data-stat="hubNames"></span> of the other heroes, against a median of <span data-stat="medianNames"></span>.</p>
+      <p>The losers are just as telling. All <span data-stat="noOne"></span> pages nobody picks are short and specific: <span data-stat="noOneShorter"></span> of them are shorter than the median page of <span data-stat="medianWords"></span> words. Baymax, Box and Typeface are among them.</p>
+    </div>
+  </section>
+
+  <section>
+    <p class="label-col">Why it matters for week 7</p>
+    <div>
+      <h2>A hub gets retrieved for everything.</h2>
+      <p>Hubness isn't only a curiosity on a map. In dense retrieval, the first step of RAG, a hub page is returned for questions it has nothing to do with. We used each of the <span data-stat="queries"></span> chunks as a query against the other pages. Captain Universe came back in the top 5 for <b data-stat="hubRetrieved"></b> of them, from <span data-stat="hubPages"></span> different pages. The median page came back <span data-stat="medianRetrieved"></span> times.</p>
+      <p>Centring the vectors is the cheap fix, and it works here. Captain Universe's picks fall from <span data-stat="hubPicked"></span> to <span data-stat="hubPickedCentred"></span>, nobody is left unpicked, and its retrievals drop from <span data-stat="hubRetrieved"></span> to <span data-stat="hubRetrievedCentred"></span>. Retrieval barely suffers: a chunk finds its own page in the top 5 <span data-stat="findsOwn"></span> of the time before centring and <span data-stat="findsOwnCentred"></span> after. <button class="go" data-go='{"measure":"centred","page":"hub"}'>See the centred skyline</button></p>
+    </div>
+  </section>
+
+  <section>
+    <p class="label-col">What we checked in the text</p>
+    <div>
+      <h2>Reading the votes.</h2>
+      <p>Click any pillar and the panel shows the pages that pick it, the pages it picks, and its <i>most average passage</i>: the chunk closest to the mean of all pages. For Captain Universe, almost none of its voters link to it (<span data-stat="hubFansLinked"></span> of <span data-stat="hubPicked"></span>). Three pages rank it first: <span data-stat="hubFirst"></span>. Open them in the panel and compare their most average passages with its own.</p>
+      <p>We also checked that the result isn't a setting. With k = 5 or k = 20 instead of 10, the most-picked page is still <span data-stat="hubK"></span>. With every name and gendered pronoun removed, the votes get even more lopsided, and the winner changes, to <span data-stat="bareTop"></span>. So hubness is robust. Which page becomes the hub depends on what the encoder reads.</p>
+    </div>
+  </section>
+
+  <section>
+    <p class="label-col">One limitation</p>
+    <div>
+      <h2>"Average" depends on who's in the room.</h2>
+      <p>A hub is near the middle of <i>this</i> corpus: 303 pages from one Wikipedia category, embedded by one small encoder and averaged over chunks. Mean pooling itself pulls long, varied pages toward the middle (picks rise with page length, ρ = <span data-stat="rhoWords"></span>). A different encoder, a different pooling, or a corpus with Captain America and Thor in it (neither has a page here) could crown someone else. The finding we'd defend is the shape: a few pages are near everyone and many are near no one, and the text's centre is not the network's centre.</p>
+    </div>
+  </section>
+
+  <footer class="colophon">
+    <p>Data: the course's frozen snapshot (26 August 2026) of 303 Wikipedia pages in Category:Marvel Comics superheroes, and the week-1 hyperlink network (1,784 directed links; <span data-stat="links"></span> undirected pairs). Wikipedia text is CC BY-SA 4.0. 3D view: three.js r170 (MIT).</p>
+    <p>Reproduce: <code>.venv/bin/python showcases/week-07-centre/prepare_centre.py</code> writes <code>centre-data.js</code> (about 5 minutes on a laptop CPU). It needs sentence-transformers (all-MiniLM-L6-v2), scikit-learn and SciPy. Every number on this page is read from that file.</p>
+    <p>Built with Claude Code for exercise 7.13, Social Graphs and Interactions, DTU.</p>
+  </footer>
+</article>
+
+<script src="centre-data.js"></script>
+<script>
+const D = window.CENTRE, S = D.summary, N = D.nodes.length;
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+const SVGNS = 'http://www.w3.org/2000/svg';
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const esc = t => String(t).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+const pct = v => (v * 100).toFixed(1).replace(/\.0$/, '') + '%';
+const title = i => D.nodes[i].title;
+const idx = t => D.nodes.findIndex(n => n.title === t);
+const el = (tag, attrs) => { const e = document.createElementNS(SVGNS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); return e; };
+const HUB = S.hub, SPIDEY = idx('Spider-Man');
+
+const adj = Array.from({ length: N }, () => []);
+for (const [a, b] of D.links) { adj[a].push(b); adj[b].push(a); }
+const linked = (a, b) => adj[a].includes(b);
+
+const MEASURE = {
+  links:   { label: 'Hyperlinks', key: 'deg', nn: 'nn', unit: 'linked pages', c: 'var(--mint)' },
+  picked:  { label: 'Picked by the text', key: 'picked', nn: 'nn', unit: 'pages pick it', c: 'var(--gold)' },
+  centred: { label: 'Picked, centred', key: 'pickedCentred', nn: 'nnCentred', unit: 'pages pick it (centred)', c: 'var(--sand)' },
+  random:  { label: 'Random vectors', key: 'pickedRandom', nn: 'nnRandom', unit: 'picks (random vectors)', c: '#9fb3bd' },
+};
+const state = { measure: 'links', page: null, fans: true, links: false, step: 0, view: '3d' };
+const values = m => D.nodes.map(n => n[MEASURE[m].key]);
+const positions = m => D.nodes.map(n => m === 'random' ? n.xyRandom : n.xy);
+const topOf = (vals, k = 5) => vals.map((v, i) => [v, i]).sort((a, b) => b[0] - a[0]).slice(0, k).map(p => p[1]);
+const fansOf = (i, m) => { const key = MEASURE[m === 'links' ? 'picked' : m].nn; return D.nodes.map((n, j) => n[key].includes(i) ? j : -1).filter(j => j >= 0); };
+
+// ---------- the tour ----------
+const TOUR = [
+  { set: { measure: 'links', page: null },
+    head: 'By the links: Spider-Man',
+    body: () => `<p>Height is the number of pages a page shares a hyperlink with. The tallest tower is <b>${title(SPIDEY)}</b>, linked with <b>${D.nodes[SPIDEY].deg}</b> pages, then ${topOf(values('links'), 3).slice(1).map(i => `${title(i)} (${D.nodes[i].deg})`).join(' and ')}.</p><p>That's the network's centre. Now ask the text.</p>` },
+  { set: { measure: 'picked', page: HUB, fans: true, links: false },
+    head: 'By the text: Captain Universe',
+    body: () => `<p>Now the height is how many pages pick this page as one of their 10 closest in text. The tallest is <b>${title(HUB)}</b>: <b>${D.nodes[HUB].picked} of ${N}</b> pages pick it, about one in four.</p><p>The gold arcs are those voters. Only <b>${S.hubFansLinked}</b> of them link to it.</p>` },
+  { set: { measure: 'picked', page: SPIDEY, fans: true, links: false },
+    head: 'Where did Spider-Man go?',
+    body: () => `<p>${title(SPIDEY)} has ${D.nodes[SPIDEY].deg} links but only <b>${D.nodes[SPIDEY].picked}</b> picks. Hulk: ${D.nodes[idx('Hulk')].deg} links, ${D.nodes[idx('Hulk')].picked} picks. Doctor Strange: ${D.nodes[idx('Doctor Strange')].deg} links, ${D.nodes[idx('Doctor Strange')].picked} picks.</p><p>${S.topLinkedInTopPicked === 0 ? 'Not one' : S.topLinkedInTopPicked} of the 10 most-linked heroes is among the 10 most-picked pages.</p>` },
+  { set: { measure: 'random', page: null },
+    head: 'Is it just 384 dimensions?',
+    body: () => `<p>The same vote with 303 random vectors of the same size. The skyline is almost flat: nobody is picked more than <b>${S.randomMax ?? Math.max(...values('random'))}</b> times, and every page is picked at least once.</p><p>So the towers come from the text, not from the dimension.</p>` },
+  { set: { measure: 'picked', page: null },
+    head: 'The middle of the map wins',
+    body: () => `<p>The pages picked most are the pages most like the <i>average</i> page (Spearman ρ = ${S.rhoMean}). A point near the middle is close to everything. This is called hubness.</p><p>At the other end, <b>${S.noOne} pages</b> are picked by nobody: short, specific pages like Baymax and Box. Hover the stubs.</p>` },
+  { set: { measure: 'centred', page: HUB, fans: true },
+    head: 'Subtract the average',
+    body: () => `<p>Centring removes the average page vector before comparing. Captain Universe falls from ${D.nodes[HUB].picked} picks to <b>${D.nodes[HUB].pickedCentred}</b>. The tallest tower is now ${title(topOf(values('centred'), 1)[0])} with ${Math.max(...values('centred'))}, and every page is picked at least once.</p><p>That doesn't make the text agree with the links in general: across all pages, the match between picks and links gets weaker (ρ ${S.rhoDegree} → ${S.rhoDegreeCentred}). What centring removes is the pull of the average page.</p>` },
+  { set: {},
+    head: 'Your turn',
+    body: () => `<p>Switch the height, click any pillar, and turn on its hyperlinks to compare who <i>links</i> to a page with who <i>reads like</i> it. Mint arcs are links; gold arcs are votes.</p>` },
+];
+
+// ---------- the hero guess ----------
+(function hero() {
+  const svg = $('#mini'), toXY = ([x, y]) => [500 + x * 410, 340 - y * 305];
+  const dots = D.nodes.map((n, i) => { const [x, y] = toXY(n.xy); const c = el('circle', { cx: x.toFixed(1), cy: y.toFixed(1), r: 6, class: 'mdot' }); svg.append(c); return c; });
+  $$('.options button').forEach(b => b.onclick = () => {
+    const right = b.dataset.guess === title(HUB), g = idx(b.dataset.guess);
+    $$('.options button').forEach(x => { x.disabled = true; x.classList.toggle('picked', x === b); x.classList.toggle('answer', x.dataset.guess === title(HUB)); });
+    dots.forEach((c, i) => { c.setAttribute('r', (3 + Math.sqrt(D.nodes[i].picked) * 3.2).toFixed(1)); c.classList.toggle('hub', i === HUB); });
+    const [x, y] = toXY(D.nodes[HUB].xy), t = el('text', { x: x.toFixed(0), y: (y - 42).toFixed(0), 'text-anchor': 'middle', class: 'mlabel' });
+    t.textContent = `${title(HUB)} · ${D.nodes[HUB].picked}`; svg.append(t);
+    $('#predict-a').innerHTML = `<strong>${right ? 'Yes: Captain Universe.' : `Not ${esc(b.dataset.guess)}. Captain Universe.`}</strong>Dot size is now how many pages pick each page. ${D.nodes[HUB].picked} of ${N} pages pick Captain Universe.${g >= 0 && g !== HUB ? ` ${esc(b.dataset.guess)}, with ${D.nodes[g].deg} links, is picked by ${D.nodes[g].picked}.` : ''} <button type="button" class="text-button" id="to-lab">See the two skylines ↓</button>`;
+    $('#to-lab').onclick = () => { tour(0); $('#lab').scrollIntoView({ behavior: reduced ? 'auto' : 'smooth' }); };
+  });
+})();
+
+// ---------- 2D chart (also the fallback without WebGL) ----------
+const cLines = $('#c-lines'), cDots = $('#c-dots'), cLabels = $('#c-labels'), tip = $('#tip');
+const toXY = ([x, y]) => [500 + x * 420, 340 - y * 310];
+const cdots = D.nodes.map((n, i) => {
+  const c = el('circle', { class: 'cdot' });
+  c.addEventListener('pointerenter', e => showTip(i, e)); c.addEventListener('pointerleave', () => tip.hidden = true);
+  c.addEventListener('click', () => select(i));
+  cDots.append(c); return c;
+});
+function showTip(i, e) {
+  const r = $('.stage').getBoundingClientRect();
+  tip.innerHTML = `${state.measure === 'random' ? `random point <small>stands in for ${esc(title(i))}` : `${esc(title(i))}<small>`} · ${values(state.measure)[i]} ${MEASURE[state.measure].unit}</small>`;
+  tip.style.left = e.clientX - r.left + 'px'; tip.style.top = e.clientY - r.top + 'px'; tip.hidden = false;
+}
+function drawChart() {
+  const vals = values(state.measure), P = positions(state.measure).map(toXY), top = new Set(topOf(vals)), sel = state.page;
+  const fans = sel != null && state.fans ? fansOf(sel, state.measure) : [], nb = sel != null && state.links ? adj[sel] : [];
+  const related = new Set([...fans, ...nb]);
+  cdots.forEach((c, i) => {
+    c.setAttribute('cx', P[i][0].toFixed(1)); c.setAttribute('cy', P[i][1].toFixed(1)); c.setAttribute('r', (2.5 + Math.sqrt(vals[i]) * 2.6).toFixed(1));
+    const lit = i === sel || top.has(i) || related.has(i);
+    c.setAttribute('fill', i === sel ? '#ffffff' : MEASURE[state.measure].c.startsWith('var') ? getComputedStyle(document.documentElement).getPropertyValue(MEASURE[state.measure].c.slice(4, -1)) : MEASURE[state.measure].c);
+    c.setAttribute('opacity', sel != null ? (lit ? 1 : .25) : (top.has(i) ? 1 : .6));
+  });
+  cLines.replaceChildren();
+  const line = (a, b, color) => cLines.append(el('path', { d: `M${P[a][0]},${P[a][1]} Q${(P[a][0] + P[b][0]) / 2},${Math.min(P[a][1], P[b][1]) - 40} ${P[b][0]},${P[b][1]}`, stroke: color, class: 'cline' }));
+  fans.forEach(j => line(j, sel, '#f2b705')); nb.forEach(j => line(sel, j, '#5ee6ae'));
+  cLabels.replaceChildren();
+  for (const i of new Set([...top, ...(sel != null ? [sel] : [])])) {
+    const t = el('text', { x: P[i][0].toFixed(1), y: (P[i][1] - 6 - Math.sqrt(vals[i]) * 2.6).toFixed(1), 'text-anchor': 'middle', class: 'clabel' });
+    t.textContent = state.measure === 'random' ? `${vals[i]}` : `${title(i).replace(/ \(.*\)$/, '')} · ${vals[i]}`; cLabels.append(t);
+  }
+}
+
+// ---------- readout, panel, controls ----------
+function readout() {
+  const vals = values(state.measure), t = topOf(vals, 1)[0], m = MEASURE[state.measure];
+  $('#readout').style.setProperty('--c', m.c);
+  $('#readout').innerHTML = `Tallest: <b>${state.measure === 'random' ? `${vals[t]} picks` : `${esc(title(t))}, ${vals[t]}`}</b><small>${m.label} · ${state.measure === 'links' ? 'number of linked pages' : `${vals.filter(v => v === 0).length} pages picked by nobody · average 10`}</small>`;
+}
+function panel() {
+  const box = $('#panel'), i = state.page;
+  box.dataset.tone = state.measure === 'links' ? 'links' : 'text';
+  if (i == null) {
+    const s = TOUR[state.step];
+    box.innerHTML = `<p class="eyebrow">Tour · ${state.step + 1} of ${TOUR.length}</p><h3>${s.head}</h3>${s.body()}
+      <div class="steps"><button class="btn ghost" id="prev" ${state.step ? '' : 'disabled'}>← Back</button>
+      <span class="dots" aria-hidden="true">${TOUR.map((_, k) => `<i class="${k === state.step ? 'on' : ''}"></i>`).join('')}</span>
+      <button class="btn" id="next" ${state.step < TOUR.length - 1 ? '' : 'disabled'}>Next →</button></div>`;
+    $('#prev').onclick = () => tour(state.step - 1); $('#next').onclick = () => tour(state.step + 1);
+    return;
+  }
+  const n = D.nodes[i], m = state.measure === 'links' ? 'picked' : state.measure, fans = fansOf(i, m), picks = n[MEASURE[m].nn];
+  const tourText = TOUR[state.step].set.page === i || (TOUR[state.step].set.page === 'hub' && i === HUB) ? TOUR[state.step] : null;
+  const chips = list => list.map(j => `<button type="button" data-go-page="${j}" class="${linked(i, j) ? 'linked' : ''}">${esc(title(j))}</button>`).join('');
+  box.innerHTML = `${tourText ? `<p class="eyebrow">Tour · ${state.step + 1} of ${TOUR.length}</p><h3>${tourText.head}</h3>${tourText.body()}` : `<p class="eyebrow">Page</p><h3>${esc(n.title)}</h3>`}
+    <div class="stats"><div class="m"><b>${n.deg}</b>linked pages</div><div class="g"><b>${n.picked}</b>pages pick it</div><div><b>${n.pickedCentred}</b>pick it, centred</div><div><b>${n.retrieved}</b>chunk queries retrieve it</div></div>
+    <h4>Picked by ${fans.length} page${fans.length === 1 ? '' : 's'}${m !== 'picked' ? ` (${MEASURE[m].label.toLowerCase()})` : ''} · ↔ = also linked</h4><div class="names">${chips(fans) || '<span class="small">nobody</span>'}</div>
+    <h4>It picks</h4><div class="names">${chips(picks)}</div>
+    ${m !== 'random' ? `<h4>Its most average passage (the chunk closest to the mean of all pages)</h4><blockquote>${esc(n.average)}…</blockquote>` : '<p class="small" style="margin-top:12px">Random vectors carry no text; each one stands in for a page.</p>'}
+    <p class="small" style="margin-top:10px"><a href="${n.url}" target="_blank" rel="noopener">Read the page on Wikipedia ↗</a> · ${n.words.toLocaleString('en')} words</p>
+    <div class="steps">${tourText ? `<button class="btn ghost" id="prev">← Back</button><span class="dots" aria-hidden="true">${TOUR.map((_, k) => `<i class="${k === state.step ? 'on' : ''}"></i>`).join('')}</span><button class="btn" id="next">Next →</button>` : `<button class="btn ghost" id="close">← Back to the tour</button>`}</div>`;
+  if (tourText) { $('#prev').onclick = () => tour(state.step - 1); $('#next').onclick = () => tour(state.step + 1); }
+  else $('#close').onclick = () => select(null);
+  $$('#panel [data-go-page]').forEach(b => b.onclick = () => select(+b.dataset.goPage));
+}
+function controls() {
+  $$('[data-measure]').forEach(b => b.setAttribute('aria-pressed', b.dataset.measure === state.measure));
+  $('#t-fans').setAttribute('aria-pressed', state.fans); $('#t-links').setAttribute('aria-pressed', state.links);
+}
+function render3d(animate) {
+  if (!window.centreSky) return;
+  const vals = values(state.measure), sel = state.page;
+  const fans = sel != null ? fansOf(sel, state.measure) : [], nb = sel != null ? adj[sel] : [];
+  window.centreSky.render({ state: { ...state }, values: vals, positions: positions(state.measure), top: topOf(vals), unit: MEASURE[state.measure].unit,
+    fans, neighbours: nb, related: new Set([...(state.fans ? fans : []), ...(state.links ? nb : [])]), animate });
+}
+let shown = state.measure;
+function update() {
+  const animate = state.measure !== shown; shown = state.measure;
+  controls(); readout(); panel(); drawChart(); render3d(animate);
+}
+function set(changes) { if (changes.page === 'hub') changes.page = HUB; Object.assign(state, changes); update(); }
+function tour(step) { state.step = step; set({ page: null, ...TOUR[step].set }); }
+function select(i) { state.page = i === state.page ? null : i; update(); }
+
+$$('[data-measure]').forEach(b => b.onclick = () => set({ measure: b.dataset.measure }));
+$('#t-fans').onclick = () => set({ fans: !state.fans });
+$('#t-links').onclick = () => set({ links: !state.links });
+$$('.go').forEach(b => b.onclick = () => { set(JSON.parse(b.dataset.go)); $('#lab').scrollIntoView({ behavior: reduced ? 'auto' : 'smooth' }); });
+function setView(v) {
+  state.view = v; $('#map-wrap').dataset.view = v;
+  $('#view-3d').setAttribute('aria-pressed', v === '3d'); $('#view-2d').setAttribute('aria-pressed', v === '2d');
+  $('#reset').disabled = v !== '3d'; tip.hidden = true;
+  if (v === '3d') window.centreSky?.resize();
+}
+$('#view-3d').onclick = () => setView('3d'); $('#view-2d').onclick = () => setView('2d');
+$('#reset').onclick = () => window.centreSky?.reset();
+function expand(on) {
+  $('#map-wrap').classList.toggle('expanded', on); document.body.classList.toggle('expanded', on);
+  $('#expand').setAttribute('aria-expanded', on); $('#expand').textContent = on ? 'Close ×' : 'Enlarge ↗';
+}
+$('#expand').onclick = () => expand(!$('#map-wrap').classList.contains('expanded'));
+addEventListener('keydown', e => { if (e.key === 'Escape' && $('#map-wrap').classList.contains('expanded')) expand(false); });
+window.CENTRE_APP = { select: i => select(i), ready: () => render3d(false), no3d: () => { setView('2d'); $('#view-3d').disabled = true; } };
+
+// ---------- numbers on the page, all read from the data file ----------
+(function pageNumbers() {
+  const deg = values('links'), pk = values('picked'), tl = topOf(deg), tp = topOf(pk), R = S.retrieval;
+  $('#tops tbody').innerHTML = tl.map((a, r) => `<tr><td>${esc(title(a))}</td><td class="m">${deg[a]}</td><td>${pk[a]}</td><td></td><td>${esc(title(tp[r]))}</td><td class="g">${pk[tp[r]]}</td><td>${deg[tp[r]]}</td></tr>`).join('');
+  const names = list => list.map(t => title(t.page)).join(', ');
+  const stat = {
+    linkTop: deg[tl[0]], linkTopName: title(tl[0]), hubName: title(HUB), hubPicked: pk[HUB], hubPickedCentred: D.nodes[HUB].pickedCentred,
+    hubFansLinked: S.hubFansLinked, randomMax: Math.max(...values('random')), chunks: S.chunks.toLocaleString('en'), links: S.links.toLocaleString('en'),
+    rhoDegree: S.rhoDegree, rhoMean: S.rhoMean, rhoWords: S.rhoWords, noOne: S.noOne, noOneShorter: S.noOneShorter, medianWords: S.medianWords.toLocaleString('en'),
+    hubNames: D.nodes[HUB].names, hubDeg: D.nodes[HUB].deg, medianNames: S.medianNames,
+    overlapText: S.topLinkedInTopPicked === 0 ? 'None of the 10 most-linked heroes is among the 10 most-picked pages.' : `Only ${S.topLinkedInTopPicked} of the 10 most-linked heroes ${S.topLinkedInTopPicked === 1 ? 'is' : 'are'} among the 10 most-picked pages.`,
+    queries: R.queries.toLocaleString('en'), hubRetrieved: R.hub, hubRetrievedCentred: R.hubCentred, hubPages: R.hubPages, medianRetrieved: R.medianPage,
+    findsOwn: pct(R.findsOwn), findsOwnCentred: pct(R.findsOwnCentred),
+    hubFirst: D.nodes.map((n, i) => n.nn[0] === HUB ? title(i) : null).filter(Boolean).join(', '),
+    hubK: [...new Set([S.top5k5[0].page, S.top5k20[0].page].map(title))].join(' and '),
+    bareTop: `${title(S.top5Bare[0].page)} (${S.top5Bare[0].picked} picks)`,
+  };
+  $$('[data-stat]').forEach(e => e.textContent = stat[e.dataset.stat]);
+})();
+
+update();
+</script>
+<script type="module" src="skyline.js?v=1"></script>
+</body>
+</html>
