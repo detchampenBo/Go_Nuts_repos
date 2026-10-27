@@ -11,6 +11,10 @@ FILES = {
     "vendor/onnxruntime-LICENSE.txt": "https://raw.githubusercontent.com/microsoft/onnxruntime/v1.14.0/LICENSE",
     "vendor/display-OFL.txt": "https://raw.githubusercontent.com/google/fonts/main/ofl/bricolagegrotesque/OFL.txt",
     "vendor/hand-OFL.txt": "https://raw.githubusercontent.com/google/fonts/main/ofl/caveat/OFL.txt",
+    "vendor/serif-OFL.txt": "https://raw.githubusercontent.com/google/fonts/main/ofl/newsreader/OFL.txt",
+    "vendor/serif-regular.ttf": "https://fonts.gstatic.com/s/newsreader/v26/cY9qfjOCX1hbuyalUrK49dLac06G1ZGsZBtoBCzBDXXD9JVF438weI_ADA.ttf",
+    "vendor/serif-semibold.ttf": "https://fonts.gstatic.com/s/newsreader/v26/cY9qfjOCX1hbuyalUrK49dLac06G1ZGsZBtoBCzBDXXD9JVF438wpojADA.ttf",
+    "vendor/serif-italic.ttf": "https://fonts.gstatic.com/s/newsreader/v26/cY9kfjOCX1hbuyalUrK439vogqC9yFZCYg7oRZaLP4obnf7fTXglsMwoT-ZA.ttf",
 }
 REV = "751bff37182d3f1213fa05d7196b954e230abad9"
 for name in ["config.json", "tokenizer.json", "tokenizer_config.json", "special_tokens_map.json", "onnx/model_quantized.onnx"]:

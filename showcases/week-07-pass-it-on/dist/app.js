@@ -1,5 +1,5 @@
-import { Retrieval, loadCorpus, queryVector } from './retrieval.js?v=squeeze8';
-import { Mechanics } from './mechanics.js?v=squeeze8';
+import { Retrieval, loadCorpus, queryVector } from './retrieval.js?v=essay1';
+import { Mechanics } from './mechanics.js?v=essay1';
 
 const $ = selector => document.querySelector(selector);
 const app = $('#app');
@@ -24,6 +24,7 @@ $('#about').addEventListener('click', event => { if (event.target === $('#about'
 function mount(html, next) {
   mechanics?.destroy(); mechanics = null;
   clearTimeout(liveTimer); liveSequence++; state = next; app.innerHTML = html;
+  document.body.classList.toggle('essay-mode', next === 'findings');
   window.scrollTo({ top: 0, behavior: 'instant' });
   app.focus({ preventScroll: true });
 }
@@ -50,7 +51,7 @@ function markBanned(text) {
 
 function home() {
   roundGeneration++; revealSequence++; busy = false; squeezes = []; stageRanks = []; banned = []; stage = 0;
-  mount(`<div class="landing"><section class="hero" aria-labelledby="title"><div class="hero-copy"><span class="handwritten title-doodle">meaning gets<br>a little squeezed ↴</span><h1 id="title">Pass<br>it on.</h1><p>A real passage. Squeeze it into 30 words.<br>Then 10. Then 3.<br>Can the machines still find where it came from?</p></div><div class="hero-stage squeeze-stage" aria-label="An illustrated example of the game"><div class="demo-source"><div class="paper-label"><span class="round">1</span>Read a passage</div><p>“She is able to control the weather and atmosphere…”</p></div><div class="demo-slip slip-10"><div class="paper-label"><span class="round">2</span>Ten words</div><p>weather-controlling woman, one of the strongest mutants alive</p></div><div class="demo-slip slip-3"><div class="paper-label"><span class="round">3</span>Three</div><p>weather controlling mutant</p></div><span class="stage-arrow">every cut<br>costs something ↗</span><div class="hero-note">Keyword search: #?<br>Meaning search: #?</div></div></section><section class="setup" aria-label="Set up a game"><div class="setup-intro"><h2>You squeeze. The machines search.</h2><p>Two real search engines rank all 303 articles<br>live, every time you cut a word.</p></div><fieldset class="budget-group"><legend>Taboo mode</legend><div class="budget-options">${[[false, 'Off', 'any words'], [true, 'On', `ban its ${BANNED} rarest`]].map(([v, a, b]) => `<button type="button" data-taboo="${v}" aria-pressed="${taboo === v}"><strong>${a}</strong><span>${b}</span></button>`).join('')}</div></fieldset><div><button id="start" class="primary" ${corpus ? '' : 'disabled'}>Let’s play ${arrow}</button><p id="load-state" class="load-label" role="status">${corpus ? '<span class="status-dot"></span>303 real articles. Everything stays in this tab.' : 'Opening the box of passages…'}</p></div></section><section class="teaser" aria-labelledby="teaser-h"><div class="teaser-head"><span class="handwritten">What we found</span><h2 id="teaser-h">We squeezed all 303 pages first.</h2><button id="teaser-open" class="primary">Read the five surprises ${arrow}</button></div><div class="teaser-cards" id="teaser-cards"><p class="small">Loading the evidence…</p></div></section><div class="landing-bottom"><span>Read → 30 → 10 → 3 → open the machine</span><button id="text-demo" class="demo-button" ${corpus ? '' : 'disabled'}>Open an example round ↗</button><button id="findings" class="demo-button" ${corpus ? '' : 'disabled'}>What we found ↗</button></div></div>`, 'home');
+  mount(`<div class="landing"><section class="hero" aria-labelledby="title"><div class="hero-copy"><span class="handwritten title-doodle">meaning gets<br>a little squeezed ↴</span><h1 id="title">Pass<br>it on.</h1><p>A real passage. Squeeze it into 30 words.<br>Then 10. Then 3.<br>Can the machines still find where it came from?</p></div><div class="hero-stage squeeze-stage" aria-label="An illustrated example of the game"><div class="demo-source"><div class="paper-label"><span class="round">1</span>Read a passage</div><p>“She is able to control the weather and atmosphere…”</p></div><div class="demo-slip slip-10"><div class="paper-label"><span class="round">2</span>Ten words</div><p>weather-controlling woman, one of the strongest mutants alive</p></div><div class="demo-slip slip-3"><div class="paper-label"><span class="round">3</span>Three</div><p>weather controlling mutant</p></div><span class="stage-arrow">every cut<br>costs something ↗</span><div class="hero-note">Keyword search: #?<br>Meaning search: #?</div></div></section><section class="setup" aria-label="Set up a game"><div class="setup-intro"><h2>You squeeze. The machines search.</h2><p>Two real search engines rank all 303 articles<br>live, every time you cut a word.</p></div><fieldset class="budget-group"><legend>Taboo mode</legend><div class="budget-options">${[[false, 'Off', 'any words'], [true, 'On', `ban its ${BANNED} rarest`]].map(([v, a, b]) => `<button type="button" data-taboo="${v}" aria-pressed="${taboo === v}"><strong>${a}</strong><span>${b}</span></button>`).join('')}</div></fieldset><div><button id="start" class="primary" ${corpus ? '' : 'disabled'}>Let’s play ${arrow}</button><p id="load-state" class="load-label" role="status">${corpus ? '<span class="status-dot"></span>303 real articles. Everything stays in this tab.' : 'Opening the box of passages…'}</p></div></section><section class="teaser" aria-labelledby="teaser-h"><div class="teaser-head"><span class="handwritten">What we found</span><h2 id="teaser-h">We squeezed all 303 pages first.</h2><button id="teaser-open" class="primary">Read the finding ${arrow}</button></div><div class="teaser-cards" id="teaser-cards"><p class="small">Loading the evidence…</p></div></section><div class="landing-bottom"><span>Read → 30 → 10 → 3 → open the machine</span><button id="text-demo" class="demo-button" ${corpus ? '' : 'disabled'}>Open an example round ↗</button><button id="findings" class="demo-button" ${corpus ? '' : 'disabled'}>What we found ↗</button></div></div>`, 'home');
   document.querySelectorAll('[data-taboo]').forEach(button => button.addEventListener('click', () => {
     taboo = button.dataset.taboo === 'true';
     document.querySelectorAll('[data-taboo]').forEach(b => b.setAttribute('aria-pressed', b === button));
@@ -61,13 +62,9 @@ function home() {
   $('#teaser-open').addEventListener('click', () => findings());
   loadEvidence().then(ev => {
     if (state !== 'home') return;
-    const pct = v => Math.round(v * 100) + '%', at = b => ev.budgets.indexOf(b), long10 = ev.magnets.budgets[10].semantic, bird = ev.magnets.budgets[1].keyword;
-    $('#teaser-cards').innerHTML = [
-      ['f-one', `${pct(ev.rules.rarest.keyword[at(1)].top5)} <small>vs</small> ${pct(ev.rules.rarest.semantic[at(1)].top5)}`, 'One rare word finds the page: keyword search vs meaning search.'],
-      ['f-magnets', escape(bird.top[0].title), `Lost keyword search’s favourite guess: a ${bird.top[0].words}-word page.`],
-      ['f-magnets', `${long10.medianWords.toLocaleString()} <small>words</small>`, `Lost meaning search’s guesses are long pages (median; all pages: ${ev.magnets.corpusMedianWords.toLocaleString()}).`],
-    ].map(([id, big, text]) => `<button class="teaser-card" data-jump="${id}"><b>${big}</b><span>${text}</span></button>`).join('');
-    document.querySelectorAll('[data-jump]').forEach(b => b.addEventListener('click', () => findings(b.dataset.jump)));
+    const s = ev.merge.sets[1];
+    $('#teaser-cards').innerHTML = `<button class="teaser-card" data-jump="merge"><b>−${s.vsKeyword['0.5'].losses} <small>heroes</small></b><span>Merge keyword and meaning search the standard 50/50 way, and you lose heroes keyword search had already found.</span></button>`;
+    document.querySelectorAll('[data-jump]').forEach(b => b.addEventListener('click', () => findings()));
   }).catch(() => { $('#teaser-cards').innerHTML = ''; });
 }
 
@@ -149,7 +146,7 @@ async function demo() {
 }
 
 async function loadEvidence() {
-  if (!evidence) evidence = await fetch('data/squeeze-evidence.json?v=squeeze8').then(r => { if (!r.ok) throw new Error(`Could not load the evidence (${r.status}).`); return r.json(); });
+  if (!evidence) evidence = await fetch('data/squeeze-evidence.json?v=essay1').then(r => { if (!r.ok) throw new Error(`Could not load the evidence (${r.status}).`); return r.json(); });
   return evidence;
 }
 async function reveal(isDemo = false) {
@@ -188,6 +185,7 @@ function renderReveal(isDemo = false) {
   $('#methods').addEventListener('click', () => $('#about').showModal());
   $('#save').addEventListener('click', downloadSqueeze);
   $('#to-findings').addEventListener('click', () => findings());
+
   app.addEventListener('click', handleEvidence);
   paintDecay();
   paintRankings();
@@ -234,67 +232,46 @@ function paintDecay() {
   $('#decay-cap').innerHTML = `How often each search still puts the source article in its top 5, when a robot ${how}. At 3 words: <b class="kw-t">keyword ${pct(k3.top5)}</b>, <b class="sm-t">meaning ${pct(s3.top5)}</b>. At 1 word: ${pct(k1.top5)} and ${pct(s1.top5)}.${mine ? ' Your ranks are in the row underneath; a filled badge means top 5.' : ''} The robot only deletes words; it never paraphrases.`;
 }
 
-// The 7.13 write-up: one question, five surprises, each with its figure and the text that was checked.
-let magnetBudget = 1;
-async function findings(jump) {
+// The 7.13 write-up as an essay. Draft for layout review: the opening, Act II and its figure.
+let mergeWeight = '0.5';
+async function findings() {
   if (!corpus) return;
   roundGeneration++;
   mount(`<div class="game-shell"><section class="game-panel loading-panel"><h1>Opening the evidence…</h1><div class="loading-line" aria-hidden="true"><span></span></div></section></div>`, 'loading');
   let ev;
   try { ev = await loadEvidence(); } catch (error) { $('.loading-panel').innerHTML = `<h1>The evidence didn’t load.</h1><p>${escape(error.message)}</p>`; return; }
-  const B = ev.budgets, at = b => B.indexOf(b), pct = v => Math.round(v * 100) + '%', F = ev.fingerprints, R = ev.rules, G = ev.magnets.budgets;
-  const drift = (method, b) => { const [miss, linked] = ev.drift.rules.first[method][at(b)]; return linked / miss; };
-  const long10 = G[10].semantic, bird = G[1].keyword;
-  evidenceRule = 'rarest';
-  const surprises = [
-    ['one', `${pct(R.rarest.keyword[at(1)].top5)} vs ${pct(R.rarest.semantic[at(1)].top5)}`, 'One rare word is enough', 'for keyword search to find a hero. Meaning search, the “smart” one, manages far less.'],
-    ['prints', `${F.pages}/${F.pages}`, 'Every page has a fingerprint', `a word no other page uses. ${pct(F.unique / F.vocabulary)} of the vocabulary appears on one page only.`],
-    ['magnets', bird.top[0].title, 'Lost keyword search guesses the tiniest page', `${pct(bird.shortest10)} of its one-word misses land on the shortest tenth of pages.`],
-    ['magnets', `${long10.medianWords.toLocaleString()} words`, 'Lost meaning search guesses long pages', `the median length of its wrong guesses at 10 words; all pages: ${ev.magnets.corpusMedianWords.toLocaleString()}.`],
-    ['drift', `${Math.round(drift('semantic', 10) / ev.drift.density)}×`, 'Wrong answers stay in the neighbourhood', 'more often hyperlinked to the right page than chance, until the words run out.'],
-  ];
-  mount(`<div class="reveal-shell findings"><div class="reveal-heading"><span class="handwritten">What we found · Week 7 · 7.13</span><h1>Five surprises in<br>303 Marvel pages.</h1><p class="question">Our question: <strong>how few words does it take to find a Marvel hero’s Wikipedia page, and why does the “dumb” keyword search outlast the “smart” semantic one?</strong> We squeezed one real sentence from every article down to a single word, ran both searches, and read what came back.</p></div>
-    <ol class="surprise-index">${surprises.map(([id, big, head, rest], i) => `<li><a href="#f-${id}"><span class="n">${i + 1}</span><b class="big">${escape(big)}</b><strong>${head}</strong><span>${rest}</span></a></li>`).join('')}</ol>
-    <section class="retrieval-panel evidence-panel" id="f-one" aria-labelledby="f-one-h"><span class="kicker">Surprise 1</span><div class="retrieval-header"><div><h2 id="f-one-h">One rare word is enough.</h2><p class="lede-p">For each of the ${ev.articles} articles we took one real sentence (18–45 words, the hero’s name replaced by “someone”) and squeezed it word by word. Keeping only its <b>single rarest word</b>, keyword search still puts the right page in its top 5 for <b class="kw-t">${pct(R.rarest.keyword[at(1)].top5)}</b> of articles; meaning search for <b class="sm-t">${pct(R.rarest.semantic[at(1)].top5)}</b>. Ban each sentence’s ${ev.banned} rarest words and keyword search still wins at 3 words: ${pct(R.taboo.keyword[at(3)].top5)} against ${pct(R.taboo.semantic[at(3)].top5)}.</p></div><div class="query-switch" aria-label="How the automatic squeeze picks words">${[['first', 'Keep the first N'], ['rarest', 'Keep the rarest N'], ['taboo', `Taboo: top ${ev.banned} banned`]].map(([r, l]) => `<button data-rule="${r}" aria-pressed="${r === evidenceRule}">${l}</button>`).join('')}</div></div><figure class="decay"><svg id="decay" viewBox="0 0 900 330" role="img" aria-labelledby="decay-cap"></svg><figcaption id="decay-cap"></figcaption></figure></section>
-    <section class="retrieval-panel" id="f-prints" aria-labelledby="f-prints-h"><span class="kicker">Surprise 2 · why surprise 1 happens</span><h2 id="f-prints-h">Every page has a fingerprint.</h2><p class="lede-p">${pct(F.unique / F.vocabulary)} of the ${F.vocabulary.toLocaleString()} indexed words appear on exactly one page, and all ${F.pages} pages have at least one (median ${F.median}). A word that occurs nowhere else gets the highest possible IDF and points at a single article, so TF-IDF needs only one. Meaning search averages the same word into 384 numbers, where it counts for little. ${pct(F.nameShare)} of fingerprints are names, the actors, writers and places around a character; the rest are ordinary words this corpus uses once.</p><div class="prints">${F.examples.map(e => `<article><h3>${escape(e.title)}</h3><p class="small muted">${e.count} fingerprint words, e.g.</p><div class="chips">${e.words.map(w => `<span class="chip">${escape(w)}</span>`).join('')}</div></article>`).join('')}</div><p class="checked"><b>Checked in the text:</b> the Hulk’s fingerprints include the actors who played him (Bixby, Ferrigno, Bana); Spider-Man’s include “clinging” and Andrew Garfield; Wolverine’s include “canadians” and “berserker”.</p></section>
-    <section class="retrieval-panel" id="f-magnets" aria-labelledby="f-magnets-h"><span class="kicker">Surprises 3 and 4</span><div class="retrieval-header"><div><h2 id="f-magnets-h">When they’re lost, they have favourite wrong answers.</h2><p class="lede-p">Every time a squeeze put the wrong page first, we noted which page. The two searches fail in opposite directions: keyword search drifts to the <b class="kw-t">shortest</b> pages, meaning search to <b class="sm-t">long</b> ones, which have more passages and so more chances to match.</p></div><div class="query-switch" aria-label="Words kept">${[10, 3, 1].map(b => `<button data-magnet="${b}" aria-pressed="${b === magnetBudget}">${b} word${b > 1 ? 's' : ''}</button>`).join('')}</div></div><div id="magnets"></div><p class="checked"><b>How reading the evidence found a bug.</b> In an earlier build, meaning search’s favourite one-word answer was Cable: ${'138 of 289'} misses, all won by a passage consisting of the single word <q>traveler.</q> The passage splitter had cut a 61-word sentence into 60 words plus one. Seven such leftovers (“X-Men.”, “UGO”, “and powers.” …) won 61% of one-word misses. We fixed the splitter (passages under 8 words are now merged with their neighbour) and rebuilt everything; all figures on this page are after the fix.</p></section>
-    <section class="retrieval-panel evidence-panel" id="f-drift" aria-labelledby="f-drift-h"><span class="kicker">Surprise 5 · the network</span><h2 id="f-drift-h">Wrong answers stay in the neighbourhood.</h2><p class="lede-p">Is the wrong page at least a Wikipedia neighbour of the right one? With a sentence’s first 10 words, ${pct(drift('keyword', 10))} of keyword misses and ${pct(drift('semantic', 10))} of meaning misses land on a page hyperlinked to the source, against ${(ev.drift.density * 100).toFixed(1)}% for a random pair. At 3 words it falls to ${pct(drift('keyword', 3))} and ${pct(drift('semantic', 3))}: near misses turn into random ones as the words run out.</p><figure class="decay"><svg id="drift" viewBox="0 0 900 290" role="img" aria-labelledby="drift-cap"></svg><figcaption id="drift-cap">Share of wrong first results that are hyperlink neighbours of the source article (week 1 network, either direction), keeping the first N words.</figcaption></figure></section>
-    <section class="retrieval-panel finding-grid"><div><h3>The other side</h3><p>Our robot only deletes words; it never paraphrases. In the worked example a player rewrites Spider-Man’s passage in their own words: keyword search slides from #2 to #8 to #13 while meaning search holds #1, #1, #7. Vocabulary mismatch is real, it just needs a human to create it. Play a round to try.</p></div><div><h3>Limitations</h3><p>One sentence per article, chosen by a fixed rule, and deletion as the only way of squeezing. One embedding model; passages of at most 60 words. A zero-overlap keyword query counts as rank ${ev.documents}. Linked pages also share vocabulary, so the drift is not purely an effect of the links.</p></div></section>
-    <div class="reveal-actions"><button id="f-play" class="primary">Play a round ${arrow}</button><div class="toolrow"><button id="f-example" class="secondary">Open the example round</button><button id="methods" class="secondary">What’s being measured?</button></div></div></div>`, 'findings');
-  document.querySelectorAll('[data-rule]').forEach(button => button.addEventListener('click', () => {
-    evidenceRule = button.dataset.rule;
-    document.querySelectorAll('[data-rule]').forEach(b => b.setAttribute('aria-pressed', b === button));
-    paintDecay();
-  }));
-  document.querySelectorAll('[data-magnet]').forEach(button => button.addEventListener('click', () => {
-    magnetBudget = Number(button.dataset.magnet);
-    document.querySelectorAll('[data-magnet]').forEach(b => b.setAttribute('aria-pressed', b === button));
-    paintMagnets();
+  const G = ev.merge, nameless = G.sets[1], pct = v => Math.round(v * 100) + '%';
+  mount(`<article class="essay">
+    <header class="essay-head"><p class="kicker">Pass it on · What we found · Week 7 · 7.13</p><h1>Merge them,<br>and lose them.</h1>
+      <p class="dek">Real search systems merge keyword search and meaning search. On Marvel’s ${ev.documents} hero pages, the standard 50/50 merge loses <b>${nameless.vsKeyword['0.5'].losses} heroes</b> that keyword search had already found on its own.</p>
+      <p class="draft">Draft · layout preview: the opening, Act II and its figure</p></header>
+    <section class="essay-row"><div class="essay-text">
+      <p>In the game you squeeze a passage until the search engines can’t find the hero any more. Two engines try. <b class="kw-t">Keyword search</b> (TF-IDF) matches the exact words; <b class="sm-t">meaning search</b> (MiniLM sentence embeddings) matches the gist. They fail on different heroes, so the obvious fix is to use both at once. That is what most real search systems do, and it has a name: hybrid search.</p>
+      <p>We tried it on every hero, three ways: ten words from the hero’s story, five words with every name removed, and ${G.sets[2].n} descriptions we wrote ourselves before looking at any results.</p></div>
+      <aside class="note"><span class="pill">On Test 2</span><p>Sparse retrieval matches shared words; dense retrieval ranks by embedding similarity (section 6). A hybrid ranks by both.</p></aside></section>
+    <section class="essay-row"><div class="essay-text"><p class="act">Act II</p><h2>Merge them, or trust one?</h2>
+      <p>The usual recipe, reciprocal rank fusion, gives each engine an equal say. With the five nameless words it puts the right hero in the top 5 for <b>${pct(nameless.top5['0.5'])}</b> of heroes. Keyword search alone managed <b>${pct(nameless.top5.keyword)}</b>. The merge rescues ${nameless.vsKeyword['0.5'].gains} heroes that keyword search missed and drops ${nameless.vsKeyword['0.5'].losses} that it had found. Tip the merge toward keywords and it recovers; at 90/10 it edges past both engines.</p></div>
+      <aside class="note"><span class="pill">On Test 2</span><p>Reciprocal rank fusion: score = w / (60 + keyword rank) + (1 − w) / (60 + meaning rank). Only ranks are used, so the two engines’ scores never need to share a scale.</p></aside></section>
+    <figure class="card" aria-labelledby="merge-h"><div class="card-head"><h3 id="merge-h">Three tests, one merge</h3><div class="pills" role="group" aria-label="How much say keyword search gets in the merge">${G.weights.map(w => `<button type="button" data-w="${w}" aria-pressed="${String(w) === mergeWeight}">${Math.round(w * 100)} / ${Math.round((1 - w) * 100)}</button>`).join('')}</div></div>
+      <div id="merge-bars"></div>
+      <figcaption><b>How to read it</b> Each block is one test. The three bars show how often the right hero lands in the top 5 of ${ev.documents} pages: keyword search alone, meaning search alone, and the merge. The buttons set how much say keyword search gets in the merge, from an equal 50/50 to 90/10. The line under each block counts heroes the merge wins and loses compared with keyword search on its own.</figcaption></figure>
+    <footer class="essay-foot"><button id="f-play" class="pill-button">Play a round →</button><button id="f-example" class="pill-button ghost">Open the example round</button></footer>
+  </article>`, 'findings');
+  document.querySelectorAll('[data-w]').forEach(button => button.addEventListener('click', () => {
+    mergeWeight = button.dataset.w;
+    document.querySelectorAll('[data-w]').forEach(b => b.setAttribute('aria-pressed', b === button));
+    paintMerge();
   }));
   $('#f-play').addEventListener('click', home); $('#f-example').addEventListener('click', demo);
-  $('#methods').addEventListener('click', () => $('#about').showModal());
-  paintDecay(); paintMagnets(); paintDrift();
-  if (jump) document.getElementById(jump)?.scrollIntoView();
+  paintMerge();
 }
-function paintMagnets() {
-  const M = evidence.magnets, G = M.budgets[magnetBudget], pct = v => Math.round(v * 100) + '%';
-  const col = (method, label, cls) => {
-    const g = G[method], max = g.top[0].count;
-    const size = w => w <= M.shortestCut ? '<em class="tag-short">shortest 10%</em>' : w >= M.longestCut ? '<em class="tag-long">longest 10%</em>' : '';
-    const quote = method === 'semantic' ? `<b>The passage that wins most often</b> (${g.passage.wins} of ${g.misses} misses), from ${escape(g.passage.title)}:<q>${escape(g.passage.text)}</q>${g.tinyWins ? `<span>${pct(g.tinyWins)} of these misses are won by one of ${M.tiny.length} passages of ${3} words or fewer that the splitter left behind: ${M.tiny.map(x => `“${escape(x.text)}”`).join(', ')}.</span>` : ''}`
-      : `<b>Its favourite wrong page</b>, ${escape(g.top[0].title)} (${g.top[0].words} words), opens:<q>${escape(g.passage.text)}</q><span>A short page has few words, so after length normalisation each one weighs a lot.</span>`;
-    return `<div class="magnet-col ${cls}"><h3>${label}</h3><p class="magnet-stat"><b>${g.medianWords.toLocaleString()}</b> words: median length of the page it wrongly picks (all pages: ${M.corpusMedianWords.toLocaleString()}). ${method === 'keyword' ? `${pct(g.shortest10)} of misses go to the shortest tenth of pages.` : `${pct(g.longest10)} go to the longest tenth.`}</p><ol>${g.top.map(x => `<li><span class="mname">${escape(x.title)} ${size(x.words)}</span><span class="mbar"><i style="width:${x.count / max * 100}%"></i></span><span class="mcount">${x.count}<small> of ${g.misses}</small></span></li>`).join('')}</ol><div class="in-text">${quote}</div></div>`;
-  };
-  $('#magnets').innerHTML = `<div class="magnet-grid">${col('keyword', 'Keyword search · TF-IDF', 'kw')}${col('semantic', 'Meaning search · MiniLM', 'sm')}</div><p class="small muted">Squeezes keep a sentence’s first ${magnetBudget} word${magnetBudget > 1 ? 's' : ''}. Pages whose length is in the shortest or longest 10% of the corpus are tagged.</p>`;
-}
-function paintDrift() {
-  const share = method => evidence.drift.rules.first[method].map(([miss, linked]) => linked / miss);
-  const series = [['keyword', 'Keyword', 'var(--kw)'], ['semantic', 'Meaning', 'var(--blue)']].map(([key, label, color]) => ({
-    label, color, values: share(key),
-    title: i => { const [miss, linked] = evidence.drift.rules.first[key][i]; return `${label} search, ${evidence.budgets[i]} words: ${linked} of ${miss} wrong first results are hyperlink neighbours`; } }));
-  const d = evidence.drift.density;
-  lineChart($('#drift'), { series, ticks: [0, 0.1, 0.2, 0.3], format: v => Math.round(v * 100) + '%', height: 290,
-    after: (x, H) => { const y = H - 40 - d / 0.3 * (H - 22 - 40); return `<line x1="56" x2="750" y1="${y}" y2="${y}" stroke="var(--ink)" stroke-width="2" stroke-dasharray="2 6"/><text class="note" x="750" y="${y - 8}" text-anchor="end">a random pair of pages: ${(d * 100).toFixed(1)}%</text>`; } });
+function paintMerge() {
+  const pct = v => Math.round(v * 100) + '%', w = mergeWeight, label = `merge ${Math.round(w * 100)}/${Math.round((1 - w) * 100)}`;
+  const bar = (name, v, cls) => `<div class="mbar-row ${cls}"><span class="mlab">${name}</span><span class="mtrack"><i style="width:${v * 100}%"></i></span><span class="mval">${pct(v)}</span></div>`;
+  $('#merge-bars').innerHTML = evidence.merge.sets.map(s => {
+    const d = s.vsKeyword[w], verdict = d.gains > d.losses ? 'better than keyword search alone' : d.gains < d.losses ? 'worse than keyword search alone' : 'no better than keyword search alone';
+    return `<div class="mblock"><p class="mtitle">${escape(s.label)} <span>· ${s.n} heroes</span></p>${bar('keyword', s.top5.keyword, 'kw')}${bar('meaning', s.top5.meaning, 'sm')}${bar(label, s.top5[w], 'mg')}<p class="mdelta">vs keyword alone: <b>+${d.gains}</b> rescued, <b>−${d.losses}</b> lost · ${verdict}</p></div>`;
+  }).join('');
 }
 
 async function updateSearch() {

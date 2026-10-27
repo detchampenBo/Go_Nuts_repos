@@ -1,4 +1,4 @@
-import { queryVector, sparseScores, ranked } from './retrieval.js?v=squeeze8';
+import { queryVector, sparseScores, ranked } from './retrieval.js?v=essay1';
 
 const html = value => String(value).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 const tokens = text => text.toLowerCase().match(/\b[a-z0-9_]{2,}\b/g) || [];
