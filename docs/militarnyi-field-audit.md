@@ -1,0 +1,26 @@
+# Militarnyi Deep Strike Map: field audit
+
+27 October 2026. Source file inspected read-only: `C:\Users\victo\Downloads\Militarnyi.csv`. This is a small diagnostic sample, not a validation of all records.
+
+## What the fields appear to mean
+
+- **Row:** Militarnyi's [launch description](https://militarnyi.com/en/news/deep-strike-map-militarnyi-launches-tracker-for-long-range-strikes-inside-russia/) calls map entries “strike events” with a briefing and report link. In the export, the practical row is often a **mapped target or object reported struck on a date**, not a whole attack and never one launched drone. The [St. Petersburg report](https://militarnyi.com/en/news/st-petersburg-drone-damag-oil-tank-2-bridge/) supplies one URL for five CSV rows (IDs 837–841: terminal, depot, logistics hub and two bridges). An [Unmanned Systems Forces article](https://militarnyi.com/uk/news/sbs-48-godyn-urazyly-12-elektropidstantsij/) supplies one URL for twelve rows. These examples show that article count, map-row count and attack count differ.
+- **Distance (km):** The [map's own filter](https://map.militarnyi.com/?embed=1&lang=en&lat=53.38067&layer=satellite&lng=55.89706&minimap=1&minimap_layer=osm&minimap_zoom=10&zoom=11) says **“Distance from front (km)”**. Treat the CSV field as the map's front-distance measure, not a known launch-to-target range or flight path. The exact front-line snapshot, nearest-point rule, and path/geodesic calculation have not been documented in the material checked.
+- **Status:** The launch description calls this “battle damage assessment (BDA)” or “degree of damage,” but it does not publish coding rules, evidence thresholds, reviewer process or meanings for blank and `Unknown`. The CSV uses `Damaged`, `Destroyed`, `Unknown`, and blank. These are **map labels**, not a verified mission outcome variable.
+- **Coverage:** The [launch description](https://militarnyi.com/en/news/deep-strike-map-militarnyi-launches-tracker-for-long-range-strikes-inside-russia/) says 2026 was populated first and older records were being integrated. The [map UI](https://map.militarnyi.com/?lang=uk) still says it currently shows 2026 strikes. The downloaded export also contains older years, so year-to-year row counts cannot be read as operational trends without a coverage audit.
+
+## Status checks against linked Militarnyi stories
+
+| CSV row | Map label | What the linked article actually supports |
+| --- | --- | --- |
+| ID 919, Voronezhsintezkauchuk, 26 Oct 2026 | `Damaged` | The [linked story](https://militarnyi.com/en/news/drones-attack-voronezh-likely-hitting-voronezhsintezkauchuk-petrochemical-plant/) identifies the plant as a **possible** target. It describes explosions and smoke in different parts of Voronezh, not confirmed physical damage at that plant. This is a concrete label/evidence mismatch in the initial report; a later update could change the assessment. |
+| ID 920, Voronezh aircraft factory, 26 Oct 2026 | `Unknown` | The [story](https://militarnyi.com/en/news/voronezh-attack-drones-likely-hit-aircraft-factory-and-bridge-besides-petrochemical-plant/) says a hit is likely and damage extent remains unknown. `Unknown` is compatible with *uncertain damage*, but it cannot be translated to failure or absence of impact. |
+| ID 606, military unit in Pochep, 22 Sep 2026 | blank | The [later report](https://militarnyi.com/en/news/drones-hit-two-russian-military-units-in-pochep-bryansk-region/) describes satellite-observed damage to buildings at two units. Blank does not mean undamaged. |
+| ID 839, OZON logistics hub, 18 Oct 2026 | `Destroyed` | The [linked retrospective](https://militarnyi.com/en/news/st-petersburg-drone-damag-oil-tank-2-bridge/) describes a large fire affecting over 10,000 m² at the logistics hub, while explicitly calling an oil tank and a depot tank destroyed. It does not clearly say the **hub** was destroyed. The status may refer to part of a facility, but that rule is not specified. |
+| ID 863, Sheremetyevo, 23 Oct 2026 | `Unknown` | The [story](https://militarnyi.com/en/news/ukr-drones-balloon-paralyze-moscow-airports/) reports an airport closure and a drone crash on its grounds, but no established physical damage to the airport. This is an operational disruption record, not necessarily a damaged target. |
+
+The linked articles themselves frequently attribute claims to officials, monitoring channels, local video or satellite analysts. A Militarnyi URL is a route to evidence and attribution, **not an independent corroborator by itself**. Evidence type and facility-specific certainty require coding from the article body and, for strong claims, checking the cited original material.
+
+## Implications for analysis
+
+Use `date × normalized target site` as a tentative observation unit, retaining map ID, source URL, status and weapon labels as separate attributes. First hand-audit same-day rows, repeated sites, multiple targets in one article and subsequent reporting updates. If the paper tests status patterns, manually code a stratified sample for `reported attack`, `site-specific impact`, `physical damage`, and `functionally disabled`, with the type of source supporting each. Do not use `Destroyed / (Damaged + Destroyed + Unknown)` as a drone success rate: the export omits failed and unreported attempts and has no drone-launch denominator.
