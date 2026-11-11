@@ -1,0 +1,189 @@
+# =====================================================================
+# Data acquisition pipeline — Guardian coverage of Premier League signings
+# DTU 02805 Social Graphs and Interactions, final project
+#
+# Goal: acquire Guardian articles about each signed player from
+# 1 year BEFORE to 1 year AFTER the transfer, so that the data supports:
+#   A1. Sentiment before vs after the transfer (per player).
+#   A2. One embedding vector per article, labelled with the player's age,
+#       to compare cosine similarity of articles about young vs old players.
+#
+# This file describes WHAT to collect and HOW; it is the spec the
+# acquisition script implements. Numbers in "expected" fields come from
+# the Transfermarkt data already in Project/data (checked 2026-11-04).
+# =====================================================================
+
+version: 2
+created: 2026-11-04
+
+inputs:
+  transfermarkt_dir: data/                 # Kaggle "Football Data from Transfermarkt" (dcaribou)
+  files:
+    transfers: transfers.csv.gz            # player_id, transfer_date, from/to club ids+names, transfer_fee, market_value_in_eur
+    players:   players.csv.gz              # player_id, name, first_name, last_name, date_of_birth, position
+    games:     games.csv.gz                # season, competition_id, home_club_id, away_club_id
+  guardian_api_key_env: GUARDIAN_API_KEY
+
+# ---------------------------------------------------------------------
+# STEP 1 — Select the transfers (one row per signing)
+# ---------------------------------------------------------------------
+step_1_select:
+  output: signings.csv
+  rules:
+    destination: club was in the Premier League (competition_id GB1) in the season of the transfer
+    season_definition: "July–June; season = year if month >= 7 else year - 1"
+    seasons: [2012, 2024]                  # 2012/13 … 2024/25; a 1-year 'after' window needs transfers up to ~mid-2025
+    exclude:
+      - same club on both sides
+      - loan returns            # heuristic: previous move of the same player was to_club -> from_club within 730 days
+    notability_filter:
+      field: market_value_in_eur           # market value at transfer, same rule for all ages
+      min: 2_000_000                       # €2m: keeps 30+ players (who mostly move on free transfers) in the sample
+      reason: >
+        A fee threshold (e.g. €10m) removes almost all 30+ players, so the
+        same market-value rule is applied to every age group instead.
+  age:
+    computed_on: transfer_date
+    groups:                                # completed years on the transfer date
+      young: [18, 24]
+      middle: [25, 29]                     # collected but not used in the young-vs-old comparison
+      old: [30, 36]
+  sampling:
+    young: all                              # optional: stratified sample by season to cap API calls
+    middle: all
+    old: all
+  expected_counts:                         # before Guardian coverage filter
+    young_18_24: ~1250
+    middle_25_29: ~670
+    old_30_36: ~140
+  columns: [signing_id, player_id, name, first_name, last_name, name_variants,
+            date_of_birth, age_at_transfer, age_group, position,
+            transfer_date, season, from_club_id, from_club_name,
+            to_club_id, to_club_name, transfer_fee, market_value_in_eur]
+  signing_id: "<player_id>_<YYYYMMDD of transfer_date>"
+
+# ---------------------------------------------------------------------
+# STEP 2 — Query the Guardian API (raw collection)
+# ---------------------------------------------------------------------
+step_2_fetch:
+  endpoint: https://content.guardianapis.com/search
+  one_query_per: signing
+  window:
+    from: transfer_date - 365 days
+    to:   transfer_date + 365 days
+  params:
+    q: '"<variant 1>" OR "<variant 2>" OR …'   # exact-phrase full name + accent-free + manual aliases
+    section: football
+    from-date: <window.from, YYYY-MM-DD>
+    to-date:   <window.to, YYYY-MM-DD>
+    show-fields: headline,byline,bodyText,wordcount,trailText
+    show-tags: tone,keyword
+    page-size: 200                           # API maximum; fewer calls than 50
+    order-by: oldest
+    page: 1..pages                           # follow response.pages
+  name_variants:
+    - transfermarkt full name                # "Matija Nastasić"
+    - accent-free full name                  # "Matija Nastasic"
+    - manual aliases                         # e.g. "Frank Anguissa" -> "Zambo Anguissa"
+  politeness:
+    pause_seconds_between_calls: 1.1
+    on_http_429: stop cleanly, keep cache, resume next run
+    on_http_5xx: retry up to 3 times with 10 s backoff
+    on_http_401: stop, report "API key missing or invalid"
+  caching:
+    dir: guardian_cache_v2/
+    file_per_signing: "<signing_id>.json"
+    contents: {signing_id, name, query, window_from, window_to,
+               fetched_at_utc, query_version: 2, articles: [raw API results]}
+    resume_rule: skip a signing if its cache file exists with query_version >= 2
+  record_provenance: "fetched_at_utc stored per signing (brief: 'keep what you collected and when')"
+  expected_volume:
+    calls_per_signing: "1–3 typical, 10+ for very famous players"
+    total_calls: "~3,000–6,000 for ~2,000 signings; spread over several days if the daily limit is hit"
+
+# ---------------------------------------------------------------------
+# STEP 3 — Build analysis tables
+# ---------------------------------------------------------------------
+step_3_build:
+
+  # 3a. One row per unique article (deduplicated across signings)
+  articles:
+    output: articles.parquet                 # (or .csv) full text kept locally, never published
+    key: article_id                          # Guardian "id"
+    columns: [article_id, url, publication_date, headline, byline,
+              wordcount, tones, keywords, body_text]
+    article_type: from tone tags -> news | features | comment | interview | blog | matchreport | liveblog | other
+
+  # 3b. One row per (article, signing) link — the unit for both analyses
+  article_player:
+    output: article_player.csv
+    key: [article_id, signing_id]
+    columns:
+      ids:        [article_id, signing_id, player_id, player]
+      timing:
+        days_from_transfer: publication_date - transfer_date        # negative = before
+        period:                                                    # A1 label
+          before: days_from_transfer < -7
+          around: -7 <= days_from_transfer <= 7                     # announcement week, kept separately
+          after:  days_from_transfer > 7
+      age:
+        age_at_article: (publication_date - date_of_birth) / 365.25 # A2 label (age at time of writing)
+        age_group_at_transfer: from signings.csv
+      focus:                                  # how much the article is about THIS player
+        mentions: number of sentences naming the player
+        share_of_sentences: mentions / total sentences in article
+        name_in_headline: true/false
+        n_tracked_players_in_article: count of other signings named in the same article
+        is_focus_article: name_in_headline OR share_of_sentences >= 0.10
+      text:
+        player_sentences: sentences naming the player (+ next sentence if it starts with He/His)
+        article_type: from 3a
+      flags:
+        overlapping_window: player has another signing whose window covers this date
+        mixed_age_article: article names tracked players from both young and old groups
+
+  # 3c. One row per sentence (input for sentiment)
+  sentences:
+    output: sentences.csv
+    columns: [article_id, signing_id, player, period, days_from_transfer,
+              age_at_article, age_group_at_transfer, article_type, match_kind, sentence]
+
+  default_exclusions:                         # applied in analysis, flags kept in the data
+    - article_type in [liveblog]              # minute-by-minute commentary
+    - mixed_age_article == true               # for A2 only: one article cannot carry two age labels
+    - overlapping_window == true              # or assign the article to the nearest transfer
+  dedup_rule: >
+    If one article links to several signings of the SAME player (overlapping windows),
+    keep the link to the transfer with the smallest |days_from_transfer|.
+
+# ---------------------------------------------------------------------
+# STEP 4 — Validation checks (run after step 3, report in Methods)
+# ---------------------------------------------------------------------
+step_4_validate:
+  - signings with 0 articles: list them, check name spelling, add aliases, re-fetch
+  - articles per signing: median and distribution, by age group and by period
+  - before vs after balance: share of signings with >= 3 articles in BOTH periods
+  - focus check: hand-read 100 random article_player rows; report % truly about the player
+  - coverage bias: compare article counts young vs old (old players may get less coverage)
+  - time spread: articles per season per age group
+
+# ---------------------------------------------------------------------
+# What the acquired data supports (downstream, not part of acquisition)
+# ---------------------------------------------------------------------
+supports:
+  A1_sentiment_before_after:
+    unit: sentence -> averaged per (signing, period)
+    input: sentences.csv, period in [before, after] (around reported separately)
+    filter: article_type not in [liveblog, matchreport] for media perception; matchreport analysed separately
+    tools: VADER + transformer sentiment (week 7), validated on ~200 hand-labelled sentences
+    comparison: paired within player, after minus before; permutation test on period labels
+  A2_article_embeddings_young_vs_old:
+    unit: article (one vector per article_player row with is_focus_article == true)
+    input_text_options:
+      full_article: body_text, chunked to <= 256 word pieces, chunk vectors mean-pooled and re-normalised (week 7)
+      player_only: player_sentences concatenated (second method / robustness)
+    encoder: sentence-transformers all-MiniLM-L6-v2 (course default)
+    label: age_group_at_transfer (young 18–24 vs old 30–36), age_at_article kept for robustness
+    comparison: mean pairwise cosine within young, within old, and between groups
+    null_model: permutation of age labels (1,000 shuffles), optionally within season
+    controls: equal text length per document, season, article_type, player fame (article count)
