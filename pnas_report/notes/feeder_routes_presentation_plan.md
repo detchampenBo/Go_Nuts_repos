@@ -1,6 +1,6 @@
 # Presentation plan: unusually frequent routes and shared ownership
 
-Prepared 11 November 2026 from the completed feeder-route analysis and ownership audit. This is a presentation plan; the proposed figures have not yet been created.
+Prepared 11 November 2026 from the completed feeder-route analysis and ownership audit. Updated 18 November 2026 to include Vitesse–Chelsea and Grasshoppers–Wolves in the joint-ownership group by user decision; their common-equity evidence and ownership dates remain unresolved. The current selection requires at least 2 recorded transfers per directed route and an unadjusted shuffle p-value strictly below 0.05. This is a presentation plan; the proposed figures have not yet been created.
 
 ## Execution brief for the next agent
 
@@ -25,7 +25,7 @@ Use the user's requested colours in this order of meaning:
 | --- | --- | --- |
 | Recorded transfer activity / observed counts | Orange | `#E69F00` |
 | Seasonal-null expected counts | Blue | `#0072B2` |
-| Verified shared ownership | Red | `#C43C39` |
+| Joint-ownership group (including manual Vitesse–Chelsea and Grasshoppers–Wolves inclusions) | Red | `#C43C39` |
 | Text, baselines, gridlines and unresolved evidence | Neutral charcoal / grey | `#333333` / `#D9D9D9` |
 
 Use additional colours only if they carry a necessary, clearly explained category. Keep colour meanings consistent across panels, and reinforce important distinctions with marker shape, fill or direct labels so they remain interpretable in greyscale.
@@ -37,15 +37,15 @@ Bars must start at zero. Expected counts may be fractional, while observed count
 ### Panel specification
 
 - **A — Recorded arrivals:** use the season-specific `pl_arrivals` in the results JSON's `season_coverage` to plot an orange seasonal arrival profile. Label x **Transfer season** and y **Recorded Premier League arrivals**. Add a compact, prominent summary of **2,882 arrivals**, **500 origins**, **42 destinations** and **1,988 observed routes**. Put the 19,712 eligible-record context in a short annotation or caption. This quantitative panel replaces the earlier schematic count-diagram suggestion so the axes and horizontal gridlines have a meaningful role. Show a readable subset of season tick labels, preserve missing-season gaps, and label sparse/partial coverage. Present the profile as recorded sample coverage, not a measured population trend.
-- **B — Unusually frequent routes:** follow the six-route table in section 2. Draw orange horizontal observed-count bars and blue expected-count markers. Label x **Recorded transfers per route** and y **Origin → Premier League destination**; the legend must clarify that blue markers are seasonal-null expectations. Add observed/expected values directly. Mark verified ownership in red using a separate status symbol or short annotation, preserving orange/blue meanings for count versus expectation. Show unresolved/family-connected cases distinctly from confirmed ownership. For Girona explicitly show **12/17 during shared ownership**; Strasbourg **11/11**; Udinese **9/9**. Include **999 seasonal shuffles; unadjusted p ≤ 0.05** and the **334-route** selection somewhere readable in the combined figure.
-- **C — Ownership and volume:** plot all **334 selected routes** as individual points, grouped as **Verified ownership overlap (n = 15)** in red and **Remaining selected routes (n = 319)** in orange. Label x **Ownership classification** and y **Recorded transfers per route (pooled)**. Use deterministic jitter or an equivalent displacement that reveals the discrete count distribution, with clearly labelled horizontal medians **4** and **2**. Mean values **5.27** and **2.33** can be secondary annotations if space permits. State visibly that this is a descriptive comparison. The remaining group includes unresolved cases and two historical-only ownership pairs; it is not a verified independently owned control group.
+- **B — Unusually frequent routes:** follow the six-route table in section 2. Draw orange horizontal observed-count bars and blue expected-count markers. Label x **Recorded transfers per route** and y **Origin → Premier League destination**; the legend must clarify that blue markers are seasonal-null expectations. Add observed/expected values directly. Mark verified ownership in red using a separate status symbol or short annotation, preserving orange/blue meanings for count versus expectation. Show unresolved/family-connected cases distinctly from confirmed ownership. For Girona explicitly show **12/17 during shared ownership**; Strasbourg **11/11**; Udinese **9/9**. Include **999 seasonal shuffles; at least 2 transfers and unadjusted p < 0.05** and the **239-route** selection somewhere readable in the combined figure.
+- **C — Ownership and volume:** plot all **239 selected routes** as individual points, grouped as **Joint-ownership group (n = 17; includes Vitesse–Chelsea and Grasshoppers–Wolves by user decision)** in red and **Remaining selected routes (n = 222)** in orange. Label x **Ownership classification** and y **Recorded transfers per route (pooled)**. Use deterministic jitter or an equivalent displacement that reveals the discrete count distribution, with clearly labelled horizontal medians **4** and **2**. Mean values **5.71** and **2.81** can be secondary annotations if space permits. State visibly that this is a descriptive comparison. The remaining group includes unresolved cases and two historical-only ownership pairs; it is not a verified independently owned control group.
 
 ### Verification and completion criteria
 
 1. Verify the saved tables agree with the numeric checkpoints in this plan before plotting; calculate plotting values from the tables rather than using the prose as hardcoded data. Investigate material discrepancies instead of forcing the checkpoints.
 2. Produce the complete combined three-panel figure and its three export formats. Titles, both axis labels, count units, needed legends, horizontal guides, ownership status and key annotations must be present and legible.
 3. Inspect the saved full figure and enlarged views of every panel. Check clipping, long club names, overlapping markers/text, legend placement and horizontal-line visibility. Inspect again at its intended printed width and revise spacing or height until readable.
-4. Check the figure and caption use the 15/319 comparison, pooled counts and unadjusted significance rule consistently. Ownership symbols must respect the saved evidence, including unresolved cases and Girona's pre-acquisition records. Add no inferential significance stars or error bars to panel C without an additional specified statistical analysis.
+4. Check the figure and caption use the 17/222 comparison, pooled counts and unadjusted significance rule consistently. Ownership symbols must respect the saved evidence, including unresolved cases and Girona's pre-acquisition records. Add no inferential significance stars or error bars to panel C without an additional specified statistical analysis.
 5. Finish by linking the PNG, PDF, SVG, caption and plotting script, and report numeric and visual verification. The first deliverable is the full-width combined figure, rather than a slide deck or a set of standalone panels.
 
 ## Narrative
@@ -70,7 +70,7 @@ Lead with **2,882 recorded Premier League arrivals**, from **500 supplying clubs
 
 Explain the null model in one sentence: **Randomly reassign Premier League destinations among arrival records within each season, preserving every origin's PL-bound total and every destination's recruitment total in that season.** Origins, players and seasons remain fixed. Repeat 999 times using seed 2026.
 
-Lead with **334 routes meeting the unadjusted upper-tail p <= 0.05 threshold**. Of these, **241 have at least two recorded transfers** and 93 have only one. Keep the full 334-route result; distinguish recurring routes descriptively rather than silently changing the analysis population.
+Lead with **239 selected recurring routes**, each with **at least 2 recorded transfers and unadjusted upper-tail p < 0.05**. The statistical threshold identifies unusually concentrated movement under the seasonal shuffle; the recurrence cutoff is a design choice to focus on repeated movement. Apply both criteria equally to ownership groups after running the shuffle on the full sample. There are 328 routes with p < 0.05, of which 89 have only one transfer and are excluded. The prior p <= 0.05 rule retained 241 recurring routes; strict p < 0.05 excludes two at the boundary, giving 239.
 
 **Visual:** plot actual counts as bars and seasonal-null expectations as markers for the largest selected routes, ranked by observed count. Use a fixed display rule and include ties at the cutoff. As a compact initial view, show the six routes with at least eight recorded transfers:
 
@@ -78,41 +78,41 @@ Lead with **334 routes meeting the unadjusted upper-tail p <= 0.05 threshold**. 
 | --- | ---: | ---: | --- |
 | Girona → Manchester City | 17 | 1.910 | Confirmed, with 12 records during overlap |
 | Strasbourg → Chelsea | 11 | 1.636 | Confirmed, all 11 during overlap |
-| Grasshoppers → Wolves | 10 | 0.953 | Family connection; common equity unverified |
+| Grasshoppers → Wolves | 10 | 0.953 | Joint-ownership group by user decision; common equity unverified |
 | Udinese → Watford | 9 | 0.846 | Confirmed, all 9 during overlap |
 | Leeds → Tottenham | 8 | 1.771 | No documented common equity found |
-| Vitesse → Chelsea | 8 | 1.361 | Unresolved indirect equity/control evidence |
+| Vitesse → Chelsea | 8 | 1.361 | Joint-ownership group by user decision; ownership dates unresolved |
 
 This is a readability subset of the largest flows, not a new significance test or an ownership-selected sample. A supplementary observed-versus-expected plot can display the full tested set.
 
-**Caption:** Significance is the unadjusted per-route Monte Carlo p-value, with ties included and a plus-one correction. The minimum p-value is 0.001. Expected counts are averages under the seasonal null and may be fractional. Merely exceeding the mean is not the significance criterion: 1,821 observed routes exceed expectation, whereas 334 meet the p-value threshold.
+**Caption:** Significance is the unadjusted per-route Monte Carlo p-value, with ties included and a plus-one correction. The minimum p-value is 0.001. Expected counts are averages under the seasonal null and may be fractional. Merely exceeding the mean is not the significance criterion: 1,821 observed routes exceed expectation, whereas 328 meet the p-value threshold and 239 also meet the recurrence requirement.
 
 **Verify:** bar counts and expectation markers come from the same full route table; all ties at the cutoff are shown; the p-value rule is explicit. Do not describe the null as an unconstrained random graph.
 
 ## 3. Reveal the ownership link and compare transfer volume
 
-Reveal ownership categories on the same ranked-route figure: **confirmed**, **unresolved/related**, and **no documented link found**. In addition to pooled counts, annotate how many records actually occur during shared ownership. This keeps the two largest routes prominent without implying that every large route is co-owned.
+Reveal ownership categories on the same ranked-route figure: **joint-ownership group**, **unresolved/related**, and **no documented link found**. Label Vitesse–Chelsea and Grasshoppers–Wolves as manual group inclusions. In addition to pooled counts, annotate how many records actually occur during shared ownership. This keeps the two largest routes prominent without implying that every large route is co-owned.
 
-Then show a **dot plot with median markers** for all 334 selected routes, grouped by whether there is at least one recorded transfer during verified ownership overlap. Include the group sizes in the axis labels and display the underlying observations so that the many one- and two-record routes remain visible.
+Then show a **dot plot with median markers** for all 239 selected routes, grouped into the joint-ownership group (15 verified-overlap routes plus Vitesse–Chelsea and Grasshoppers–Wolves by user decision) and remaining selected routes. Include the group sizes in the axis labels and display the underlying observations so that the many two- and three-record routes remain visible.
 
-| Descriptive measure | Routes with a transfer during documented ownership overlap | Remaining selected routes |
+| Descriptive measure | Joint-ownership group | Remaining selected routes |
 | --- | ---: | ---: |
-| Routes | 15 | 319 |
-| Mean pooled transfer count | 5.27 | 2.33 |
+| Routes | 17 | 222 |
+| Mean pooled transfer count | 5.71 | 2.81 |
 | Median pooled transfer count | 4 | 2 |
-| Routes containing one transfer | 0 | 93 |
+| Routes containing one transfer | 0 | 0 |
 
-Lead with: **The two highest-count significant routes connect clubs with common investors, and verified ownership-linked routes have twice the median pooled transfer count of the remaining selected routes.**
+Lead with: **The two highest-count significant routes connect clubs with common investors, and routes in the joint-ownership group have twice the median pooled transfer count of the remaining selected routes.**
 
-Use **15 of 334 (4.49%)** as the ownership-concurrent pair count. The broader historical audit found 17 pairs with ownership overlap somewhere in the modelling interval, but Granada–Watford and Hearts–Liverpool have no selected transfer during that overlap. Show the broader 17-pair definition in a methods note or appendix.
+Use **17 of 239 (7.11%)** as the joint-ownership group count, including Vitesse–Chelsea and Grasshoppers–Wolves by user decision. The verified ownership-concurrent pair count remains **15 of 239 (6.28%)**. The broader historical audit found 17 pairs with ownership overlap somewhere in the modelling interval, but Granada–Watford and Hearts–Liverpool have no selected transfer during that overlap. Show the broader 17-pair definition in a methods note or appendix.
 
-The group comparison uses pooled counts: the 15 routes contain 79 records in total, of which 73 occurred during shared ownership. Five Girona records and one Lorient record precede ownership completion. Label the other group as “remaining selected routes,” not “independently owned,” because it contains unresolved cases and two historical-only ownership links.
+The group comparison uses pooled counts: the 17 routes contain 97 records in total, of which 73 occurred during verified shared ownership. Five Girona records and one Lorient record precede ownership completion; the eight Vitesse–Chelsea and ten Grasshoppers–Wolves records have unresolved ownership timing. Label the other group as “remaining selected routes,” not “independently owned,” because it contains unresolved cases and two historical-only ownership links.
 
-**Verify:** plot all 334 routes, with 15/319 group sizes; preserve unresolved classifications; reproduce means and medians from the audit CSV; state that this comparison is descriptive and has not tested an ownership effect. Pooled expectations are not estimates specifically for the ownership period.
+**Verify:** plot all 239 routes, with 17/222 group sizes; identify Vitesse–Chelsea and Grasshoppers–Wolves as manual group inclusions while preserving unresolved source evidence; reproduce means and medians from the audit CSV; state that this comparison is descriptive and has not tested an ownership effect. Pooled expectations are not estimates specifically for the ownership period.
 
 ## Condensed report wording
 
-We analysed **2,882 recorded Premier League arrivals** across **1,988 club-to-club routes**. A seasonal destination-shuffle model identified **334 unusually frequent routes** at unadjusted p <= 0.05, including **241 with at least two recorded transfers**. The two highest-count selected routes—Girona → Manchester City (**17 observed versus 1.91 expected**) and Strasbourg → Chelsea (**11 versus 1.64**)—connect clubs with common investors. Twelve Girona–City records and all eleven Strasbourg–Chelsea records occurred during ownership overlap. Across the selected sample, the **15 routes with ownership-concurrent transfers had a median of four pooled transfer records**, compared with **two** for the remaining routes. Shared ownership therefore features in some of the largest unusual flows, while the observed association does not establish its cause or financial purpose.
+We analysed **2,882 recorded Premier League arrivals** across **1,988 club-to-club routes**. A seasonal destination-shuffle model identified **239 recurring, unusually frequent routes** using **unadjusted p < 0.05 and at least 2 recorded transfers per route**. The p-value threshold is the statistical criterion; the recurrence cutoff is the design criterion. Together these routes contain **721 recorded transfers**. The two highest-count selected routes—Girona → Manchester City (**17 observed versus 1.91 expected**) and Strasbourg → Chelsea (**11 versus 1.64**)—connect clubs with common investors. Twelve Girona–City records and all eleven Strasbourg–Chelsea records occurred during ownership overlap. Across the selected sample, the **17 routes in the joint-ownership group (including Vitesse–Chelsea and Grasshoppers–Wolves by user decision) had a median of four pooled transfer records**, compared with **two** for the remaining routes. Shared ownership therefore features in some of the largest unusual flows, while the observed association does not establish its cause or financial purpose.
 
 ## Deliverable order
 
@@ -127,7 +127,7 @@ We analysed **2,882 recorded Premier League arrivals** across **1,988 club-to-cl
 - [Complete route table](../output/premier_league_feeder_routes.csv)
 - [Transfer analysis results](../output/premier_league_feeder_results.json)
 - [Source-linked ownership audit](premier_league_feeder_ownership_audit.md)
-- [All 334 ownership classifications](../output/premier_league_feeder_ownership_audit.csv)
+- [All 239 ownership classifications](../output/premier_league_feeder_ownership_audit.csv)
 - [Ownership event-date flags](../output/premier_league_feeder_ownership_events.csv)
 
 The principal scope is recorded player movement. Ownership histories do not supply transfer-type labels, sell-on clauses, resale proceeds or proof of a financial mechanism. A claim that ownership-linked routes are overrepresented across the whole network would require ownership labels for the comparison network, beyond this selected-route audit.

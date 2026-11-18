@@ -12,7 +12,7 @@ import matplotlib
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-from matplotlib.ticker import MultipleLocator
+from matplotlib.ticker import MaxNLocator, MultipleLocator
 import numpy as np
 
 
@@ -183,66 +183,103 @@ def _verify_snapshot(main):
     return {"all_reference_counts_match": not discrepancies, "discrepancies": discrepancies}
 
 
+def _draw_shuffle_distribution(ax, analysis, suffix):
+    plot_colors = ["#372107", "#895211", "#DC831B", "#F9AB50", "#FBC382"]
+    values = analysis["simulated_gaps_percentage_points"] + [
+        analysis["observed_gap_percentage_points"], analysis["shuffle_mean_gap_percentage_points"]
+    ]
+    low, high = min(values), max(values)
+    padding = 0.3 if suffix == "all_eligible_transfers" else max((high - low) * 0.08, 0.3)
+    bins = np.linspace(low - padding, high + padding, 31)
+    ax.hist(analysis["simulated_gaps_percentage_points"], bins=bins,
+            color=plot_colors[0],
+            label=f"Shuffles (n = {len(analysis['simulated_gaps_percentage_points']):,})",
+            alpha=0.85, rwidth=0.9)
+    observed_line = ax.axvline(
+        analysis["observed_gap_percentage_points"], color=plot_colors[2], linewidth=1.5,
+        label=f"Observed gap: {analysis['observed_gap_percentage_points']:.2f}",
+    )
+    null_mean = analysis["shuffle_mean_gap_percentage_points"]
+    null_sd = np.std(analysis["simulated_gaps_percentage_points"], ddof=1)
+    if null_sd > 0:
+        x = np.linspace(bins[0], bins[-1], 500)
+        density = np.exp(-0.5 * ((x - null_mean) / null_sd) ** 2) / (
+            null_sd * np.sqrt(2 * np.pi)
+        )
+        expected_counts = density * len(analysis["simulated_gaps_percentage_points"]) * (bins[1] - bins[0])
+        ax.plot(x, expected_counts, color=plot_colors[1], linewidth=1.2, label="Normal fit")
+    mean_line = ax.axvline(
+        null_mean, color="#0072B2", linewidth=1.2, linestyle="-",
+        label=f"Null mean: {null_mean:.2f} ± {null_sd:.2f}",
+    )
+    ax.set_xlim(bins[0], bins[-1])
+    ax.xaxis.set_major_locator(MultipleLocator(1 if bins[-1] - bins[0] < 7 else 2))
+    ax.yaxis.set_major_locator(MaxNLocator(nbins=5, integer=True))
+    ax.set_ylabel("Number of shuffles")
+    ax.set_axisbelow(True)
+    ax.grid(which="major", color="#B0B0B0", linewidth=0.65)
+    ax.tick_params(length=2.5, width=0.6, pad=2)
+    ax.set_xlabel(
+        "Premier League joining-rate gap\n(30+ minus under 30,\npercentage points)",
+        labelpad=6,
+    )
+    legend = ax.legend(
+        loc="upper right", ncol=1, frameon=True, fancybox=True,
+        facecolor="white", edgecolor="#BBBBBB", framealpha=1,
+        borderpad=0.55, labelspacing=0.35, handlelength=1.5, handletextpad=0.5,
+    )
+    legend.get_frame().set_linewidth(0.6)
+    # Reserve a clear strip for the complete legend, above all data and reference marks.
+    ax.figure.canvas.draw()
+    renderer = ax.figure.canvas.get_renderer()
+    legend_fraction = legend.get_window_extent(renderer).height / ax.get_window_extent(renderer).height
+    data_top = ax.get_ylim()[1]
+    reference_fraction = 1 - legend_fraction - 0.08
+    ax.set_ylim(0, data_top / reference_fraction)
+    observed_line.set_ydata([0, reference_fraction])
+    mean_line.set_ydata([0, reference_fraction])
+
+
 def _save_figures(main, sensitivity, output_dir):
-    analyses = [main, sensitivity]
-    for analysis, suffix in zip(
-        analyses,
-        ["all_eligible_transfers", "one_transfer_per_player"],
-    ):
-        values = analysis["simulated_gaps_percentage_points"] + [
-            analysis["observed_gap_percentage_points"], analysis["shuffle_mean_gap_percentage_points"]
-        ]
-        low, high = min(values), max(values)
-        padding = 0.3 if suffix == "all_eligible_transfers" else max((high - low) * 0.08, 0.3)
-        bins = np.linspace(low - padding, high + padding, 31)
-        fig, ax = plt.subplots(figsize=(9, 6))
-        fig.subplots_adjust(
-            left=0.1, right=0.97, bottom=0.2,
-            top=0.83 if suffix == "one_transfer_per_player" else 0.88,
-        )
-        fig.suptitle(
-            (
-                "Age-label permutation null model\non a fixed network with one eligible transfer\n"
-                "sampled uniformly at random per player"
-                if suffix == "one_transfer_per_player"
-                else "Age-label permutation null model\non the fixed observed transfer network"
-            ),
-            fontsize=15, y=0.98,
-        )
-        ax.hist(analysis["simulated_gaps_percentage_points"], bins=bins,
-                color="#0072B2",
-                label=f"Shuffles (n = {len(analysis['simulated_gaps_percentage_points']):,})",
-                alpha=0.9, rwidth=0.9)
-        ax.axvline(analysis["observed_gap_percentage_points"], color="#D55E00",
-                   linewidth=2.5,
-                   label=f"Observed gap: {analysis['observed_gap_percentage_points']:.2f}")
-        null_mean = analysis["shuffle_mean_gap_percentage_points"]
-        null_sd = np.std(analysis["simulated_gaps_percentage_points"], ddof=1)
-        if null_sd > 0:
-            x = np.linspace(bins[0], bins[-1], 500)
-            density = np.exp(-0.5 * ((x - null_mean) / null_sd) ** 2) / (
-                null_sd * np.sqrt(2 * np.pi)
-            )
-            expected_counts = density * len(analysis["simulated_gaps_percentage_points"]) * (bins[1] - bins[0])
-            ax.plot(x, expected_counts, color="#333333", linewidth=2, label="Normal fit")
-        ax.axvline(null_mean, color="#CC0000", linewidth=2.5, linestyle="--",
-                   label=f"Null mean: {null_mean:.2f} ± {null_sd:.2f}")
-        ax.set_xlim(bins[0], bins[-1])
-        ax.xaxis.set_major_locator(MultipleLocator(1))
-        ax.set_ylabel("Number of shuffles", fontsize=11)
-        ax.set_axisbelow(True)
-        ax.grid(axis="y", color="#D9D9D9", linewidth=0.7)
-        ax.legend(loc="upper right", fontsize=10, frameon=True, fancybox=True,
-                  facecolor="white", edgecolor="#D0D5DD", framealpha=1,
-                  borderpad=0.9, labelspacing=0.6)
-        ax.set_ylim(0, ax.get_ylim()[1] * 1.35)
-        ax.spines[["top", "right"]].set_visible(False)
-        ax.set_xlabel(
-            "Premier League joining-rate gap\n(30+ minus under 30, percentage points)",
-            fontsize=12, labelpad=12,
-        )
-        fig.savefig(Path(output_dir) / f"age_shuffle_outsideprem_toprem_{suffix}.png", dpi=300)
-        plt.close(fig)
+    output_dir = Path(output_dir)
+    findings_dir = output_dir / "age_shuffle_outsideprem_toprem_findings"
+    findings_dir.mkdir(parents=True, exist_ok=True)
+    style = {
+        "font.family": "Arial", "font.size": 9.5,
+        "text.color": "#333333", "axes.labelcolor": "#333333",
+        "axes.edgecolor": "#333333", "axes.titlecolor": "#333333",
+        "axes.labelsize": 9.5, "axes.titlesize": 10,
+        "axes.linewidth": 0.6, "axes.spines.top": False, "axes.spines.right": False,
+        "xtick.color": "#333333", "ytick.color": "#333333",
+        "xtick.labelsize": 9, "ytick.labelsize": 9, "legend.fontsize": 9,
+        "figure.facecolor": "white", "axes.facecolor": "white",
+        "pdf.fonttype": 42, "svg.fonttype": "none",
+        "savefig.dpi": 600, "savefig.bbox": None,
+    }
+    analyses = [
+        (main, "all_eligible_transfers", "All eligible transfers"),
+        (sensitivity, "one_transfer_per_player", "One transfer per player"),
+    ]
+    with plt.rc_context(style):
+        combined, axes = plt.subplots(1, 2, figsize=(7.16, 3.4))
+        combined.subplots_adjust(left=0.075, right=0.985, bottom=0.26, top=0.88, wspace=0.28)
+        for index, (analysis, suffix, title) in enumerate(analyses):
+            _draw_shuffle_distribution(axes[index], analysis, suffix)
+            axes[index].set_title(f"({chr(ord('a') + index)}) {title}", loc="left", pad=10)
+        for extension in ("pdf", "png", "svg"):
+            combined.savefig(findings_dir / f"age_shuffle_outsideprem_toprem_comparison.{extension}")
+        plt.close(combined)
+
+        for analysis, suffix, title in analyses:
+            fig, ax = plt.subplots(figsize=(3.58, 3.4))
+            fig.subplots_adjust(left=0.16, right=0.97, bottom=0.26, top=0.97)
+            _draw_shuffle_distribution(ax, analysis, suffix)
+            stem = f"age_shuffle_outsideprem_toprem_{suffix}"
+            for extension in ("pdf", "png", "svg"):
+                fig.savefig(findings_dir / f"{stem}.{extension}")
+            # Keep existing report links working with the updated presentation.
+            fig.savefig(output_dir / f"{stem}.png")
+            plt.close(fig)
 
 
 def run_age_shuffle_outsideprem_toprem(

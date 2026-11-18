@@ -23,7 +23,7 @@ def run_ownership_audit():
     output = PROJECT_DIR / "output"
     paths = {
         "routes": output / "premier_league_feeder_routes.csv",
-        "selected_routes": output / "premier_league_feeder_significant_routes.csv",
+        "selected_routes": output / "premier_league_feeder_selected_routes.csv",
         "shuffle_results": output / "premier_league_feeder_results.json",
         "transfers": PROJECT_DIR / "data/dataset_graph/outsideprem_toprem_eligible_transfers.csv.gz",
         "membership": PROJECT_DIR / "data/top_five_league_clubs.csv",
@@ -34,13 +34,15 @@ def run_ownership_audit():
     if shuffle["n_permutations"] != 999 or shuffle["adjustment_method"] != "none":
         raise ValueError("Ownership research was screened against the 999-shuffle, unadjusted analysis.")
     full = pd.read_csv(paths["routes"])
-    routes = full.loc[full.p_value.le(0.05)].sort_values(
+    selection = full.p_value.lt(0.05) & full.observed_count.ge(2)
+    np.testing.assert_array_equal(full.selected_route, selection)
+    routes = full.loc[selection].sort_values(
         ["p_value", "observed_count", *KEYS], ascending=[True, False, True, True]).reset_index(drop=True)
     # The filtered CSV has been serialized once more than the complete table.
     pd.testing.assert_frame_equal(routes, pd.read_csv(paths["selected_routes"]),
                                   check_exact=False, rtol=1e-12, atol=1e-15)
-    if len(routes) != 334 or routes.duplicated(KEYS).any():
-        raise ValueError("The research denominator must remain the 334 unique screened routes.")
+    if len(routes) != shuffle["selected_route_count"] or routes.duplicated(KEYS).any():
+        raise ValueError("The ownership denominator must match the selected recurring routes.")
 
     sample, _, _, _, _ = _build_sample(paths["transfers"], paths["membership"])
     events = sample.merge(routes[KEYS], on=KEYS, validate="many_to_one")
@@ -129,10 +131,20 @@ def run_ownership_audit():
             raise ValueError("A flagged unconfirmed case conflicts with confirmed evidence.")
         audit.loc[mask, "ownership_status"] = status
         audit.loc[mask, "ownership_note"] = note
+    audit["manual_joint_ownership_inclusion"] = False
+    for row in evidence["manual_joint_ownership_pairs"]:
+        mask = audit.from_club_id.eq(row["from_club_id"]) & audit.to_club_id.eq(row["to_club_id"])
+        if mask.sum() != 1:
+            raise ValueError(f"Manual joint-ownership inclusion lacks a selected route: {row}")
+        audit.loc[mask, "manual_joint_ownership_inclusion"] = True
+        audit.loc[mask, "ownership_note"] += " " + row["note"]
+    audit["joint_ownership_group"] = (audit.has_ownership_concurrent_record
+                                      | audit.manual_joint_ownership_inclusion)
     by_destination = audit.groupby(["to_club_id", "to_club_name"]).agg(
         screened_pairs=("from_club_id", "size"),
         documented_pairs=("documented_shared_owner_during_model_interval", "sum"),
         transfer_concurrent_pairs=("has_ownership_concurrent_record", "sum"),
+        joint_ownership_pairs=("joint_ownership_group", "sum"),
     )
     results = {
         "research_as_of": evidence["research_as_of"], "definition": evidence["definition"],
@@ -141,7 +153,7 @@ def run_ownership_audit():
         "selected_route_event_date_min": events.transfer_date.min(),
         "selected_route_event_date_max": events.transfer_date.max(),
         "shuffle_permutations": shuffle["n_permutations"], "shuffle_seed": shuffle["seed"],
-        "selection_threshold": "unadjusted upper-tail Monte Carlo p <= 0.05",
+        "selection_threshold": shuffle["selection_rule"],
         "screened_unique_pairs": len(audit),
         "unique_unordered_pairs": len({tuple(sorted(pair)) for pair in audit[KEYS].itertuples(index=False, name=None)}),
         "origin_clubs": int(audit.from_club_id.nunique()), "destination_clubs": len(by_destination),
@@ -152,6 +164,10 @@ def run_ownership_audit():
         "transfer_concurrent_pair_percent": float(100 * audit.has_ownership_concurrent_record.mean()),
         "selected_records_on_ever_shared_owner_pairs": int(audit.loc[known, "observed_count"].sum()),
         "ownership_concurrent_transfer_records": int(events.confirmed_shared_owner_on_record_date.sum()),
+        "joint_ownership_group_pairs": int(audit.joint_ownership_group.sum()),
+        "joint_ownership_group_percent": float(100 * audit.joint_ownership_group.mean()),
+        "joint_ownership_group_pooled_records": int(audit.loc[audit.joint_ownership_group, "observed_count"].sum()),
+        "manual_joint_ownership_pairs": evidence["manual_joint_ownership_pairs"],
         "date_boundary_uncertain_records": int(events.ownership_boundary_uncertain.sum()),
         "selected_events_after_research_date": int(events.transfer_date.gt(evidence["research_as_of"]).sum()),
         "verified_route_events_in_trust_control_windows": int(events.in_trust_control_window.sum()),

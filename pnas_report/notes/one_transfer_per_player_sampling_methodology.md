@@ -14,13 +14,13 @@ The code constructs `selected` once, then passes it to `_run_test`. Within `_run
 
 The root seed is 2026. `SeedSequence(seed).spawn(3)` creates separate streams for the main permutation, record selection and sensitivity permutation. NumPy documents spawning as producing streams that are independent with very high probability. [NumPy: parallel random number generation](https://numpy.org/doc/stable/reference/random/parallel.html).
 
-## Plot title
+## Plot caption
 
 > Age-label permutation null model  
 > on a fixed network with one eligible transfer  
 > sampled uniformly at random per player
 
-This title identifies the null operation, the fixed network during permutations, and the actual sampling unit and selection rule. The selected records form a transfer-edge subset of the observed network, not a newly generated or rewired network.
+This wording is retained in the publication caption, with no title inside the standalone plot. It identifies the null operation, the fixed network during permutations, and the actual sampling unit and selection rule. The selected records form a transfer-edge subset of the observed network, not a newly generated or rewired network.
 
 For a methods paragraph:
 

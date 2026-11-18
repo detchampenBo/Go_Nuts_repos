@@ -13,3 +13,5 @@ The [week 8 brief](../data/week8/) calls for one research question using both ne
 Start by writing the question in `notes/question.md` and documenting each dataset's source and contents in its own README. Keep only figures that advance the paper's single story.
 
 The existing `data/transfermarkt-datasets/` files are left in place; the two new dataset directories are for data you create.
+
+For new analysis plots or presentation changes, read the [scientific plotting style](PLOTTING_STYLE.md): chart selection, default palette and semantic overrides, publication typography, combined/standalone exports, and verification checks.

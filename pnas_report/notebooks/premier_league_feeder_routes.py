@@ -163,7 +163,7 @@ def _route_statistics(sample, n_permutations, seed):
         "permutations_greater_or_equal": greater_or_equal[family],
         "permutations_equal": equal[family],
         "p_value": p_values,
-        "significant": p_values <= 0.05,
+        "significant": p_values < 0.05,
     })
     players = sample.groupby(["from_club_id", "to_club_id"]).player_id.nunique()
     table["distinct_players"] = [int(players.get((a, b), 0)) for a, b in
@@ -172,6 +172,7 @@ def _route_statistics(sample, n_permutations, seed):
     table["repeat_player_extra_records"] = table.observed_count - table.distinct_players
     table["repeated_player_flag"] = table.repeat_player_extra_records > 0
     table["recurring_route"] = table.observed_count >= 2
+    table["selected_route"] = table.significant & table.recurring_route
     if not table.loc[table.observed_count.eq(0), "p_value"].eq(1).all():
         raise AssertionError("Unobserved routes must have p-value 1 (ties included).")
     verification = {
@@ -182,7 +183,9 @@ def _route_statistics(sample, n_permutations, seed):
         "upper_tail_includes_ties": bool(np.array_equal(
             table.p_value.to_numpy(), (1 + table.permutations_greater_or_equal) / (1 + n_permutations))),
         "p_values_cover_entire_testing_family": len(p_values) == len(table),
-        "significance_uses_unadjusted_p_values": bool(np.array_equal(table.significant, table.p_value <= 0.05)),
+        "significance_uses_unadjusted_p_values": bool(np.array_equal(table.significant, table.p_value < 0.05)),
+        "selection_requires_significance_and_recurrence": bool(np.array_equal(
+            table.selected_route, table.p_value.lt(0.05) & table.observed_count.ge(2))),
         "expected_counts_sum_to_arrivals": bool(np.isclose(expected.sum(), len(sample))),
     }
     return table, verification
@@ -215,11 +218,11 @@ def _save_figures(table, labels, output_dir, origins, destinations, displayed):
     destination_y = dict(zip(destinations, np.linspace(1, 0, len(destinations))))
     fig, ax = plt.subplots(figsize=(18, max(12, len(destinations) * 0.34)))
     fig.subplots_adjust(left=0.02, right=0.98, top=0.90, bottom=0.13)
-    for row in displayed.sort_values(["significant", "observed_count"]).itertuples():
+    for row in displayed.sort_values(["selected_route", "observed_count"]).itertuples():
         ax.plot([0, 1], [origin_y[row.from_club_id], destination_y[row.to_club_id]],
                 linewidth=0.45 * row.observed_count,
-                color=ORANGE if row.significant else GREY,
-                alpha=0.9 if row.significant else 0.28, solid_capstyle="round")
+                color=ORANGE if row.selected_route else GREY,
+                alpha=0.9 if row.selected_route else 0.28, solid_capstyle="round")
     for clubs, positions, x, alignment, offset in (
         (origins, origin_y, 0, "right", -0.025),
         (destinations, destination_y, 1, "left", 0.025),
@@ -232,18 +235,18 @@ def _save_figures(table, labels, output_dir, origins, destinations, displayed):
     ax.set(xlim=(-0.57, 1.57), ylim=(-0.025, 1.075))
     ax.axis("off")
     fig.suptitle("Recorded routes into the Premier League", fontsize=21, y=0.975)
-    handles = [Line2D([0], [0], color=GREY, lw=2, label="Unadjusted p > 0.05"),
-               Line2D([0], [0], color=ORANGE, lw=2, label="Unadjusted p ≤ 0.05")]
+    handles = [Line2D([0], [0], color=GREY, lw=2, label="Remaining observed routes"),
+               Line2D([0], [0], color=ORANGE, lw=2, label="≥ 2 transfers and unadjusted p < 0.05")]
     maximum = int(displayed.observed_count.max())
     for count in sorted({1, max(2, maximum // 2), maximum}):
         handles.append(Line2D([0], [0], color="#243746", lw=0.45 * count,
                               label=f"{count} recorded transfers"))
     fig.legend(handles=handles, loc="lower center", bbox_to_anchor=(0.5, 0.045),
                ncol=3, frameon=False, fontsize=10)
-    outside = int((table.significant & ~table.from_club_id.isin(origins)).sum())
+    outside = int((table.selected_route & ~table.from_club_id.isin(origins)).sum())
     fig.text(0.5, 0.025,
              f"Top 20 origins by PL-bound count (ties: club ID); all {len(destinations)} connected destinations. "
-             f"Full-sample tests; {outside} significant routes outside this view.\n"
+             f"Full-sample tests; {outside} selected recurring routes outside this view.\n"
              "Line width is proportional to transfer count. Club IDs are in brackets; roles remain separate across seasons.",
              ha="center", fontsize=10)
     fig.savefig(output_dir / f"{PREFIX}_network.png", dpi=300)
@@ -251,7 +254,7 @@ def _save_figures(table, labels, output_dir, origins, destinations, displayed):
 
     matrix = table.pivot(index="from_club_id", columns="to_club_id", values="observed_count").reindex(
         index=origins, columns=destinations).fillna(0).to_numpy(dtype=int)
-    significant = table.pivot(index="from_club_id", columns="to_club_id", values="significant").reindex(
+    selected = table.pivot(index="from_club_id", columns="to_club_id", values="selected_route").reindex(
         index=origins, columns=destinations).eq(True).to_numpy(dtype=bool)
     fig, ax = plt.subplots(figsize=(max(18, len(destinations) * 0.40), 13))
     fig.subplots_adjust(left=0.19, right=0.93, top=0.89, bottom=0.29)
@@ -261,7 +264,7 @@ def _save_figures(table, labels, output_dir, origins, destinations, displayed):
     for i, j in zip(*np.nonzero(matrix)):
         ax.text(j, i, str(matrix[i, j]), ha="center", va="center", fontsize=8,
                 color="white" if matrix[i, j] > matrix.max() * 0.55 else "#243746")
-    for i, j in zip(*np.nonzero(significant)):
+    for i, j in zip(*np.nonzero(selected)):
         ax.add_patch(Rectangle((j - 0.48, i - 0.48), 0.96, 0.96, fill=False,
                                edgecolor=ORANGE, linewidth=1.6))
     colorbar = fig.colorbar(im, ax=ax, fraction=0.024, pad=0.025)
@@ -269,12 +272,13 @@ def _save_figures(table, labels, output_dir, origins, destinations, displayed):
     ax.set_xlabel("Premier League destination (receiving role)", labelpad=10)
     ax.set_ylabel("Outside-PL origin (supplying role)")
     fig.suptitle("Destination patterns among the 20 largest supplying clubs", fontsize=20, y=0.97)
-    fig.legend(handles=[Line2D([0], [0], color=ORANGE, lw=2, label="Orange cell border: unadjusted p ≤ 0.05")],
+    fig.legend(handles=[Line2D([0], [0], color=ORANGE, lw=2,
+                               label="Orange cell border: ≥ 2 transfers and unadjusted p < 0.05")],
                loc="lower center", bbox_to_anchor=(0.5, 0.085), frameon=False, fontsize=10)
     fig.text(0.5, 0.04,
              f"Same origins and order as the network: top 20 by PL-bound count, ties by club ID; "
              f"all {len(destinations)} connected destinations.\n"
-             f"Counts are pooled across all recorded seasons. Tests use the full sample; {outside} significant routes outside this view.",
+             f"Counts are pooled across all recorded seasons. Tests use the full sample; {outside} selected recurring routes outside this view.",
              ha="center", fontsize=10)
     fig.savefig(output_dir / f"{PREFIX}_heatmap.png", dpi=300)
     plt.close(fig)
@@ -283,8 +287,8 @@ def _save_figures(table, labels, output_dir, origins, destinations, displayed):
 def _save_summary(table, results, output_dir):
     counts = results["sample_and_exclusion_counts"]
     significant = table.loc[table.significant]
-    # Do not rank one-record 100% shares as prominent recurring routes.
-    prominent = table.loc[table.recurring_route & table.observed_expected_ratio.gt(1)].sort_values(
+    selected = table.loc[table.selected_route]
+    prominent = selected.sort_values(
         ["p_value", "observed_count", "from_club_id", "to_club_id"],
         ascending=[True, False, True, True]).head(10)
     lines = [
@@ -312,18 +316,24 @@ def _save_summary(table, results, output_dir):
         f"Its minimum and grid spacing are {results['permutation_p_value_resolution']:.4g}. "
         f"We tested **all {len(table):,} pairs with positive expected count**, "
         f"including {results['unobserved_tested_pairs']:,} unobserved routes (p = 1). "
-        "The significance flag and highlighting use unadjusted p ≤ 0.05. No multiple-comparison correction "
+        "The significance flag uses unadjusted p < 0.05. Selected routes must also have at least two "
+        "recorded transfers; highlighting uses both criteria. This recurrence requirement is a design choice "
+        "to focus on repeated movement, not an additional statistical test. It counts recorded events, "
+        "not necessarily distinct players or permanent sales. The shuffle uses the full arrival sample "
+        "before this route filter is applied. No multiple-comparison correction "
         "is applied; this is a per-route threshold and does not control false discoveries across all tested routes. "
         "A minimum-grid p-value is not zero.", "",
         "## Results", "",
-        (f"**{len(significant)} routes meet the unadjusted p ≤ 0.05 threshold.**" if len(significant)
-         else "**No route meets the unadjusted p ≤ 0.05 threshold.**"), "",
+        f"**{len(selected)} recurring routes are selected: at least 2 recorded transfers and unadjusted p < 0.05.**", "",
+        f"{len(significant)} routes pass the statistical threshold alone; "
+        f"{len(significant) - len(selected)} single-transfer routes are excluded by the recurrence requirement. "
+        f"The selected routes contain {int(selected.observed_count.sum())} recorded transfers.", "",
         f"The smallest unadjusted p-value is {table.p_value.min():.4g}; "
         f"{int(table.p_value.eq(results['permutation_p_value_resolution']).sum())} routes reach the "
         "minimum Monte Carlo p-value. The finite resolution limits distinctions between routes "
         "with small tail probabilities.", "",
-        "The table below lists recurring, over-expected routes ranked by unadjusted p, then count "
-        "(ID tie breaks). The per-route significance threshold is unadjusted p ≤ 0.05.", "",
+        "The table below lists selected recurring routes ranked by unadjusted p, then count "
+        "(ID tie breaks). Every route meets both the statistical and recurrence criteria.", "",
         "| Origin → destination (IDs) | Transfers | Expected | Obs./exp. | Origin PL total | Share | Distinct players | Repeat extras | Unadjusted p |",
         "| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |",
     ]
@@ -341,14 +351,16 @@ def _save_summary(table, results, output_dir):
         f"and a flag for every pair. There are {counts['identical_arrival_records']} completely identical arrival rows.", "",
         "## Figures", "",
         f"{DISPLAY_RULE} Both figures use the same origin order and connected destinations; all routes remain "
-        f"in the analysis. {results['significant_routes_outside_display']} routes meeting the unadjusted threshold fall outside this view.", "",
+        f"in the statistical testing family. {results['selected_routes_outside_display']} selected recurring routes fall outside this view.", "",
         f"![Two-column weighted transfer network]({PREFIX}_network.png)", "",
-        "*Line width is proportional to recorded transfer count. Grey routes have unadjusted p > 0.05; "
-        "orange routes have unadjusted p ≤ 0.05. Club IDs appear in brackets. The top-20-origin display is a subset of the full analysis.*", "",
+        "*Line width is proportional to recorded transfer count. Orange routes have at least 2 transfers "
+        "and unadjusted p < 0.05; grey routes do not meet both criteria. Club IDs appear in brackets. "
+        "The top-20-origin display is a subset of the full analysis.*", "",
         f"![Origin-by-destination transfer heatmap]({PREFIX}_heatmap.png)", "",
         "*The heatmap shows counts for the same top 20 origins and all their connected destinations. "
-        "Blank cells have zero transfers; orange borders identify routes with unadjusted p ≤ 0.05.*", "",
-        f"[Complete route table]({PREFIX}_routes.csv) · [Results and verification]({PREFIX}_results.json)", "",
+        "Blank cells have zero transfers; orange borders identify routes with at least 2 transfers and unadjusted p < 0.05.*", "",
+        f"[Complete route table]({PREFIX}_routes.csv) · [Selected recurring routes]({PREFIX}_selected_routes.csv) · "
+        f"[Statistical threshold alone]({PREFIX}_significant_routes.csv) · [Results and verification]({PREFIX}_results.json)", "",
         "## Season coverage and limitations", "",
         "All recorded seasons are retained, including sparse and partial coverage. Dates below describe recorded "
         "events, not evidence of complete season observation. In particular, 2026/27 contains recorded future-dated "
@@ -431,16 +443,21 @@ def run_feeder_routes(transfers_path, league_lookup_path, output_dir, *, n_permu
         "observed_routes": int(table.observed_count.gt(0).sum()),
         "unobserved_tested_pairs": int(table.observed_count.eq(0).sum()),
         "adjustment_method": "none",
-        "significance_basis": "unadjusted upper-tail Monte Carlo p_value <= 0.05",
+        "significance_basis": "unadjusted upper-tail Monte Carlo p_value < 0.05",
         "significance_threshold": 0.05,
+        "selection_rule": "observed_count >= 2 and unadjusted upper-tail Monte Carlo p_value < 0.05",
+        "minimum_route_transfers": 2,
         "permutation_p_value_resolution": 1 / (1 + n_permutations),
         "significant_route_count": int(table.significant.sum()),
+        "selected_route_count": int(table.selected_route.sum()),
+        "selected_transfer_records": int(table.loc[table.selected_route, "observed_count"].sum()),
         "display_selection_rule": DISPLAY_RULE,
         "display_origin_ids": [int(c) for c in origins],
         "display_destination_ids": [int(c) for c in destinations],
         "displayed_routes": len(displayed),
         "displayed_transfer_records": int(displayed.observed_count.sum()),
         "significant_routes_outside_display": int((table.significant & ~table.from_club_id.isin(origins)).sum()),
+        "selected_routes_outside_display": int((table.selected_route & ~table.from_club_id.isin(origins)).sum()),
         "routes_with_repeated_players": int(table.repeated_player_flag.sum()),
         "route_repeat_player_extra_records": int(table.repeat_player_extra_records.sum()),
         "verification": verification,
@@ -449,6 +466,10 @@ def run_feeder_routes(transfers_path, league_lookup_path, output_dir, *, n_permu
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
     table.to_csv(output_dir / f"{PREFIX}_routes.csv", index=False)
+    ranked = table.sort_values(["p_value", "observed_count", "from_club_id", "to_club_id"],
+                              ascending=[True, False, True, True])
+    ranked.loc[ranked.significant].to_csv(output_dir / f"{PREFIX}_significant_routes.csv", index=False)
+    ranked.loc[ranked.selected_route].to_csv(output_dir / f"{PREFIX}_selected_routes.csv", index=False)
     _save_figures(table, labels, output_dir, origins, destinations, displayed)
     (output_dir / f"{PREFIX}_results.json").write_text(
         json.dumps(results, indent=2, allow_nan=False) + "\n", encoding="utf-8")
@@ -467,7 +488,8 @@ def _main():
     args = parser.parse_args()
     results = run_feeder_routes(**vars(args))
     print(json.dumps({key: results[key] for key in (
-        "sample_and_exclusion_counts", "testing_family_size", "significant_route_count", "verification")}, indent=2))
+        "sample_and_exclusion_counts", "testing_family_size", "significant_route_count",
+        "selected_route_count", "selected_transfer_records", "verification")}, indent=2))
     print(f"Saved outputs to {args.output_dir.resolve()}")
 
 

@@ -16,9 +16,11 @@ Start with the existing eligible-transfer dataset and retain the **2,882 recorde
 
 ## Analysis
 
+Selection updated 18 November 2026: retain a route only when it has **at least 2 recorded transfers and unadjusted shuffle p < 0.05**. The p-value criterion identifies unusual concentration; the recurrence criterion is a design choice to study repeated movement. Compute the shuffle on the full sample, then apply both criteria equally to every route. Recurrence counts recorded movements, including repeated players and loan returns.
+
 For each route, measure its transfer count and its share of the origin club's Premier League-bound transfers. These shares describe destination preferences conditional on entering the Premier League, rather than the origin's overall Premier League joining rate.
 
-Compare route counts with a null model that shuffles Premier League destinations among arrival records **within each season**. This preserves each origin's number of Premier League-bound transfers and each destination's recruitment total per season. Use **999 shuffles** and identify unusually strong routes using **unadjusted upper-tail Monte Carlo p-values <= 0.05**, without multiple-comparison correction. Report counts alongside concentration, since one transfer can produce a misleading 100% share. Check whether repeated transfers by the same player drive prominent routes.
+Compare route counts with a null model that shuffles Premier League destinations among arrival records **within each season**. This preserves each origin's number of Premier League-bound transfers and each destination's recruitment total per season. Use **999 shuffles** and identify unusually strong routes using **unadjusted upper-tail Monte Carlo p-values < 0.05 and at least two recorded transfers per directed route**, without multiple-comparison correction. Report counts alongside concentration, since one transfer can produce a misleading 100% share. Check whether repeated transfers by the same player drive prominent routes.
 
 Community detection, such as Louvain, is an optional exploration of groups of supplying and receiving clubs that trade strongly with each other. A community may contain several Premier League clubs, so community membership alone does not establish a specific feeder route.
 
@@ -56,24 +58,26 @@ Expose an importable function `run_feeder_routes(transfers_path, league_lookup_p
 - Pool route counts across seasons, while shuffling destination IDs only within the same season. Use 999 permutations and seed 2026, with deterministic record ordering.
 - For route A to B, calculate its expected count as the sum across seasons of `origin_PL_arrivals_A * destination_arrivals_B / total_PL_arrivals`, using season-specific counts and seasons with arrivals. Record observed count, expected count, observed/expected ratio, origin's PL-bound total, destination share, and distinct players on the route. Destination share means observed count divided by the origin's PL-bound total.
 - Define the testing family before examining route strength: all origin/destination pairs with positive expected count, including unobserved routes. For each route, use the upper-tail Monte Carlo p-value `(1 + number of shuffled counts >= observed count) / (1 + n_permutations)`. Include ties. Unobserved routes have p-value 1.
-- Use the unadjusted p-value <= 0.05 for the significance flag and highlighting. Do not apply multiple-comparison correction or export adjusted p-values. With 999 shuffles, the minimum p-value and grid spacing are 0.001; include ties and the plus-one correction specified above. Label results and figure legends as unadjusted, and interpret the threshold as a per-route comparison rather than control of false discoveries across all tested routes.
+- Use the unadjusted p-value < 0.05 for the significance flag. Highlight and select only routes that also have at least two recorded transfers, using a separate `selected_route` flag. Do not apply multiple-comparison correction or export adjusted p-values. With 999 shuffles, the minimum p-value and grid spacing are 0.001; include ties and the plus-one correction specified above. Label results and figure legends as unadjusted, and interpret the threshold as a per-route comparison rather than control of false discoveries across all tested routes.
 - Include distinct-player counts and flag routes whose transfer counts are inflated by repeated records for the same player. Treat this as a descriptive check, not an independent significance test. Explain that the shuffle controls seasonal transfer volumes, but not geography, ownership, or player characteristics.
 
 ### Required outputs in `/output`
 
 | Filename | Contents |
 | --- | --- |
-| `premier_league_feeder_routes.csv` | Every tested pair, club IDs and available names, route measures above, unadjusted p-value, and significance flag based on unadjusted p-value <= 0.05. |
+| `premier_league_feeder_routes.csv` | Every tested pair, club IDs and available names, route measures above, unadjusted p-value, and significance flag based on unadjusted p-value < 0.05. |
+| `premier_league_feeder_selected_routes.csv` | Routes with at least 2 recorded transfers and unadjusted p < 0.05; the ownership analysis and combined figure use this selection. |
+| `premier_league_feeder_significant_routes.csv` | All routes with unadjusted p < 0.05, including single-transfer routes; statistical threshold alone. |
 | `premier_league_feeder_results.json` | Input paths, sample/exclusion counts, season coverage, seed, permutation count, testing-family size, adjustment method recorded as none, unadjusted significant-route count, display-selection rule, and verification results. |
-| `premier_league_feeder_network.png` | Two-column weighted network with supplying and receiving roles separated; line width represents transfer count and colour marks routes with unadjusted p-value <= 0.05. |
+| `premier_league_feeder_network.png` | Two-column weighted network with supplying and receiving roles separated; line width represents transfer count and colour marks routes with at least 2 recorded transfers and unadjusted p-value < 0.05. |
 | `premier_league_feeder_heatmap.png` | Origin-by-destination heatmap of transfer counts, using the same displayed origin clubs as the network. |
-| `premier_league_feeder_summary.md` | Methods, key counts, strongest routes under the unadjusted comparison, repeated-player caveat, interpretation limits, and links to both figures and the route table. Report the number of routes with unadjusted p-value <= 0.05 and explicitly state if none meet this threshold. |
+| `premier_league_feeder_summary.md` | Methods, key counts, strongest routes under the unadjusted comparison, repeated-player caveat, interpretation limits, and links to both figures and the route table. Report the number of routes with unadjusted p-value < 0.05 and explicitly state if none meet this threshold. |
 
 For readable figures, display the 20 origins with the most PL-bound transfers and all destinations connected to them; break ties by club ID. Analyse the full sample regardless of this display selection. State this selection in captions and report whether significant routes fall outside it. Export readable PNGs at 300 dpi with legends defining weights and colours. Use club IDs when names are unavailable.
 
 ### Verification and completion
 
 1. Check membership coverage for every input season, endpoint eligibility, total selected arrivals, and that edge weights sum to the arrival count.
-2. Verify that each permutation preserves origin and destination transfer totals within every season. Check p-value ties, inclusion of the complete testing family, significance flags based directly on unadjusted p-value <= 0.05, and the distinction between role-specific nodes. Confirm that adjusted p-values are absent from the outputs.
+2. Verify that each permutation preserves origin and destination transfer totals within every season. Check p-value ties, inclusion of the complete testing family, significance flags based directly on unadjusted p-value < 0.05, and the distinction between role-specific nodes. Confirm that adjusted p-values are absent from the outputs.
 3. Run the analysis twice with the same seed and confirm identical statistical outputs. Inspect both saved figures for readable labels, legends, and clipping; correct any layout issues.
 4. Finish by reporting the Python file path, output paths, sample size, number of routes meeting the unadjusted p-value threshold, and any limitations. Do not describe a recurring route as evidence of a formal feeder agreement.

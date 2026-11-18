@@ -47,7 +47,7 @@ class FeederRoutesTests(unittest.TestCase):
         np.testing.assert_array_equal(routes.permutations_equal, [ties[pair] for pair in routes.index])
         self.assertGreater(ties[(10, 100)], 0)
         self.assertGreater(ge[(10, 100)], ge[(10, 100)] - ties[(10, 100)])
-        np.testing.assert_array_equal(routes.significant, raw <= 0.05)
+        np.testing.assert_array_equal(routes.significant, raw < 0.05)
         self.assertNotIn("adjusted_p_value", routes.columns)
         self.assertTrue(routes.loc[routes.observed_count.eq(0), "p_value"].eq(1).all())
         self.assertEqual(routes.loc[(10, 100), "distinct_players"], 1)
@@ -56,7 +56,7 @@ class FeederRoutesTests(unittest.TestCase):
         self.assertAlmostEqual(routes.loc[(10, 100), "destination_share"], 2 / 3)
         self.assertTrue(verification["all_permutations_preserved_origin_and_destination_totals_within_every_season"])
 
-    def test_unadjusted_threshold_includes_p_equal_to_point_zero_five(self):
+    def test_unadjusted_threshold_excludes_p_equal_to_point_zero_five(self):
         sample = pd.DataFrame([
             ("01/02", 10, 100, player) for player in range(5)
         ] + [
@@ -65,8 +65,24 @@ class FeederRoutesTests(unittest.TestCase):
         table, _ = _route_statistics(sample, 19, 2026)
         observed = table.loc[table.observed_count.gt(0)]
         self.assertTrue(observed.p_value.eq(0.05).all())
-        self.assertTrue(observed.significant.all())
+        self.assertFalse(observed.significant.any())
+        self.assertFalse(observed.selected_route.any())
         self.assertFalse(table.loc[table.observed_count.eq(0), "significant"].any())
+
+    def test_selection_requires_recurrence_even_when_single_transfer_is_significant(self):
+        sample = pd.DataFrame([
+            ("01/02", 10, 100, 1),
+        ] + [
+            ("01/02", 20, 200, player) for player in range(2, 102)
+        ] + [
+            ("01/02", 30, 300, 102), ("01/02", 30, 300, 103),
+        ], columns=self.sample.columns)
+        table, _ = _route_statistics(sample, 999, 2026)
+        routes = table.set_index(["from_club_id", "to_club_id"])
+        self.assertTrue(routes.loc[(10, 100), "significant"])
+        self.assertFalse(routes.loc[(10, 100), "selected_route"])
+        self.assertTrue(routes.loc[(30, 300), "selected_route"])
+        self.assertFalse(table.loc[table.observed_count.lt(2), "selected_route"].any())
 
     def test_same_club_has_distinct_supplying_and_receiving_nodes(self):
         table, _ = _route_statistics(self.sample, 5, 2026)
