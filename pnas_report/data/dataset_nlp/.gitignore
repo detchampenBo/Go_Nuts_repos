@@ -1,0 +1,25 @@
+# Guardian article text: large, and not ours to republish
+guardian_cache/
+guardian_cache_v2/
+articles.csv
+articles.parquet
+article_player.csv
+sentences.csv
+*.tmp
+Pilot/
+a1_cache_*.csv
+a1_*_scores.csv
+
+# Transfermarkt data: download from Kaggle
+pipeline/data/
+data/*.csv.gz
+# ...except the text-free link table, which is ours to share
+!data/article_player_notext.csv.gz
+
+# test runs, Python, notebooks, secrets
+pipeline/tests/run/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.env
+.venv/
