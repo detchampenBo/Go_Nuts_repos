@@ -1,0 +1,9 @@
+pandas>=2.0
+numpy
+requests
+matplotlib
+vaderSentiment
+pyarrow            # optional: articles.parquet instead of articles.csv
+# for --scorer roberta only:
+# transformers
+# torch

@@ -1,0 +1,133 @@
+﻿model,spec,period,n_30plus,n_under30,under30_mean,gap_30plus_minus_under30,ci_lo,ci_hi,p_within_season
+RoBERTa,1 no controls (as 11 Nov),before,67,753,0.1253,-0.0339,-0.0666,-0.0013,0.0412
+RoBERTa,1 no controls (as 11 Nov),after,67,753,0.1117,-0.0279,-0.0601,0.0043,0.0918
+RoBERTa,1 no controls (as 11 Nov),change,67,753,-0.0137,0.0060,-0.0330,0.0451,0.7558
+RoBERTa,2 + fame (log articles before),before,67,753,0.1253,-0.0291,-0.0632,0.0051,0.0960
+RoBERTa,2 + fame (log articles before),after,67,753,0.1117,-0.0279,-0.0616,0.0058,0.1048
+RoBERTa,2 + fame (log articles before),change,67,753,-0.0137,0.0012,-0.0400,0.0423,0.9546
+RoBERTa,3 + fame + market value,before,67,753,0.1253,-0.0260,-0.0601,0.0082,0.1378
+RoBERTa,3 + fame + market value,after,67,753,0.1117,-0.0344,-0.0682,-0.0007,0.0482
+RoBERTa,3 + fame + market value,change,67,753,-0.0137,-0.0085,-0.0496,0.0326,0.6821
+RoBERTa,4 article type adjusted,before,67,753,0.1230,-0.0369,-0.0689,-0.0048,0.0268
+RoBERTa,4 article type adjusted,after,67,753,0.1100,-0.0288,-0.0603,0.0028,0.0760
+RoBERTa,4 article type adjusted,change,67,753,-0.0130,0.0081,-0.0304,0.0466,0.6839
+RoBERTa,5 no quoted sentences,before,65,728,0.1085,-0.0298,-0.0609,0.0012,0.0644
+RoBERTa,5 no quoted sentences,after,65,728,0.0904,-0.0271,-0.0592,0.0051,0.0978
+RoBERTa,5 no quoted sentences,change,65,728,-0.0181,0.0028,-0.0360,0.0416,0.8828
+RoBERTa,6 seasons 2016+,before,66,607,0.1243,-0.0367,-0.0696,-0.0039,0.0290
+RoBERTa,6 seasons 2016+,after,66,607,0.1118,-0.0285,-0.0617,0.0046,0.0942
+RoBERTa,6 seasons 2016+,change,66,607,-0.0126,0.0082,-0.0313,0.0478,0.6793
+RoBERTa,"7 all: no quotes, type adjusted, fame + value",before,65,728,0.1074,-0.0153,-0.0474,0.0168,0.3511
+RoBERTa,"7 all: no quotes, type adjusted, fame + value",after,65,728,0.0902,-0.0349,-0.0683,-0.0014,0.0390
+RoBERTa,"7 all: no quotes, type adjusted, fame + value",change,65,728,-0.0172,-0.0196,-0.0605,0.0214,0.3455
+RoBERTa,8 all + position,before,65,728,0.1074,-0.0104,-0.0421,0.0214,0.5225
+RoBERTa,8 all + position,after,65,728,0.0902,-0.0341,-0.0676,-0.0005,0.0428
+RoBERTa,8 all + position,change,65,728,-0.0172,-0.0237,-0.0645,0.0171,0.2537
+RoBERTa,9 within news only (>=3 sentences per period),before,36,488,0.1221,-0.0308,-0.0808,0.0192,0.2294
+RoBERTa,9 within news only (>=3 sentences per period),after,36,488,0.0835,-0.0341,-0.0868,0.0187,0.2108
+RoBERTa,9 within news only (>=3 sentences per period),change,36,488,-0.0386,-0.0032,-0.0716,0.0651,0.9244
+RoBERTa,9 within features only (>=3 sentences per period),before,60,730,0.1248,-0.0420,-0.0849,0.0009,0.0538
+RoBERTa,9 within features only (>=3 sentences per period),after,60,730,0.1239,-0.0268,-0.0679,0.0143,0.2192
+RoBERTa,9 within features only (>=3 sentences per period),change,60,730,-0.0009,0.0152,-0.0368,0.0672,0.5627
+RoBERTa,9 within comment only (>=3 sentences per period),before,9,123,0.1086,-0.1107,-0.2272,0.0059,0.1728
+RoBERTa,9 within comment only (>=3 sentences per period),after,9,123,0.0838,-0.0064,-0.1344,0.1215,0.9288
+RoBERTa,9 within comment only (>=3 sentences per period),change,9,123,-0.0248,0.1043,-0.0505,0.2590,0.3891
+VADER,1 no controls (as 11 Nov),before,67,753,0.1980,-0.0888,-0.1284,-0.0493,0.0004
+VADER,1 no controls (as 11 Nov),after,67,753,0.1580,-0.0601,-0.1040,-0.0162,0.0512
+VADER,1 no controls (as 11 Nov),change,67,753,-0.0401,0.0287,-0.0175,0.0750,0.2386
+VADER,2 + fame (log articles before),before,67,753,0.1980,-0.0689,-0.1101,-0.0277,0.0020
+VADER,2 + fame (log articles before),after,67,753,0.1580,-0.0356,-0.0817,0.0105,0.1312
+VADER,2 + fame (log articles before),change,67,753,-0.0401,0.0333,-0.0153,0.0819,0.1884
+VADER,3 + fame + market value,before,67,753,0.1980,-0.0569,-0.0979,-0.0160,0.0068
+VADER,3 + fame + market value,after,67,753,0.1580,-0.0432,-0.0894,0.0030,0.0630
+VADER,3 + fame + market value,change,67,753,-0.0401,0.0138,-0.0347,0.0622,0.5845
+VADER,4 article type adjusted,before,67,753,0.1962,-0.0917,-0.1310,-0.0523,0.0002
+VADER,4 article type adjusted,after,67,753,0.1566,-0.0608,-0.1043,-0.0172,0.0498
+VADER,4 article type adjusted,change,67,753,-0.0396,0.0309,-0.0151,0.0769,0.2004
+VADER,5 no quoted sentences,before,65,728,0.1857,-0.0898,-0.1292,-0.0505,0.0004
+VADER,5 no quoted sentences,after,65,728,0.1388,-0.0570,-0.1023,-0.0117,0.0866
+VADER,5 no quoted sentences,change,65,728,-0.0469,0.0329,-0.0150,0.0808,0.1870
+VADER,6 seasons 2016+,before,66,607,0.1913,-0.0875,-0.1272,-0.0479,0.0002
+VADER,6 seasons 2016+,after,66,607,0.1533,-0.0573,-0.1015,-0.0131,0.0440
+VADER,6 seasons 2016+,change,66,607,-0.0380,0.0302,-0.0173,0.0777,0.2412
+VADER,"7 all: no quotes, type adjusted, fame + value",before,65,728,0.1845,-0.0545,-0.0955,-0.0134,0.0086
+VADER,"7 all: no quotes, type adjusted, fame + value",after,65,728,0.1364,-0.0408,-0.0888,0.0071,0.0988
+VADER,"7 all: no quotes, type adjusted, fame + value",change,65,728,-0.0481,0.0136,-0.0370,0.0642,0.5999
+VADER,8 all + position,before,65,728,0.1845,-0.0524,-0.0934,-0.0114,0.0114
+VADER,8 all + position,after,65,728,0.1364,-0.0430,-0.0909,0.0049,0.0836
+VADER,8 all + position,change,65,728,-0.0481,0.0094,-0.0412,0.0601,0.7119
+VADER,9 within news only (>=3 sentences per period),before,36,488,0.1925,-0.0865,-0.1545,-0.0186,0.0494
+VADER,9 within news only (>=3 sentences per period),after,36,488,0.0867,-0.0155,-0.0757,0.0448,0.6231
+VADER,9 within news only (>=3 sentences per period),change,36,488,-0.1058,0.0711,-0.0104,0.1525,0.1902
+VADER,9 within features only (>=3 sentences per period),before,60,730,0.2075,-0.0767,-0.1222,-0.0313,0.0036
+VADER,9 within features only (>=3 sentences per period),after,60,730,0.1908,-0.0705,-0.1226,-0.0185,0.0714
+VADER,9 within features only (>=3 sentences per period),change,60,730,-0.0167,0.0062,-0.0552,0.0676,0.8710
+VADER,9 within comment only (>=3 sentences per period),before,9,123,0.1987,-0.1843,-0.3069,-0.0617,0.0014
+VADER,9 within comment only (>=3 sentences per period),after,9,123,0.1916,0.0363,-0.0639,0.1366,0.4829
+VADER,9 within comment only (>=3 sentences per period),change,9,123,-0.0071,0.2206,0.0818,0.3595,0.0010
+Bing,1 no controls (as 11 Nov),before,67,753,0.1893,-0.0706,-0.1228,-0.0183,0.0140
+Bing,1 no controls (as 11 Nov),after,67,753,0.1746,-0.0521,-0.1010,-0.0031,0.0638
+Bing,1 no controls (as 11 Nov),change,67,753,-0.0147,0.0185,-0.0425,0.0795,0.5495
+Bing,2 + fame (log articles before),before,67,753,0.1893,-0.0512,-0.1055,0.0032,0.0664
+Bing,2 + fame (log articles before),after,67,753,0.1746,-0.0323,-0.0833,0.0188,0.2160
+Bing,2 + fame (log articles before),change,67,753,-0.0147,0.0189,-0.0453,0.0831,0.5605
+Bing,3 + fame + market value,before,67,753,0.1893,-0.0374,-0.0916,0.0167,0.1782
+Bing,3 + fame + market value,after,67,753,0.1746,-0.0671,-0.1183,-0.0159,0.0112
+Bing,3 + fame + market value,change,67,753,-0.0147,-0.0297,-0.0934,0.0341,0.3537
+Bing,4 article type adjusted,before,67,753,0.1864,-0.0761,-0.1280,-0.0242,0.0110
+Bing,4 article type adjusted,after,67,753,0.1718,-0.0547,-0.1031,-0.0063,0.0594
+Bing,4 article type adjusted,change,67,753,-0.0146,0.0214,-0.0395,0.0823,0.4887
+Bing,5 no quoted sentences,before,65,728,0.1772,-0.0533,-0.1063,-0.0003,0.0944
+Bing,5 no quoted sentences,after,65,728,0.1571,-0.0629,-0.1129,-0.0129,0.0268
+Bing,5 no quoted sentences,change,65,728,-0.0201,-0.0096,-0.0723,0.0532,0.7728
+Bing,6 seasons 2016+,before,66,607,0.1902,-0.0711,-0.1231,-0.0190,0.0152
+Bing,6 seasons 2016+,after,66,607,0.1735,-0.0523,-0.1022,-0.0023,0.0560
+Bing,6 seasons 2016+,change,66,607,-0.0167,0.0188,-0.0425,0.0801,0.5557
+Bing,"7 all: no quotes, type adjusted, fame + value",before,65,728,0.1748,-0.0190,-0.0738,0.0358,0.4961
+Bing,"7 all: no quotes, type adjusted, fame + value",after,65,728,0.1539,-0.0829,-0.1352,-0.0305,0.0012
+Bing,"7 all: no quotes, type adjusted, fame + value",change,65,728,-0.0209,-0.0638,-0.1299,0.0022,0.0552
+Bing,8 all + position,before,65,728,0.1748,-0.0210,-0.0760,0.0340,0.4583
+Bing,8 all + position,after,65,728,0.1539,-0.0800,-0.1325,-0.0275,0.0022
+Bing,8 all + position,change,65,728,-0.0209,-0.0590,-0.1253,0.0072,0.0794
+Bing,9 within news only (>=3 sentences per period),before,36,488,0.1710,-0.0158,-0.0993,0.0676,0.7451
+Bing,9 within news only (>=3 sentences per period),after,36,488,0.0879,-0.0116,-0.0906,0.0674,0.7738
+Bing,9 within news only (>=3 sentences per period),change,36,488,-0.0832,0.0042,-0.1098,0.1183,0.9486
+Bing,9 within features only (>=3 sentences per period),before,60,730,0.2048,-0.0637,-0.1303,0.0028,0.0632
+Bing,9 within features only (>=3 sentences per period),after,60,730,0.1998,-0.0819,-0.1434,-0.0203,0.0166
+Bing,9 within features only (>=3 sentences per period),change,60,730,-0.0051,-0.0181,-0.1014,0.0651,0.7013
+Bing,9 within comment only (>=3 sentences per period),before,9,123,0.1886,-0.1419,-0.3493,0.0655,0.1790
+Bing,9 within comment only (>=3 sentences per period),after,9,123,0.1652,-0.0471,-0.1852,0.0910,0.4981
+Bing,9 within comment only (>=3 sentences per period),change,9,123,-0.0234,0.0948,-0.1548,0.3444,0.4571
+"Bing, no football words",1 no controls (as 11 Nov),before,67,753,0.1484,-0.0879,-0.1428,-0.0330,0.0046
+"Bing, no football words",1 no controls (as 11 Nov),after,67,753,0.1166,-0.0649,-0.1189,-0.0109,0.0286
+"Bing, no football words",1 no controls (as 11 Nov),change,67,753,-0.0318,0.0230,-0.0398,0.0858,0.4723
+"Bing, no football words",2 + fame (log articles before),before,67,753,0.1484,-0.0667,-0.1236,-0.0099,0.0208
+"Bing, no football words",2 + fame (log articles before),after,67,753,0.1166,-0.0535,-0.1101,0.0031,0.0654
+"Bing, no football words",2 + fame (log articles before),change,67,753,-0.0318,0.0133,-0.0527,0.0792,0.6893
+"Bing, no football words",3 + fame + market value,before,67,753,0.1484,-0.0468,-0.1033,0.0097,0.1040
+"Bing, no football words",3 + fame + market value,after,67,753,0.1166,-0.0676,-0.1243,-0.0109,0.0216
+"Bing, no football words",3 + fame + market value,change,67,753,-0.0318,-0.0208,-0.0866,0.0450,0.5337
+"Bing, no football words",4 article type adjusted,before,67,753,0.1460,-0.0929,-0.1475,-0.0384,0.0038
+"Bing, no football words",4 article type adjusted,after,67,753,0.1145,-0.0666,-0.1200,-0.0132,0.0246
+"Bing, no football words",4 article type adjusted,change,67,753,-0.0314,0.0263,-0.0364,0.0891,0.4125
+"Bing, no football words",5 no quoted sentences,before,65,728,0.1377,-0.0779,-0.1338,-0.0220,0.0170
+"Bing, no football words",5 no quoted sentences,after,65,728,0.0995,-0.0801,-0.1355,-0.0247,0.0080
+"Bing, no football words",5 no quoted sentences,change,65,728,-0.0382,-0.0023,-0.0667,0.0622,0.9530
+"Bing, no football words",6 seasons 2016+,before,66,607,0.1491,-0.0891,-0.1442,-0.0341,0.0054
+"Bing, no football words",6 seasons 2016+,after,66,607,0.1172,-0.0692,-0.1242,-0.0141,0.0162
+"Bing, no football words",6 seasons 2016+,change,66,607,-0.0319,0.0199,-0.0432,0.0831,0.5439
+"Bing, no football words","7 all: no quotes, type adjusted, fame + value",before,65,728,0.1357,-0.0379,-0.0955,0.0197,0.2010
+"Bing, no football words","7 all: no quotes, type adjusted, fame + value",after,65,728,0.0970,-0.0866,-0.1448,-0.0284,0.0034
+"Bing, no football words","7 all: no quotes, type adjusted, fame + value",change,65,728,-0.0387,-0.0487,-0.1168,0.0194,0.1592
+"Bing, no football words",8 all + position,before,65,728,0.1357,-0.0376,-0.0954,0.0202,0.2074
+"Bing, no football words",8 all + position,after,65,728,0.0970,-0.0812,-0.1397,-0.0228,0.0064
+"Bing, no football words",8 all + position,change,65,728,-0.0387,-0.0436,-0.1121,0.0248,0.2110
+"Bing, no football words",9 within news only (>=3 sentences per period),before,36,488,0.1311,-0.0475,-0.1366,0.0417,0.3667
+"Bing, no football words",9 within news only (>=3 sentences per period),after,36,488,0.0347,0.0072,-0.0737,0.0882,0.8730
+"Bing, no football words",9 within news only (>=3 sentences per period),change,36,488,-0.0964,0.0547,-0.0627,0.1721,0.4755
+"Bing, no football words",9 within features only (>=3 sentences per period),before,60,730,0.1641,-0.0695,-0.1377,-0.0013,0.0514
+"Bing, no football words",9 within features only (>=3 sentences per period),after,60,730,0.1464,-0.0989,-0.1659,-0.0320,0.0066
+"Bing, no football words",9 within features only (>=3 sentences per period),change,60,730,-0.0177,-0.0294,-0.1158,0.0570,0.5589
+"Bing, no football words",9 within comment only (>=3 sentences per period),before,9,123,0.1466,-0.1103,-0.2796,0.0590,0.2008
+"Bing, no football words",9 within comment only (>=3 sentences per period),after,9,123,0.1314,-0.0464,-0.1814,0.0887,0.4951
+"Bing, no football words",9 within comment only (>=3 sentences per period),change,9,123,-0.0152,0.0639,-0.1665,0.2943,0.5873

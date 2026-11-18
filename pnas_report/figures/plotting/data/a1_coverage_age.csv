@@ -1,0 +1,21 @@
+﻿articles,spec,period,n_30plus,n_under30,median_articles_30plus,median_articles_under30,gap_log,ratio_30plus_vs_under30,ratio_lo,ratio_hi,p_within_season
+all article types,season only,before,88.0000,1244.0000,27.5000,12.0000,0.8049,2.2364,1.6573,3.0177,0.0002
+all article types,season only,after,88.0000,1244.0000,47.5000,35.0000,0.3680,1.4448,1.1368,1.8364,0.0028
+all article types,season only,change,88.0000,1244.0000,,,-0.4369,0.6461,0.4984,0.8374,0.0008
+all article types,+ market value,before,88.0000,1244.0000,27.5000,12.0000,1.2751,3.5789,2.7363,4.6811,0.0002
+all article types,+ market value,after,88.0000,1244.0000,47.5000,35.0000,0.7870,2.1969,1.7895,2.6971,0.0002
+all article types,+ market value,change,88.0000,1244.0000,,,-0.4880,0.6138,0.4736,0.7957,0.0004
+all article types,+ market value + position,before,88.0000,1244.0000,27.5000,12.0000,1.2062,3.3406,2.5598,4.3596,0.0002
+all article types,+ market value + position,after,88.0000,1244.0000,47.5000,35.0000,0.7666,2.1525,1.7547,2.6406,0.0002
+all article types,+ market value + position,change,88.0000,1244.0000,,,-0.4395,0.6444,0.4971,0.8352,0.0008
+all article types,+ market value + coverage before,after,,,,,0.4340,1.5435,1.2816,1.8589,0.0002
+no liveblogs,season only,before,88.0000,1244.0000,18.0000,8.0000,0.7334,2.0822,1.5605,2.7782,0.0002
+no liveblogs,season only,after,88.0000,1244.0000,33.5000,25.0000,0.3822,1.4655,1.1474,1.8719,0.0028
+no liveblogs,season only,change,88.0000,1244.0000,,,-0.3512,0.7038,0.5499,0.9009,0.0054
+no liveblogs,+ market value,before,88.0000,1244.0000,18.0000,8.0000,1.2028,3.3295,2.5783,4.2995,0.0002
+no liveblogs,+ market value,after,88.0000,1244.0000,33.5000,25.0000,0.8123,2.2531,1.8272,2.7784,0.0002
+no liveblogs,+ market value,change,88.0000,1244.0000,,,-0.3905,0.6767,0.5286,0.8663,0.0018
+no liveblogs,+ market value + position,before,88.0000,1244.0000,18.0000,8.0000,1.1156,3.0513,2.3698,3.9288,0.0002
+no liveblogs,+ market value + position,after,88.0000,1244.0000,33.5000,25.0000,0.7763,2.1735,1.7645,2.6771,0.0002
+no liveblogs,+ market value + position,change,88.0000,1244.0000,,,-0.3392,0.7123,0.5565,0.9117,0.0066
+no liveblogs,+ market value + coverage before,after,,,,,0.4330,1.5419,1.2784,1.8596,0.0002

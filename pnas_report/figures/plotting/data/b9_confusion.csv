@@ -1,0 +1,37 @@
+model,human,model_class,count
+RoBERTa,neg,neg,23
+RoBERTa,neg,neu,3
+RoBERTa,neg,pos,2
+RoBERTa,neu,neg,31
+RoBERTa,neu,neu,31
+RoBERTa,neu,pos,49
+RoBERTa,pos,neg,9
+RoBERTa,pos,neu,4
+RoBERTa,pos,pos,44
+VADER,neg,neg,15
+VADER,neg,neu,4
+VADER,neg,pos,9
+VADER,neu,neg,25
+VADER,neu,neu,26
+VADER,neu,pos,60
+VADER,pos,neg,8
+VADER,pos,neu,7
+VADER,pos,pos,42
+Bing,neg,neg,15
+Bing,neg,neu,10
+Bing,neg,pos,3
+Bing,neu,neg,23
+Bing,neu,neu,49
+Bing,neu,pos,39
+Bing,pos,neg,8
+Bing,pos,neu,14
+Bing,pos,pos,35
+"Bing, no football",neg,neg,15
+"Bing, no football",neg,neu,10
+"Bing, no football",neg,pos,3
+"Bing, no football",neu,neg,25
+"Bing, no football",neu,neu,54
+"Bing, no football",neu,pos,32
+"Bing, no football",pos,neg,7
+"Bing, no football",pos,neu,16
+"Bing, no football",pos,pos,34
