@@ -1,0 +1,193 @@
+﻿group,month,mean,signings,smooth,model
+30+,-12,0.0656,35,0.1053,RoBERTa (main)
+30+,-11,0.1449,33,0.1242,RoBERTa (main)
+30+,-10,0.1622,37,0.1354,RoBERTa (main)
+30+,-9,0.0992,31,0.1295,RoBERTa (main)
+30+,-8,0.1272,35,0.0945,RoBERTa (main)
+30+,-7,0.0571,33,0.0828,RoBERTa (main)
+30+,-6,0.0641,40,0.0712,RoBERTa (main)
+30+,-5,0.0924,38,0.0726,RoBERTa (main)
+30+,-4,0.0611,33,0.0921,RoBERTa (main)
+30+,-3,0.1229,34,0.0879,RoBERTa (main)
+30+,-2,0.0799,45,0.1022,RoBERTa (main)
+30+,-1,0.1039,49,0.0919,RoBERTa (main)
+30+,0,0.1362,57,0.1122,RoBERTa (main)
+30+,1,0.0882,56,0.0848,RoBERTa (main)
+30+,2,0.0301,46,0.049,RoBERTa (main)
+30+,3,0.0288,46,0.0215,RoBERTa (main)
+30+,4,0.0056,43,0.0348,RoBERTa (main)
+30+,5,0.07,41,0.0526,RoBERTa (main)
+30+,6,0.0823,46,0.0535,RoBERTa (main)
+30+,7,0.0082,44,0.0373,RoBERTa (main)
+30+,8,0.0215,37,0.0133,RoBERTa (main)
+30+,9,0.01,40,-0.0164,RoBERTa (main)
+30+,10,-0.0809,35,0.0162,RoBERTa (main)
+30+,11,0.1195,36,0.0193,RoBERTa (main)
+Under 30,-12,0.1206,294,0.1124,RoBERTa (main)
+Under 30,-11,0.1042,327,0.117,RoBERTa (main)
+Under 30,-10,0.1263,316,0.1118,RoBERTa (main)
+Under 30,-9,0.105,328,0.1154,RoBERTa (main)
+Under 30,-8,0.115,329,0.1065,RoBERTa (main)
+Under 30,-7,0.0995,352,0.1083,RoBERTa (main)
+Under 30,-6,0.1106,396,0.1004,RoBERTa (main)
+Under 30,-5,0.0911,372,0.1067,RoBERTa (main)
+Under 30,-4,0.1183,396,0.1026,RoBERTa (main)
+Under 30,-3,0.0985,438,0.1047,RoBERTa (main)
+Under 30,-2,0.0974,505,0.0954,RoBERTa (main)
+Under 30,-1,0.0903,580,0.0938,RoBERTa (main)
+Under 30,0,0.1523,653,0.1327,RoBERTa (main)
+Under 30,1,0.113,633,0.1186,RoBERTa (main)
+Under 30,2,0.0904,576,0.0908,RoBERTa (main)
+Under 30,3,0.069,528,0.0727,RoBERTa (main)
+Under 30,4,0.0588,527,0.0645,RoBERTa (main)
+Under 30,5,0.0656,521,0.0661,RoBERTa (main)
+Under 30,6,0.0738,491,0.0736,RoBERTa (main)
+Under 30,7,0.0813,443,0.0758,RoBERTa (main)
+Under 30,8,0.0723,427,0.0802,RoBERTa (main)
+Under 30,9,0.087,405,0.0731,RoBERTa (main)
+Under 30,10,0.0601,387,0.0776,RoBERTa (main)
+Under 30,11,0.0858,406,0.0729,RoBERTa (main)
+30+,-12,0.0718,35,0.1341,VADER
+30+,-11,0.1965,33,0.1317,VADER
+30+,-10,0.1269,37,0.1398,VADER
+30+,-9,0.0959,31,0.1256,VADER
+30+,-8,0.1539,35,0.1187,VADER
+30+,-7,0.1062,33,0.1021,VADER
+30+,-6,0.0463,40,0.0637,VADER
+30+,-5,0.0386,38,0.0059,VADER
+30+,-4,-0.0673,33,0.0485,VADER
+30+,-3,0.1742,34,0.102,VADER
+30+,-2,0.199,45,0.1939,VADER
+30+,-1,0.2084,49,0.2037,VADER
+30+,0,0.1998,57,0.1611,VADER
+30+,1,0.1224,56,0.1428,VADER
+30+,2,0.1063,46,0.0632,VADER
+30+,3,-0.039,46,0.0347,VADER
+30+,4,0.0367,43,0.0176,VADER
+30+,5,0.0551,41,0.0437,VADER
+30+,6,0.0392,46,0.0286,VADER
+30+,7,-0.0086,44,0.0158,VADER
+30+,8,0.0168,37,-0.0073,VADER
+30+,9,-0.0301,40,0.0177,VADER
+30+,10,0.0663,35,0.049,VADER
+30+,11,0.1109,36,0.0886,VADER
+Under 30,-12,0.1636,294,0.1625,VADER
+Under 30,-11,0.1614,327,0.1576,VADER
+Under 30,-10,0.148,316,0.1525,VADER
+Under 30,-9,0.1481,328,0.1509,VADER
+Under 30,-8,0.1565,329,0.1609,VADER
+Under 30,-7,0.1783,352,0.1704,VADER
+Under 30,-6,0.1764,396,0.172,VADER
+Under 30,-5,0.1614,372,0.1658,VADER
+Under 30,-4,0.1595,396,0.1678,VADER
+Under 30,-3,0.1824,438,0.1782,VADER
+Under 30,-2,0.1927,505,0.1979,VADER
+Under 30,-1,0.2185,580,0.2056,VADER
+Under 30,0,0.2171,653,0.1799,VADER
+Under 30,1,0.1427,633,0.1616,VADER
+Under 30,2,0.1251,576,0.1187,VADER
+Under 30,3,0.0882,528,0.0978,VADER
+Under 30,4,0.08,527,0.0903,VADER
+Under 30,5,0.1025,521,0.0906,VADER
+Under 30,6,0.0892,491,0.0939,VADER
+Under 30,7,0.0901,443,0.0972,VADER
+Under 30,8,0.1125,427,0.1114,VADER
+Under 30,9,0.1316,405,0.1261,VADER
+Under 30,10,0.1342,387,0.1371,VADER
+Under 30,11,0.1456,406,0.1399,VADER
+30+,-12,0.1518,35,0.209,Bing
+30+,-11,0.2663,33,0.1799,Bing
+30+,-10,0.1216,37,0.1834,Bing
+30+,-9,0.1623,31,0.1329,Bing
+30+,-8,0.1147,35,0.1366,Bing
+30+,-7,0.1328,33,0.0915,Bing
+30+,-6,0.0271,40,0.0958,Bing
+30+,-5,0.1275,38,0.0694,Bing
+30+,-4,0.0537,33,0.1252,Bing
+30+,-3,0.1943,34,0.14,Bing
+30+,-2,0.1719,45,0.2082,Bing
+30+,-1,0.2585,49,0.2152,Bing
+30+,0,0.2354,57,0.1819,Bing
+30+,1,0.1283,56,0.1067,Bing
+30+,2,-0.0438,46,0.0379,Bing
+30+,3,0.0291,46,0.0099,Bing
+30+,4,0.0444,43,0.0217,Bing
+30+,5,-0.0084,41,0.0074,Bing
+30+,6,-0.0139,46,-0.024,Bing
+30+,7,-0.0497,44,-0.0618,Bing
+30+,8,-0.1217,37,-0.0165,Bing
+30+,9,0.1218,40,-0.0036,Bing
+30+,10,-0.0109,35,0.1113,Bing
+30+,11,0.2229,36,0.106,Bing
+Under 30,-12,0.1557,294,0.1766,Bing
+Under 30,-11,0.1974,327,0.1607,Bing
+Under 30,-10,0.1289,316,0.1616,Bing
+Under 30,-9,0.1585,328,0.1608,Bing
+Under 30,-8,0.195,329,0.1825,Bing
+Under 30,-7,0.1939,352,0.1874,Bing
+Under 30,-6,0.1733,396,0.1787,Bing
+Under 30,-5,0.1688,372,0.1636,Bing
+Under 30,-4,0.1486,396,0.155,Bing
+Under 30,-3,0.1477,438,0.1632,Bing
+Under 30,-2,0.1933,505,0.1708,Bing
+Under 30,-1,0.1713,580,0.1823,Bing
+Under 30,0,0.2229,653,0.1906,Bing
+Under 30,1,0.1583,633,0.1679,Bing
+Under 30,2,0.1224,576,0.1417,Bing
+Under 30,3,0.1445,528,0.1212,Bing
+Under 30,4,0.0968,527,0.1238,Bing
+Under 30,5,0.1302,521,0.1131,Bing
+Under 30,6,0.1123,491,0.1249,Bing
+Under 30,7,0.1324,443,0.135,Bing
+Under 30,8,0.1603,427,0.1544,Bing
+Under 30,9,0.1705,405,0.1642,Bing
+Under 30,10,0.1618,387,0.1744,Bing
+Under 30,11,0.1908,406,0.1763,Bing
+30+,-12,0.0868,35,0.1736,"Bing, no football words"
+30+,-11,0.2603,33,0.1236,"Bing, no football words"
+30+,-10,0.0237,37,0.1403,"Bing, no football words"
+30+,-9,0.137,31,0.0756,"Bing, no football words"
+30+,-8,0.0662,35,0.0901,"Bing, no football words"
+30+,-7,0.0672,33,0.0355,"Bing, no football words"
+30+,-6,-0.0268,40,0.0211,"Bing, no football words"
+30+,-5,0.0228,38,-0.0021,"Bing, no football words"
+30+,-4,-0.0023,33,0.0611,"Bing, no football words"
+30+,-3,0.1628,34,0.1033,"Bing, no football words"
+30+,-2,0.1495,45,0.1617,"Bing, no football words"
+30+,-1,0.1729,49,0.1612,"Bing, no football words"
+30+,0,0.176,57,0.1149,"Bing, no football words"
+30+,1,0.0537,56,0.0502,"Bing, no football words"
+30+,2,-0.0792,46,-0.0218,"Bing, no football words"
+30+,3,-0.0399,46,-0.0449,"Bing, no football words"
+30+,4,-0.0156,43,-0.0412,"Bing, no football words"
+30+,5,-0.0681,41,-0.0466,"Bing, no football words"
+30+,6,-0.0562,46,-0.0819,"Bing, no football words"
+30+,7,-0.1213,44,-0.1154,"Bing, no football words"
+30+,8,-0.1689,37,-0.072,"Bing, no football words"
+30+,9,0.074,40,-0.0442,"Bing, no football words"
+30+,10,-0.0376,35,0.0776,"Bing, no football words"
+30+,11,0.1964,36,0.0794,"Bing, no football words"
+Under 30,-12,0.1426,294,0.1509,"Bing, no football words"
+Under 30,-11,0.1593,327,0.1289,"Bing, no football words"
+Under 30,-10,0.0848,316,0.1184,"Bing, no football words"
+Under 30,-9,0.1111,328,0.1137,"Bing, no football words"
+Under 30,-8,0.1453,329,0.1268,"Bing, no football words"
+Under 30,-7,0.1239,352,0.1288,"Bing, no football words"
+Under 30,-6,0.1172,396,0.1271,"Bing, no football words"
+Under 30,-5,0.1403,372,0.1189,"Bing, no football words"
+Under 30,-4,0.0993,396,0.1118,"Bing, no football words"
+Under 30,-3,0.0957,438,0.1184,"Bing, no football words"
+Under 30,-2,0.1602,505,0.1313,"Bing, no football words"
+Under 30,-1,0.1381,580,0.1491,"Bing, no football words"
+Under 30,0,0.1624,653,0.1291,"Bing, no football words"
+Under 30,1,0.0958,633,0.104,"Bing, no football words"
+Under 30,2,0.0538,576,0.0812,"Bing, no football words"
+Under 30,3,0.0941,528,0.0646,"Bing, no football words"
+Under 30,4,0.0459,527,0.0706,"Bing, no football words"
+Under 30,5,0.0718,521,0.0591,"Bing, no football words"
+Under 30,6,0.0595,491,0.0591,"Bing, no football words"
+Under 30,7,0.046,443,0.0723,"Bing, no football words"
+Under 30,8,0.1112,427,0.0912,"Bing, no football words"
+Under 30,9,0.1164,405,0.1188,"Bing, no football words"
+Under 30,10,0.1287,387,0.134,"Bing, no football words"
+Under 30,11,0.1569,406,0.1428,"Bing, no football words"

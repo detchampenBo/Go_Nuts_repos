@@ -1,0 +1,156 @@
+# File guide: pnas_report/ (text part). Same content as FILE_GUIDE.md, machine-readable.
+# Paths are relative to pnas_report/. Version of 18 Nov 2026 (upload package v2 + plotting kit + link table).
+
+guide_version: "2026-11-18"
+companion_files: [FILE_GUIDE.md, FILE_GUIDE.tex, FILE_GUIDE.pdf]
+
+quick_start:
+  read_the_results: [notes/findings.md, paper/main.pdf]
+  make_or_restyle_a_figure: figures/plotting/README.md
+  count_articles_or_build_new_things: data/dataset_nlp/data/article_player_notext.csv.gz
+  check_a_number_in_the_paper: data/dataset_nlp/results/
+  rerun_from_scratch: data/dataset_nlp/README.md   # needs a Guardian API key and ~1.7 GB of downloads
+
+terms:
+  signing: "One player joining a Premier League club on one date; signing_id = <player_id>_<YYYYMMDD>."
+  age_groups: "30+ vs under 30 at the transfer. Older grouping: young 18-24, middle 25-29, old 30-36 (old = 30+)."
+  periods: {before: "-365 to -8 days", around: "-7 to +7 days (left out of tests)", after: "+8 to +365 days"}
+  main_sample: "820 signings (67 aged 30+, 753 under 30) with >= 5 scored sentences before and after; liveblogs and match reports not counted."
+  models: {roberta: "main instrument (cardiffnlp/twitter-roberta-base-sentiment-latest, P(pos) - P(neg))", vader: lexicon, bing: lexicon, bing_nofootball: "Bing without 21 football words"}
+  hypotheses:
+    H1: "Network (teammates): are 30+ players less likely to join the Premier League?"
+    H2: "Text: does the tone change across the move differ for 30+ signings?"
+    H2b: "Text: at the same fame and price, is the tone toward 30+ signings lower?"
+
+folders:
+
+  - path: ./
+    description: Top level of the paper workspace.
+    files:
+      - {name: FILE_GUIDE.md, contents: "This guide in Markdown."}
+      - {name: FILE_GUIDE.yaml, contents: "This file."}
+      - {name: FILE_GUIDE.tex, contents: "This guide as LaTeX (clatex style)."}
+      - {name: FILE_GUIDE.pdf, contents: "This guide, printable."}
+    subfolders: [notes/, data/dataset_graph/, data/dataset_nlp/, figures/, paper/]
+
+  - path: notes/
+    description: The research question and findings in plain text.
+    files:
+      - {name: question.md, contents: "Adopted research question: H1, H2, H2b framed as access (H1) vs reception (H2, H2b), worked example of H2 vs H2b, null models, support rules."}
+      - {name: findings.md, contents: "Every text-part result with number, P and source CSV (validation B8/B9, H2, H2b with controls, coverage volume). H1 left blank for teammates."}
+
+  - path: data/dataset_graph/
+    description: Network data (teammates; not part of this upload).
+
+  - path: data/dataset_nlp/
+    description: Everything for the text part.
+    files:
+      - {name: README.md, contents: "Dataset description in the course template: sources, collection date, what one row is, fields of every file (including those not uploaded), selection rules, how to run."}
+      - {name: decisions.md, contents: "Every choice and check with its reason: selection and loan returns, name handling and the B5 wrong-person fix, focus rule and both focus checks, sentiment check, limitations."}
+      - {name: requirements.txt, contents: "pandas, numpy, requests, matplotlib, vaderSentiment; transformers + torch only for RoBERTa."}
+      - {name: .gitignore, contents: "Keeps large and text-bearing files out of git; ignores data/*.csv.gz except data/article_player_notext.csv.gz."}
+
+  - path: data/dataset_nlp/pipeline/
+    description: Getting the data.
+    files:
+      - {name: get_guardian_articles.py, contents: "Data pipeline (B5, md5 2e10c82c...): select (1,332 signings from Transfermarkt), fetch (one Guardian query per signing; key from $env:GUARDIAN_API_KEY, never stored), build (links + sentences naming the player), validate (checks + labelling samples)."}
+      - {name: pipeline_spec.yaml, contents: "Spec the pipeline implements: selection, periods, name rules, focus rule, outputs, analysis plan."}
+      - {name: tests/test_pipeline.py, contents: "66 checks (name matching, who-is-who rules, periods, loan returns, never overwriting a labelled sample). Run: python -m pytest."}
+
+  - path: data/dataset_nlp/sentiment/
+    description: Scoring and analysis scripts. They take the Project folder and an output folder as arguments and read the local build (sentences.csv, article_player.csv, a1_*_scores.csv).
+    files:
+      - {name: a1_sentiment.py, contents: "Scores every sentence with one model, averages per signing and period, after - before with 5,000 period shuffles.", writes: ["a1_<model>_results.csv", "a1_<model>_per_signing.csv", "a1_<model>_scores.csv (not uploaded)"]}
+      - {name: a1_compare_methods.py, contents: "Four models side by side; sentence-level agreement.", writes: ["comparison table (Pilot)"]}
+      - {name: a1_age30.py, contents: "H2: change for 30+ vs under 30; gap tested by shuffling the 30+ label within season; robustness samples.", writes: [a1_age30_results.csv]}
+      - {name: a1_age30_arc.py, contents: "Monthly tone arc -12..+11 months with bootstrap bands.", writes: [a1_age30_arc.csv]}
+      - {name: a1_age30_arc_numbers.py, contents: "Earlier arc figure with numbers under the panels (replaced by a1_age30_arc_sentiment.py).", writes: [a1_age30_levels_pct.csv]}
+      - {name: a1_age30_arc_sentiment.py, contents: "H2 arc figure as used: no bands, months at midpoints, one legend per panel.", writes: [figures/fig_h2_arc_sentiment.png]}
+      - {name: a1_h2b_controls.py, contents: "H2b: level gap before/after; OLS 30+ coefficient with season dummies + controls (fame, market value, article type, quotes, seasons 2016+, position), refitted on 5,000 within-season shuffles.", writes: [a1_h2b_controls.csv, a1_h2b_signings.csv]}
+      - {name: a1_coverage_age.py, contents: "Coverage volume: articles for 30+ vs under 30, before/after, with and without market value.", writes: [a1_coverage_age.csv]}
+      - {name: a1_h2b_arc.py, contents: "Monthly arc with tone adjusted for the H2b controls; asserts gaps equal the tested coefficients.", writes: [a1_h2b_arc.csv, figures/fig_h2b_arc_controls.png]}
+      - {name: a1_h2b_arc_paper.py, contents: "Paper-size PDF of the adjusted arc (Fig. 2).", writes: [paper/figures/fig_h2b_arc_paper.pdf]}
+      - {name: a1_h2b_figure.py, contents: "Dot-and-interval figure: tone gaps and coverage ratio (Fig. 3).", writes: [figures/fig_h2b_tone_coverage.png, paper/figures/fig_h2b_tone_coverage.pdf]}
+      - {name: b8_focus.py, contents: "Scores the focus rule against focus check 2 (weighted by stratum) and re-checks check 1.", writes: [b8_focus_rule_scores.csv]}
+      - {name: b9_score.py, contents: "Scores the four models against the 200 hand-labelled sentences (Spearman rho, accuracy, sign accuracy, age-bias check).", writes: [b9_model_scores.csv, b9_confusion.csv, b9_labels_joined.csv]}
+      - {name: b10_signing_tone.py, contents: "One tidy row per signing: tone for four models, coverage, controls.", writes: [signing_tone.csv]}
+      - {name: opinion_lexicon/, contents: "Bing (Hu & Liu) word lists positive-words.txt, negative-words.txt, README with citation."}
+
+  - path: data/dataset_nlp/data/
+    description: Inputs, the link table and hand-labelled samples. No article text; labels match a local build through article_id and sentence_row.
+    files:
+      - {name: signings.csv, rows: 1332, contents: "The signings: player, date of birth, age at transfer, age group, position, date, season, from/to clubs, fee, market value. Join key for the network part (player_id, club ids, season)."}
+      - name: article_player_notext.csv.gz
+        rows: 125231
+        size: "4.3 MB (gzip)"
+        contents: "All article-signing links: article_player.csv without its player_sentences text column. One row per article x signing. pandas reads it directly with pd.read_csv(...)."
+        columns: [article_id, signing_id, player_id, player, publication_date, days_from_transfer, period, age_at_article, age_group_at_transfer, mentions, total_sentences, share_of_sentences, name_in_headline, n_tracked_players_in_article, is_focus_article, focus_old_rule, name_clash, article_type, overlapping_window, mixed_age_article]
+        uses: ["recount articles per signing or period", "filter by article type", "co-mention network (players sharing an article_id)"]
+        article_url: "https://www.theguardian.com/<article_id>"
+      - {name: check_zero_articles.csv, rows: 3, contents: "The 3 signings with no Guardian articles (Tedic, Bustos, Carreras), each loaned out straight away."}
+      - {name: check_focus_sample_labelled.csv, rows: 100, contents: "Focus check 1, random links; truly_about_player y = main subject, n = passing mention, x = wrong person."}
+      - {name: check_focus_sample_2_labelled.csv, rows: 100, contents: "Focus check 2 (B8): 50 focus / 50 non-focus links, no liveblogs, no overlap with check 1; 99 labelled."}
+      - {name: check_sentiment_sample_200_labelled.csv, rows: 200, contents: "Sentiment check (B9): 100 before / 100 after, labelled blind; tone pos/neu/neg/x and a note tag (contrast, quote, passing mention, unsure...)."}
+
+  - path: data/dataset_nlp/results/
+    description: Every number in the paper, as small CSVs. Start with PLOTTING.md.
+    files:
+      - {name: PLOTTING.md, contents: "Which CSV feeds which figure, column meanings, colours.", used_for: figures}
+      - {name: signing_tone.csv, rows: 1332, contents: "One row per signing: tone before/after/change, four models (filled for the 820 main-sample signings), article counts, market value, position, age.", used_for: "easiest file to start from"}
+      - {name: "a1_<model>_results.csv (x4)", rows: 28, contents: "After - before by sample (all, age groups, focus-only, article types...): mean, 95% CI, median, share more positive, permutation P.", used_for: "overall tone-change table"}
+      - {name: "a1_<model>_per_signing.csv (x4)", rows: 820, contents: "Per signing: tone before/after, sentence and article counts, difference.", used_for: "input to H2 tests"}
+      - {name: a1_age30_results.csv, rows: 16, contents: "H2: change for under 30 and 30+, gap, within-season P (four models x four samples).", used_for: "H2 result"}
+      - {name: a1_age30_levels.csv, rows: 12, contents: "Gap in level before/after/change without controls (first H2b test).", used_for: "H2b no-controls row"}
+      - {name: a1_age30_levels_pct.csv, rows: 4, contents: "Same gaps as % of the under-30 level (descriptive only).", used_for: "old arc legends"}
+      - {name: a1_age30_mde.csv, rows: 8, contents: "Smallest gap detectable at 80% power (67 vs 753, 67 vs 67).", used_for: "H2 limitation"}
+      - {name: a1_age30_arc.csv, rows: 96, contents: "Raw monthly arc, RoBERTa and VADER: mean, band, smoothed.", used_for: fig_h2_arc_sentiment.png}
+      - {name: a1_h2b_controls.csv, rows: 132, contents: "H2b gap per model x control spec x period: n, gap, CI, P.", used_for: "H2b result, Fig. 3"}
+      - {name: a1_h2b_signings.csv, rows: 820, contents: "Per signing: RoBERTa and VADER level before/after plus controls.", used_for: "H2b reruns"}
+      - {name: a1_h2b_arc.csv, rows: 192, contents: "Adjusted monthly arc, four models.", used_for: "Fig. 2"}
+      - {name: a1_coverage_age.csv, rows: 20, contents: "Coverage ratio 30+ / under 30 by period and spec, CI, P.", used_for: "coverage result, Fig. 3C"}
+      - {name: b8_focus_rule_scores.csv, rows: 5, contents: "Precision and recall of five focus rules on check 2 (weighted) and check 1.", used_for: "focus-rule decision"}
+      - {name: b9_model_scores.csv, rows: 72, contents: "Each model on the 200 sentences by subset (all, without unsure, 30+, under 30, tag, before/after).", used_for: "Table 1 (validation)"}
+      - {name: b9_confusion.csv, rows: 36, contents: "Human label x model class counts.", used_for: validation}
+      - {name: b9_labels_joined.csv, rows: 200, contents: "Labels, cleaned tags and four model scores per labelled sentence (no text).", used_for: "validation reruns"}
+
+  - path: figures/
+    description: Finished figures, plus plotting/ for the group's own versions.
+    files:
+      - {name: README.md, contents: "Table of figures: what each shows, which script made it."}
+      - {name: fig_h2_arc_sentiment.png, contents: "H2: raw monthly tone, 30+ vs under 30, four models."}
+      - {name: fig_h2b_arc_controls.png, contents: "H2b: same arcs, tone adjusted for controls; gap between lines = tested gap."}
+      - {name: fig_h2b_tone_coverage.png, contents: "H2b + coverage: tone gaps without/with controls, coverage ratio."}
+
+  - path: figures/plotting/
+    description: Kit for the group to restyle the figures; runs with no arguments, needs only pandas and matplotlib.
+    files:
+      - {name: README.md, contents: "How to run, file table, conventions (colours, month midpoints, what the gaps mean)."}
+      - {name: PLOTTING.md, contents: "Column guide (as results/PLOTTING.md) plus a note on the 4-model arc file."}
+      - {name: plot_h2_arc.py, contents: "Raw arcs, four models."}
+      - {name: plot_h2b_arc.py, contents: "Adjusted arcs (= paper Fig. 2)."}
+      - {name: plot_h2b_gaps_coverage.py, contents: "Gaps and coverage (= paper Fig. 3)."}
+      - {name: data/, contents: "Copies of the seven CSVs the scripts read: a1_h2_arc_4models.csv (new: raw arc, four models), a1_h2b_arc.csv, a1_h2b_controls.csv, a1_coverage_age.csv, signing_tone.csv, b9_model_scores.csv, b9_confusion.csv."}
+      - {name: make_data/export_h2_arc_4models.py, contents: "How a1_h2_arc_4models.csv was made (original arc functions, same seed); needs the local build."}
+      - {name: out/, contents: "Reference renders (.pdf + 300-dpi .png) of the three figures; scripts write here."}
+
+  - path: paper/
+    description: PNAS LaTeX source and compiled draft. Compile with pdflatex main && bibtex main && pdflatex main && pdflatex main, or Overleaf.
+    files:
+      - {name: README.md, contents: "What each file is, how to compile."}
+      - {name: main.tex, contents: "Draft: text part written in full, H1 as red [TODO] placeholders; Discussion has two red H1 tie-in paragraphs, keep the one that matches H1."}
+      - {name: main.pdf, contents: "Compiled draft, 5 pages with both tie-in variants (limit 6 incl. references)."}
+      - {name: references.bib, contents: "VADER, Bing, RoBERTa/TweetEval/TimeLMs, Reagan arcs, Jurafsky & Martin, Phipson & Smyth, Guardian API, Transfermarkt Kaggle. Add network references here."}
+      - {name: figures/, contents: "fig_h2b_arc_paper.pdf (Fig. 2), fig_h2b_tone_coverage.pdf (Fig. 3) at 17.8 cm; H1 figure goes here."}
+      - {name: "pnas-new.cls, pnasresearcharticle.sty, pnas-new.bst, jabbrv*.sty/.ldf, PNAS_Logo.pdf", contents: "Template files, unchanged."}
+
+not_in_repo:
+  note: "Kept on the laptop in the Project folder; .gitignore keeps them out. Everything needed to check the paper is in the repo; a full rebuild needs a free Guardian key ($env:GUARDIAN_API_KEY, never in a file) and the Kaggle data, then get_guardian_articles.py select -> fetch -> build -> validate and the sentiment scripts."
+  files:
+    - {name: "guardian_cache_v2/ (and guardian_cache/)", size: "~1.7 GB", reason: "Raw API responses with full article bodies: too large for git, and the free Guardian key does not allow republishing article content."}
+    - {name: articles.csv, size: "326 MB", reason: "One row per article with body_text (full article text): both reasons."}
+    - {name: sentences.csv, size: "106 MB", reason: "Verbatim Guardian sentences (licence), and above GitHub's 100 MB per-file limit."}
+    - {name: article_player.csv, size: "87 MB", reason: "player_sentences column holds sentence text, and above the 25 MB web-upload limit. Everything except that column is in the repo as data/article_player_notext.csv.gz."}
+    - {name: "a1_<model>_scores.csv (x4)", size: "~23 MB each", reason: "One score per sentence, no text, but large and only meaningful next to sentences.csv; every number derived from them is in results/."}
+    - {name: "a1_cache_...roberta....csv", size: "9 MB", reason: "RoBERTa score cache for faster reruns; keyed by sentence text."}
+    - {name: "data/*.csv.gz (Transfermarkt)", reason: "Third-party data, downloadable from Kaggle (dcaribou, Football Data from Transfermarkt)."}
+    - {name: Pilot/, reason: "Frozen partial build from 4 Nov, kept only for history."}
