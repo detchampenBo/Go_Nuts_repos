@@ -1,0 +1,68 @@
+# 09 Select figures and define their claims and labels
+
+## Created
+
+2026-11-19 15:30:34 Europe/Copenhagen. Created as part of the initial paper-development issue batch.
+
+## Status
+
+Open
+
+## Checkpoint workflow
+
+1. At the start, read the Current checkpoint in [paper_simple/README.md](../README.md). Compare it with this issue's status, latest progress, and related decisions.
+
+2. Remind the user where this issue fits in the recorded process and identify the next discussion or action. Reconcile any difference between the README and the issue with the user.
+
+3. Record agreed evidence and decisions in this issue and the affected planning files. Create linked scratch issues for new research, evidence, citation, or cross-reference needs.
+
+4. When the completion criteria are met and the user confirms satisfaction, set this issue to Resolved and append a dated resolution with the outcome, supporting evidence, and changed file links.
+
+5. Update the Current checkpoint in [paper_simple/README.md](../README.md) as part of resolving this issue. Include the update date, completed issue, agreed outcome, links to changed documents and new issues, and the next issue with its exact next discussion or action.
+
+6. Verify that this issue and the README agree, then tell the user that both were updated. If the session ends during the issue, record partial progress and the next step in both places while retaining the issue's current status.
+
+## Starting context
+
+The repository root is `C:\Users\victo\Codex\Go_Nuts_repos`. The current paper is being developed afresh in `pnas_report/paper_simple`, using the existing analyses and research question. The user wants an interactive process in which the question and storyline are agreed before drafting. Use PNAS and the course's six-page requirements.
+
+Read [REPOSITORY_CONTEXT.md](REPOSITORY_CONTEXT.md) when starting this issue in a new session. It maps the code, data, saved findings, earlier draft, source caveats, and environment limitations. Recheck the current branch and linked planning files when resuming.
+
+The H1 publication directory contains main, sensitivity, and combined exports in PDF, PNG, and SVG. plot_guardian_text_findings.py reads copied text tables from figures/plotting/data and writes publication exports plus compatibility PDFs used by the earlier draft. Original text result tables live in data/dataset_nlp/results. Check that copied tables match the intended source rows. Figure selection and final label names have not been agreed.
+
+## Related decisions and first interaction
+
+Review the current outcomes of issues [08](2026-11-19_15-30-34_08-agree-storyline-and-page-budget.scratch). Use the latest agreed decisions when available and record any assumptions that remain provisional.
+
+Discuss which two or three figures best carry the agreed argument and the specific comparison that each panel should communicate.
+
+## Question or gap
+
+Existing exports cover more analyses than the paper can accommodate. Each selected figure needs a purpose in the agreed storyline and a traceable source.
+
+## Paper context and supporting files
+
+[Age publication exports](../../output/age_shuffle_outsideprem_toprem_findings/), [Guardian plotting script](../../notebooks/plot_guardian_text_findings.py), [saved text plotting data](../../figures/plotting/data/), [plotting style](../../PLOTTING_STYLE.md), [storyline](../paper_storyline.md).
+
+## Next action to discuss
+
+1. Discuss two or three figure candidates and identify the question, comparison, and check carried by each panel.
+
+2. Verify source tables, units, denominators, sample restrictions, colour meanings, and uncertainty definitions.
+
+3. Plan self-contained captions and choose print-readable layouts suitable for the PNAS page width.
+
+4. Agree stable LaTeX labels for figures and tables, then record which claims will reference them.
+
+5. If a figure needs new evidence or a substantive analysis change, open a linked issue before producing that revision.
+
+## Resolved when
+
+paper_storyline.md records the agreed figure plan, source paths, caption content, intended labels, and required presentation changes.
+
+## Progress and resolution
+
+2026-11-19 15:30:34 Europe/Copenhagen — Issue recorded from the agreed planning context. Follow-up work awaits discussion.
+
+2026-11-19 15:38:00 Europe/Copenhagen — Added standalone repository context, specific evidence locations, related decisions, and the starting discussion for this issue.
+

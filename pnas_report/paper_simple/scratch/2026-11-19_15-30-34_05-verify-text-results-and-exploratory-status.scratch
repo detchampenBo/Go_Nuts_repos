@@ -1,0 +1,70 @@
+# 05 Separate and verify H2, H2b, and coverage findings
+
+## Created
+
+2026-11-19 15:30:34 Europe/Copenhagen. Created as part of the initial paper-development issue batch.
+
+## Status
+
+Open
+
+## Checkpoint workflow
+
+1. At the start, read the Current checkpoint in [paper_simple/README.md](../README.md). Compare it with this issue's status, latest progress, and related decisions.
+
+2. Remind the user where this issue fits in the recorded process and identify the next discussion or action. Reconcile any difference between the README and the issue with the user.
+
+3. Record agreed evidence and decisions in this issue and the affected planning files. Create linked scratch issues for new research, evidence, citation, or cross-reference needs.
+
+4. When the completion criteria are met and the user confirms satisfaction, set this issue to Resolved and append a dated resolution with the outcome, supporting evidence, and changed file links.
+
+5. Update the Current checkpoint in [paper_simple/README.md](../README.md) as part of resolving this issue. Include the update date, completed issue, agreed outcome, links to changed documents and new issues, and the next issue with its exact next discussion or action.
+
+6. Verify that this issue and the README agree, then tell the user that both were updated. If the session ends during the issue, record partial progress and the next step in both places while retaining the issue's current status.
+
+## Starting context
+
+The repository root is `C:\Users\victo\Codex\Go_Nuts_repos`. The current paper is being developed afresh in `pnas_report/paper_simple`, using the existing analyses and research question. The user wants an interactive process in which the question and storyline are agreed before drafting. Use PNAS and the course's six-page requirements.
+
+Read [REPOSITORY_CONTEXT.md](REPOSITORY_CONTEXT.md) when starting this issue in a new session. It maps the code, data, saved findings, earlier draft, source caveats, and environment limitations. Recheck the current branch and linked planning files when resuming.
+
+In a1_age30_results.csv, select method RoBERTa and sample main for H2 (+0.006, p_gap_within_season = 0.7558). For H2b, select a1_h2b_controls.csv model RoBERTa, spec '7 all: no quotes, type adjusted, fame + value', period after (-0.0349, p_within_season = 0.0390, 65 older and 728 younger signings). a1_coverage_age.csv contains ratios for all article types and season-only or additional-control specifications. The different result types and specifications must remain explicit during the audit.
+
+## Related decisions and first interaction
+
+Review the current outcomes of issues [02](2026-11-19_15-30-34_02-reconcile-samples-and-data-provenance.scratch), [04](2026-11-19_15-30-34_04-review-sentiment-measurement-validation.scratch). Use the latest agreed decisions when available and record any assumptions that remain provisional.
+
+Discuss whether H2, exploratory H2b, and coverage volume form the intended question's main outcomes. Then agree which table rows and robustness specifications to examine.
+
+## Question or gap
+
+Change in tone, tone level, and coverage volume answer different questions. The paper needs a faithful account of each result and of the exploratory development of H2b.
+
+## Paper context and supporting files
+
+[Findings notes](../../notes/findings.md), [H2 results](../../data/dataset_nlp/results/a1_age30_results.csv), [detectable effect estimates](../../data/dataset_nlp/results/a1_age30_mde.csv), [H2b controls](../../data/dataset_nlp/results/a1_h2b_controls.csv), [coverage results](../../data/dataset_nlp/results/a1_coverage_age.csv), [analysis scripts](../../data/dataset_nlp/sentiment/).
+
+## Next action to discuss
+
+1. Trace the H2 age-group difference in before-to-after changes, its uncertainty, and the detectable-effect calculation.
+
+2. Trace the H2b before- and after-move level comparisons and the exact all-controls specification.
+
+3. Check how the H2b result changes across instruments and control sets, including the reported role of market value.
+
+4. Verify the coverage-volume denominators, model specifications, and ratio interpretation.
+
+5. Check how reported intervals and permutation p-values are constructed, including label shuffling with controls, so statistical labels match the implemented procedure.
+
+6. Retain the distinction between a change with substantial uncertainty and evidence of equivalence. Record when H2b emerged and which decisions followed exploration.
+
+## Resolved when
+
+Each selected text finding has a verified statistic, sample, comparison, uncertainty description, exploratory status, and interpretation in evidence_and_sources.md.
+
+## Progress and resolution
+
+2026-11-19 15:30:34 Europe/Copenhagen — Issue recorded from the agreed planning context. Follow-up work awaits discussion.
+
+2026-11-19 15:38:00 Europe/Copenhagen — Added standalone repository context, specific evidence locations, related decisions, and the starting discussion for this issue.
+

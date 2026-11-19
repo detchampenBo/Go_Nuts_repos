@@ -1,0 +1,74 @@
+# 14 Review the six-page paper and prepare the Overleaf ZIP
+
+## Created
+
+2026-11-19 15:30:34 Europe/Copenhagen. Created as part of the initial paper-development issue batch.
+
+## Status
+
+Open
+
+## Checkpoint workflow
+
+1. At the start, read the Current checkpoint in [paper_simple/README.md](../README.md). Compare it with this issue's status, latest progress, and related decisions.
+
+2. Remind the user where this issue fits in the recorded process and identify the next discussion or action. Reconcile any difference between the README and the issue with the user.
+
+3. Record agreed evidence and decisions in this issue and the affected planning files. Create linked scratch issues for new research, evidence, citation, or cross-reference needs.
+
+4. When the completion criteria are met and the user confirms satisfaction, set this issue to Resolved and append a dated resolution with the outcome, supporting evidence, and changed file links.
+
+5. Update the Current checkpoint in [paper_simple/README.md](../README.md) as part of resolving this issue. Include the update date, completed issue, agreed outcome, links to changed documents and new issues, and the next issue with its exact next discussion or action.
+
+6. Verify that this issue and the README agree, then tell the user that both were updated. If the session ends during the issue, record partial progress and the next step in both places while retaining the issue's current status.
+
+## Starting context
+
+The repository root is `C:\Users\victo\Codex\Go_Nuts_repos`. The current paper is being developed afresh in `pnas_report/paper_simple`, using the existing analyses and research question. The user wants an interactive process in which the question and storyline are agreed before drafting. Use PNAS and the course's six-page requirements.
+
+Read [REPOSITORY_CONTEXT.md](REPOSITORY_CONTEXT.md) when starting this issue in a new session. It maps the code, data, saved findings, earlier draft, source caveats, and environment limitations. Recheck the current branch and linked planning files when resuming.
+
+The user asked about an Overleaf-uploadable package and previously named paper_output_zip. Its placement under paper_simple is a proposal to confirm. Completion will require a fresh compiled paper within six pages including references and a ZIP containing all required source dependencies. The original template ZIP contains example content. Current planning files and scratch issues are still a working foundation whose Git state should be checked when handing the work to a teammate.
+
+## Related decisions and first interaction
+
+Review the current outcomes of issues [12](2026-11-19_15-30-34_12-draft-sections-and-confirm-author-details.scratch), [13](2026-11-19_15-30-34_13-assemble-pnas-template-and-check-references.scratch). Use the latest agreed decisions when available and record any assumptions that remain provisional.
+
+Review the first draft and remaining issues together, confirm the output location, and agree that the document is ready for packaging and verification against the [first-draft completion criteria](README.md).
+
+## Question or gap
+
+The tracker leads to a complete first draft ready for the group's full review, including the written paper in the PNAS template, a compiled PDF, and a usable Overleaf upload package. Earlier discussion identified paper_output_zip as the intended output folder name.
+
+## Paper context and supporting files
+
+[Requirements checklist](../project_requirements.md), [question](../final_research_question.md), [storyline](../paper_storyline.md), [tone guide](../tone_of_voice.md), [issue tracker guide](README.md).
+
+## Next action to discuss
+
+1. Review the final title, Abstract, figures, Results, and Discussion against the same research question and agreed central claim.
+
+2. Reconcile every final numerical claim, sample description, citation, and limitation with the reviewed evidence.
+
+3. Verify the six-page limit including references, 150-word Abstract, required sections, specific contributions, readable figures, and complete captions.
+
+4. Review open scratch issues together and resolve or explicitly account for those affecting the first draft. Check the completion criteria in README.md, including all required written sections and confirmed author details.
+
+5. Confirm the final output location, using paper_simple/paper_output_zip as the proposed folder, then package the source, bibliography, selected figures, and required template dependencies.
+
+6. Test compilation from a fresh extraction of the ZIP, confirm the main document, and inspect the resulting PDF.
+
+7. Keep the wider three-slide presentation and reflection requirements visible in project_requirements.md for the group's submission planning.
+
+## Resolved when
+
+The complete first draft meets the goal and completion criteria in README.md and is ready for the group's full review. Record the exact LaTeX source, compiled PDF, and verified Overleaf ZIP paths, the compilation and visual checks performed, and any remaining questions for review. Relevant issue resolutions and planning documents capture the evidence and decisions behind the draft.
+
+## Progress and resolution
+
+2026-11-19 15:30:34 Europe/Copenhagen — Issue recorded from the agreed planning context. Follow-up work awaits discussion.
+
+2026-11-19 15:38:00 Europe/Copenhagen — Added standalone repository context, specific evidence locations, related decisions, and the starting discussion for this issue.
+
+2026-11-19 15:44:48 Europe/Copenhagen — Clarified the endpoint as a complete first draft ready for group review, with written sections, compiled PDF, and verified ZIP, and linked the shared completion criteria.
+

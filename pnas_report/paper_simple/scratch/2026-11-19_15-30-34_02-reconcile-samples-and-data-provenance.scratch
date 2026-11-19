@@ -1,0 +1,66 @@
+# 02 Reconcile transfer and text samples
+
+## Created
+
+2026-11-19 15:30:34 Europe/Copenhagen. Created as part of the initial paper-development issue batch.
+
+## Status
+
+Open
+
+## Checkpoint workflow
+
+1. At the start, read the Current checkpoint in [paper_simple/README.md](../README.md). Compare it with this issue's status, latest progress, and related decisions.
+
+2. Remind the user where this issue fits in the recorded process and identify the next discussion or action. Reconcile any difference between the README and the issue with the user.
+
+3. Record agreed evidence and decisions in this issue and the affected planning files. Create linked scratch issues for new research, evidence, citation, or cross-reference needs.
+
+4. When the completion criteria are met and the user confirms satisfaction, set this issue to Resolved and append a dated resolution with the outcome, supporting evidence, and changed file links.
+
+5. Update the Current checkpoint in [paper_simple/README.md](../README.md) as part of resolving this issue. Include the update date, completed issue, agreed outcome, links to changed documents and new issues, and the next issue with its exact next discussion or action.
+
+6. Verify that this issue and the README agree, then tell the user that both were updated. If the session ends during the issue, record partial progress and the next step in both places while retaining the issue's current status.
+
+## Starting context
+
+The repository root is `C:\Users\victo\Codex\Go_Nuts_repos`. The current paper is being developed afresh in `pnas_report/paper_simple`, using the existing analyses and research question. The user wants an interactive process in which the question and storyline are agreed before drafting. Use PNAS and the course's six-page requirements.
+
+Read [REPOSITORY_CONTEXT.md](REPOSITORY_CONTEXT.md) when starting this issue in a new session. It maps the code, data, saved findings, earlier draft, source caveats, and environment limitations. Recheck the current branch and linked planning files when resuming.
+
+The transfer CSV directly contains 19,712 records with season labels from 00/01 to 26/27, with gaps in early coverage. The text signings CSV contains 1,332 rows with season values 2012–2024, subject to age, value, and loan-return rules. Main sentiment uses 820 signings, while the all-controls H2b table uses 793. Matching identifiers include player_id, transfer date, origin club, and destination club. Membership and age are calculated under different pipeline conventions that need inspection.
+
+## Related decisions and first interaction
+
+Review the current outcomes of issues [01](2026-11-19_15-30-34_01-refine-research-question.scratch). Use the latest agreed decisions when available and record any assumptions that remain provisional.
+
+Agree how the paper should describe the two populations, starting with a comparison of eligibility rules and a check of available matching keys. A new common-sample analysis would be a separate decision.
+
+## Question or gap
+
+The analyses use different units and eligibility rules. The saved network summary describes 19,712 transfer records, while the text notes describe 1,332 selected signings and 820 with sufficient sentiment coverage. Their relationship needs verification before the paper presents a combined argument.
+
+## Paper context and supporting files
+
+[Graph data](../../data/dataset_graph/), [age results](../../output/age_shuffle_outsideprem_toprem_results.json), [NLP overview](../../data/dataset_nlp/README.md), [signings](../../data/dataset_nlp/data/signings.csv), [NLP pipeline](../../data/dataset_nlp/pipeline/get_guardian_articles.py).
+
+## Next action to discuss
+
+1. Trace source snapshots, collection dates, season coverage, partial seasons, and cleaning for both datasets.
+
+2. Compare age definitions, market-value thresholds, loans and returns, real-club rules, and minimum text coverage.
+
+3. Check whether text signings can be matched to network records using available player, club, and transfer identifiers. Report unmatched cases and reasons.
+
+4. Document each unit and denominator, repeated players, and any sample restrictions that affect comparability.
+
+## Resolved when
+
+evidence_and_sources.md contains a verified sample description and an explicit explanation of how the two datasets relate. Discuss any need for further analysis before carrying it out.
+
+## Progress and resolution
+
+2026-11-19 15:30:34 Europe/Copenhagen — Issue recorded from the agreed planning context. Follow-up work awaits discussion.
+
+2026-11-19 15:38:00 Europe/Copenhagen — Added standalone repository context, specific evidence locations, related decisions, and the starting discussion for this issue.
+

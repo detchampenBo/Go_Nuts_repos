@@ -1,0 +1,72 @@
+# 12 Draft the agreed paper in the requested voice
+
+## Created
+
+2026-11-19 15:30:34 Europe/Copenhagen. Created as part of the initial paper-development issue batch.
+
+## Status
+
+Open
+
+## Checkpoint workflow
+
+1. At the start, read the Current checkpoint in [paper_simple/README.md](../README.md). Compare it with this issue's status, latest progress, and related decisions.
+
+2. Remind the user where this issue fits in the recorded process and identify the next discussion or action. Reconcile any difference between the README and the issue with the user.
+
+3. Record agreed evidence and decisions in this issue and the affected planning files. Create linked scratch issues for new research, evidence, citation, or cross-reference needs.
+
+4. When the completion criteria are met and the user confirms satisfaction, set this issue to Resolved and append a dated resolution with the outcome, supporting evidence, and changed file links.
+
+5. Update the Current checkpoint in [paper_simple/README.md](../README.md) as part of resolving this issue. Include the update date, completed issue, agreed outcome, links to changed documents and new issues, and the next issue with its exact next discussion or action.
+
+6. Verify that this issue and the README agree, then tell the user that both were updated. If the session ends during the issue, record partial progress and the next step in both places while retaining the issue's current status.
+
+## Starting context
+
+The repository root is `C:\Users\victo\Codex\Go_Nuts_repos`. The current paper is being developed afresh in `pnas_report/paper_simple`, using the existing analyses and research question. The user wants an interactive process in which the question and storyline are agreed before drafting. Use PNAS and the course's six-page requirements.
+
+Read [REPOSITORY_CONTEXT.md](REPOSITORY_CONTEXT.md) when starting this issue in a new session. It maps the code, data, saved findings, earlier draft, source caveats, and environment limitations. Recheck the current branch and linked planning files when resuming.
+
+The earlier paper/main.tex contains a teammate's prose, H1 TODOs, and alternative Discussion paragraphs. The new paper will be developed in paper_simple from the agreed planning documents. No new paper prose or final author metadata has been agreed here. The course asks for specific author contributions, a 150-word Abstract, and a short Significance Statement. The user's tone preference is simple academic language with selected essential numerical detail.
+
+## Related decisions and first interaction
+
+Review the current outcomes of issues [08](2026-11-19_15-30-34_08-agree-storyline-and-page-budget.scratch), [09](2026-11-19_15-30-34_09-select-figures-and-plan-cross-references.scratch), [10](2026-11-19_15-30-34_10-plan-reproducible-methods.scratch), [11](2026-11-19_15-30-34_11-agree-discussion-and-claim-boundaries.scratch). Use the latest agreed decisions when available and record any assumptions that remain provisional.
+
+Agree which section to draft and how much to review in the next interaction. Collect missing author and contribution details directly from the group.
+
+## Question or gap
+
+The fresh paper needs prose developed from the agreed question and storyline, with contributions and author details supplied by the group.
+
+## Paper context and supporting files
+
+[Question](../final_research_question.md), [storyline](../paper_storyline.md), [tone guide](../tone_of_voice.md), [evidence inventory](../evidence_and_sources.md), [requirements](../project_requirements.md).
+
+## Next action to discuss
+
+1. Agree which section to draft first, then review sections together in manageable increments.
+
+2. Write from the agreed argument and checked evidence. Select essential numbers and explain their meaning in simple academic English.
+
+3. Add verified citations and the planned figure references as each claim is written.
+
+4. After the body is agreed, draft the 150-word Abstract, two- or three-sentence Significance Statement, and title.
+
+5. Ask the group for names, affiliations, specific contributions, corresponding contact, and relevant declarations.
+
+6. Capture new research, evidence, citation, or cross-reference gaps as separate issues during drafting.
+
+## Resolved when
+
+All required sections of the first draft have been written and reviewed with the user against the question, storyline, tone guide, and evidence. The title, 150-word Abstract, Significance Statement, Introduction, Results, Discussion, Methods, References, and specific author contributions are present. Author details are confirmed, source locations are recorded, and outstanding issues are explicitly linked for template assembly and the final draft review.
+
+## Progress and resolution
+
+2026-11-19 15:30:34 Europe/Copenhagen — Issue recorded from the agreed planning context. Follow-up work awaits discussion.
+
+2026-11-19 15:38:00 Europe/Copenhagen — Added standalone repository context, specific evidence locations, related decisions, and the starting discussion for this issue.
+
+2026-11-19 15:44:48 Europe/Copenhagen — Made the complete written first-draft outcome explicit and connected it to the shared completion criteria in README.md.
+

@@ -1,0 +1,66 @@
+# 01 Agree on the academic research question
+
+## Created
+
+2026-11-19 15:30:34 Europe/Copenhagen. Created as part of the initial paper-development issue batch.
+
+## Status
+
+Waiting for discussion
+
+## Checkpoint workflow
+
+1. At the start, read the Current checkpoint in [paper_simple/README.md](../README.md). Compare it with this issue's status, latest progress, and related decisions.
+
+2. Remind the user where this issue fits in the recorded process and identify the next discussion or action. Reconcile any difference between the README and the issue with the user.
+
+3. Record agreed evidence and decisions in this issue and the affected planning files. Create linked scratch issues for new research, evidence, citation, or cross-reference needs.
+
+4. When the completion criteria are met and the user confirms satisfaction, set this issue to Resolved and append a dated resolution with the outcome, supporting evidence, and changed file links.
+
+5. Update the Current checkpoint in [paper_simple/README.md](../README.md) as part of resolving this issue. Include the update date, completed issue, agreed outcome, links to changed documents and new issues, and the next issue with its exact next discussion or action.
+
+6. Verify that this issue and the README agree, then tell the user that both were updated. If the session ends during the issue, record partial progress and the next step in both places while retaining the issue's current status.
+
+## Starting context
+
+The repository root is `C:\Users\victo\Codex\Go_Nuts_repos`. The current paper is being developed afresh in `pnas_report/paper_simple`, using the existing analyses and research question. The user wants an interactive process in which the question and storyline are agreed before drafting. Use PNAS and the course's six-page requirements.
+
+Read [REPOSITORY_CONTEXT.md](REPOSITORY_CONTEXT.md) when starting this issue in a new session. It maps the code, data, saved findings, earlier draft, source caveats, and environment limitations. Recheck the current branch and linked planning files when resuming.
+
+The starting question is still preserved verbatim in final_research_question.md. Existing analyses cover entry rates (H1), differences in sentiment change (H2), exploratory differences in sentiment levels (H2b), and coverage volume. The preliminary preference is an age-centred argument connecting recruitment and coverage. Its exact academic contribution and the role of the structural network analyses remain open.
+
+## Related decisions and first interaction
+
+This is the first discussion issue. Use the latest agreed decisions when available and record any assumptions that remain provisional.
+
+Read the starting wording together and discuss what one academic question could connect the selected recruitment and media outcomes. Present revisions for the user to compare before choosing one.
+
+## Question or gap
+
+The starting question joins Premier League entry with changes in Guardian tone. The saved text work also examines tone levels through exploratory H2b. We need wording that connects the selected outcomes and accurately expresses the contribution.
+
+## Paper context and supporting files
+
+[Current question](../final_research_question.md), [original question and hypothesis history](../../notes/question.md), [writing preferences](../tone_of_voice.md).
+
+## Next action to discuss
+
+1. Discuss the academic motivation for connecting age, recruitment, and media coverage.
+
+2. Compare two or three revisions of the existing question, explaining the outcomes and claims each would cover.
+
+3. Agree whether H2b and coverage volume are central or supporting outcomes. Preserve the exploratory history of H2b.
+
+4. Identify population and period details that depend on the sample review in issue 02. Revisit wording after that review.
+
+## Resolved when
+
+The user agrees on wording and scope. Record the agreed version and reasons in final_research_question.md, with any remaining evidence-dependent qualifications.
+
+## Progress and resolution
+
+2026-11-19 15:30:34 Europe/Copenhagen — Issue recorded from the agreed planning context. Follow-up work awaits discussion.
+
+2026-11-19 15:38:00 Europe/Copenhagen — Added standalone repository context, specific evidence locations, related decisions, and the starting discussion for this issue.
+

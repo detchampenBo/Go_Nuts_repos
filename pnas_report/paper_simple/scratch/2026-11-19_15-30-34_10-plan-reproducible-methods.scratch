@@ -1,0 +1,68 @@
+# 10 Specify concise and reproducible Methods
+
+## Created
+
+2026-11-19 15:30:34 Europe/Copenhagen. Created as part of the initial paper-development issue batch.
+
+## Status
+
+Open
+
+## Checkpoint workflow
+
+1. At the start, read the Current checkpoint in [paper_simple/README.md](../README.md). Compare it with this issue's status, latest progress, and related decisions.
+
+2. Remind the user where this issue fits in the recorded process and identify the next discussion or action. Reconcile any difference between the README and the issue with the user.
+
+3. Record agreed evidence and decisions in this issue and the affected planning files. Create linked scratch issues for new research, evidence, citation, or cross-reference needs.
+
+4. When the completion criteria are met and the user confirms satisfaction, set this issue to Resolved and append a dated resolution with the outcome, supporting evidence, and changed file links.
+
+5. Update the Current checkpoint in [paper_simple/README.md](../README.md) as part of resolving this issue. Include the update date, completed issue, agreed outcome, links to changed documents and new issues, and the next issue with its exact next discussion or action.
+
+6. Verify that this issue and the README agree, then tell the user that both were updated. If the session ends during the issue, record partial progress and the next step in both places while retaining the issue's current status.
+
+## Starting context
+
+The repository root is `C:\Users\victo\Codex\Go_Nuts_repos`. The current paper is being developed afresh in `pnas_report/paper_simple`, using the existing analyses and research question. The user wants an interactive process in which the question and storyline are agreed before drafting. Use PNAS and the course's six-page requirements.
+
+Read [REPOSITORY_CONTEXT.md](REPOSITORY_CONTEXT.md) when starting this issue in a new session. It maps the code, data, saved findings, earlier draft, source caveats, and environment limitations. Recheck the current branch and linked planning files when resuming.
+
+Network code lives in notebooks, while the Guardian pipeline and text analysis code live under data/dataset_nlp. The graph README is an incomplete scaffold. Full raw Guardian text and scoring caches are described as external to Git, while derived results are available locally. Reproduction documentation names different Conda environments, and an earlier test attempt in network_analysis failed on dependencies and an import. This issue plans the necessary Methods and evidence of reproducibility before any agreed rerun.
+
+## Related decisions and first interaction
+
+Review the current outcomes of issues [02](2026-11-19_15-30-34_02-reconcile-samples-and-data-provenance.scratch), [03](2026-11-19_15-30-34_03-verify-age-entry-results.scratch), [04](2026-11-19_15-30-34_04-review-sentiment-measurement-validation.scratch), [05](2026-11-19_15-30-34_05-verify-text-results-and-exploratory-status.scratch), [06](2026-11-19_15-30-34_06-choose-network-analysis-role.scratch), [07](2026-11-19_15-30-34_07-research-literature-and-verify-citations.scratch). Use the latest agreed decisions when available and record any assumptions that remain provisional.
+
+Agree the minimum study-specific detail needed for reproduction, then map it to the actual implementation and available inputs. Discuss any proposed reruns or environment changes before undertaking them.
+
+## Question or gap
+
+The user wants accessible explanations and citations for technical theory. The course also requires enough study-specific information for a reader to reproduce the work.
+
+## Paper context and supporting files
+
+[Tone guide](../tone_of_voice.md), [requirements](../project_requirements.md), [evidence inventory](../evidence_and_sources.md), [graph data](../../data/dataset_graph/), [NLP pipeline](../../data/dataset_nlp/pipeline/), [NLP analysis](../../data/dataset_nlp/sentiment/).
+
+## Next action to discuss
+
+1. Create a methods outline covering data sources and dates, units, eligibility, network construction, text processing, outcome definitions, controls, null models, and validation.
+
+2. Retain implementation choices that affect findings, while using verified citations for method derivations.
+
+3. Check available inputs and saved outputs against the steps needed for reproduction. Document article text and caches held outside the repository.
+
+4. Reconcile environment instructions before any agreed rerun, given the earlier missing leidenalg, unavailable Rscript, and NetworkX import errors.
+
+5. Record any unresolved statistical-method questions from issues 03 to 05 before drafting their interpretation.
+
+## Resolved when
+
+paper_storyline.md contains an agreed Methods outline, and evidence_and_sources.md identifies the corresponding implementations, inputs, outputs, and reproduction limitations.
+
+## Progress and resolution
+
+2026-11-19 15:30:34 Europe/Copenhagen — Issue recorded from the agreed planning context. Follow-up work awaits discussion.
+
+2026-11-19 15:38:00 Europe/Copenhagen — Added standalone repository context, specific evidence locations, related decisions, and the starting discussion for this issue.
+

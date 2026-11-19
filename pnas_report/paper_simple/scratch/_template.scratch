@@ -1,0 +1,51 @@
+# Issue title
+
+## Created
+
+Creation date and time in Europe/Copenhagen.
+
+## Status
+
+Open
+
+## Checkpoint workflow
+
+1. At the start, read the Current checkpoint in [paper_simple/README.md](../README.md). Compare it with this issue's status, latest progress, and related decisions.
+
+2. Remind the user where this issue fits in the recorded process and identify the next discussion or action. Reconcile any difference between the README and the issue with the user.
+
+3. Record agreed evidence and decisions in this issue and the affected planning files. Create linked scratch issues for new research, evidence, citation, or cross-reference needs.
+
+4. When the completion criteria are met and the user confirms satisfaction, set this issue to Resolved and append a dated resolution with the outcome, supporting evidence, and changed file links.
+
+5. Update the Current checkpoint in [paper_simple/README.md](../README.md) as part of resolving this issue. Include the update date, completed issue, agreed outcome, links to changed documents and new issues, and the next issue with its exact next discussion or action.
+
+6. Verify that this issue and the README agree, then tell the user that both were updated. If the session ends during the issue, record partial progress and the next step in both places while retaining the issue's current status.
+
+## Starting context
+
+Give the repository root, the current paper location, and the specific existing evidence or decisions needed to understand this issue independently. Link [REPOSITORY_CONTEXT.md](REPOSITORY_CONTEXT.md) and the [first-draft goal and workflow](README.md), and check the dated context against the current files. Define any hypothesis names or specialist terms used below.
+
+## Related decisions and first interaction
+
+Link relevant earlier issues and state which decisions are agreed or still open. Identify the first question to discuss with the user when resuming this issue.
+
+## Question or gap
+
+Describe the research need, missing evidence, finding to check, citation, cross-reference, or decision.
+
+## Paper context and supporting files
+
+Identify the affected claim or section, its relevance to the research question or storyline, and links to available evidence.
+
+## Next action to discuss
+
+Describe the proposed follow-up and what would resolve the issue.
+
+## Resolved when
+
+State the verifiable outcome and which paper or planning files should record it.
+
+## Progress and resolution
+
+Append dated entries in chronological order. When resolved, link the supporting evidence and record the decision and any files updated.

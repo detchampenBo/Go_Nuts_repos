@@ -1,0 +1,68 @@
+# 03 Verify H1 and the strength of its evidence
+
+## Created
+
+2026-11-19 15:30:34 Europe/Copenhagen. Created as part of the initial paper-development issue batch.
+
+## Status
+
+Open
+
+## Checkpoint workflow
+
+1. At the start, read the Current checkpoint in [paper_simple/README.md](../README.md). Compare it with this issue's status, latest progress, and related decisions.
+
+2. Remind the user where this issue fits in the recorded process and identify the next discussion or action. Reconcile any difference between the README and the issue with the user.
+
+3. Record agreed evidence and decisions in this issue and the affected planning files. Create linked scratch issues for new research, evidence, citation, or cross-reference needs.
+
+4. When the completion criteria are met and the user confirms satisfaction, set this issue to Resolved and append a dated resolution with the outcome, supporting evidence, and changed file links.
+
+5. Update the Current checkpoint in [paper_simple/README.md](../README.md) as part of resolving this issue. Include the update date, completed issue, agreed outcome, links to changed documents and new issues, and the next issue with its exact next discussion or action.
+
+6. Verify that this issue and the README agree, then tell the user that both were updated. If the session ends during the issue, record partial progress and the next step in both places while retaining the issue's current status.
+
+## Starting context
+
+The repository root is `C:\Users\victo\Codex\Go_Nuts_repos`. The current paper is being developed afresh in `pnas_report/paper_simple`, using the existing analyses and research question. The user wants an interactive process in which the question and storyline are agreed before drafting. Use PNAS and the course's six-page requirements.
+
+Read [REPOSITORY_CONTEXT.md](REPOSITORY_CONTEXT.md) when starting this issue in a new session. It maps the code, data, saved findings, earlier draft, source caveats, and environment limitations. Recheck the current branch and linked planning files when resuming.
+
+The saved H1 summary reports 2,735/18,398 under-30 transfers entering the PL (14.87%) and 147/1,314 older transfers (11.19%). It reports an observed gap of about -3.68 percentage points, a null mean around -2.41 points, and one-sided p = 0.045. The one-transfer-per-player check reports p = 0.044 from one fixed sample of 5,213 players. Those saved outcomes exist even though notes/findings.md and the earlier draft still leave H1 unfinished. Trace the JSON fields and code before finalising the numbers or interpretation.
+
+## Related decisions and first interaction
+
+Review the current outcomes of issues [02](2026-11-19_15-30-34_02-reconcile-samples-and-data-provenance.scratch). Use the latest agreed decisions when available and record any assumptions that remain provisional.
+
+Discuss the distinction between the raw age gap and the gap relative to the club-season null. Agree on the evidence checks needed for a defensible H1 statement.
+
+## Question or gap
+
+The earlier draft leaves H1 as a placeholder even though saved results exist. The new paper needs an independently traced account of the age gap and its comparison with the specified null.
+
+## Paper context and supporting files
+
+[Age summary](../../output/age_shuffle_outsideprem_toprem_summary.md), [results JSON](../../output/age_shuffle_outsideprem_toprem_results.json), [implementation](../../notebooks/age_shuffle_outsideprem_toprem.py), [sampling explanation](../../notes/one_transfer_per_player_sampling_methodology.md).
+
+## Next action to discuss
+
+1. Reconcile age-group totals, Premier League arrivals, joining rates, and gap against saved results and implementation.
+
+2. Check the within-origin-club-and-season shuffle, one-sided alternative, ties, plus-one p-value calculation, and number of permutations.
+
+3. Explain why the shuffled gap need not be zero. Distinguish the observed gap from its difference relative to the null expectation.
+
+4. Assess the modest evidence reported in the saved summary and the sensitivity check based on one fixed transfer per player.
+
+5. Check whether any robustness claims in earlier planning notes have actually been executed. Raise a separate issue for an agreed missing check.
+
+## Resolved when
+
+The H1 claim, essential numbers, null interpretation, and sensitivity limitations are recorded with exact sources in evidence_and_sources.md.
+
+## Progress and resolution
+
+2026-11-19 15:30:34 Europe/Copenhagen — Issue recorded from the agreed planning context. Follow-up work awaits discussion.
+
+2026-11-19 15:38:00 Europe/Copenhagen — Added standalone repository context, specific evidence locations, related decisions, and the starting discussion for this issue.
+

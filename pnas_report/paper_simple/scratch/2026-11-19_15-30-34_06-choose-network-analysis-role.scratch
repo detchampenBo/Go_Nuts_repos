@@ -1,0 +1,68 @@
+# 06 Agree which network findings belong in the paper
+
+## Created
+
+2026-11-19 15:30:34 Europe/Copenhagen. Created as part of the initial paper-development issue batch.
+
+## Status
+
+Open
+
+## Checkpoint workflow
+
+1. At the start, read the Current checkpoint in [paper_simple/README.md](../README.md). Compare it with this issue's status, latest progress, and related decisions.
+
+2. Remind the user where this issue fits in the recorded process and identify the next discussion or action. Reconcile any difference between the README and the issue with the user.
+
+3. Record agreed evidence and decisions in this issue and the affected planning files. Create linked scratch issues for new research, evidence, citation, or cross-reference needs.
+
+4. When the completion criteria are met and the user confirms satisfaction, set this issue to Resolved and append a dated resolution with the outcome, supporting evidence, and changed file links.
+
+5. Update the Current checkpoint in [paper_simple/README.md](../README.md) as part of resolving this issue. Include the update date, completed issue, agreed outcome, links to changed documents and new issues, and the next issue with its exact next discussion or action.
+
+6. Verify that this issue and the README agree, then tell the user that both were updated. If the session ends during the issue, record partial progress and the next step in both places while retaining the issue's current status.
+
+## Starting context
+
+The repository root is `C:\Users\victo\Codex\Go_Nuts_repos`. The current paper is being developed afresh in `pnas_report/paper_simple`, using the existing analyses and research question. The user wants an interactive process in which the question and storyline are agreed before drafting. Use PNAS and the course's six-page requirements.
+
+Read [REPOSITORY_CONTEXT.md](REPOSITORY_CONTEXT.md) when starting this issue in a new session. It maps the code, data, saved findings, earlier draft, source caveats, and environment limitations. Recheck the current branch and linked planning files when resuming.
+
+Completed saved outputs include a directed transfer network of 1,254 clubs and 12,794 weighted routes. Louvain and Leiden each find five communities in their observed runs and compare with one shared randomized graph. The feeder output selects 239 recurring routes using at least two records and unadjusted p < 0.05. The backbone output examines local transfer-share concentration. Each measures a structural property whose contribution to the age question still needs agreement. Earlier proposal language can predate these outputs.
+
+## Related decisions and first interaction
+
+Review the current outcomes of issues [01](2026-11-19_15-30-34_01-refine-research-question.scratch), [02](2026-11-19_15-30-34_02-reconcile-samples-and-data-provenance.scratch). Use the latest agreed decisions when available and record any assumptions that remain provisional.
+
+Discuss whether the proposed age-and-media story demonstrates the required network science, and whether a specific existing structural result adds evidence relevant to that story.
+
+## Question or gap
+
+The repository contains degree, feeder-route, ownership, community, and backbone analyses. We need to decide which contribute to the age-centred question and demonstrate network science within the six-page course submission.
+
+## Paper context and supporting files
+
+[Course requirements](../project_requirements.md), [degree recap](../../output/degree_distribution_recap.md), [community comparison](../../output/transfer_community_comparison/method_comparison.md), [feeder summary](../../output/premier_league_feeder_summary.md), [ownership audit](../../notes/premier_league_feeder_ownership_audit.md), [backbone summary](../../output/louvain_transfer_backbone_findings/backbone_summary.md).
+
+## Next action to discuss
+
+1. For each candidate, state the specific part of the agreed research question it helps answer.
+
+2. Assess whether H1 and the proposed network context sufficiently demonstrate the network-science component of the course.
+
+3. Discuss the space and interpretation required by any structural result proposed for inclusion.
+
+4. Preserve relevant qualifications, including the single-realization community null and unadjusted feeder-route comparisons.
+
+5. If a structural claim requires a new link to age or media outcomes, capture that proposed analysis in a separate issue for discussion.
+
+## Resolved when
+
+paper_storyline.md records the agreed role of each selected network result and the reasons for the selection.
+
+## Progress and resolution
+
+2026-11-19 15:30:34 Europe/Copenhagen — Issue recorded from the agreed planning context. Follow-up work awaits discussion.
+
+2026-11-19 15:38:00 Europe/Copenhagen — Added standalone repository context, specific evidence locations, related decisions, and the starting discussion for this issue.
+

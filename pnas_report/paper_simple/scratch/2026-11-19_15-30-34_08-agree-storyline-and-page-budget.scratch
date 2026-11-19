@@ -1,0 +1,68 @@
+# 08 Agree the section argument before drafting
+
+## Created
+
+2026-11-19 15:30:34 Europe/Copenhagen. Created as part of the initial paper-development issue batch.
+
+## Status
+
+Open
+
+## Checkpoint workflow
+
+1. At the start, read the Current checkpoint in [paper_simple/README.md](../README.md). Compare it with this issue's status, latest progress, and related decisions.
+
+2. Remind the user where this issue fits in the recorded process and identify the next discussion or action. Reconcile any difference between the README and the issue with the user.
+
+3. Record agreed evidence and decisions in this issue and the affected planning files. Create linked scratch issues for new research, evidence, citation, or cross-reference needs.
+
+4. When the completion criteria are met and the user confirms satisfaction, set this issue to Resolved and append a dated resolution with the outcome, supporting evidence, and changed file links.
+
+5. Update the Current checkpoint in [paper_simple/README.md](../README.md) as part of resolving this issue. Include the update date, completed issue, agreed outcome, links to changed documents and new issues, and the next issue with its exact next discussion or action.
+
+6. Verify that this issue and the README agree, then tell the user that both were updated. If the session ends during the issue, record partial progress and the next step in both places while retaining the issue's current status.
+
+## Starting context
+
+The repository root is `C:\Users\victo\Codex\Go_Nuts_repos`. The current paper is being developed afresh in `pnas_report/paper_simple`, using the existing analyses and research question. The user wants an interactive process in which the question and storyline are agreed before drafting. Use PNAS and the course's six-page requirements.
+
+Read [REPOSITORY_CONTEXT.md](REPOSITORY_CONTEXT.md) when starting this issue in a new session. It maps the code, data, saved findings, earlier draft, source caveats, and environment limitations. Recheck the current branch and linked planning files when resuming.
+
+The user requested a clean beginning in paper_simple and an agreed storyline before writing prose. paper_storyline.md currently records section-planning questions and open decisions. Available evidence includes a modest H1 comparison, an uncertain H2 change comparison, exploratory H2b level findings, and coverage differences. Their combined interpretation and academic contribution remain to be agreed after the evidence review. The PNAS/course limit is six pages including references.
+
+## Related decisions and first interaction
+
+Review the current outcomes of issues [01](2026-11-19_15-30-34_01-refine-research-question.scratch), [02](2026-11-19_15-30-34_02-reconcile-samples-and-data-provenance.scratch), [03](2026-11-19_15-30-34_03-verify-age-entry-results.scratch), [04](2026-11-19_15-30-34_04-review-sentiment-measurement-validation.scratch), [05](2026-11-19_15-30-34_05-verify-text-results-and-exploratory-status.scratch), [06](2026-11-19_15-30-34_06-choose-network-analysis-role.scratch), [07](2026-11-19_15-30-34_07-research-literature-and-verify-citations.scratch). Use the latest agreed decisions when available and record any assumptions that remain provisional.
+
+Review the latest agreed question and evidence, then discuss one central claim, the result sequence, and a realistic page budget.
+
+## Question or gap
+
+The fresh paper needs an agreed narrative that answers the refined question within six pages. The existing storyline file currently holds planning questions.
+
+## Paper context and supporting files
+
+[Storyline](../paper_storyline.md), [question](../final_research_question.md), [evidence inventory](../evidence_and_sources.md), [requirements](../project_requirements.md).
+
+## Next action to discuss
+
+1. Use the reviewed evidence and literature to formulate a central claim for discussion.
+
+2. Order the selected results so each contributes to answering the question and has a clear transition to the next.
+
+3. Describe the purpose and intended argument of Introduction, Results, Discussion, and Methods.
+
+4. Allocate space for two or three figures, references, the Abstract, and Significance Statement.
+
+5. Record unresolved contradictions, evidence gaps, or choices as linked scratch issues.
+
+## Resolved when
+
+The user agrees on the section argument, result order, and provisional page budget in paper_storyline.md before paper prose is drafted.
+
+## Progress and resolution
+
+2026-11-19 15:30:34 Europe/Copenhagen — Issue recorded from the agreed planning context. Follow-up work awaits discussion.
+
+2026-11-19 15:38:00 Europe/Copenhagen — Added standalone repository context, specific evidence locations, related decisions, and the starting discussion for this issue.
+

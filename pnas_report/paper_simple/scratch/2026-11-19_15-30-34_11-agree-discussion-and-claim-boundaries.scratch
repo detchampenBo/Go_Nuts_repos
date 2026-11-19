@@ -1,0 +1,68 @@
+# 11 Agree the interpretation and limitations
+
+## Created
+
+2026-11-19 15:30:34 Europe/Copenhagen. Created as part of the initial paper-development issue batch.
+
+## Status
+
+Open
+
+## Checkpoint workflow
+
+1. At the start, read the Current checkpoint in [paper_simple/README.md](../README.md). Compare it with this issue's status, latest progress, and related decisions.
+
+2. Remind the user where this issue fits in the recorded process and identify the next discussion or action. Reconcile any difference between the README and the issue with the user.
+
+3. Record agreed evidence and decisions in this issue and the affected planning files. Create linked scratch issues for new research, evidence, citation, or cross-reference needs.
+
+4. When the completion criteria are met and the user confirms satisfaction, set this issue to Resolved and append a dated resolution with the outcome, supporting evidence, and changed file links.
+
+5. Update the Current checkpoint in [paper_simple/README.md](../README.md) as part of resolving this issue. Include the update date, completed issue, agreed outcome, links to changed documents and new issues, and the next issue with its exact next discussion or action.
+
+6. Verify that this issue and the README agree, then tell the user that both were updated. If the session ends during the issue, record partial progress and the next step in both places while retaining the issue's current status.
+
+## Starting context
+
+The repository root is `C:\Users\victo\Codex\Go_Nuts_repos`. The current paper is being developed afresh in `pnas_report/paper_simple`, using the existing analyses and research question. The user wants an interactive process in which the question and storyline are agreed before drafting. Use PNAS and the course's six-page requirements.
+
+Read [REPOSITORY_CONTEXT.md](REPOSITORY_CONTEXT.md) when starting this issue in a new session. It maps the code, data, saved findings, earlier draft, source caveats, and environment limitations. Recheck the current branch and linked planning files when resuming.
+
+The main interpretation is still open. The saved H1 summary characterises evidence as modest and notes a fixed-sample sensitivity check. H2 does not detect an age difference in tone change. H2b emerged during exploration and varies in significance across controls and instruments. The datasets have different eligibility rules and periods, and Guardian coverage concerns one publication. These features constrain how recruitment and reception can be discussed together.
+
+## Related decisions and first interaction
+
+Review the current outcomes of issues [02](2026-11-19_15-30-34_02-reconcile-samples-and-data-provenance.scratch), [03](2026-11-19_15-30-34_03-verify-age-entry-results.scratch), [04](2026-11-19_15-30-34_04-review-sentiment-measurement-validation.scratch), [05](2026-11-19_15-30-34_05-verify-text-results-and-exploratory-status.scratch), [07](2026-11-19_15-30-34_07-research-literature-and-verify-citations.scratch), [08](2026-11-19_15-30-34_08-agree-storyline-and-page-budget.scratch). Use the latest agreed decisions when available and record any assumptions that remain provisional.
+
+Discuss what the combined results support in answer to the agreed question, then identify the strongest alternative explanations and limitations.
+
+## Question or gap
+
+The Discussion must connect the network and text findings to the question with conclusions proportionate to the evidence. Different sample selections, exploratory analysis, and model limitations affect that interpretation.
+
+## Paper context and supporting files
+
+[H1 summary](../../output/age_shuffle_outsideprem_toprem_summary.md), [text findings and limitations](../../notes/findings.md), [NLP decisions](../../data/dataset_nlp/decisions.md), [question](../final_research_question.md), [storyline](../paper_storyline.md).
+
+## Next action to discuss
+
+1. Discuss what the selected findings jointly establish and which interpretations remain open.
+
+2. Assess selection into the text sample, repeated players, season composition, one-newspaper coverage, and small older-player samples.
+
+3. Address uncertainty in H1 and H2, the exploratory status and control sensitivity of H2b, and sentiment-validation limits.
+
+4. Connect the interpretation to the verified literature without assuming that club decisions and press tone influence each other.
+
+5. Record the evidence required for any proposed explanation beyond the measured associations as a new issue.
+
+## Resolved when
+
+The user agrees on the principal interpretation, alternative explanations, and limitations, recorded in paper_storyline.md with links to their evidence.
+
+## Progress and resolution
+
+2026-11-19 15:30:34 Europe/Copenhagen — Issue recorded from the agreed planning context. Follow-up work awaits discussion.
+
+2026-11-19 15:38:00 Europe/Copenhagen — Added standalone repository context, specific evidence locations, related decisions, and the starting discussion for this issue.
+
