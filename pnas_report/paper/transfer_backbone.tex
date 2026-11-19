@@ -1,0 +1,19 @@
+\subsection{Louvain transfer backbone}
+\label{sec:louvain-transfer-backbone}
+
+We applied the directed disparity filter \cite{serrano2009multiscale} to the
+observed transfer-count-weighted network and to the induced network of each
+saved Louvain community. A route survived when its source-outgoing or
+destination-incoming upper-tail probability was strictly below the local
+cutoff. We also checked the directed connectivity exception, which applied to
+zero observed routes.
+
+At $\alpha=0.20$, the whole-network backbone retained 1,684 of 12,794 routes
+and 6,526 of 19,712 recorded transfers (33.1\%). This included 372 of 5,211
+between-community routes representing 1,187 transfers. All 427 active clubs
+were in one weak component, covering 34.1\% of the original 1,254 clubs. In the
+induced community views, Lille first split into multiple active weak components
+as the cutoff decreased, at $\alpha=0.41$. At $\alpha=0.10$, Wolves had nine
+active weak components and the largest held 10 of its 180 clubs. Weak
+connectivity ignores route direction. The cutoff describes locally
+concentrated transfer counts under the disparity null.
