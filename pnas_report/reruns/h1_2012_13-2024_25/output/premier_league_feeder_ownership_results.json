@@ -1,0 +1,107 @@
+{
+  "research_as_of": "2026-11-21",
+  "definition": "Documented common direct or indirect club-equity investor, including minority stakes; accounting common-control disclosure accepted with club ownership corroboration. Named strategic corporate minority stakes count, including Granada plc through SMG. This is a confirmed-minimum source screen, not an exhaustive beneficial-owner census.",
+  "model_seasons": [
+    "12/13",
+    "13/14",
+    "14/15",
+    "15/16",
+    "16/17",
+    "17/18",
+    "18/19",
+    "19/20",
+    "20/21",
+    "21/22",
+    "22/23",
+    "23/24",
+    "24/25"
+  ],
+  "model_input_date_min": "2012-07-01",
+  "model_input_date_max": "2025-07-15",
+  "selected_route_event_date_min": "2012-07-01",
+  "selected_route_event_date_max": "2025-06-30",
+  "shuffle_permutations": 999,
+  "shuffle_seed": 2026,
+  "selection_threshold": "observed_count >= 2 and unadjusted upper-tail Monte Carlo p_value < 0.05",
+  "screened_unique_pairs": 217,
+  "unique_unordered_pairs": 217,
+  "origin_clubs": 177,
+  "destination_clubs": 32,
+  "selected_transfer_records": 626,
+  "documented_shared_owner_pairs_during_model_interval": 16,
+  "documented_pair_percent": 7.373271889400922,
+  "pairs_with_ownership_concurrent_transfer": 15,
+  "transfer_concurrent_pair_percent": 6.912442396313365,
+  "selected_records_on_ever_shared_owner_pairs": 72,
+  "ownership_concurrent_transfer_records": 62,
+  "joint_ownership_group_pairs": 17,
+  "joint_ownership_group_percent": 7.834101382488479,
+  "joint_ownership_group_pooled_records": 85,
+  "manual_joint_ownership_pairs": [
+    {
+      "from_club_id": 499,
+      "to_club_id": 631,
+      "note": "Historical broad-period research note: User-directed inclusion of Vitesse-Chelsea in the joint-ownership analysis group on 2026-11-18. Include all eight pooled selected records; no verified common-equity interval is asserted. Restricted-run application retains the authorised manual inclusion of all 7 selected pooled records; no verified equity interval is asserted."
+    },
+    {
+      "from_club_id": 504,
+      "to_club_id": 543,
+      "note": "Historical broad-period research note: User-directed inclusion of Grasshoppers-Wolves in the joint-ownership analysis group on 2026-11-18. Include all ten pooled selected records; no verified common-equity interval is asserted. Restricted-run application retains the authorised manual inclusion of all 10 selected pooled records; no verified equity interval is asserted."
+    }
+  ],
+  "date_boundary_uncertain_records": 0,
+  "selected_events_after_research_date": 0,
+  "verified_route_events_in_trust_control_windows": 0,
+  "unconfirmed_pairs": 201,
+  "status_counts": {
+    "no_documented_common_equity_found": 197,
+    "confirmed_shared_equity_with_transfer_overlap": 15,
+    "family_connected_common_equity_unverified": 1,
+    "unresolved_indirect_ownership_or_control": 1,
+    "confirmed_shared_equity_outside_selected_transfer_dates": 1,
+    "branded_network_common_equity_unverified": 1,
+    "partnership_common_equity_unverified": 1
+  },
+  "verification": {
+    "filtered_routes_equal_current_analysis_within_csv_roundtrip_precision": true,
+    "every_route_event_count_equals_original_observed_count": true,
+    "evidence_keys_are_unique_selected_pairs_with_citations": true,
+    "date_bounds_valid_and_overlapping_model": true,
+    "unconfirmed_is_not_proven_independent_ownership": true
+  },
+  "inputs": {
+    "routes": {
+      "path": "C:\\Users\\victo\\Codex\\Go_Nuts_repos\\pnas_report\\reruns\\h1_2012_13-2024_25\\output\\premier_league_feeder_routes.csv",
+      "sha256": "21714bd68c52ead07d047fc8a2b27581d525ed3603bb88fd05d621419d99a22c"
+    },
+    "selected_routes": {
+      "path": "C:\\Users\\victo\\Codex\\Go_Nuts_repos\\pnas_report\\reruns\\h1_2012_13-2024_25\\output\\premier_league_feeder_selected_routes.csv",
+      "sha256": "5e4a19c05edbea0f549b93dd01edadf5b5597ac07140fd7c8865203c45fd1091"
+    },
+    "shuffle_results": {
+      "path": "C:\\Users\\victo\\Codex\\Go_Nuts_repos\\pnas_report\\reruns\\h1_2012_13-2024_25\\output\\premier_league_feeder_results.json",
+      "sha256": "76afbc33ac57ec03ab1a712d05d3548ea8d6034137cd963c22c3e16d09a5924d"
+    },
+    "transfers": {
+      "path": "C:\\Users\\victo\\Codex\\Go_Nuts_repos\\pnas_report\\reruns\\h1_2012_13-2024_25\\data\\outsideprem_toprem_eligible_transfers.csv.gz",
+      "sha256": "48247e435eb0256405f778cafcfdba4eea39651a009fa61f88c41c907d36055a"
+    },
+    "membership": {
+      "path": "C:\\Users\\victo\\Codex\\Go_Nuts_repos\\pnas_report\\data\\top_five_league_clubs.csv",
+      "sha256": "10a2d153baaac57271c56af09ffe2afc2db70cbfd9c33d997e6bfbae302ef3be"
+    },
+    "ownership_evidence": {
+      "path": "C:\\Users\\victo\\Codex\\Go_Nuts_repos\\pnas_report\\reruns\\h1_2012_13-2024_25\\output\\premier_league_feeder_ownership_evidence.json",
+      "sha256": "b73c19643f5ca93fe7521ea00de875817f0e320a5354daa5a4fa09efe4089b52"
+    },
+    "coverage": {
+      "path": "C:\\Users\\victo\\Codex\\Go_Nuts_repos\\pnas_report\\reruns\\h1_2012_13-2024_25\\provenance\\ownership_coverage_ledger.csv",
+      "sha256": "b7f3f4379fd4e2db1044140aee7e1d6f163f998283278a5711baf48f013afbd8"
+    },
+    "additional_screen": {
+      "path": "C:\\Users\\victo\\Codex\\Go_Nuts_repos\\pnas_report\\reruns\\h1_2012_13-2024_25\\provenance\\ownership_screen_28_routes.md",
+      "sha256": "84f6919f1d118af641d49c500a8d69dbe3683dcfb16090fb1b66bc56c254fac9"
+    }
+  },
+  "source_screen_limit": "Bounded source screen: 189 routes from the reused audit, 28 additional routes screened, 0 unscreened. The documented count is a confirmed minimum with incomplete historical minority and beneficial-owner disclosures."
+}

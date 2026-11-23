@@ -1,0 +1,85 @@
+{
+  "transfer_community_inputs.py": {
+    "source_sha256": "c3279203cf1852ceadfe864e2ca05148a5832912f30508f4b35b67beda08103e",
+    "copy_sha256": "91d6796abad4d55c14121cc331fa1ca8cda5dfbf69bf60d4e412514f58c1d3ea",
+    "diff": [
+      "--- original/transfer_community_inputs.py\n",
+      "+++ rerun/transfer_community_inputs.py\n",
+      "@@ -13,7 +13,7 @@\n",
+      " import pandas as pd",
+      " ",
+      " REPORT = Path(__file__).resolve().parents[1]",
+      "-TRANSFERS = REPORT / \"data/dataset_graph/outsideprem_toprem_eligible_transfers.csv.gz\"",
+      "+TRANSFERS = REPORT / \"data/outsideprem_toprem_eligible_transfers.csv.gz\"",
+      " SHARED = REPORT / \"output/transfer_community_comparison\"",
+      " WEIGHT = \"transfer_count\"",
+      " ROUTE_COLUMNS = [\"from_club_id\", \"to_club_id\", WEIGHT]",
+      "@@ -67,10 +67,12 @@\n",
+      "         saved = json.loads((REPORT / \"output/age_shuffle_outsideprem_toprem_results.json\").read_text(",
+      "             encoding=\"utf-8\"",
+      "         ))",
+      "+        restricted = json.loads((REPORT / \"provenance/reduction_manifest.json\").read_text())[\"restricted\"]",
+      "+        require(checksum(transfers_path) == restricted[\"sha256\"], \"Restricted input hash differs\")",
+      "         sample = saved[\"all_eligible_transfers\"][\"sample_counts\"]",
+      "-        require(totals[\"records\"] == sample[\"eligible_transfer_records\"] == 19712",
+      "-                and totals[\"distinct_players\"] == sample[\"distinct_players\"] == 5213",
+      "-                and (totals[\"nodes\"], totals[\"edges\"]) == (1254, 12794),",
+      "+        require(totals[\"records\"] == sample[\"eligible_transfer_records\"] == restricted[\"rows\"]",
+      "+                and totals[\"distinct_players\"] == sample[\"distinct_players\"] == restricted[\"players\"]",
+      "+                and (totals[\"nodes\"], totals[\"edges\"]) == (restricted[\"clubs\"], restricted[\"directed_routes\"]),",
+      "                 f\"Eligible transfer snapshot differs from the saved analysis: {totals}\")",
+      "     conflicts = {str(club): {\"chosen\": names[club], \"variants\": sorted(options)}",
+      "                  for club, options in sorted(variants.items()) if len(options) > 1}"
+    ]
+  },
+  "transfer_community_outputs.py": {
+    "source_sha256": "256298a581b0f2e30348304e37dffa2f7bababdb2e088d58bde22c16b29cb257",
+    "copy_sha256": "f10b2fceb3e2c161841888b20d75ee9c83c52f1867c5f9518fa33dc9e419a544",
+    "diff": [
+      "--- original/transfer_community_outputs.py\n",
+      "+++ rerun/transfer_community_outputs.py\n",
+      "@@ -334,7 +334,7 @@\n",
+      "     refs = REFERENCES[method]",
+      "     qt = result[\"q_observed\"], result[\"q_shuffled\"], result[\"delta_q\"]",
+      "     counter = \"completed_iterations\" if method == \"leiden\" else \"accepted_moves\"",
+      "-    commands = (f\"python -B pnas_report/notebooks/{method}_transfer_communities.py\")",
+      "+    commands = (f\"python -B pnas_report/reruns/h1_2012_13-2024_25/notebooks/{method}_transfer_communities.py\")",
+      "     caption, summary = (f\"{stems[0]}_{part}.md\" for part in (\"caption\", \"summary\"))",
+      "     links = [f\"- [{p.name}]({p.name})\" for p in sorted(output.glob(\"*.csv\"))]",
+      "     figures = [\"- \" + \" \u00b7 \".join(f\"[{ext.upper()}]({stem}.{ext})\""
+    ]
+  },
+  "louvain_transfer_communities.py": {
+    "source_sha256": "53de4edb5bb7fd6e1bd3114704450b4311079a060d3b826058b1c007e4ff5d20",
+    "copy_sha256": "ed4901463fe9b22fc559b41bb10f02e1ba42f6b514958f143bd588f5e1b8588f",
+    "diff": []
+  },
+  "leiden_transfer_communities.py": {
+    "source_sha256": "4a77b6eb4206049321dbc5f2442b5f35415ae6bf971adde9e61ded3039b2fcb3",
+    "copy_sha256": "ade897633434307e31551851227d9fb16821bd7d4f1ce37f2aaadd712f2fbb5d",
+    "diff": []
+  },
+  "compare_transfer_communities.py": {
+    "source_sha256": "3927d3487c86e6ce558b9c93d6350d86932edb6dcc4982a8e2dd0f2207783f6c",
+    "copy_sha256": "848746e2f4699b3dd4c6ee166aa6f241ff59006de9b45c30a90ee395fa757d12",
+    "diff": [
+      "--- original/compare_transfer_communities.py\n",
+      "+++ rerun/compare_transfer_communities.py\n",
+      "@@ -169,10 +169,10 @@\n",
+      "         f\"- Eligible transfer input SHA-256 `{info['input_sha256']}`\\n\"",
+      "         f\"{file_checksums}\\n\\n\"",
+      "         \"Run from the repository root in the machine-learning environment.\\n\\n\"",
+      "-        \"```powershell\\npython -B pnas_report/notebooks/transfer_community_inputs.py\\n\"",
+      "-        \"python -B pnas_report/notebooks/leiden_transfer_communities.py\\n\"",
+      "-        \"python -B pnas_report/notebooks/louvain_transfer_communities.py\\n\"",
+      "-        \"python -B pnas_report/notebooks/compare_transfer_communities.py\\n```\\n\",",
+      "+        \"```powershell\\npython -B pnas_report/reruns/h1_2012_13-2024_25/notebooks/transfer_community_inputs.py\\n\"",
+      "+        \"python -B pnas_report/reruns/h1_2012_13-2024_25/notebooks/leiden_transfer_communities.py\\n\"",
+      "+        \"python -B pnas_report/reruns/h1_2012_13-2024_25/notebooks/louvain_transfer_communities.py\\n\"",
+      "+        \"python -B pnas_report/reruns/h1_2012_13-2024_25/notebooks/compare_transfer_communities.py\\n```\\n\",",
+      "         encoding=\"utf-8\")",
+      " ",
+      " "
+    ]
+  }
+}

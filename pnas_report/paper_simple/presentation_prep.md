@@ -1,0 +1,11 @@
+# Presentation prep
+
+## How H2b fits the 02805 curriculum
+
+H2b is within the scope of the final project as an exploratory extension. It asks whether Guardian coverage of older signings scored less positively after the move when the model accounted for prior coverage, recorded market value and transfer season. The Week 8 brief permits methods beyond class and asks the paper to centre on the network science and NLP taught in the course. [Week 8 project FAQ](<../../data/week8/Week 8 · Putting it all together · 02805.html#faq>)
+
+- **Sentiment measurement is directly in scope.** Week 7 compares lexicon and contextual sentiment tools and asks students to check their scores against labelled examples. The Guardian validation applies that lesson, and H2's before-to-after comparison fits the week's emphasis on measuring change over time. [Week 7 sentiment lesson](<../../data/week7/Week 7 · From meaning to measurement · 02805.html#sentiment>)
+- **The shuffle applies a course principle.** Week 2 teaches choosing what to preserve and what to randomise. H2b shuffles age labels within transfer season, keeping each season's age mix. The specific use of this shuffle with regression controls needs its own justification. [Week 2 null-model lesson](<../../data/week2/Week 2 · Models & null models — 02805.html#a-null-model-in-action-the-friendship-paradox>)
+- **The regression is a project extension.** Week 7's logistic regression classifies text. H2b's multiple linear regression starts from scores that have already been assigned and estimates a gap between age groups at the same measured characteristics. The saved course pages give the measurement and null-model foundations. The paper should explain the added regression in its own terms. [Week 7 sentiment lesson](<../../data/week7/Week 7 · From meaning to measurement · 02805.html#sentiment>) · [H2b implementation](../data/dataset_nlp/sentiment/a1_h2b_controls.py)
+
+Keep H2 and sentiment validation central. H2b can add an exploratory finding about the post-signing tone level, while H2 addresses how much tone changed. A useful H2b figure would show how the estimated gap changes when market value is added to the model for the same signings. [Model and figure follow-up](scratch/2026-11-21_15-45-35_15-explain-h2b-model-and-figure.scratch)

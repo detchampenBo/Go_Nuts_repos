@@ -1,0 +1,81 @@
+--- original/premier_league_feeder_ownership_audit.py
+
++++ rerun/premier_league_feeder_ownership_audit.py
+
+@@ -25,9 +25,11 @@
+
+         "routes": output / "premier_league_feeder_routes.csv",
+         "selected_routes": output / "premier_league_feeder_selected_routes.csv",
+         "shuffle_results": output / "premier_league_feeder_results.json",
+-        "transfers": PROJECT_DIR / "data/dataset_graph/outsideprem_toprem_eligible_transfers.csv.gz",
+-        "membership": PROJECT_DIR / "data/top_five_league_clubs.csv",
++        "transfers": PROJECT_DIR / "data/outsideprem_toprem_eligible_transfers.csv.gz",
++        "membership": PROJECT_DIR.parents[1] / "data/top_five_league_clubs.csv",
+         "ownership_evidence": output / f"{PREFIX}_evidence.json",
++        "coverage": PROJECT_DIR / "provenance/ownership_coverage_ledger.csv",
++        "additional_screen": PROJECT_DIR / "provenance/ownership_screen_28_routes.md",
+     }
+     evidence = json.loads(paths["ownership_evidence"].read_text(encoding="utf-8"))
+     shuffle = json.loads(paths["shuffle_results"].read_text(encoding="utf-8"))
+@@ -62,13 +64,24 @@
+
+     audit["ownership_status"] = "no_documented_common_equity_found"
+     audit["documented_shared_owner_during_model_interval"] = False
+     audit["screening_note"] = np.where(
+-        audit.to_club_id.eq(281), "../notes/premier_league_feeder_ownership_audit.md#city-group-screen",
++        audit.to_club_id.eq(281), "../../../notes/premier_league_feeder_ownership_audit.md#city-group-screen",
+         np.where(audit.to_club_id.isin([631, 873, 1237, 1010, 703, 1003, 1148, 11, 180, 543]),
+-                 "../notes/feeder_ownership_candidate_sources.md",
+-                 "../notes/feeder_ownership_other_destinations.md"))
++                 "../../../notes/feeder_ownership_candidate_sources.md",
++                 "../../../notes/feeder_ownership_other_destinations.md"))
+     for column in ("common_owner", "start_date_min", "start_date_max", "end_date_min", "end_date_max",
+                    "date_precision", "ownership_sources", "ownership_note"):
+         audit[column] = ""
++    coverage = pd.read_csv(paths["coverage"])
++    coverage_status = coverage.set_index(KEYS).coverage_status.reindex(pd.MultiIndex.from_frame(audit[KEYS]))
++    reused = coverage_status.eq("existing_bounded_screen_reused")
++    newly_screened = coverage_status.eq("new_selected_route_screened")
++    unscreened = coverage_status.eq("new_selected_route_not_screened")
++    if len(coverage) != len(audit) or not (reused | newly_screened | unscreened).all():
++        raise ValueError("The ownership coverage ledger must account for every selected route.")
++    screened_mask = (reused | newly_screened).to_numpy()
++    audit.loc[newly_screened.to_numpy(), "screening_note"] = "../provenance/ownership_screen_28_routes.md"
++    audit.loc[~screened_mask, "ownership_status"] = "not_screened_new_selected_route"
++    audit.loc[~screened_mask, "screening_note"] = "../provenance/ownership_coverage_ledger.csv: new route, no source screen performed"
+     known_pairs = set()
+     for row in evidence["confirmed_pair_intervals"]:
+         pair = (row["from_club_id"], row["to_club_id"])
+@@ -146,6 +159,7 @@
+
+         transfer_concurrent_pairs=("has_ownership_concurrent_record", "sum"),
+         joint_ownership_pairs=("joint_ownership_group", "sum"),
+     )
++    by_destination["screened_pairs"] = audit.assign(screened=screened_mask).groupby(["to_club_id", "to_club_name"]).screened.sum()
+     results = {
+         "research_as_of": evidence["research_as_of"], "definition": evidence["definition"],
+         "model_seasons": [row["transfer_season"] for row in shuffle["season_coverage"]],
+@@ -154,7 +168,7 @@
+
+         "selected_route_event_date_max": events.transfer_date.max(),
+         "shuffle_permutations": shuffle["n_permutations"], "shuffle_seed": shuffle["seed"],
+         "selection_threshold": shuffle["selection_rule"],
+-        "screened_unique_pairs": len(audit),
++        "screened_unique_pairs": int(screened_mask.sum()),
+         "unique_unordered_pairs": len({tuple(sorted(pair)) for pair in audit[KEYS].itertuples(index=False, name=None)}),
+         "origin_clubs": int(audit.from_club_id.nunique()), "destination_clubs": len(by_destination),
+         "selected_transfer_records": len(events),
+@@ -182,7 +196,11 @@
+
+         },
+         "inputs": {key: {"path": str(path), "sha256": hashlib.sha256(path.read_bytes()).hexdigest()}
+                    for key, path in paths.items()},
+-        "source_screen_limit": "Confirmed minimum; incomplete historical minority/beneficial-owner disclosures prevent proving no common investor for all unconfirmed pairs.",
++        "source_screen_limit": (
++            f"Bounded source screen: {int(reused.sum())} routes from the reused audit, "
++            f"{int(newly_screened.sum())} additional routes screened, {int(unscreened.sum())} unscreened. "
++            "The documented count is a confirmed minimum with incomplete historical minority and beneficial-owner disclosures."
++        ),
+     }
+     audit.to_csv(output / f"{PREFIX}_audit.csv", index=False)
+     events.to_csv(output / f"{PREFIX}_events.csv", index=False)

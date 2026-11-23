@@ -1,0 +1,3 @@
+# Premier League feeder routes and ownership
+
+(a) Observed and seasonal-null expected transfer counts for selected routes with at least 7 recorded transfers. Red fractions count selected transfers during verified common-equity intervals. For Grasshoppers → Wolves and Vitesse → Chelsea, the fractions show the coverage of the existing manual inclusions, which use all selected records for those routes. (b) Percentage of routes with at least each transfer count. The joint-ownership group includes the verified transfer-date matches and the two manual inclusions, Grasshoppers → Wolves and Vitesse → Chelsea. For the remaining routes, the bounded source screen leaves common ownership unconfirmed or documents it outside the selected transfer dates.

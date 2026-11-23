@@ -1,0 +1,1280 @@
+{
+  "created_at": "2026-11-20 16:38:41 Europe/Copenhagen",
+  "original_root": "pnas_report",
+  "new_root": "reruns/h1_2012_13-2024_25",
+  "files": [
+    {
+      "path": "output/age_shuffle_outsideprem_toprem_all_eligible_transfers.png",
+      "issue": "01",
+      "sha256": "0f90c5b2eef5ea361eae6fed4a1a863f2747431c7c990a241c0ca7c2e74c3b9f",
+      "bytes": 194235
+    },
+    {
+      "path": "output/age_shuffle_outsideprem_toprem_findings/age_shuffle_outsideprem_toprem_all_eligible_transfers.pdf",
+      "issue": "01",
+      "sha256": "d6b73ed9d02b2f041eca03efc3c4cbef49cc0c0666009238bf200998d26b3992",
+      "bytes": 30281
+    },
+    {
+      "path": "output/age_shuffle_outsideprem_toprem_findings/age_shuffle_outsideprem_toprem_all_eligible_transfers.png",
+      "issue": "01",
+      "sha256": "0f90c5b2eef5ea361eae6fed4a1a863f2747431c7c990a241c0ca7c2e74c3b9f",
+      "bytes": 194235
+    },
+    {
+      "path": "output/age_shuffle_outsideprem_toprem_findings/age_shuffle_outsideprem_toprem_all_eligible_transfers.svg",
+      "issue": "01",
+      "sha256": "d8c5cb5a56d6daaf8b6987915a3941f8b72f035e4c940feb68423b57c8bb328c",
+      "bytes": 19684
+    },
+    {
+      "path": "output/age_shuffle_outsideprem_toprem_findings/age_shuffle_outsideprem_toprem_comparison.pdf",
+      "issue": "01",
+      "sha256": "3268bbd9e1f382d84edc379ab4e099af886d350d4d50d500e4b3b5e2601acbe8",
+      "bytes": 33591
+    },
+    {
+      "path": "output/age_shuffle_outsideprem_toprem_findings/age_shuffle_outsideprem_toprem_comparison.png",
+      "issue": "01",
+      "sha256": "08ea4091d33109c45c58cd7bbff03e8ef1741483c04c581620b80d491e602f46",
+      "bytes": 313458
+    },
+    {
+      "path": "output/age_shuffle_outsideprem_toprem_findings/age_shuffle_outsideprem_toprem_comparison.svg",
+      "issue": "01",
+      "sha256": "d3c4d059eef465974c61262ef34c162eeb38dc4d6516ab047c109aaa5c85c120",
+      "bytes": 37495
+    },
+    {
+      "path": "output/age_shuffle_outsideprem_toprem_findings/age_shuffle_outsideprem_toprem_one_transfer_per_player.pdf",
+      "issue": "01",
+      "sha256": "c758925b2918e1392c2134ae8e52bd0052445f599290fc7abb6b4bbe8133b582",
+      "bytes": 30153
+    },
+    {
+      "path": "output/age_shuffle_outsideprem_toprem_findings/age_shuffle_outsideprem_toprem_one_transfer_per_player.png",
+      "issue": "01",
+      "sha256": "0918a894688752f1ee72fc9e9fd14095d31ea27fd4e5d168d9657209b69b5897",
+      "bytes": 186501
+    },
+    {
+      "path": "output/age_shuffle_outsideprem_toprem_findings/age_shuffle_outsideprem_toprem_one_transfer_per_player.svg",
+      "issue": "01",
+      "sha256": "7d4292004ea80edff8b95fbbd0e81b844c60fd708895f22a117dcb0c4d0b5d32",
+      "bytes": 19435
+    },
+    {
+      "path": "output/age_shuffle_outsideprem_toprem_findings/README.md",
+      "issue": "01",
+      "sha256": "15f9b1003a24c49ee6cd5e174cd39bafaa4e1f76d9d8b3bcb6f73c958eee74b3",
+      "bytes": 3587
+    },
+    {
+      "path": "output/age_shuffle_outsideprem_toprem_one_transfer_per_player.png",
+      "issue": "01",
+      "sha256": "0918a894688752f1ee72fc9e9fd14095d31ea27fd4e5d168d9657209b69b5897",
+      "bytes": 186501
+    },
+    {
+      "path": "output/age_shuffle_outsideprem_toprem_results.json",
+      "issue": "01",
+      "sha256": "cbd559a67ecfd908e24c5c11b62a68dafa4debdfcf293b49caaa57054944be84",
+      "bytes": 61148,
+      "json_top_level_keys": [
+        "seed",
+        "n_permutations",
+        "alternative",
+        "shuffle_groups",
+        "input_paths",
+        "random_streams",
+        "interpretation",
+        "sample_and_exclusion_counts",
+        "snapshot_verification",
+        "sensitivity_selection_verified_one_record_per_eligible_player",
+        "all_eligible_transfers",
+        "one_transfer_per_player"
+      ]
+    },
+    {
+      "path": "output/age_shuffle_outsideprem_toprem_summary.md",
+      "issue": "01",
+      "sha256": "86f7ab9d6e1e173100d440f222eda10a303f5b465a77a1ddfea0add669e6ea40",
+      "bytes": 3139
+    },
+    {
+      "path": "output/club_transfer_network_findings/club_transfer_degree_distributions.pdf",
+      "issue": "02",
+      "sha256": "3579fcf61cb7854b5404cd7e7645ea41f7cf7139e2f8dec1e43c541b5baa5eb9",
+      "bytes": 37492
+    },
+    {
+      "path": "output/club_transfer_network_findings/club_transfer_degree_distributions.png",
+      "issue": "02",
+      "sha256": "94bd42dabdaaa04febd9e0c54933d9a61844aaef001c98f698ad08d7ce589eff",
+      "bytes": 320593
+    },
+    {
+      "path": "output/club_transfer_network_findings/club_transfer_degree_distributions.svg",
+      "issue": "02",
+      "sha256": "387ee4de727aabce417298ed61bc7553cac252f17c13b40adc01a68ceb4a5f3a",
+      "bytes": 73938
+    },
+    {
+      "path": "output/club_transfer_network_findings/club_transfer_network.pdf",
+      "issue": "02",
+      "sha256": "1a49dafcd4b8a72ff2f29fafb9cd1c6d91b18776baff482c712fa313a758c425",
+      "bytes": 328304
+    },
+    {
+      "path": "output/club_transfer_network_findings/club_transfer_network.png",
+      "issue": "02",
+      "sha256": "cb60bb490f011e46b2cacbd569579c1e5681017a9243eb44fe183616384ea2d4",
+      "bytes": 1461042
+    },
+    {
+      "path": "output/club_transfer_network_findings/club_transfer_network.svg",
+      "issue": "02",
+      "sha256": "242be587038a11b3bc5a0d0ced67a1911b30aa30dd82a19ae9d767a322ce9739",
+      "bytes": 3135744
+    },
+    {
+      "path": "output/club_transfer_network_findings/in_degree_distribution.pdf",
+      "issue": "02",
+      "sha256": "4e1d3da88481fb81109086df3c082517ba14035ba505b99bbdde7372fb5d1d17",
+      "bytes": 32170
+    },
+    {
+      "path": "output/club_transfer_network_findings/in_degree_distribution.png",
+      "issue": "02",
+      "sha256": "8e4ae259ad6cfe8e5598a90c5c29820280139a44030e78df1669e2c7d4d0fa6f",
+      "bytes": 174004
+    },
+    {
+      "path": "output/club_transfer_network_findings/in_degree_distribution.svg",
+      "issue": "02",
+      "sha256": "6b19ad8d04d0f5f09c9ae2d5104504440d1e0cf4f9ea6407c8b759fa281bddb5",
+      "bytes": 29009
+    },
+    {
+      "path": "output/club_transfer_network_findings/out_degree_distribution.pdf",
+      "issue": "02",
+      "sha256": "ac2e040de870972f530afd7c78d0f2cf48a34a284076f835ba049f6a1b10ee22",
+      "bytes": 32093
+    },
+    {
+      "path": "output/club_transfer_network_findings/out_degree_distribution.png",
+      "issue": "02",
+      "sha256": "8cadf905fa1ae6f2f8592d0c9e4f24e6daa99ff5252ff408af06c4c7d8a79a13",
+      "bytes": 172895
+    },
+    {
+      "path": "output/club_transfer_network_findings/out_degree_distribution.svg",
+      "issue": "02",
+      "sha256": "02c752fa42a9ded1ce924e8592515b5ee2b86257c4d1511a38b5e1f66a722610",
+      "bytes": 27366
+    },
+    {
+      "path": "output/club_transfer_network_findings/README.md",
+      "issue": "02",
+      "sha256": "9d925123c2da3c45e26614ff2e40ae46c916d532731979f063f2026f3a8ebd6a",
+      "bytes": 4108
+    },
+    {
+      "path": "output/club_transfer_network_findings/reciprocal_degree_distribution.pdf",
+      "issue": "02",
+      "sha256": "5b210a7c24afd2569d202321b90ab83e11b607f1f6f33b9804376b3cfa48442d",
+      "bytes": 31973
+    },
+    {
+      "path": "output/club_transfer_network_findings/reciprocal_degree_distribution.png",
+      "issue": "02",
+      "sha256": "213425be65fb50cb7021cffaf4a7a26df53aec25dc5f9a620cd2d104c94dd3b9",
+      "bytes": 163580
+    },
+    {
+      "path": "output/club_transfer_network_findings/reciprocal_degree_distribution.svg",
+      "issue": "02",
+      "sha256": "cc49e5de1364dc6b2186bf47b0c770bd8b2d62965b9f6b34eb7b5dcfd354e938",
+      "bytes": 23925
+    },
+    {
+      "path": "output/degree_distribution_recap.md",
+      "issue": "02",
+      "sha256": "ded72d147c220f49f2f8de7e78a6de9f7f080e872b90821c9e0b88fb8bbf01d1",
+      "bytes": 9704
+    },
+    {
+      "path": "output/feeder_findings_visual_qa/separate_exports/combined.png",
+      "issue": "09",
+      "sha256": "45fcaf36d84443bdf136bea700d12de34371c58fd51f45654562e05821e7edca",
+      "bytes": 75459
+    },
+    {
+      "path": "output/feeder_findings_visual_qa/separate_exports/frequent_transfer_routes.png",
+      "issue": "09",
+      "sha256": "0dc617090bd85bb63c6dc95e22912ed11fd67403191788a1d80c08e49d241aae",
+      "bytes": 42248
+    },
+    {
+      "path": "output/feeder_findings_visual_qa/separate_exports/transfer_count_exceedance.png",
+      "issue": "09",
+      "sha256": "aa37487e85aa2bbf1268414d3aefa5fe80b63d148d84257582db2982206bd7f8",
+      "bytes": 30105
+    },
+    {
+      "path": "output/leiden_transfer_communities_findings/club_vertex_mapping.csv",
+      "issue": "05",
+      "sha256": "027062298ab9737ed22fd674587c69fff79dda64c0a359ee6b02357ea907b34f",
+      "bytes": 12560,
+      "csv_columns": [
+        "club_id",
+        "vertex_index"
+      ]
+    },
+    {
+      "path": "output/leiden_transfer_communities_findings/communities.csv",
+      "issue": "05",
+      "sha256": "ecad68394919b80c31424ba9dc1d95c33b4fc5a0eda950c617bbc85d46cf73e7",
+      "bytes": 137531,
+      "csv_columns": [
+        "club_id",
+        "club_name",
+        "community_id",
+        "community_name",
+        "representative",
+        "in_degree",
+        "out_degree",
+        "total_degree",
+        "in_strength",
+        "out_strength",
+        "color",
+        "x",
+        "y",
+        "node_size"
+      ]
+    },
+    {
+      "path": "output/leiden_transfer_communities_findings/community_summary.csv",
+      "issue": "05",
+      "sha256": "a350579a524b38518ad254c4067c7e60d4fb670e3c2854f32a80183e1067e73d",
+      "bytes": 436,
+      "csv_columns": [
+        "community_id",
+        "community_name",
+        "color",
+        "community_size",
+        "representative_id",
+        "representative_name",
+        "representative_degree",
+        "q_contribution"
+      ]
+    },
+    {
+      "path": "output/leiden_transfer_communities_findings/final_partitions.csv",
+      "issue": "05",
+      "sha256": "29eb0a30352996bd9f476d82e67d2dd25f929c0b41058a3c9abd84ae06734d00",
+      "bytes": 42944,
+      "csv_columns": [
+        "run",
+        "community_id",
+        "club_id"
+      ]
+    },
+    {
+      "path": "output/leiden_transfer_communities_findings/leiden_membership_trace.csv",
+      "issue": "05",
+      "sha256": "1b24988cb11616747d98069a83a8e91dfedc0ddcd973b2ff75b35e23092a6968",
+      "bytes": 363900,
+      "csv_columns": [
+        "run",
+        "iteration",
+        "club_id",
+        "community_id"
+      ]
+    },
+    {
+      "path": "output/leiden_transfer_communities_findings/leiden_progress.csv",
+      "issue": "05",
+      "sha256": "5b3999c78a49eb2cafa3e11903a868be2bc0dd22aa16cdc7915978be2e3af5a3",
+      "bytes": 1690,
+      "csv_columns": [
+        "run",
+        "iteration",
+        "returned_improvement",
+        "delta_q",
+        "leiden_q",
+        "networkx_q",
+        "verification_error",
+        "community_count"
+      ]
+    },
+    {
+      "path": "output/leiden_transfer_communities_findings/leiden_results.json",
+      "issue": "05",
+      "sha256": "cc198257fa16b8fe8bc80e894658b86b390343dc7d42dc649b31992e431fb929",
+      "bytes": 14839,
+      "json_top_level_keys": [
+        "input_sha256",
+        "counts",
+        "directed",
+        "weight",
+        "resolution",
+        "seeds",
+        "shuffle",
+        "club_name_conflicts",
+        "method",
+        "weighting",
+        "shared_inputs_sha256",
+        "shared_files_sha256",
+        "settings",
+        "tolerance",
+        "versions",
+        "runs",
+        "q_observed",
+        "q_shuffled",
+        "observed_community_sizes",
+        "verification",
+        "delta_q"
+      ]
+    },
+    {
+      "path": "output/leiden_transfer_communities_findings/leiden_transfer_communities.html",
+      "issue": "05",
+      "sha256": "ab889b9d85277c86c8ad3c7312045bf486186bad1dad2caa2054dd813c790f5d",
+      "bytes": 2410958
+    },
+    {
+      "path": "output/leiden_transfer_communities_findings/leiden_transfer_communities.pdf",
+      "issue": "05",
+      "sha256": "4b4bfb1f200ee1090f8d4720518245e66172587f4f1bfdaa8ab8db38cdae9fb5",
+      "bytes": 327453
+    },
+    {
+      "path": "output/leiden_transfer_communities_findings/leiden_transfer_communities.png",
+      "issue": "05",
+      "sha256": "83273e921678db3a6deb92aa64dd3f567abfaede911cc4663b3fc9ae2847ab5c",
+      "bytes": 947768
+    },
+    {
+      "path": "output/leiden_transfer_communities_findings/leiden_transfer_communities.svg",
+      "issue": "05",
+      "sha256": "c637c3d83e94aac1a2bac5155b5a86f9787aa82bbab696256b61a6fe25869608",
+      "bytes": 3072233
+    },
+    {
+      "path": "output/leiden_transfer_communities_findings/leiden_transfer_communities_and_modularity.html",
+      "issue": "05",
+      "sha256": "373780f1d35ae06d5fb18aa9a7a3da22a886b241bbe6c07673e369c1d5cad3f5",
+      "bytes": 3426420
+    },
+    {
+      "path": "output/leiden_transfer_communities_findings/leiden_transfer_communities_and_modularity.pdf",
+      "issue": "05",
+      "sha256": "0b5941aca5716ac7d517d9fa1c98fd57c6f0908e9faecad289bc497ef6bec0f5",
+      "bytes": 335316
+    },
+    {
+      "path": "output/leiden_transfer_communities_findings/leiden_transfer_communities_and_modularity.png",
+      "issue": "05",
+      "sha256": "8f3bee45481a9e537290b970bbe7334a42dbb5743a0969e09d566404e3d4eba9",
+      "bytes": 1113767
+    },
+    {
+      "path": "output/leiden_transfer_communities_findings/leiden_transfer_communities_and_modularity.svg",
+      "issue": "05",
+      "sha256": "e8f4c089a45edbed694eade1f1fb616ac7a4959fbcf5d8c2d9fb1780571c2847",
+      "bytes": 3107335
+    },
+    {
+      "path": "output/leiden_transfer_communities_findings/leiden_transfer_communities_caption.md",
+      "issue": "05",
+      "sha256": "aa6701948d18e801316ab2870ec2f1ad55ce4c84c561463867443e5909239451",
+      "bytes": 651
+    },
+    {
+      "path": "output/leiden_transfer_communities_findings/leiden_transfer_communities_summary.md",
+      "issue": "05",
+      "sha256": "240158d64a570fbd75460e6518c733e7787394bfd0ecdfd6f86246b8780d061d",
+      "bytes": 2523
+    },
+    {
+      "path": "output/leiden_transfer_communities_findings/leiden_transfer_modularity_progress.pdf",
+      "issue": "05",
+      "sha256": "0a5cdf0efb8bcf099b820e0b602ed540d0ad6135c41ee69db0f337b3cd6be08e",
+      "bytes": 28929
+    },
+    {
+      "path": "output/leiden_transfer_communities_findings/leiden_transfer_modularity_progress.png",
+      "issue": "05",
+      "sha256": "15f8afb451f482d8bb05199b208dbbba29d62e038fc71dcab9864c4930b2335f",
+      "bytes": 161565
+    },
+    {
+      "path": "output/leiden_transfer_communities_findings/leiden_transfer_modularity_progress.svg",
+      "issue": "05",
+      "sha256": "e5db5160ebb092d19f3d92c0f3201bcbf483f569840ea3f6f9e778dcd83d6bff",
+      "bytes": 11576
+    },
+    {
+      "path": "output/leiden_transfer_communities_findings/README.md",
+      "issue": "05",
+      "sha256": "e8830162f575acda637c05778ad7ac2d602ad7e5d6284beb370a73003cb392fa",
+      "bytes": 1549
+    },
+    {
+      "path": "output/leiden_transfer_communities_findings/shuffled_routes.csv",
+      "issue": "05",
+      "sha256": "5771470b1580b080d9a3d4cab028bb9dbe2ffd067ef8487833321b199347e8ff",
+      "bytes": 147206,
+      "csv_columns": [
+        "from_club_id",
+        "to_club_id",
+        "transfer_count"
+      ]
+    },
+    {
+      "path": "output/louvain_transfer_backbone_findings/backbone_layout.csv",
+      "issue": "10",
+      "sha256": "e0a8e911a0588aac1c655c05b01700ec05f7bac7f197c5cad29e4f0a9be93ee7",
+      "bytes": 184329,
+      "csv_columns": [
+        "scope",
+        "club_id",
+        "vertex_index",
+        "x",
+        "y",
+        "node_size",
+        "reference_isolate"
+      ]
+    },
+    {
+      "path": "output/louvain_transfer_backbone_findings/backbone_results.json",
+      "issue": "10",
+      "sha256": "f98152b274b9270db60ef012bed41acbef6e4bb16363d937ec19d0c1fef63b77",
+      "bytes": 13690,
+      "json_top_level_keys": [
+        "input_sha256",
+        "inputs_unchanged",
+        "observed_louvain_q",
+        "observed_reciprocal_pairs",
+        "directed",
+        "weight",
+        "communities",
+        "versions",
+        "rules",
+        "layout",
+        "structural_exceptions",
+        "parity"
+      ]
+    },
+    {
+      "path": "output/louvain_transfer_backbone_findings/backbone_retention.csv",
+      "issue": "10",
+      "sha256": "b333a647e30c0c36403c4df731eda48fd679969be662d80b3aecdefcdf03855a",
+      "bytes": 86866,
+      "csv_columns": [
+        "scope",
+        "view",
+        "alpha",
+        "original_routes",
+        "original_transfers",
+        "original_clubs",
+        "original_within_routes",
+        "original_within_transfers",
+        "original_between_routes",
+        "original_between_transfers",
+        "retained_routes",
+        "retained_transfers",
+        "active_clubs",
+        "isolates",
+        "largest_weak_component",
+        "weak_components",
+        "strong_components",
+        "within_routes",
+        "within_transfers",
+        "between_routes",
+        "between_transfers",
+        "retained_routes_fraction",
+        "retained_transfers_fraction",
+        "active_clubs_fraction",
+        "largest_weak_component_fraction"
+      ]
+    },
+    {
+      "path": "output/louvain_transfer_backbone_findings/backbone_route_scores.csv",
+      "issue": "10",
+      "sha256": "5d4d1b6e8c5096d1ef0f4cf8ecc73ad5681735ea7369e8f9bbc51df53a216042",
+      "bytes": 1780202,
+      "csv_columns": [
+        "scope",
+        "from_club_id",
+        "to_club_id",
+        "transfer_count",
+        "source_out_degree",
+        "source_out_strength",
+        "source_out_score",
+        "destination_in_degree",
+        "destination_in_strength",
+        "destination_in_score",
+        "min_score",
+        "structural_exception"
+      ]
+    },
+    {
+      "path": "output/louvain_transfer_backbone_findings/backbone_summary.md",
+      "issue": "10",
+      "sha256": "7bcc8d5d248306d44a17fd6467de3b75b1ea26ccf27dbcd414d69d9bb40f757f",
+      "bytes": 3932
+    },
+    {
+      "path": "output/louvain_transfer_backbone_findings/louvain_backbone_alpha_comparison.pdf",
+      "issue": "10",
+      "sha256": "1c193bce75df9a42b6250dfb22359e157ff5f85ec2871e6635b302c6d78d98f3",
+      "bytes": 420662
+    },
+    {
+      "path": "output/louvain_transfer_backbone_findings/louvain_backbone_alpha_comparison.png",
+      "issue": "10",
+      "sha256": "27d019cc329f23f7aa1f61b56c6f7dbf645de01c3b0fb54386483aef9bc55cdd",
+      "bytes": 974848
+    },
+    {
+      "path": "output/louvain_transfer_backbone_findings/louvain_backbone_alpha_comparison.svg",
+      "issue": "10",
+      "sha256": "10ba8d303e2510d79d10f563d349f0cd646cee51d397396cc527801f174cefad",
+      "bytes": 2435785
+    },
+    {
+      "path": "output/louvain_transfer_backbone_findings/louvain_transfer_backbone.html",
+      "issue": "10",
+      "sha256": "4be4a4e80896cf6fbf941857b1e464768e99f5c1b33d785bdcf80d3e8b6fc4ec",
+      "bytes": 4369902
+    },
+    {
+      "path": "output/louvain_transfer_backbone_findings/README.md",
+      "issue": "10",
+      "sha256": "f9c1ac287c8e4f0fcb9a677a7da166ba0a2c1757ed355c3347854c1bf8599b6f",
+      "bytes": 1850
+    },
+    {
+      "path": "output/louvain_transfer_communities_findings/communities.csv",
+      "issue": "04",
+      "sha256": "47dd83f206757c0cc82f8f2be9c22fccc70d650e1ed88e34f9a2d19a521808a0",
+      "bytes": 136961,
+      "csv_columns": [
+        "club_id",
+        "club_name",
+        "community_id",
+        "community_name",
+        "representative",
+        "in_degree",
+        "out_degree",
+        "total_degree",
+        "in_strength",
+        "out_strength",
+        "color",
+        "x",
+        "y",
+        "node_size"
+      ]
+    },
+    {
+      "path": "output/louvain_transfer_communities_findings/community_summary.csv",
+      "issue": "04",
+      "sha256": "d44e024adfdf00095161fa2270ceb24b921c688abb7daaef18aa10ca036fdd52",
+      "bytes": 433,
+      "csv_columns": [
+        "community_id",
+        "community_name",
+        "color",
+        "community_size",
+        "representative_id",
+        "representative_name",
+        "representative_degree",
+        "q_contribution"
+      ]
+    },
+    {
+      "path": "output/louvain_transfer_communities_findings/final_partitions.csv",
+      "issue": "04",
+      "sha256": "07ee8ce411d8a6e7800cb2d78b471151ea6c2644b6afd7dcf5f18aa291f8ed9f",
+      "bytes": 42867,
+      "csv_columns": [
+        "run",
+        "community_id",
+        "club_id"
+      ]
+    },
+    {
+      "path": "output/louvain_transfer_communities_findings/louvain_progress.csv",
+      "issue": "04",
+      "sha256": "ec0ac377696f75a0019d8f326c408fae679470a84e25d761e9d7e0488c7e3ace",
+      "bytes": 262005,
+      "csv_columns": [
+        "run",
+        "move",
+        "level",
+        "sweep",
+        "moved_node",
+        "represented_clubs",
+        "delta_q",
+        "q",
+        "community_count"
+      ]
+    },
+    {
+      "path": "output/louvain_transfer_communities_findings/louvain_q_evaluations.csv",
+      "issue": "04",
+      "sha256": "8ae3cbe47c4ca9fe954704caf1779adaf33d2457efec53e07a62b2f41eac6568",
+      "bytes": 18251986,
+      "csv_columns": [
+        "run",
+        "evaluation_id",
+        "evaluation_type",
+        "level",
+        "sweep",
+        "node_visit",
+        "move",
+        "moved_node",
+        "source_community",
+        "target_community",
+        "q_before",
+        "delta_q",
+        "q_candidate",
+        "accepted"
+      ]
+    },
+    {
+      "path": "output/louvain_transfer_communities_findings/louvain_results.json",
+      "issue": "04",
+      "sha256": "7ae4e1c1877aef03f79e8ce22ec68fe4200ac0e4ac13f134f331b89848af08d7",
+      "bytes": 15083,
+      "json_top_level_keys": [
+        "input_sha256",
+        "counts",
+        "directed",
+        "weight",
+        "resolution",
+        "seeds",
+        "shuffle",
+        "club_name_conflicts",
+        "method",
+        "weighting",
+        "shared_inputs_sha256",
+        "shared_files_sha256",
+        "settings",
+        "tolerance",
+        "versions",
+        "runs",
+        "q_observed",
+        "q_shuffled",
+        "observed_community_sizes",
+        "verification",
+        "delta_q"
+      ]
+    },
+    {
+      "path": "output/louvain_transfer_communities_findings/louvain_supernode_mapping.csv",
+      "issue": "04",
+      "sha256": "ff0b10a8b828a7722a247c6a2fc345d17a5f825f7c25ded7b1cc8a77b3007d5a",
+      "bytes": 201632,
+      "csv_columns": [
+        "run",
+        "level",
+        "node",
+        "initial_community",
+        "club_id"
+      ]
+    },
+    {
+      "path": "output/louvain_transfer_communities_findings/louvain_sweeps.csv",
+      "issue": "04",
+      "sha256": "a94dc4d7850c385301b680afac954ca2f833b7e265660dc3af52cbb632e8bfc1",
+      "bytes": 1353,
+      "csv_columns": [
+        "run",
+        "level",
+        "sweep",
+        "first_move_before_sweep",
+        "last_move_after_sweep",
+        "accepted_moves",
+        "node_visits",
+        "q"
+      ]
+    },
+    {
+      "path": "output/louvain_transfer_communities_findings/louvain_transfer_communities.html",
+      "issue": "04",
+      "sha256": "8d8ae81f3dde3a753ebb9232883912edf60909b1c14e0e9b8f6446ea0024862b",
+      "bytes": 2410362
+    },
+    {
+      "path": "output/louvain_transfer_communities_findings/louvain_transfer_communities.pdf",
+      "issue": "04",
+      "sha256": "ca6e512f2bc844b0ac538079c018aa66d437fce6d168107a4ca9242625ec9ab5",
+      "bytes": 329555
+    },
+    {
+      "path": "output/louvain_transfer_communities_findings/louvain_transfer_communities.png",
+      "issue": "04",
+      "sha256": "a9c193c236b778f80daa0ed3ce79a5415848551a5631ce5807dcf8fed277a911",
+      "bytes": 949420
+    },
+    {
+      "path": "output/louvain_transfer_communities_findings/louvain_transfer_communities.svg",
+      "issue": "04",
+      "sha256": "19da042b0fb38a98bfb16af3f0a454ea724449d94344944539c78ea43c8b37b9",
+      "bytes": 3072302
+    },
+    {
+      "path": "output/louvain_transfer_communities_findings/louvain_transfer_communities_and_modularity.html",
+      "issue": "04",
+      "sha256": "11a2a8998be02667103fe0045d310c2b30149943a5eb941d76a19261a223f6db",
+      "bytes": 3665636
+    },
+    {
+      "path": "output/louvain_transfer_communities_findings/louvain_transfer_communities_and_modularity.pdf",
+      "issue": "04",
+      "sha256": "0c92b52a92c9cc84b07a4ab16064dc7989d927c9430e7d832b5962af0990619b",
+      "bytes": 354081
+    },
+    {
+      "path": "output/louvain_transfer_communities_findings/louvain_transfer_communities_and_modularity.png",
+      "issue": "04",
+      "sha256": "68a5fdcd2f47ed4818c7dcfd38f949cc6053adff47e3ad527eb8a6c50908ff3c",
+      "bytes": 1140603
+    },
+    {
+      "path": "output/louvain_transfer_communities_findings/louvain_transfer_communities_and_modularity.svg",
+      "issue": "04",
+      "sha256": "22d4d647ded362747744385cf1c3bf000126abc823c2b6d0dd1a9422baaed522",
+      "bytes": 3347883
+    },
+    {
+      "path": "output/louvain_transfer_communities_findings/louvain_transfer_communities_caption.md",
+      "issue": "04",
+      "sha256": "45209a13959ca261cfb6ddbe42666074997190e8ca83fd0cd37c3ca387375ae6",
+      "bytes": 654
+    },
+    {
+      "path": "output/louvain_transfer_communities_findings/louvain_transfer_communities_summary.md",
+      "issue": "04",
+      "sha256": "926c63afa322312ae2b1fa35c6f314e653a99d47073039f053ec643e40af3729",
+      "bytes": 2923
+    },
+    {
+      "path": "output/louvain_transfer_communities_findings/louvain_transfer_modularity_progress.pdf",
+      "issue": "04",
+      "sha256": "4aa8839a9f8167f3cc45da78325a6d62ac79a46fdd714e990c2e57a7e37bb1d8",
+      "bytes": 47247
+    },
+    {
+      "path": "output/louvain_transfer_communities_findings/louvain_transfer_modularity_progress.png",
+      "issue": "04",
+      "sha256": "380c0d22af99ed0b81ca2af22f5c3f043a5c2f716cd0c9a3e66aadfd759ad291",
+      "bytes": 184342
+    },
+    {
+      "path": "output/louvain_transfer_communities_findings/louvain_transfer_modularity_progress.svg",
+      "issue": "04",
+      "sha256": "3dcae21b3ecf4eb8961e247a7f59b606ad5115e6041358e9b413b7db3e200ad8",
+      "bytes": 251388
+    },
+    {
+      "path": "output/louvain_transfer_communities_findings/README.md",
+      "issue": "04",
+      "sha256": "8e9040d95062fe9836e85acfc592d2677943dfddd7c84930350b9e7219cd01d0",
+      "bytes": 1778
+    },
+    {
+      "path": "output/louvain_transfer_communities_findings/shuffled_routes.csv",
+      "issue": "04",
+      "sha256": "5771470b1580b080d9a3d4cab028bb9dbe2ffd067ef8487833321b199347e8ff",
+      "bytes": 147206,
+      "csv_columns": [
+        "from_club_id",
+        "to_club_id",
+        "transfer_count"
+      ]
+    },
+    {
+      "path": "output/premier_league_feeder_findings/combined.pdf",
+      "issue": "09",
+      "sha256": "1fe3b3bc1d0f067d68a28ad2a03eff5cef81374a199f5cd88918ff8fa8f19b43",
+      "bytes": 47726
+    },
+    {
+      "path": "output/premier_league_feeder_findings/combined.png",
+      "issue": "09",
+      "sha256": "93880e19a9e2908fccd8bf0d4f2ef2e80df13e8686a359440fd033ce66285fc6",
+      "bytes": 424102
+    },
+    {
+      "path": "output/premier_league_feeder_findings/combined.svg",
+      "issue": "09",
+      "sha256": "1a0fda71e693f635ad2cfbefd795908134451ceff2647f8ff3f3c2963f9581c1",
+      "bytes": 33521
+    },
+    {
+      "path": "output/premier_league_feeder_findings/frequent_transfer_routes.pdf",
+      "issue": "09",
+      "sha256": "4bf0b6c22c3fce442c2dd6083cef4cd8491a9d8e6d7f723c7474b160c8e8af0b",
+      "bytes": 45460
+    },
+    {
+      "path": "output/premier_league_feeder_findings/frequent_transfer_routes.png",
+      "issue": "09",
+      "sha256": "4677e00996c5097cd2006c864a68646cd53c3cf492901bc141a4eb1e7c95a78e",
+      "bytes": 245763
+    },
+    {
+      "path": "output/premier_league_feeder_findings/frequent_transfer_routes.svg",
+      "issue": "09",
+      "sha256": "1e1b6b7cbff9a7bee9bff21f498e0e7720eedfa528a163a9303cd57a08bbf84e",
+      "bytes": 18859
+    },
+    {
+      "path": "output/premier_league_feeder_findings/README.md",
+      "issue": "09",
+      "sha256": "b51c69b13600a8a5ae559305cd8ca0d006164feeaa2dbe1aa4227ffdb984e493",
+      "bytes": 1031
+    },
+    {
+      "path": "output/premier_league_feeder_findings/transfer_count_exceedance.pdf",
+      "issue": "09",
+      "sha256": "981af39dbfc2f5fd19ddcf96abecb3356aa6535f5368f48c7455b9a6ac015994",
+      "bytes": 25851
+    },
+    {
+      "path": "output/premier_league_feeder_findings/transfer_count_exceedance.png",
+      "issue": "09",
+      "sha256": "c714ecb77a64437859ffacce1d22bf4708d33f327b9d70ffd8f9ed0a0d6c6b8c",
+      "bytes": 152694
+    },
+    {
+      "path": "output/premier_league_feeder_findings/transfer_count_exceedance.svg",
+      "issue": "09",
+      "sha256": "fc58f7d4a89d5c878d4e2c0f8343c7be0d44ed12c589bb47f1b3f7d4096714ae",
+      "bytes": 15434
+    },
+    {
+      "path": "output/premier_league_feeder_findings_three_panel_caption.md",
+      "issue": "09",
+      "sha256": "647e34647366d2ea86558f141c3a22faa4d26f5cd7c0563b9b1099703c599a28",
+      "bytes": 211
+    },
+    {
+      "path": "output/premier_league_feeder_network.png",
+      "issue": "07",
+      "sha256": "7093490ce11606b8e052d4ddfac144874a217a2b15aa252f786975dc9f7ca6a1",
+      "bytes": 4500037
+    },
+    {
+      "path": "output/premier_league_feeder_ownership_audit.csv",
+      "issue": "08",
+      "sha256": "efcd1b8ba80ea292e25a6c079d585d609dbcc0f5eaa17e3aa49eeb34276f4044",
+      "bytes": 70117,
+      "csv_columns": [
+        "from_club_id",
+        "from_club_name",
+        "to_club_id",
+        "to_club_name",
+        "observed_count",
+        "expected_count",
+        "observed_expected_ratio",
+        "origin_pl_bound_total",
+        "destination_arrival_total",
+        "distinct_players",
+        "permutations_greater_or_equal",
+        "permutations_equal",
+        "p_value",
+        "significant",
+        "destination_share",
+        "repeat_player_extra_records",
+        "repeated_player_flag",
+        "recurring_route",
+        "selected_route",
+        "ownership_status",
+        "documented_shared_owner_during_model_interval",
+        "screening_note",
+        "common_owner",
+        "start_date_min",
+        "start_date_max",
+        "end_date_min",
+        "end_date_max",
+        "date_precision",
+        "ownership_sources",
+        "ownership_note",
+        "ownership_concurrent_records",
+        "ownership_boundary_uncertain_records",
+        "has_ownership_concurrent_record",
+        "manual_joint_ownership_inclusion",
+        "joint_ownership_group"
+      ]
+    },
+    {
+      "path": "output/premier_league_feeder_ownership_destinations.csv",
+      "issue": "08",
+      "sha256": "c62635a13ebe82e756de89096839919cc5c8c35274a941c1a529aea049d49fd6",
+      "bytes": 1085,
+      "csv_columns": [
+        "to_club_id",
+        "to_club_name",
+        "screened_pairs",
+        "documented_pairs",
+        "transfer_concurrent_pairs",
+        "joint_ownership_pairs"
+      ]
+    },
+    {
+      "path": "output/premier_league_feeder_ownership_events.csv",
+      "issue": "08",
+      "sha256": "190c1faf4bb9474aab890bbb8484b3cbedf6d68ee4a697737ab4a6aac891647f",
+      "bytes": 50581,
+      "csv_columns": [
+        "from_club_id",
+        "to_club_id",
+        "transfer_season",
+        "transfer_date",
+        "player_id",
+        "player_name",
+        "confirmed_shared_owner_on_record_date",
+        "ownership_boundary_uncertain",
+        "in_trust_control_window",
+        "common_owner"
+      ]
+    },
+    {
+      "path": "output/premier_league_feeder_ownership_evidence.json",
+      "issue": "08",
+      "sha256": "7985859b0fb46ab133eb7e9a2a7920578aca15d5e7c41175e16fb9eb1c372ae7",
+      "bytes": 15508,
+      "json_top_level_keys": [
+        "research_as_of",
+        "definition",
+        "interval_convention",
+        "manual_joint_ownership_pairs",
+        "confirmed_pair_intervals"
+      ]
+    },
+    {
+      "path": "output/premier_league_feeder_ownership_results.json",
+      "issue": "08",
+      "sha256": "a43f63f33c8dee8b74557a0b274c4f7a15e50775a56e72f0cd738d08db2ad2d0",
+      "bytes": 4870,
+      "json_top_level_keys": [
+        "research_as_of",
+        "definition",
+        "model_seasons",
+        "model_input_date_min",
+        "model_input_date_max",
+        "selected_route_event_date_min",
+        "selected_route_event_date_max",
+        "shuffle_permutations",
+        "shuffle_seed",
+        "selection_threshold",
+        "screened_unique_pairs",
+        "unique_unordered_pairs",
+        "origin_clubs",
+        "destination_clubs",
+        "selected_transfer_records",
+        "documented_shared_owner_pairs_during_model_interval",
+        "documented_pair_percent",
+        "pairs_with_ownership_concurrent_transfer",
+        "transfer_concurrent_pair_percent",
+        "selected_records_on_ever_shared_owner_pairs",
+        "ownership_concurrent_transfer_records",
+        "joint_ownership_group_pairs",
+        "joint_ownership_group_percent",
+        "joint_ownership_group_pooled_records",
+        "manual_joint_ownership_pairs",
+        "date_boundary_uncertain_records",
+        "selected_events_after_research_date",
+        "verified_route_events_in_trust_control_windows",
+        "unconfirmed_pairs",
+        "status_counts",
+        "verification",
+        "inputs",
+        "source_screen_limit"
+      ]
+    },
+    {
+      "path": "output/premier_league_feeder_results.json",
+      "issue": "07",
+      "sha256": "7ca73ec651c47366826045ed805214ac6e65364c3304d52297856979874e1061",
+      "bytes": 12425,
+      "json_top_level_keys": [
+        "input_paths",
+        "sample_and_exclusion_counts",
+        "snapshot_discrepancies",
+        "season_coverage",
+        "season_coverage_note",
+        "record_order",
+        "seed",
+        "n_permutations",
+        "random_generator",
+        "testing_family",
+        "testing_family_size",
+        "observed_routes",
+        "unobserved_tested_pairs",
+        "adjustment_method",
+        "significance_basis",
+        "significance_threshold",
+        "selection_rule",
+        "minimum_route_transfers",
+        "permutation_p_value_resolution",
+        "significant_route_count",
+        "selected_route_count",
+        "selected_transfer_records",
+        "display_selection_rule",
+        "display_origin_ids",
+        "display_destination_ids",
+        "displayed_routes",
+        "displayed_transfer_records",
+        "significant_routes_outside_display",
+        "selected_routes_outside_display",
+        "routes_with_repeated_players",
+        "route_repeat_player_extra_records",
+        "verification",
+        "deviations_from_proposal"
+      ]
+    },
+    {
+      "path": "output/premier_league_feeder_routes.csv",
+      "issue": "07",
+      "sha256": "47420132844787464f7a24d11dfc79cb48cf144784a65693b096395b8302e11c",
+      "bytes": 1473945,
+      "csv_columns": [
+        "from_club_id",
+        "from_club_name",
+        "to_club_id",
+        "to_club_name",
+        "observed_count",
+        "expected_count",
+        "observed_expected_ratio",
+        "origin_pl_bound_total",
+        "destination_arrival_total",
+        "distinct_players",
+        "permutations_greater_or_equal",
+        "permutations_equal",
+        "p_value",
+        "significant",
+        "destination_share",
+        "repeat_player_extra_records",
+        "repeated_player_flag",
+        "recurring_route",
+        "selected_route"
+      ]
+    },
+    {
+      "path": "output/premier_league_feeder_selected_routes.csv",
+      "issue": "07",
+      "sha256": "22d8cd420ceb07929a53343ece56bf0d285d8b35af03403506dc08b9679643c7",
+      "bytes": 31516,
+      "csv_columns": [
+        "from_club_id",
+        "from_club_name",
+        "to_club_id",
+        "to_club_name",
+        "observed_count",
+        "expected_count",
+        "observed_expected_ratio",
+        "origin_pl_bound_total",
+        "destination_arrival_total",
+        "distinct_players",
+        "permutations_greater_or_equal",
+        "permutations_equal",
+        "p_value",
+        "significant",
+        "destination_share",
+        "repeat_player_extra_records",
+        "repeated_player_flag",
+        "recurring_route",
+        "selected_route"
+      ]
+    },
+    {
+      "path": "output/premier_league_feeder_significant_routes.csv",
+      "issue": "07",
+      "sha256": "1049ac30a53ad3fcff55870032d1f01cac459b45722699a27711b49ec17d9143",
+      "bytes": 42295,
+      "csv_columns": [
+        "from_club_id",
+        "from_club_name",
+        "to_club_id",
+        "to_club_name",
+        "observed_count",
+        "expected_count",
+        "observed_expected_ratio",
+        "origin_pl_bound_total",
+        "destination_arrival_total",
+        "distinct_players",
+        "permutations_greater_or_equal",
+        "permutations_equal",
+        "p_value",
+        "significant",
+        "destination_share",
+        "repeat_player_extra_records",
+        "repeated_player_flag",
+        "recurring_route",
+        "selected_route"
+      ]
+    },
+    {
+      "path": "output/premier_league_feeder_summary.md",
+      "issue": "07",
+      "sha256": "e038866d0ad08eb389922bb24b9dd699dbce4d09f8f5c035e902dc0f921a9595",
+      "bytes": 19748
+    },
+    {
+      "path": "output/transfer_community_comparison/community_connectivity.csv",
+      "issue": "06",
+      "sha256": "6fc9da66d627bd5fa9f05681636cbf2eb89a8fc91b87acaf9fa460bbc67cc051",
+      "bytes": 379,
+      "csv_columns": [
+        "method",
+        "community_id",
+        "community_name",
+        "community_size",
+        "weak_components",
+        "strong_components"
+      ]
+    },
+    {
+      "path": "output/transfer_community_comparison/community_overlap.csv",
+      "issue": "06",
+      "sha256": "f2d8c72fdfc0f28277cc039a58b45a97aa160654240aca5926476d975c087ef3",
+      "bytes": 834,
+      "csv_columns": [
+        "louvain_id",
+        "leiden_id",
+        "louvain_size",
+        "leiden_size",
+        "intersection_size",
+        "jaccard"
+      ]
+    },
+    {
+      "path": "output/transfer_community_comparison/layout.csv",
+      "issue": "03",
+      "sha256": "adcb0225e0ffe4d92dc6bc2c7f7f08848dd472e0b57bdeff44be40e24b2c004e",
+      "bytes": 77318,
+      "csv_columns": [
+        "club_id",
+        "x",
+        "y",
+        "node_size"
+      ]
+    },
+    {
+      "path": "output/transfer_community_comparison/louvain_leiden_community_comparison.pdf",
+      "issue": "06",
+      "sha256": "45629c009816e720942c726dadc8fc9b5ec7a409c0715bfb9308ad7b9657860e",
+      "bytes": 635722
+    },
+    {
+      "path": "output/transfer_community_comparison/louvain_leiden_community_comparison.png",
+      "issue": "06",
+      "sha256": "f2f62d7e8933162acb1ed8534c866add55dcd96cff19aa3cb470cfb75481ac61",
+      "bytes": 1032469
+    },
+    {
+      "path": "output/transfer_community_comparison/louvain_leiden_community_comparison.svg",
+      "issue": "06",
+      "sha256": "4e6510a67f91a406c4885cd3506e9747d30538227c907b414a798feb461724bf",
+      "bytes": 6190692
+    },
+    {
+      "path": "output/transfer_community_comparison/method_comparison.csv",
+      "issue": "06",
+      "sha256": "64d109f68b77ab8b1926309a3177b5da39b2d027d55feb8f3b0e2118ed7736ed",
+      "bytes": 1587,
+      "csv_columns": [
+        "method",
+        "resolution",
+        "optimizer_seed",
+        "settings",
+        "versions",
+        "q_observed",
+        "observed_community_count",
+        "observed_convergence",
+        "q_shuffled",
+        "shuffled_community_count",
+        "shuffled_convergence",
+        "observed_community_sizes",
+        "delta_q"
+      ]
+    },
+    {
+      "path": "output/transfer_community_comparison/method_comparison.md",
+      "issue": "06",
+      "sha256": "a85943ed136a674a9fb4f0abc41d6ada5fcdca42635aab4bdedbdf4c1657a6e4",
+      "bytes": 4078
+    },
+    {
+      "path": "output/transfer_community_comparison/observed_routes.csv",
+      "issue": "03",
+      "sha256": "4c8aac24464701da548ab6635b4a686f2d8ee96d56236991f34a3e6c28a07ec7",
+      "bytes": 147206,
+      "csv_columns": [
+        "from_club_id",
+        "to_club_id",
+        "transfer_count"
+      ]
+    },
+    {
+      "path": "output/transfer_community_comparison/shared_inputs.json",
+      "issue": "03",
+      "sha256": "a5913b7269e528ef24116b5d03b358cbaf340616adaaa3a0ef73e6899252400b",
+      "bytes": 26948,
+      "json_top_level_keys": [
+        "input_sha256",
+        "counts",
+        "seeds",
+        "directed",
+        "weight",
+        "resolution",
+        "node_order",
+        "edge_order",
+        "club_name_conflicts",
+        "swap_target_multiplier",
+        "attempt_multiplier",
+        "layout",
+        "shuffle",
+        "versions",
+        "files_sha256"
+      ]
+    },
+    {
+      "path": "output/transfer_community_comparison/shuffled_routes.csv",
+      "issue": "03",
+      "sha256": "5771470b1580b080d9a3d4cab028bb9dbe2ffd067ef8487833321b199347e8ff",
+      "bytes": 147206,
+      "csv_columns": [
+        "from_club_id",
+        "to_club_id",
+        "transfer_count"
+      ]
+    },
+    {
+      "path": "figures/degree_distributions.png",
+      "issue": "02",
+      "sha256": "94bd42dabdaaa04febd9e0c54933d9a61844aaef001c98f698ad08d7ce589eff",
+      "bytes": 320593
+    },
+    {
+      "path": "figures/transfer_graphs.png",
+      "issue": "02",
+      "sha256": "cb60bb490f011e46b2cacbd569579c1e5681017a9243eb44fe183616384ea2d4",
+      "bytes": 1461042
+    }
+  ],
+  "contract": "Same filenames/formats/table schemas/methods; all data-dependent values and captions regenerated.",
+  "unchanged_text_analyses": [
+    "H2",
+    "H2b",
+    "coverage volume",
+    "sentiment validation"
+  ],
+  "outside_scope": "age_shuffle_null_model.py tests top-five exits using a different input/outcome; no current saved output in this inventory. It is not H1 and is not added as a new analysis."
+}

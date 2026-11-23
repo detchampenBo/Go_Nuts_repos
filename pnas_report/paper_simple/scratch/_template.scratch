@@ -38,6 +38,8 @@ Describe the research need, missing evidence, finding to check, citation, cross-
 
 Identify the affected claim or section, its relevance to the research question or storyline, and links to available evidence.
 
+For H1 and network claims, use the [confirmed restricted rerun evidence](../../reruns/h1_2012_13-2024_25/provenance/output_parity_report.md). Guardian evidence uses the separate saved tables under [dataset_nlp/results](../../data/dataset_nlp/results/).
+
 ## Next action to discuss
 
 Describe the proposed follow-up and what would resolve the issue.

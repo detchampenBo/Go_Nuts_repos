@@ -44,6 +44,8 @@ The paper_simple directory has the requested template ZIP and planning foundatio
 
 [Requested template ZIP](../template/Template_for_preparing_your_research_report_submission_to_PNAS_using_Overleaf__2025_.zip), [requirements](../project_requirements.md), [figure and section plan](../paper_storyline.md), [source inventory](../evidence_and_sources.md).
 
+For H1 and network claims, use the user-confirmed [restricted rerun evidence](../../reruns/h1_2012_13-2024_25/provenance/output_parity_report.md).
+
 ## Next action to discuss
 
 1. Agree the location of the new LaTeX source and unpack the supplied template when assembly begins.
@@ -65,4 +67,3 @@ The new project compiles with the supplied PNAS template, references resolve, an
 2026-11-19 15:30:34 Europe/Copenhagen — Issue recorded from the agreed planning context. Follow-up work awaits discussion.
 
 2026-11-19 15:38:00 Europe/Copenhagen — Added standalone repository context, specific evidence locations, related decisions, and the starting discussion for this issue.
-

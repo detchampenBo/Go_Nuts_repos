@@ -1,0 +1,75 @@
+# 10 Rerun transfer backbones
+
+## Created
+
+2026-11-20 16:38:41 Europe/Copenhagen. Restricted-period rerun batch.
+
+## Status
+
+Resolved
+
+## Fresh-context requirement
+
+The user requires script reruns to be performed by a NEW agent in a FRESH context window. Dispatch with `fork_turns="none"`, providing this file's absolute path and the rerun README. The original planning agent must not execute statistical/structural reruns. New agents must read saved instructions/provenance instead of depending on inherited chat. If continuing in another context, hand off using the same saved records. Data reduction already happened before this requirement; verify it afresh.
+
+## Checkpoint workflow
+
+1. Read the [paper checkpoint](../../../paper_simple/README.md), [rerun index](../README.md), [original Issue 02](../../../paper_simple/scratch/2026-11-19_15-30-34_02-reconcile-samples-and-data-provenance.scratch) and [repository context](../../../paper_simple/scratch/REPOSITORY_CONTEXT.md); recap the next action.
+2. Verify dependencies and [reduction manifest](../provenance/reduction_manifest.json). The approved period supersedes older keep-H1-unchanged statements; do not ask for that decision again. Original Issue 02 remains Open pending its own criteria and user confirmation.
+3. Execute authorised work and checks. Discuss changes to methods, eligibility beyond season, ownership evidence or substantive presentation before implementing them. Necessary path/snapshot plumbing is authorised and must be logged.
+4. Preserve original data/results. Write new inputs/results/figures/executed notebooks/provenance inside `pnas_report/reruns/h1_2012_13-2024_25/`, reusing original relative output/ and figures/ names. Never mix old and new results.
+5. Append dated progress with actual commands, environment, checks and evidence. Update this issue, rerun index, paper checkpoint and evidence inventory with the exact next step. Mark Resolved only after criteria and user satisfaction confirmation; otherwise record execution status plainly.
+
+## Starting context and approved decision
+
+Repository: `C:/Users/victo/Codex/Go_Nuts_repos`; paper: `pnas_report/paper_simple`. The user approved H1 and dependent transfer/network reruns for recorded seasons **2012/13-2024/25**, retaining other eligibility/methods and identical output forms. H1/H2 are separate study samples; text analyses stay unchanged. Original broad-period outputs remain historical evidence. New input relative to this run: `data/outsideprem_toprem_eligible_transfers.csv.gz`, SHA-256 `48247e435eb0256405f778cafcfdba4eea39651a009fa61f88c41c907d36055a`. Use the original league lookup, whose hash is recorded. No hypothesis/structural reruns have yet been executed at issue creation.
+
+## Dependencies
+
+[03](2026-11-20_16-38-41_03-rebuild-shared-community-inputs.scratch), [04](2026-11-20_16-38-41_04-rerun-louvain-communities.scratch)
+
+## Paper context and supporting files
+
+- [notebooks/louvain_transfer_backbone.py](../../../notebooks/louvain_transfer_backbone.py)
+- [notebooks/louvain_transfer_backbone_template.html](../../../notebooks/louvain_transfer_backbone_template.html)
+- [notebooks/disparityfilter_reference.R](../../../notebooks/disparityfilter_reference.R)
+- [Paper evidence](../../../paper_simple/evidence_and_sources.md)
+- [Baseline filenames, hashes and schemas](../provenance/baseline_outputs_manifest.json)
+
+## Work and verification
+
+Run directed disparity backbones on NEW observed routes and Louvain memberships/Q for the whole graph and every new induced-community scope. Preserve the directional score formula, strict cutoff, degree-one missing score, structural exception, integer-numerator precision, alpha/slider grids and snapshot cutoffs. Preserve layout seed 2029/reference alpha and plotting settings, with coordinates and groups recomputed.
+
+Replace hard-coded old Q, names/counts and internal/external checkpoints with values verified from the new metadata/partitions, not bypasses. Do not assume five communities. Regenerate scoped route scores, retention/fragmentation, layout CSVs, result JSON, offline HTML, publication PDF/PNG/SVG, summary and README. Run ACTUAL R reference parity at every existing cutoff for each new scope. Rscript was unavailable previously: resolve it or report a real blocker; never label skipped parity successful. Record dependencies, template/path adaptations and validation.
+
+## Required artifacts
+
+Paths are relative to this run root. Preserve filenames/formats and existing table schemas; data-dependent sizes and values change. Consult the baseline manifest for exact CSV columns and JSON contracts. Additional exports naturally produced by the same existing code must be logged; they cannot replace missing baseline outputs.
+
+- `output/louvain_transfer_backbone_findings/backbone_layout.csv`
+- `output/louvain_transfer_backbone_findings/backbone_results.json`
+- `output/louvain_transfer_backbone_findings/backbone_retention.csv`
+- `output/louvain_transfer_backbone_findings/backbone_route_scores.csv`
+- `output/louvain_transfer_backbone_findings/backbone_summary.md`
+- `output/louvain_transfer_backbone_findings/louvain_backbone_alpha_comparison.pdf`
+- `output/louvain_transfer_backbone_findings/louvain_backbone_alpha_comparison.png`
+- `output/louvain_transfer_backbone_findings/louvain_backbone_alpha_comparison.svg`
+- `output/louvain_transfer_backbone_findings/louvain_transfer_backbone.html`
+- `output/louvain_transfer_backbone_findings/README.md`
+
+## Resolved when
+
+Every listed artifact is regenerated or, for issue 00, verified; specified method/data/dependency checks pass; new outputs trace to the restricted input; original baseline hashes remain unchanged; findings and handoff are recorded and the user confirms satisfaction. Do not claim skipped dependency/evidence checks are successful.
+
+## Progress and resolution
+
+2026-11-20 16:38:41 Europe/Copenhagen - Issue created; rerun not yet executed.
+
+21 November 2026 — A fresh-context agent reproduced the actual R/Python discrepancy and isolated it with the two outgoing edges of club 210. The exact Grêmio → Sassuolo source score is 1/5; R's normalization rounds below 0.20. Strict Python exclusion follows the preserved cutoff. Raw parity remains 29/30 and this issue remains Open. [Diagnosis](../provenance/backbone_boundary_diagnosis.json) · [Execution log](../provenance/run_log.md)
+
+21 November 2026 — Independently verified all 17,695 scope/route scores, 606 retention and fragmentation rows, 2,314 layout rows and the complete embedded dataset in the offline HTML. The publication PNG and PDF were inspected. The browser tool could not verify the current Windows browser URL, so live browser interaction remains unverified.
+
+
+2026-11-20T17:02:02.605428+01:00 ? PAUSED at user request for shutdown. No further computation authorised until explicit resume. Saved execution state, partial artifacts, ownership coverage gap and backbone R-parity failure are recorded in [PAUSE_CHECKPOINT.md](../PAUSE_CHECKPOINT.md). Use a new fresh-context agent when resuming; do not repeat verified H1 automatically. This issue is not resolved by pause.
+
+21 November 2026 — The user verified and accepted the current computations and new results and confirmed closure of this rerun issue. Raw reference agreement remains 29/30 because of the diagnosed strict-cutoff rounding difference. Live browser interaction remains unverified. [Boundary diagnosis](../provenance/backbone_boundary_diagnosis.json)

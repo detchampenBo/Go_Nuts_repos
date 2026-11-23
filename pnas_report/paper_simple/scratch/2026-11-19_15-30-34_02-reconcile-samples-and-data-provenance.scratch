@@ -6,7 +6,7 @@
 
 ## Status
 
-Open
+Resolved
 
 ## Checkpoint workflow
 
@@ -28,7 +28,7 @@ The repository root is `C:\Users\victo\Codex\Go_Nuts_repos`. The current paper i
 
 Read [REPOSITORY_CONTEXT.md](REPOSITORY_CONTEXT.md) when starting this issue in a new session. It maps the code, data, saved findings, earlier draft, source caveats, and environment limitations. Recheck the current branch and linked planning files when resuming.
 
-The transfer CSV directly contains 19,712 records with season labels from 00/01 to 26/27, with gaps in early coverage. The text signings CSV contains 1,332 rows with season values 2012–2024, subject to age, value, and loan-return rules. Main sentiment uses 820 signings, while the all-controls H2b table uses 793. Matching identifiers include player_id, transfer date, origin club, and destination club. Membership and age are calculated under different pipeline conventions that need inspection.
+The restricted H1 input contains 16,636 eligible transfer records from 4,602 players in recorded seasons 2012/13–2024/25. Calendar dates run from 1 July 2012 through 15 July 2025. The separate Guardian signings file contains 1,332 rows, of which 820 are in main sentiment and 793 in the all-controls H2b table. Reconcile the units, season definitions, and eligibility rules before drafting the sample description.
 
 ## Related decisions and first interaction
 
@@ -38,13 +38,17 @@ Agree how the paper should describe the two populations, starting with a compari
 
 ## Question or gap
 
-The analyses use different units and eligibility rules. The saved network summary describes 19,712 transfer records, while the text notes describe 1,332 selected signings and 820 with sufficient sentiment coverage. Their relationship needs verification before the paper presents a combined argument.
+H1 and the Guardian analyses use separate samples with different units and eligibility. The restricted rerun records 16,636 transfers. The historical 949/519 linkage counts were calculated against the broader H1 input and belong to that audit.
 
 ## Paper context and supporting files
 
-[Graph data](../../data/dataset_graph/), [age results](../../output/age_shuffle_outsideprem_toprem_results.json), [NLP overview](../../data/dataset_nlp/README.md), [signings](../../data/dataset_nlp/data/signings.csv), [NLP pipeline](../../data/dataset_nlp/pipeline/get_guardian_articles.py).
+[Restricted transfer input](../../reruns/h1_2012_13-2024_25/data/outsideprem_toprem_eligible_transfers.csv.gz), [reduction manifest](../../reruns/h1_2012_13-2024_25/provenance/reduction_manifest.json), [restricted H1 results](../../reruns/h1_2012_13-2024_25/output/age_shuffle_outsideprem_toprem_results.json), [NLP overview](../../data/dataset_nlp/README.md), [signings](../../data/dataset_nlp/data/signings.csv), [NLP pipeline](../../data/dataset_nlp/pipeline/get_guardian_articles.py).
+
+For H1 and network claims, use the user-confirmed [restricted rerun evidence](../../reruns/h1_2012_13-2024_25/provenance/output_parity_report.md).
 
 ## Next action to discuss
+
+The user confirmed satisfaction with the [study sample description](../evidence_and_sources.md#current-sample-description-for-review-21-november-2026) on 21 November 2026. This issue is Resolved. Next, open [Issue 03](2026-11-19_15-30-34_03-verify-age-entry-results.scratch) to agree the H1 claim, within-origin-club/season null interpretation and fixed-player sensitivity limitations. The check list below preserves the completed audit scope.
 
 1. Trace source snapshots, collection dates, season coverage, partial seasons, and cleaning for both datasets.
 
@@ -60,7 +64,89 @@ evidence_and_sources.md contains a verified sample description and an explicit e
 
 ## Progress and resolution
 
+**21 November 2026 — Restricted evidence handoff.** The fresh-context resumption verified the saved H1, network and community work, diagnosed the one R/Python cutoff difference and screened the 28 additional ownership routes. All 217 selected routes now have a bounded screen. See the [output verification report](../../reruns/h1_2012_13-2024_25/provenance/output_parity_report.md) for the exact evidence and open checks. Issue 02 stays Open. The recorded wide-period 949/519 linkage counts remain historical. The earlier [shutdown checkpoint](../../reruns/h1_2012_13-2024_25/PAUSE_CHECKPOINT.md) preserves the state on 20 November.
+
 2026-11-19 15:30:34 Europe/Copenhagen — Issue recorded from the agreed planning context. Follow-up work awaits discussion.
 
 2026-11-19 15:38:00 Europe/Copenhagen — Added standalone repository context, specific evidence locations, related decisions, and the starting discussion for this issue.
 
+### 20 November 2026: checks completed; satisfaction confirmation pending
+
+Read the README, repository context, agreed research question, evidence inventory and storyline. Issue 01 remains resolved; the agreed question, 30+/under-30 contrast and roles of H1/H2/H2b/volume are unchanged.
+
+The user clarified: “The samples in H1 and H2 has no relation expect they both describe the premier league. they are not from the same source and that is a product of how we could aqquire data. For H1 - Keep existing samples and disclose limitations”. Recorded decision: describe separate study samples acquired through different routes; no shared recruitment-to-coverage cohort. Keep H1's sample, rules and results unchanged and disclose the verified limitations. No new sample restrictions or hypothesis analyses were implemented.
+
+The [full comparison and evidence-status distinctions](../evidence_and_sources.md#issue-02-sample-and-provenance-audit-20-november-2026) are now recorded in evidence_and_sources.md. Supporting artifacts: [read-only audit script](issue02_sample_audit.py), [findings and input hashes](issue02_sample_audit.json), [event linkage](issue02_signing_linkage.csv).
+
+| Verified dimension | H1 | Text |
+| --- | --- | --- |
+| Units and players | 19,712 events; 5,213 players | 1,332 selected signings; 980 players. Main sentiment: 820 signings; 613 players |
+| Age groups | 18,398 under 30; 1,314 aged 30+ | Selected: 1,244 / 88; main: 753 / 67; H2b all-controls: 728 / 65 |
+| Dates and seasons | 2001-01-01–2027-06-30; recorded labels 00/01–26/27, missing 01/02 | Signings 2012-07-01–2025-06-10; July–June season values 2012–2024. Articles 2011-07-22–2026-06-09 |
+| Selection | Real-club origin outside PL under source season; upstream top-five endpoint and club-ID restrictions; no value/loan-return filter | PL destination under date-derived season, age 18–36, transfer-record market value >= EUR 2m, same-club/heuristic-return exclusions; PL/youth/non-club origins permitted |
+| Age calculation | Completed years; observed 16–41 | Completed years; no disagreement on matched events |
+| Text requirements | Not applicable | Main: no liveblogs/match reports, >=5 sentences in each before/after period. Volume uses all 1,332; H2b 793 follows quote removal and renewed threshold |
+| Source status | Transfermarkt data and league lookup | Guardian content; Transfermarkt-derived signing metadata. Acquisition histories are separate, as clarified by the user |
+
+**Checks passed:** reconstructing raw -> cleaned -> reduced -> H1 reproduces event membership exactly. Running the existing NLP selector with saving disabled reproduces every saved column for all 1,332 signings. Article metadata reproduces the saved before/after coverage counts; all four main-model per-signing ID sets agree. The provisional starting-context suggestion of different age calculations is superseded: the eligibility ranges and season conventions differ, but both calculate completed-years age.
+
+**Matching check, for provenance only:** every selected text event occurs in local raw transfers. Matching player ID, transfer date and both club IDs finds 949 selected events (52 older) and 519 main events (37 older) in H1. Nonmatches comprise PL origins (330 selected / 276 main), graph club exclusions (50 / 23), and non-club origins (3 / 2); none is unexplained. These overlaps do not define a shared analytical cohort or common acquisition history. No matched-subset outcome analysis was performed or agreed.
+
+**Disclosures to retain:**
+
+- H1 includes 11 future-dated events, all under 30, including 3 PL arrivals. Its latest nonfuture date is 15 August 2026, and late-season coverage is partial; early coverage is sparse. Do not describe all events as completed moves or all labelled seasons as fully observed.
+- H1's club list excludes senior clubs as well as youth/reserve sides; two selected text signings from Boca Juniors illustrate this. Its top-five endpoint restriction narrows the denominator beyond all transfers originating outside the PL.
+- H1 retains 6,881 unpaid/missing-fee reversals under the text pipeline's 730-day heuristic. They are not confirmed loan-return labels. Text retains 74 paid reversals under its documented exception; it is not a permanent-transfer-only sample.
+- Source-season and July–June conventions disagree for 283 H1 records and 7 text signings. Delap's June 2025 move changes origin league status between conventions. Retain existing conventions and state them.
+- Repeated players occur in both analyses, and different signings can share articles. Neither is a unique-player cohort. Main H2's coverage threshold retains 67/88 older versus 753/1,244 younger signings.
+- Documentation reports Guardian fetching on 4–7 November 2026 and a B5 rebuild on 8–9 November. Exact Kaggle version/download dates and cache completeness cannot be independently verified. The latest requested article date precedes the documented fetch, but full retrieval cannot be certified. The retired-player explanation for sparse histories remains a documentation claim.
+- Article-link metadata is available locally, correcting the broader absence suggested by the older context. Raw article bodies, sentence text and model score caches are absent at the documented paths. H2b's saved table verifies 793, but the precise 27 exclusions from its 820-row base cannot be reconstructed locally.
+
+**Completion review:** the verified population descriptions and explicit explanation of the relationship are written; the user has decided to retain the existing H1 sample. No further analysis is currently proposed. Original acquisition/version gaps and inaccessible text inputs are disclosed as limits. User satisfaction with this recorded description is still required before changing Status to Resolved. The README records this same handoff. After confirmation, proceed to issue 03 with the existing H1 definition; text measurement/results reviews remain in issues 04–05.
+
+### Follow-up: common period proposed, not agreed
+
+The user subsequently asked whether limiting H1 to 2012–2025 would strengthen the paper. No restriction or hypothesis rerun was authorised. Counts verified: recorded seasons 2012/13–2024/25 contain 16,636 events (15,573 under 30; 1,063 aged 30+) / 4,602 players; date interval 1 July 2012–30 June 2025 contains 16,652 events (15,585 / 1,067) / 4,607 players. See the [discussion and recommendation](../evidence_and_sources.md#follow-up-discussion-restricting-h1s-period).
+
+Proposed recommendation: a main H1 using recorded seasons 2012/13–2024/25, with the original broad-period result retained as a sensitivity comparison. This improves historical scope and removes the sparsest early and partial/future late coverage, while retaining about 84% of events and 81% of older events. It does not create a common cohort or fix the other eligibility limits; H1 already shuffles within season. The effect on results is unknown and untested. This proposal supersedes the preceding statement that no further analysis is proposed, but does not supersede the user's retention decision unless the user agrees. Next action: discuss period definition and whether to authorise that rerun before seeking satisfaction confirmation or resolving issue 02.
+
+### Follow-up: community input confirmed
+
+The user asked whether community results use the same data as H1. Verified: current saved Louvain and Leiden both use all 19,712 events in `outsideprem_toprem_eligible_transfers.csv.gz`, exactly H1's main sample. The shared and both method-specific metadata hashes match the current input; independent aggregation exactly reproduces all 12,794 saved directed routes and weights (1,254 clubs). H1 removes zero rows from this prefiltered input. Communities aggregate across ages and seasons; H1 uses age-labelled events. They have different null models, and communities do not use H1's one-transfer-per-player sensitivity sample. See [full verification](../evidence_and_sources.md#follow-up-verification-community-results-use-the-same-h1-events).
+
+Keeping a single transfer population after a period change would therefore require rerunning the community graph/null/partitions as well as H1. No rerun or period change has been implemented; the period decision remains under discussion and Issue 02 stays Open.
+
+### Approved period change, saved data and new issues
+
+20 November 2026: the user instructed us to restrict H1 to **recorded seasons 2012/13–2024/25**, create one scratch issue for each necessary dependent rerun plus the data reduction, preserve current output forms in a separate folder, and record the filtered data as paper evidence. This supersedes the initial keep-H1-unchanged decision. Other eligibility, methods, seeds and thresholds remain unchanged. Guardian analyses stay unchanged. Later, the user explicitly required script reruns by a new agent in a fresh context window.
+
+Created [reruns/h1_2012_13-2024_25](../../reruns/h1_2012_13-2024_25/README.md), with **12 new issues** covering data reduction, H1/player sensitivity, degree/network results, shared community graph/null/layout, Louvain, Leiden, comparison, feeder routes, ownership, feeder figures, backbones and final artifact/provenance parity. Each issue records dependencies, exact current output paths, unchanged methods, known hard-coded snapshot/path obstacles, verification and checkpoint instructions. All require dispatch using `fork_turns="none"` and saved file paths. This is the new-agent handoff, not permission to silently change analyses or overwrite old outputs.
+
+The approved period filter was executed before the fresh-agent instruction. [Saved restricted dataset](../../reruns/h1_2012_13-2024_25/data/outsideprem_toprem_eligible_transfers.csv.gz): 16,636 rows / 4,602 players, 15,573 under 30 / 1,063 aged 30+, 1,157 clubs / 11,016 routes. Exactly 3,076 rows removed from the 19,712-row original. Actual retained dates span 1 July 2012–15 July 2025 because the rule follows source-season labels. Restricted hash `48247e435eb0256405f778cafcfdba4eea39651a009fa61f88c41c907d36055a`; original hash unchanged. No statistical/structural rerun was executed by the planning agent.
+
+[Reduction manifest](../../reruns/h1_2012_13-2024_25/provenance/reduction_manifest.json), [retained row indices](../../reruns/h1_2012_13-2024_25/provenance/retained_source_rows.csv), [excluded row indices](../../reruns/h1_2012_13-2024_25/provenance/excluded_source_rows.csv), and [season/age counts](../../reruns/h1_2012_13-2024_25/provenance/sample_by_season.csv) document exact selection and field/order preservation. The reproducible reduction script uses deterministic gzip. The [baseline output manifest](../../reruns/h1_2012_13-2024_25/provenance/baseline_outputs_manifest.json) freezes 124 original output/figure files and schemas to check their preservation and new-output parity. A run-local gitignore exception keeps new output artifacts visible for version control despite the root output/ ignore rule.
+
+The [evidence inventory](../evidence_and_sources.md#approved-restriction-saved-input-and-rerun-issues), research-question qualifications, paper README and issue tracker are updated. Broad-sample audit values, old p values/partitions and 949/519 overlap counts are historical and must not be presented as restricted results. Original issues 03/06 depend on new verified results. The new agent must independently verify reduction issue 00, then execute H1 issue 01 and continue the queued dependencies; original Issue 02 remains Open until its criteria and satisfaction confirmation are met.
+
+
+21 November 2026 — The user confirmed the restricted rerun computations and results. This paper issue remains Open for review of the sample description and provenance wording. Use the restricted H1 denominators and preserve the documented Guardian denominators.
+
+### 21 November 2026: current sample wording prepared; confirmation pending
+
+Resumed from the README's accepted restricted rerun handoff. The issue and checkpoint agree: computations are accepted; the sample wording still needs satisfaction confirmation. Read the repository context, agreed question, historical sample audit, reduction manifest, restricted summary, Guardian selector and H2/H2b tables/code.
+
+Added the [current sample description, proposed paper wording and disclosures](../evidence_and_sources.md#current-sample-description-for-review-21-november-2026). It distinguishes the 16,636-event / 4,602-player transfer population (15,573 under 30; 1,063 aged 30+) from 1,332 selected Guardian signings, 820 main-sentiment signings and 793 all-controls H2b signings. It specifies repeated observations, age/value/club/return rules, source-season versus July–June membership, H1 dates through 15 July 2025, sufficient-text selection and unresolved acquisition/text-input gaps. Historical broad-period counts remain labelled as such.
+
+Verification: the restricted input's SHA-256 matches its reduction manifest; all ten input hashes in the historical sample audit match the current local files. Guardian rules and denominators were checked against the saved tables and implementation. No producer or audit script was rerun, and no new linkage, restriction or hypothesis analysis was performed.
+
+Recommendation for confirmation: present the two separate samples without a numerical overlap claim. The historical 949/519 counts are not restricted evidence. A new restricted linkage calculation is unnecessary for the prepared wording and is not proposed. No new scratch issue is needed for already disclosed provenance gaps; text measurement/results remain assigned to Issues 04–05.
+
+Status remains **Open**, following the checkpoint workflow's requirement for user satisfaction confirmation. The [paper README](../README.md) records the same wording, evidence, pending decision and next step. Upon confirmation, resolve Issue 02 and proceed to Issue 03 to agree the H1 claim, null interpretation and fixed-player sensitivity limitations.
+
+### Resolution — 21 November 2026
+
+The user reproduced the exact three-paragraph sample description from the evidence inventory and stated satisfaction with that study sample description. Those paragraphs are now the agreed wording; their text is unchanged. Completion criteria are met: the description identifies the restricted transfer population and separate Guardian denominators, eligibility and relationship, with supporting provenance and limitations recorded. Status changed to **Resolved**.
+
+Supporting evidence: [restricted reduction manifest](../../reruns/h1_2012_13-2024_25/provenance/reduction_manifest.json), [accepted rerun handoff](../../reruns/h1_2012_13-2024_25/provenance/output_parity_report.md), [Guardian audit findings and hashes](issue02_sample_audit.json), [main H2 table](../../data/dataset_nlp/results/a1_age30_results.csv) and [H2b controls table](../../data/dataset_nlp/results/a1_h2b_controls.csv). The prior read-only checks established unchanged audited inputs. No additional analysis was required or performed; no new issues were created. The approved paragraphs contain no overlap number; historical 949/519 linkage counts remain outside the current sample description.
+
+Changed records: [agreed wording and evidence inventory](../evidence_and_sources.md#current-sample-description-for-review-21-november-2026), this issue, [paper checkpoint](../README.md) and [issue tracker handoff](README.md). The README and this issue both record Issue 02 as Resolved. Next is [Issue 03](2026-11-19_15-30-34_03-verify-age-entry-results.scratch): agree the H1 claim, within-origin-club/season null interpretation and limitations of the fixed one-transfer-per-player sensitivity using the accepted restricted results.

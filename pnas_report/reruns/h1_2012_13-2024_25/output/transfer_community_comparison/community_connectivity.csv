@@ -1,0 +1,11 @@
+method,community_id,community_name,community_size,weak_components,strong_components
+Leiden,1,Inter,320,1,78
+Leiden,2,Monaco,244,1,75
+Leiden,3,Atlético,208,1,66
+Leiden,4,Wolfsburg,195,1,46
+Leiden,5,Chelsea,190,1,165
+Louvain,1,Inter,344,1,89
+Louvain,2,Monaco,229,1,70
+Louvain,3,Atlético,214,1,68
+Louvain,4,Wolfsburg,193,1,46
+Louvain,5,Chelsea,177,1,153

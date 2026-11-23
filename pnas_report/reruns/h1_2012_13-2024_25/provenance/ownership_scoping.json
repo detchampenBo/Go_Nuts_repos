@@ -1,0 +1,24 @@
+{
+  "original_evidence_sha256": "7985859b0fb46ab133eb7e9a2a7920578aca15d5e7c41175e16fb9eb1c372ae7",
+  "selected_routes": 217,
+  "previously_screened_routes": 189,
+  "new_unscreened_routes": 0,
+  "omitted_evidence": [
+    {
+      "field": "confirmed_pair_intervals",
+      "pair": [
+        43,
+        31
+      ],
+      "reason": "documented interval does not overlap restricted model dates"
+    }
+  ],
+  "new_research_performed": true,
+  "newly_screened_routes": 28,
+  "newly_screened_selected_records": 68,
+  "new_documented_shared_equity_intervals": 0,
+  "reused_screen_research_as_of": "2026-11-11",
+  "additional_screen_research_as_of": "2026-11-21",
+  "additional_screen": "provenance/ownership_screen_28_routes.md",
+  "additional_screen_sha256": "84f6919f1d118af641d49c500a8d69dbe3683dcfb16090fb1b66bc56c254fac9"
+}

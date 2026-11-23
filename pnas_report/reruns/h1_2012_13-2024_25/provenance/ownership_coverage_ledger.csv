@@ -1,0 +1,218 @@
+from_club_id,to_club_id,from_club_name,to_club_name,observed_count,previously_screened_route,coverage_status
+12321,281,Girona FC,Manchester City,15,True,existing_bounded_screen_reused
+504,543,Grasshoppers,Wolverhampton Wanderers,10,True,existing_bounded_screen_reused
+410,1010,Udinese Calcio,Watford FC,9,True,existing_bounded_screen_reused
+499,631,Vitesse,Chelsea FC,7,True,existing_bounded_screen_reused
+683,703,Olympiacos,Nottingham Forest,6,True,existing_bounded_screen_reused
+3948,1237,Union SG,Brighton & Hove Albion,6,True,existing_bounded_screen_reused
+16,985,Borussia Dortmund,Manchester United,5,True,existing_bounded_screen_reused
+3329,543,Famalicão,Wolverhampton Wanderers,5,True,existing_bounded_screen_reused
+209,281,River Plate,Manchester City,4,True,existing_bounded_screen_reused
+1095,281,ESTAC Troyes,Manchester City,4,True,existing_bounded_screen_reused
+1158,989,FC Lorient,AFC Bournemouth,4,True,existing_bounded_screen_reused
+2727,1003,OH Leuven,Leicester City,4,True,existing_bounded_screen_reused
+16795,1010,Granada CF,Watford FC,4,True,existing_bounded_screen_reused
+25580,281,Melbourne City,Manchester City,4,True,existing_bounded_screen_reused
+60,1148,SC Freiburg,Brentford FC,3,True,existing_bounded_screen_reused
+62,379,Slavia Praha,West Ham United,3,True,existing_bounded_screen_reused
+409,399,Salzburg,Leeds United,3,True,existing_bounded_screen_reused
+698,603,Bristol City,Cardiff City,3,True,existing_bounded_screen_reused
+720,512,Porto,Stoke City,3,True,existing_bounded_screen_reused
+7,984,Al Ahly,West Bromwich Albion,2,True,existing_bounded_screen_reused
+1091,1123,PAOK,Norwich City,2,True,existing_bounded_screen_reused
+13241,399,UD Ibiza,Leeds United,2,True,existing_bounded_screen_reused
+28760,379,A. Klagenfurt,West Ham United,2,True,existing_bounded_screen_reused
+162,631,AS Monaco,Chelsea FC,7,True,existing_bounded_screen_reused
+399,989,Leeds United,AFC Bournemouth,6,True,existing_bounded_screen_reused
+371,180,Celtic,Southampton FC,5,True,existing_bounded_screen_reused
+22,873,Derby,Crystal Palace,4,True,existing_bounded_screen_reused
+405,985,Aston Villa,Manchester United,4,True,existing_bounded_screen_reused
+603,31,Cardiff City,Liverpool FC,4,True,existing_bounded_screen_reused
+677,1003,Ipswich Town,Leicester City,4,True,existing_bounded_screen_reused
+1027,379,Bradford,West Ham United,3,True,existing_bounded_screen_reused
+1465,543,Estoril,Wolverhampton Wanderers,3,True,existing_bounded_screen_reused
+865,1148,Midtjylland,Brentford FC,2,True,existing_bounded_screen_reused
+1519,3008,Dundee United,Hull City,2,True,existing_bounded_screen_reused
+3537,1148,Crawley Town,Brentford FC,2,True,existing_bounded_screen_reused
+54189,873,RWDM,Crystal Palace,2,True,existing_bounded_screen_reused
+1032,631,Reading FC,Chelsea FC,7,True,existing_bounded_screen_reused
+5,631,AC Milan,Chelsea FC,6,True,existing_bounded_screen_reused
+162,1003,AS Monaco,Leicester City,5,True,existing_bounded_screen_reused
+317,281,FC Twente,Manchester City,4,True,existing_bounded_screen_reused
+698,1132,Bristol City,Burnley FC,3,True,existing_bounded_screen_reused
+7136,1010,Envigado,Watford FC,3,True,existing_bounded_screen_reused
+969,1110,Montpellier HSC,Huddersfield Town,2,True,existing_bounded_screen_reused
+1247,11,Colorado,Arsenal FC,2,True,existing_bounded_screen_reused
+2455,1148,Bristol Rovers,Brentford FC,2,True,existing_bounded_screen_reused
+2524,379,Al-Jazira,West Ham United,2,True,existing_bounded_screen_reused
+3371,180,Cheltenham,Southampton FC,2,True,existing_bounded_screen_reused
+131,29,FC Barcelona,Everton FC,6,True,existing_bounded_screen_reused
+132,281,NAC Breda,Manchester City,4,True,existing_bounded_screen_reused
+989,762,AFC Bournemouth,Newcastle United,3,True,existing_bounded_screen_reused
+190,1003,Copenhagen,Leicester City,2,True,existing_bounded_screen_reused
+352,180,Swindon Town,Southampton FC,2,True,existing_bounded_screen_reused
+468,1010,Sparta R.,Watford FC,2,True,existing_bounded_screen_reused
+1053,405,Aalborg BK,Aston Villa,2,True,existing_bounded_screen_reused
+3641,148,Degerfors,Tottenham Hotspur,2,True,existing_bounded_screen_reused
+583,379,Paris Saint-Germain,West Ham United,4,True,existing_bounded_screen_reused
+15,405,Bayer 04 Leverkusen,Aston Villa,3,False,new_selected_route_screened
+16795,985,Granada CF,Manchester United,3,True,existing_bounded_screen_reused
+221,631,Santos,Chelsea FC,2,True,existing_bounded_screen_reused
+687,603,Molde FK,Cardiff City,2,True,existing_bounded_screen_reused
+6574,989,US Sassuolo,AFC Bournemouth,2,True,existing_bounded_screen_reused
+399,148,Leeds United,Tottenham Hotspur,6,True,existing_bounded_screen_reused
+337,931,Birmingham,Fulham FC,3,True,existing_bounded_screen_reused
+990,1123,Coventry,Norwich City,3,True,existing_bounded_screen_reused
+237,1010,RCD Mallorca,Watford FC,2,True,existing_bounded_screen_reused
+306,2288,Heerenveen,Swansea City,2,True,existing_bounded_screen_reused
+1533,762,SD Eibar,Newcastle United,2,True,existing_bounded_screen_reused
+13,543,Atlético de Madrid,Wolverhampton Wanderers,6,True,existing_bounded_screen_reused
+399,1132,Leeds United,Burnley FC,4,True,existing_bounded_screen_reused
+990,1237,Coventry,Brighton & Hove Albion,3,True,existing_bounded_screen_reused
+265,289,Panathinaikos,Sunderland AFC,2,True,existing_bounded_screen_reused
+306,1237,Heerenveen,Brighton & Hove Albion,2,True,existing_bounded_screen_reused
+349,1031,Barnsley,Luton Town,2,True,existing_bounded_screen_reused
+1032,1031,Reading FC,Luton Town,2,True,existing_bounded_screen_reused
+1039,2288,Queens Park Rangers,Swansea City,2,True,existing_bounded_screen_reused
+1150,29,Leyton Orient,Everton FC,2,True,existing_bounded_screen_reused
+2425,703,Rio Ave,Nottingham Forest,2,True,existing_bounded_screen_reused
+2805,543,Wycombe,Wolverhampton Wanderers,2,True,existing_bounded_screen_reused
+4795,1110,FC Ingolstadt 04,Huddersfield Town,2,True,existing_bounded_screen_reused
+6890,405,Basaksehir,Aston Villa,2,True,existing_bounded_screen_reused
+19309,1237,Independiente,Brighton & Hove Albion,2,True,existing_bounded_screen_reused
+667,631,RC Strasbourg Alsace,Chelsea FC,4,True,existing_bounded_screen_reused
+23826,31,RB Leipzig,Liverpool FC,4,True,existing_bounded_screen_reused
+2454,985,Doncaster,Manchester United,3,True,existing_bounded_screen_reused
+39,1110,1.FSV Mainz 05,Huddersfield Town,2,True,existing_bounded_screen_reused
+89,31,1.FC Union Berlin,Liverpool FC,2,True,existing_bounded_screen_reused
+197,762,Sparta Prague,Newcastle United,2,True,existing_bounded_screen_reused
+1071,29,Wigan Athletic,Everton FC,4,True,existing_bounded_screen_reused
+1110,703,Huddersfield Town,Nottingham Forest,3,True,existing_bounded_screen_reused
+801,1010,IFK Göteborg,Watford FC,2,True,existing_bounded_screen_reused
+1030,1237,Argentinos Jrs.,Brighton & Hove Albion,2,True,existing_bounded_screen_reused
+2352,1010,CD América,Watford FC,2,True,existing_bounded_screen_reused
+10093,1010,Indep. Medellín,Watford FC,2,True,existing_bounded_screen_reused
+31297,11,SKF Sered,Arsenal FC,2,True,existing_bounded_screen_reused
+683,543,Olympiacos,Wolverhampton Wanderers,5,True,existing_bounded_screen_reused
+703,762,Nottingham Forest,Newcastle United,4,True,existing_bounded_screen_reused
+698,989,Bristol City,AFC Bournemouth,3,True,existing_bounded_screen_reused
+3057,180,Standard Liège,Southampton FC,2,True,existing_bounded_screen_reused
+3697,31,Morecambe FC,Liverpool FC,2,True,existing_bounded_screen_reused
+6699,1148,Exeter City,Brentford FC,2,True,existing_bounded_screen_reused
+9636,148,Seattle,Tottenham Hotspur,2,True,existing_bounded_screen_reused
+355,379,Bolton,West Ham United,3,True,existing_bounded_screen_reused
+499,1237,Vitesse,Brighton & Hove Albion,2,True,existing_bounded_screen_reused
+2778,1237,Nordsjaelland,Brighton & Hove Albion,2,True,existing_bounded_screen_reused
+29831,1237,FC Viitorul,Brighton & Hove Albion,2,True,existing_bounded_screen_reused
+40058,281,New York City,Manchester City,2,True,existing_bounded_screen_reused
+368,148,Sevilla FC,Tottenham Hotspur,5,True,existing_bounded_screen_reused
+337,985,Birmingham,Manchester United,4,False,new_selected_route_screened
+43,31,Heart of Midl.,Liverpool FC,2,True,existing_bounded_screen_reused
+687,1237,Molde FK,Brighton & Hove Albion,2,True,existing_bounded_screen_reused
+124,180,Rangers,Southampton FC,3,True,existing_bounded_screen_reused
+35,1237,FC St. Pauli,Brighton & Hove Albion,2,True,existing_bounded_screen_reused
+1194,1031,Rotherham,Luton Town,2,True,existing_bounded_screen_reused
+12,631,Associazione Sportiva Roma,Chelsea FC,5,True,existing_bounded_screen_reused
+358,1132,Charlton,Burnley FC,3,True,existing_bounded_screen_reused
+677,989,Ipswich Town,AFC Bournemouth,3,True,existing_bounded_screen_reused
+60,1003,SC Freiburg,Leicester City,2,True,existing_bounded_screen_reused
+432,631,Chicago,Chelsea FC,2,True,existing_bounded_screen_reused
+448,985,Vojvodina,Manchester United,2,True,existing_bounded_screen_reused
+533,1132,TSG 1899 Hoffenheim,Burnley FC,2,True,existing_bounded_screen_reused
+3938,281,CA Talleres,Manchester City,2,True,existing_bounded_screen_reused
+86,1123,SV Werder Bremen,Norwich City,2,True,existing_bounded_screen_reused
+273,1010,Stade Rennais FC,Watford FC,2,True,existing_bounded_screen_reused
+416,931,Torino FC,Fulham FC,2,True,existing_bounded_screen_reused
+601,281,KV Kortrijk,Manchester City,2,True,existing_bounded_screen_reused
+1042,405,Crewe Alexandra,Aston Villa,2,True,existing_bounded_screen_reused
+1031,405,Luton Town,Aston Villa,3,True,existing_bounded_screen_reused
+370,762,Aberdeen FC,Newcastle United,2,True,existing_bounded_screen_reused
+1027,289,Bradford,Sunderland AFC,2,False,new_selected_route_screened
+29228,31,Mouscron,Liverpool FC,2,True,existing_bounded_screen_reused
+418,631,Real Madrid,Chelsea FC,4,True,existing_bounded_screen_reused
+27,985,Bayern Munich,Manchester United,3,True,existing_bounded_screen_reused
+150,11,Real Betis Balompié,Arsenal FC,3,True,existing_bounded_screen_reused
+238,1237,Lech Poznan,Brighton & Hove Albion,2,True,existing_bounded_screen_reused
+2963,405,Burton Albion,Aston Villa,2,True,existing_bounded_screen_reused
+6621,281,Cukaricki,Manchester City,2,True,existing_bounded_screen_reused
+79,31,VfB Stuttgart,Liverpool FC,3,True,existing_bounded_screen_reused
+44,31,Hertha BSC,Liverpool FC,2,True,existing_bounded_screen_reused
+347,148,FC Metz,Tottenham Hotspur,2,True,existing_bounded_screen_reused
+703,350,Nottingham Forest,Sheffield United,2,True,existing_bounded_screen_reused
+1035,762,Sheff Wed,Newcastle United,2,True,existing_bounded_screen_reused
+5026,281,Lommel SK,Manchester City,2,True,existing_bounded_screen_reused
+114,29,Besiktas,Everton FC,3,True,existing_bounded_screen_reused
+1302,543,Northampton,Wolverhampton Wanderers,2,True,existing_bounded_screen_reused
+984,762,West Bromwich Albion,Newcastle United,3,True,existing_bounded_screen_reused
+370,31,Aberdeen FC,Liverpool FC,2,True,existing_bounded_screen_reused
+610,985,Ajax,Manchester United,4,True,existing_bounded_screen_reused
+39,31,1.FSV Mainz 05,Liverpool FC,3,True,existing_bounded_screen_reused
+22,350,Derby,Sheffield United,2,True,existing_bounded_screen_reused
+232,631,Spartak Moscow,Chelsea FC,2,True,existing_bounded_screen_reused
+466,29,Preston,Everton FC,3,True,existing_bounded_screen_reused
+39,873,1.FSV Mainz 05,Crystal Palace,2,True,existing_bounded_screen_reused
+940,180,Celta de Vigo,Southampton FC,2,True,existing_bounded_screen_reused
+11177,1132,Fleetwood,Burnley FC,2,True,existing_bounded_screen_reused
+124,31,Rangers,Liverpool FC,3,True,existing_bounded_screen_reused
+800,148,Atalanta BC,Tottenham Hotspur,3,True,existing_bounded_screen_reused
+122,1237,Sturm Graz,Brighton & Hove Albion,2,True,existing_bounded_screen_reused
+1025,11,Bologna Football Club 1909,Arsenal FC,2,True,existing_bounded_screen_reused
+1269,281,PEC Zwolle,Manchester City,2,True,existing_bounded_screen_reused
+2410,1003,CSKA Moscow,Leicester City,2,True,existing_bounded_screen_reused
+46,631,Inter Milan,Chelsea FC,4,True,existing_bounded_screen_reused
+418,985,Real Madrid,Manchester United,3,True,existing_bounded_screen_reused
+1420,543,Angers SCO,Wolverhampton Wanderers,2,True,existing_bounded_screen_reused
+336,29,Sporting,Everton FC,4,False,new_selected_route_screened
+337,512,Birmingham,Stoke City,2,False,new_selected_route_screened
+354,281,KV Mechelen,Manchester City,2,True,existing_bounded_screen_reused
+873,985,Crystal Palace,Manchester United,2,False,new_selected_route_screened
+2410,29,CSKA Moscow,Everton FC,2,True,existing_bounded_screen_reused
+2462,1010,Fluminense,Watford FC,2,True,existing_bounded_screen_reused
+667,405,RC Strasbourg Alsace,Aston Villa,3,False,new_selected_route_screened
+4,1237,1.FC Nuremberg,Brighton & Hove Albion,2,True,existing_bounded_screen_reused
+22,1132,Derby,Burnley FC,2,False,new_selected_route_screened
+1194,1003,Rotherham,Leicester City,2,True,existing_bounded_screen_reused
+244,762,Olympique Marseille,Newcastle United,3,False,new_selected_route_screened
+1071,1237,Wigan Athletic,Brighton & Hove Albion,3,True,existing_bounded_screen_reused
+1028,148,Millwall,Tottenham Hotspur,3,True,existing_bounded_screen_reused
+465,762,St. Mirren,Newcastle United,2,True,existing_bounded_screen_reused
+826,281,RC Lens,Manchester City,2,False,new_selected_route_screened
+1244,180,CD Leganés,Southampton FC,2,True,existing_bounded_screen_reused
+159,405,Red Star,Aston Villa,2,False,new_selected_route_screened
+199,703,Corinthians,Nottingham Forest,2,True,existing_bounded_screen_reused
+472,543,UD Las Palmas,Wolverhampton Wanderers,2,True,existing_bounded_screen_reused
+371,873,Celtic,Crystal Palace,2,False,new_selected_route_screened
+2454,180,Doncaster,Southampton FC,2,True,existing_bounded_screen_reused
+418,11,Real Madrid,Arsenal FC,3,True,existing_bounded_screen_reused
+618,631,AS Saint-Étienne,Chelsea FC,3,True,existing_bounded_screen_reused
+180,762,Southampton FC,Newcastle United,2,True,existing_bounded_screen_reused
+1108,985,Deportivo Alavés,Manchester United,2,True,existing_bounded_screen_reused
+466,985,Preston,Manchester United,3,True,existing_bounded_screen_reused
+252,148,Genoa CFC,Tottenham Hotspur,2,True,existing_bounded_screen_reused
+897,11,Deportivo de La Coruña,Arsenal FC,2,False,new_selected_route_screened
+1042,762,Crewe Alexandra,Newcastle United,2,False,new_selected_route_screened
+1050,148,Villarreal CF,Tottenham Hotspur,4,True,existing_bounded_screen_reused
+164,399,Blackburn,Leeds United,2,False,new_selected_route_screened
+180,379,Southampton FC,West Ham United,2,True,existing_bounded_screen_reused
+1049,281,Valencia CF,Manchester City,5,True,existing_bounded_screen_reused
+1123,762,Norwich City,Newcastle United,3,True,existing_bounded_screen_reused
+10484,631,Kasimpasa,Chelsea FC,2,True,existing_bounded_screen_reused
+383,631,PSV,Chelsea FC,4,True,existing_bounded_screen_reused
+978,631,Vasco da Gama,Chelsea FC,2,False,new_selected_route_screened
+417,11,OGC Nice,Arsenal FC,3,True,existing_bounded_screen_reused
+409,31,Salzburg,Liverpool FC,2,False,new_selected_route_screened
+984,1132,West Bromwich Albion,Burnley FC,2,False,new_selected_route_screened
+3709,989,Getafe CF,AFC Bournemouth,2,False,new_selected_route_screened
+714,148,RCD Espanyol Barcelona,Tottenham Hotspur,2,False,new_selected_route_screened
+1148,405,Brentford FC,Aston Villa,2,True,existing_bounded_screen_reused
+294,543,Benfica,Wolverhampton Wanderers,4,False,new_selected_route_screened
+347,543,FC Metz,Wolverhampton Wanderers,2,True,existing_bounded_screen_reused
+202,281,FC Groningen,Manchester City,2,True,existing_bounded_screen_reused
+1023,281,Palmeiras,Manchester City,2,False,new_selected_route_screened
+681,11,Real Sociedad,Arsenal FC,2,True,existing_bounded_screen_reused
+506,631,Juventus FC,Chelsea FC,4,False,new_selected_route_screened
+164,989,Blackburn,AFC Bournemouth,3,False,new_selected_route_screened
+24,985,Eintracht Frankfurt,Manchester United,2,False,new_selected_route_screened
+543,31,Wolverhampton Wanderers,Liverpool FC,2,False,new_selected_route_screened
+800,1003,Atalanta BC,Leicester City,2,False,new_selected_route_screened
+447,281,Hajduk Split,Manchester City,2,False,new_selected_route_screened

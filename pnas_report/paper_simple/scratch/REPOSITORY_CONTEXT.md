@@ -1,6 +1,12 @@
 # Repository context for paper issues
 
-Snapshot reviewed on 19 November 2026. Check the linked files and Git state when resuming work because this document records the state at that date.
+**End-of-day handoff, 22 November 2026 at 20:37 Europe/Copenhagen.** Resume Issue 09 through the updated [continuation prompt](2026-11-19_15-30-34_09-select-figures-and-plan-cross-references.scratch#continuation-prompt), beginning with Figure 1's final caption. Both current figures are produced; captions/labels, Results cross-references, coverage presentation and manuscript fit remain. Figure 1's final marker instruction is 1.5 times network-marker width/height and standard legend symbols. H2b is omitted. Figure output folders are saved locally but gitignored, and new producers/follow-up issues remain untracked; preserve the working tree. No routine rerun is required to resume discussion.
+
+**Latest paper scope, 22 November 2026.** The user selected the new unadjusted four-model monthly H2 figure and explicitly omitted H2b from the manuscript. The [agreed decision and rationale](../paper_storyline.md#agreed-figure-2-and-h2b-omission-22-november-2026) supersede older conditional H2b wording in this snapshot. H2b's narrower, model-dependent contribution does not justify its assumptions, explanation and page cost; preserve its analyses/figures as exploratory repository history. The sample description removes only its H2b sentence, with all other sample/H1 wording preserved. Issues 09a/09b are Resolved; Issue 09 remains Open for captions/layout and Issue 11.1 only for the possible further text-subanalysis disposition. No replacement analysis is selected. Start with the current paper README for the exact next action.
+
+Repository snapshot reviewed on 19 November 2026. The evidence pointers reflect the user-confirmed rerun handoff of 21 November 2026.
+
+**Paper handoff, 21 November 2026.** Issues 01–05 are Resolved. Preserve Issue 02's exact sample description and Issue 03's approved H1 interpretation and complete sensitivity passage in [evidence_and_sources.md](../evidence_and_sources.md). H1 reports a lower observed rate for older transfers with limited evidence against the club-season null. Its fixed-player sensitivity is conditional on one selected sample. Issues 04–05 establish how to interpret tone and coverage in the separate Guardian samples. Results briefly answers the research question and Discussion develops broader meaning. [Issue 15](2026-11-21_15-45-35_15-explain-h2b-model-and-figure.scratch) remains open for the H2b model, figure and inclusion decision. Start with the [Issue 06 continuation prompt](2026-11-19_15-30-34_06-choose-network-analysis-role.scratch#continuation-prompt) and the verified restricted transfer results when deciding what network evidence belongs in the paper. This handoff supersedes historical pending-audit wording below.
 
 ## Purpose and collaboration
 
@@ -23,11 +29,11 @@ The agreed endpoint is a complete first draft in the PNAS template, with a compi
 | --- | --- |
 | [paper_simple](../) | Current question, storyline, evidence inventory, requirements, and tone guide |
 | [paper](../../paper/) | Earlier draft, bibliography, template dependencies, and a separate backbone subsection |
-| [data/dataset_graph](../../data/dataset_graph/) | Selected transfer-network inputs |
+| [Restricted H1 and network rerun](../../reruns/h1_2012_13-2024_25/README.md) | Active paper evidence for transfer and network claims |
 | [data/top_five_league_clubs.csv](../../data/top_five_league_clubs.csv) | Season-specific league-membership lookup |
 | [data/dataset_nlp](../../data/dataset_nlp/) | Guardian pipeline, selected signings, validation labels, analysis scripts, and result tables |
 | [notebooks](../../notebooks/) | Network analyses, tests, and current plotting scripts |
-| [output](../../output/) | Saved network findings, machine-readable results, interactive views, and publication figures |
+| [Original transfer output](../../output/) | Historical broad-period analyses and figures |
 | [notes](../../notes/) | Earlier specifications, proposals, source audits, and findings notes |
 | [figures/plotting/data](../../figures/plotting/data/) | Copies of derived text tables used by the current text plotting script |
 
@@ -46,17 +52,17 @@ The question in [final_research_question.md](../final_research_question.md) and 
 
 ## Data and result snapshot
 
-The eligible transfer input is [outsideprem_toprem_eligible_transfers.csv.gz](../../data/dataset_graph/outsideprem_toprem_eligible_transfers.csv.gz). Direct inspection found 19,712 records, with season labels from `00/01` through `26/27` and gaps in the earlier coverage. It includes real-club moves originating outside the Premier League and retains destinations inside and outside that league. The saved network summary reports 1,254 clubs and 12,794 directed routes, weighted by transfer counts. This is a selected transfer network whose scope requires explanation.
+The [restricted transfer input](../../reruns/h1_2012_13-2024_25/data/outsideprem_toprem_eligible_transfers.csv.gz) contains 16,636 eligible records and 4,602 players in recorded seasons 2012/13–2024/25. It includes real-club moves originating outside the Premier League and retains destinations inside and outside that league. The [restricted degree recap](../../reruns/h1_2012_13-2024_25/output/degree_distribution_recap.md) reports 1,157 clubs and 11,016 directed routes. The original 19,712-row broad-period input belongs to the historical audit.
 
 The text [signings.csv](../../data/dataset_nlp/data/signings.csv) contains 1,332 signings with season values 2012 through 2024. Its documentation describes seasons 2012/13–2024/25, ages 18–36, market value at least EUR 2 million, and exclusions for loan returns and same-club moves. Main sentiment results use 820 signings, including 67 aged 30+. The all-controls H2b result table uses 793 signings, including 65 aged 30+. These samples require an explicit comparison with the network input.
 
 Saved evidence to verify and interpret during the relevant issues includes the following.
 
-- [H1 summary](../../output/age_shuffle_outsideprem_toprem_summary.md) reports joining rates of 14.87% for under-30 transfers and 11.19% for 30+, with a one-sided permutation p-value of 0.045. The sensitivity analysis uses one fixed random transfer per player and reports p = 0.044.
+- The [restricted H1 summary](../../reruns/h1_2012_13-2024_25/output/age_shuffle_outsideprem_toprem_summary.md) reports joining rates of 14.56% for under-30 transfers and 12.14% for 30+, with a one-sided permutation p-value of 0.098. The fixed one-transfer-per-player sensitivity reports p = 0.074.
 - [H2 table](../../data/dataset_nlp/results/a1_age30_results.csv) reports a main RoBERTa difference in changes of +0.006 with p = 0.7558.
 - [H2b table](../../data/dataset_nlp/results/a1_h2b_controls.csv), RoBERTa, specification `7 all: no quotes, type adjusted, fame + value`, period `after`, reports a gap of -0.0349 with p = 0.0390. Several specifications and instruments were examined.
-- [Validation table](../../data/dataset_nlp/results/b9_model_scores.csv), subset `all scored`, reports 196 scored human-labelled sentences and RoBERTa Spearman correlation 0.5158. The small older-player validation subset needs discussion.
-- The community, feeder-route, ownership, degree, and backbone outputs exist. Their relevance to the new argument awaits the network-scope decision in issue 06.
+- [Validation table](../../data/dataset_nlp/results/b9_model_scores.csv), subset `all scored`, reports 196 scored human-labelled sentences and RoBERTa Spearman correlation 0.5158. Issue 04 documents the small older-player subset and uncertainty about age-specific validity. [Measurement review](../evidence_and_sources.md#issue-04-guardian-tone-measurement-review-21-november-2026)
+- The [restricted evidence handoff](../../reruns/h1_2012_13-2024_25/provenance/output_parity_report.md) links the community, feeder, ownership, degree, and backbone outputs. Their role in the paper awaits the network-scope decision in Issue 06.
 
 These values locate the existing evidence. A full audit of statistical interpretation and reproducibility remains part of the issues.
 
@@ -68,7 +74,7 @@ For numerical claims, trace the result row or JSON field, generating code, input
 
 Raw Guardian article bodies, sentence text, and scoring caches are described as held outside the repository. The repository has derived tables, selected signings, labels, and code. Check available inputs before planning a full rerun.
 
-A test attempt in the `network_analysis` environment encountered missing leidenalg, unavailable Rscript, and a NetworkX private-import error. The community comparison instead names `machine-learning` as its environment. Confirm the relevant environment and versions before reproduction. Saved outputs and an executable local rerun are separate facts to verify.
+The [restricted execution log](../../reruns/h1_2012_13-2024_25/provenance/run_log.md) records the environments used successfully for the reruns. The backbone's raw R/Python agreement is 29/30, and live browser interaction remains unverified.
 
 ## Agreed paper constraints
 

@@ -1,0 +1,60 @@
+# 09b Produce unadjusted monthly H2 curves with period means
+
+## Created
+
+22 November 2026, 18:56:56 Europe/Copenhagen. User-requested presentation follow-up within Issue 09.
+
+## Status
+
+Resolved
+
+## Checkpoint workflow
+
+Read [the paper checkpoint](../README.md) and the latest [Issue 09 decisions](2026-11-19_15-30-34_09-select-figures-and-plan-cross-references.scratch) before resuming. Preserve existing changes and historical outputs. Record evidence and agreed decisions here and in affected plans; keep the README and tracker consistent. Resolve only after the user confirms satisfaction, otherwise record partial progress and the next discussion.
+
+## User request and scope
+
+The user does not want regression-based plots. They requested a figure similar to the existing four-panel monthly PDF but using the core H2 unadjusted monthly curves, with red dots and short horizontal lines showing before/after means. Preserve all four sentiment instruments to show sensitivity to measurement choice. Produce this presentation from saved results in a fresh-context agent, as required by the recorded workflow. Do not rerun sentiment scoring, regression, shuffles, smoothing, bootstraps or the original export pipeline.
+
+The user subsequently confirmed exactly one mean for each age group in each period for every model and invited a colour choice suited to the plot. Use orange markers for 30+ and dark-brown markers for under 30, matching the curves; this supersedes the initial red suggestion. There are four labelled mean marks per model panel. The short horizontal segment extends on both sides of its dot; its fixed length is a visual marker, not a confidence interval or a duration. Do not use pooled-age means, which would obscure the age comparison. This decision rejects regression-adjusted plots for this figure; it does not automatically settle whether H2b prose belongs in the paper, which remains with Issue 11.1.
+
+## Source evidence and provenance
+
+- Curves: [a1_h2_arc_4models.csv](../../figures/plotting/data/a1_h2_arc_4models.csv), four models, two age groups and 24 months (192 saved rows), `mean_smooth` at `month + 0.5`, drawn separately before/after signing.
+- The [plotting-kit README](../../figures/plotting/README.md) identifies this as the unadjusted H2 export. Its [exporter](../../figures/plotting/make_data/export_h2_arc_4models.py) calls `monthly()` and `arc()` from [a1_age30_arc.py](../../data/dataset_nlp/sentiment/a1_age30_arc.py), using the same model order and seed as the original four-model figure. This producer was found during the current source review; earlier Issue 09 notes correctly record the absence of separate original Bing monthly exports, but should not be read as absence of an identified exporter.
+- The 96 rows in original [a1_age30_arc.csv](../../data/dataset_nlp/results/a1_age30_arc.csv), RoBERTa/VADER, match the corresponding copy after column renaming and numeric formatting normalisation. The Bing rows have the documented exporter but no matching separate monthly result export here. Missing sentences/full score caches prevent independent raw reconstruction; use saved curves with that provenance qualification.
+- Red period means: [a1_age30_levels.csv](../../data/dataset_nlp/results/a1_age30_levels.csv), all four models, before/after rows, only group mean columns. Ignore its historical interval/p columns. Use [a1_age30_results.csv](../../data/dataset_nlp/results/a1_age30_results.csv), each model's `sample=main` row, for counts, change gaps and p-values.
+
+## Definitions and presentation
+
+Use the same 820 main signings (67 aged 30+, 753 under 30); before days -365 to -8 and after +8 to +365; exclude liveblogs and match reports; require five scored sentences in both periods. No quote removal, article-type centring or regression adjustment. Monthly curves first average within signing-month, then across available signings, with the already-saved three-month rolling means split at signing. Monthly membership varies. Period means average signing-period means, giving every main signing equal weight. They are not averages of the plotted smoothed curve.
+
+Follow [PLOTTING_STYLE.md](../../PLOTTING_STYLE.md): Arial, 17.8 cm combined width from PNAS, four panels, older orange and younger dark brown. Add age-coloured mean dots with short horizontal segments, clear age labels and a descriptive mean legend. Use marker size/outline to distinguish the means from the curves. No shaded bands, signed-score percentage changes or uncertainty bars. Preserve all previous figures.
+
+## Deliverables and verification
+
+New [producer](../../notebooks/plot_h2_monthly_period_means.py) and isolated [output folder](../../output/h2_monthly_period_means_findings/): combined four-model figure and four standalone model views, PDF/600 dpi PNG/editable SVG, plus README/caption and verification. Verify unique saved curve rows, period means and sample counts, common original rows, input hashes and unchanged historical reference PDFs. Render and visually inspect combined/standalone colour/grayscale at intended size; check fonts, dimensions, vector content, rotation and label collisions. No final six-page fit is claimed until typesetting.
+
+## Completion and next discussion
+
+The user likes the produced plot and requested a label-only refinement: show just each mean number, horizontally centred below the 30+ dot/segment and above the under-30 dot/segment. Remove the repeated age prefixes from annotations, retaining colours and the legend for group identity. Refresh and verify all combined/standalone exports, then return the revised plot for review. Final caption and manuscript layout remain with Issue 09. Issue 11.1 still settles H2b's remaining treatment before drafting. Keep the two-point comparison from Issue 09a as an existing working candidate.
+
+## Progress
+
+22 November 2026 - Authorised production dispatched to a fresh-context agent. Next: inspect the saved-results figure and verify the red marks represent signing-period means correctly, then return it to the user for review.
+
+22 November 2026 - While production was underway, the user confirmed before/after period means for both age groups in each model and invited a colour choice matching the plot. Root selected orange for older and dark brown for younger mean markers, matching the curves, and sent the update to the producing agent. This supersedes the initial red colour request while retaining the dot and short horizontal segment design.
+
+22 November 2026 - The [combined unadjusted H2 figure](../../output/h2_monthly_period_means_findings/combined.pdf) is produced, with four model panels and 16 age-coloured signing-period mean markers. Each model also has a standalone PDF/PNG/SVG in the [output folder](../../output/h2_monthly_period_means_findings/). [Verification](../../output/h2_monthly_period_means_findings/verification.json) confirms the 192 saved curve rows, exact agreement of the 96 common original rows, source-based marker values, embedded Arial, vector PDFs, zero rotation, 600 dpi PNG and editable SVG text. The primary agent inspected the corrected combined colour/grayscale renders; colliding Before/After headings were removed, with negative/positive months and the dashed signing line identifying the periods. Short marker segments span a fixed +/-0.75 month for visibility only. Their centres at -6 and +6 are label positions for whole-period means, not means of those particular months. The full-width plot is 17.8 cm by 5 inches before its caption; final fit to the provisional Figure 2 budget still needs typesetting and possibly an explicit space reallocation. No statistical analysis was rerun. The user must still review the presentation and confirm satisfaction; Issues 09 and 09b remain Open.
+
+22 November 2026 - The user said they like the plot and requested numeric-only mean annotations: remove `Under 30:` and `30+:`, centre older-group values below the symbols and younger-group values above. This supersedes earlier requirements for explicit age prefixes on every mean. A fresh-context agent was dispatched for the surgical annotation change and refresh of the existing presentation exports. No other design or analytical change was requested.
+
+22 November 2026 - Completed the label-only revision and refreshed all five PDF/PNG/SVG views at the existing paths. Only the annotation string changed in the producer; the existing centred alignment and above/below offsets already matched the request. The producing agent inspected all ten colour/grayscale renders, and the primary agent inspected the refreshed combined render. Numeric-only means are centred below older-group symbols and above younger-group symbols, without clipping or overlaps. Export/source checks passed. Colours, legend, curves, mean values, dimensions and historical reference PDFs are unchanged. Review the revised combined PDF; final caption and manuscript-fit decisions remain with Issue 09.
+
+22 November 2026 - At the user's request, added a finer background grid to all panels: minor lines every three months and 0.05 score units, light grey `#E4E4E4` at 0.35 pt, retaining the existing major grid. Minor tick marks are hidden and the grid stays behind the plotted curves/means. A fresh-context agent refreshed all five PDF/PNG/SVG views using saved results; export/source/hash checks passed. The primary agent inspected the revised combined render and confirmed the lighter grid hierarchy and unchanged numeric mean placement. Updated files remain at the same output paths; no analysis was rerun.
+
+22 November 2026 - The user then requested the same, darker colour for all gridlines. Refreshed all five views with both major and minor gridlines in `#999999` at 0.5 pt, behind the data; the finer spacing remains three months and 0.05 score units. This supersedes the preceding lighter-minor-grid treatment. Fresh-context production passed the existing source/export checks, and the primary agent inspected the updated combined render. Curves, means, labels, legend and dimensions remain unchanged.
+
+## Resolution, 22 November 2026
+
+The user explicitly agreed to use the produced [unadjusted monthly H2 figure](../../output/h2_monthly_period_means_findings/combined.pdf) in the paper. The accepted export has four sentiment instruments, age-coloured signing-period means with numeric-only labels and a uniform darker fine grid. The [source/caption record](../../output/h2_monthly_period_means_findings/README.md), [verification](../../output/h2_monthly_period_means_findings/verification.json) and visual QA support the accepted artifact. No analysis was rerun. The [storyline](../paper_storyline.md#agreed-figure-2-and-h2b-omission-22-november-2026), Issue 09 and paper checkpoint record Figure 2 selection and H2b omission. Production issue 09b is Resolved; final manuscript caption and layout remain tracked in Issue 09, rather than reopening figure choice.

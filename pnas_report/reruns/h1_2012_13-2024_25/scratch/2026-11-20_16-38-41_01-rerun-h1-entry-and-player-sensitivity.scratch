@@ -1,0 +1,77 @@
+# 01 Rerun H1 entry and player sensitivity
+
+## Created
+
+2026-11-20 16:38:41 Europe/Copenhagen. Restricted-period rerun batch.
+
+## Status
+
+Resolved
+
+## Fresh-context requirement
+
+The user requires script reruns to be performed by a NEW agent in a FRESH context window. Dispatch with `fork_turns="none"`, providing this file's absolute path and the rerun README. The original planning agent must not execute statistical/structural reruns. New agents must read saved instructions/provenance instead of depending on inherited chat. If continuing in another context, hand off using the same saved records. Data reduction already happened before this requirement; verify it afresh.
+
+## Checkpoint workflow
+
+1. Read the [paper checkpoint](../../../paper_simple/README.md), [rerun index](../README.md), [original Issue 02](../../../paper_simple/scratch/2026-11-19_15-30-34_02-reconcile-samples-and-data-provenance.scratch) and [repository context](../../../paper_simple/scratch/REPOSITORY_CONTEXT.md); recap the next action.
+2. Verify dependencies and [reduction manifest](../provenance/reduction_manifest.json). The approved period supersedes older keep-H1-unchanged statements; do not ask for that decision again. Original Issue 02 remains Open pending its own criteria and user confirmation.
+3. Execute authorised work and checks. Discuss changes to methods, eligibility beyond season, ownership evidence or substantive presentation before implementing them. Necessary path/snapshot plumbing is authorised and must be logged.
+4. Preserve original data/results. Write new inputs/results/figures/executed notebooks/provenance inside `pnas_report/reruns/h1_2012_13-2024_25/`, reusing original relative output/ and figures/ names. Never mix old and new results.
+5. Append dated progress with actual commands, environment, checks and evidence. Update this issue, rerun index, paper checkpoint and evidence inventory with the exact next step. Mark Resolved only after criteria and user satisfaction confirmation; otherwise record execution status plainly.
+
+## Starting context and approved decision
+
+Repository: `C:/Users/victo/Codex/Go_Nuts_repos`; paper: `pnas_report/paper_simple`. The user approved H1 and dependent transfer/network reruns for recorded seasons **2012/13-2024/25**, retaining other eligibility/methods and identical output forms. H1/H2 are separate study samples; text analyses stay unchanged. Original broad-period outputs remain historical evidence. New input relative to this run: `data/outsideprem_toprem_eligible_transfers.csv.gz`, SHA-256 `48247e435eb0256405f778cafcfdba4eea39651a009fa61f88c41c907d36055a`. Use the original league lookup, whose hash is recorded. No hypothesis/structural reruns have yet been executed at issue creation.
+
+## Dependencies
+
+[00](2026-11-20_16-38-41_00-reduce-and-record-h1-data.scratch)
+
+## Paper context and supporting files
+
+- [notebooks/age_shuffle_outsideprem_toprem.py](../../../notebooks/age_shuffle_outsideprem_toprem.py)
+- [notebooks/plot_age_shuffle_outsideprem_toprem.py](../../../notebooks/plot_age_shuffle_outsideprem_toprem.py)
+- [Paper evidence](../../../paper_simple/evidence_and_sources.md)
+- [Baseline filenames, hashes and schemas](../provenance/baseline_outputs_manifest.json)
+
+## Work and verification
+
+Run H1 on the restricted CSV and original league lookup, directing output into this run. Preserve seed 2026, 999 permutations, lower-tail alternative, within-origin-club/season age shuffles, plus-one calculation and three SeedSequence child streams. Rebuild the player pool and uniformly draw exactly one eligible transfer per player FROM THE RESTRICTED SAMPLE; do not filter the old draw. Fix that new draw across permutations.
+
+Regenerate results JSON, both historical PNG exports, all three publication views in PDF/PNG/SVG, figure README/captions and main summary Markdown. Existing computation does not generate every prose recap: regenerate those from new results. Preserve plotting methods, sizes and styling. _verify_snapshot contains old reference totals; distinguish those historical comparisons from actual restricted-manifest validation. Do not change statistics or fake old counts. Check new numerators, denominators, tail counts and sensitivity membership. Log real commands, environment, code adaptations and input hashes.
+
+## Required artifacts
+
+Paths are relative to this run root. Preserve filenames/formats and existing table schemas; data-dependent sizes and values change. Consult the baseline manifest for exact CSV columns and JSON contracts. Additional exports naturally produced by the same existing code must be logged; they cannot replace missing baseline outputs.
+
+- `output/age_shuffle_outsideprem_toprem_all_eligible_transfers.png`
+- `output/age_shuffle_outsideprem_toprem_findings/age_shuffle_outsideprem_toprem_all_eligible_transfers.pdf`
+- `output/age_shuffle_outsideprem_toprem_findings/age_shuffle_outsideprem_toprem_all_eligible_transfers.png`
+- `output/age_shuffle_outsideprem_toprem_findings/age_shuffle_outsideprem_toprem_all_eligible_transfers.svg`
+- `output/age_shuffle_outsideprem_toprem_findings/age_shuffle_outsideprem_toprem_comparison.pdf`
+- `output/age_shuffle_outsideprem_toprem_findings/age_shuffle_outsideprem_toprem_comparison.png`
+- `output/age_shuffle_outsideprem_toprem_findings/age_shuffle_outsideprem_toprem_comparison.svg`
+- `output/age_shuffle_outsideprem_toprem_findings/age_shuffle_outsideprem_toprem_one_transfer_per_player.pdf`
+- `output/age_shuffle_outsideprem_toprem_findings/age_shuffle_outsideprem_toprem_one_transfer_per_player.png`
+- `output/age_shuffle_outsideprem_toprem_findings/age_shuffle_outsideprem_toprem_one_transfer_per_player.svg`
+- `output/age_shuffle_outsideprem_toprem_findings/README.md`
+- `output/age_shuffle_outsideprem_toprem_one_transfer_per_player.png`
+- `output/age_shuffle_outsideprem_toprem_results.json`
+- `output/age_shuffle_outsideprem_toprem_summary.md`
+
+## Resolved when
+
+Every listed artifact is regenerated or, for issue 00, verified; specified method/data/dependency checks pass; new outputs trace to the restricted input; original baseline hashes remain unchanged; findings and handoff are recorded and the user confirms satisfaction. Do not claim skipped dependency/evidence checks are successful.
+
+## Progress and resolution
+
+2026-11-20 16:38:41 Europe/Copenhagen - Issue created; rerun not yet executed.
+
+
+20 November 2026 — Unchanged original H1 producer completed via activated machine-learning environment. Independent verify_h1.py exactly recomputed both 999-permutation distributions, tail/tie counts, stratum counts and fresh restricted-player draw; selection membership saved in provenance/h1_sensitivity_selected_rows.csv. Main: 2,267/15,573 under30 vs 129/1,063 older; gap −2.421780853 pp, null −1.314527914 pp, tail 97 (15 ties), p=0.098. Sensitivity: 925/4,310 vs 57/292; gap −1.941168992 pp, null +0.458181539 pp, tail 73 (27 ties), p=0.074. All 14 artifacts exist; combined PNG visually inspected without clipping. All 124 frozen original hashes remain unchanged. Historical snapshot warnings remain labelled as historical. No method/plot changes; recaps generated from new results. See provenance/h1_verification.json.
+
+
+2026-11-20T17:02:02.605428+01:00 ? PAUSED at user request for shutdown. No further computation authorised until explicit resume. Saved execution state, partial artifacts, ownership coverage gap and backbone R-parity failure are recorded in [PAUSE_CHECKPOINT.md](../PAUSE_CHECKPOINT.md). Use a new fresh-context agent when resuming; do not repeat verified H1 automatically. This issue is not resolved by pause.
+
+21 November 2026 — The user verified and accepted the current computations and new results and confirmed closure of this rerun issue.

@@ -1,0 +1,12 @@
+Statistic,Value
+Number of nodes,1157
+Number of directed edges,11016
+Maximum in-degree,128
+Maximum out-degree,136
+Maximum reciprocal degree,104
+Mean in-degree,9.52
+Mean out-degree,9.52
+Mean reciprocal degree,5.7
+Median in-degree,2.0
+Median out-degree,2.0
+Median reciprocal degree,1.0

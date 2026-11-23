@@ -1,0 +1,671 @@
+{
+  "input_sha256": "48247e435eb0256405f778cafcfdba4eea39651a009fa61f88c41c907d36055a",
+  "counts": {
+    "records": 16636,
+    "distinct_players": 4602,
+    "nodes": 1157,
+    "edges": 11016,
+    "self_loops": 0,
+    "total_transfer_count": 16636
+  },
+  "directed": true,
+  "weight": "transfer_count",
+  "resolution": 1.0,
+  "seeds": {
+    "optimizer": 2026,
+    "swap": 2027,
+    "weight_permutation": 2028,
+    "layout": 2029
+  },
+  "shuffle": {
+    "target": 110160,
+    "max_attempts": 11016000,
+    "successes": 110160,
+    "attempts": 258790,
+    "fraction_original_routes_retained": 0.1804647785039942
+  },
+  "club_name_conflicts": {
+    "12": {
+      "chosen": "AS Roma",
+      "variants": [
+        "AS Roma",
+        "Roma"
+      ]
+    },
+    "13": {
+      "chosen": "Atlético",
+      "variants": [
+        "Atlético",
+        "Atlético Madrid"
+      ]
+    },
+    "15": {
+      "chosen": "B. Leverkusen",
+      "variants": [
+        "B. Leverkusen",
+        "Leverkusen"
+      ]
+    },
+    "16": {
+      "chosen": "Dortmund",
+      "variants": [
+        "Bor. Dortmund",
+        "Dortmund"
+      ]
+    },
+    "18": {
+      "chosen": "Mönchengladbach",
+      "variants": [
+        "Bor. M'gladbach",
+        "Mönchengladbach"
+      ]
+    },
+    "24": {
+      "chosen": "Frankfurt",
+      "variants": [
+        "E. Frankfurt",
+        "Frankfurt"
+      ]
+    },
+    "26": {
+      "chosen": "Basel",
+      "variants": [
+        "Basel",
+        "FC Basel"
+      ]
+    },
+    "35": {
+      "chosen": "St. Pauli",
+      "variants": [
+        "FC St. Pauli",
+        "St. Pauli"
+      ]
+    },
+    "36": {
+      "chosen": "Fenerbahce",
+      "variants": [
+        "Fenerbahce",
+        "Fenerbahçe"
+      ]
+    },
+    "39": {
+      "chosen": "Mainz",
+      "variants": [
+        "1.FSV Mainz 05",
+        "Mainz"
+      ]
+    },
+    "41": {
+      "chosen": "Hamburg",
+      "variants": [
+        "Hamburg",
+        "Hamburger SV"
+      ]
+    },
+    "60": {
+      "chosen": "Freiburg",
+      "variants": [
+        "Freiburg",
+        "SC Freiburg"
+      ]
+    },
+    "62": {
+      "chosen": "Slavia Praha",
+      "variants": [
+        "Slavia Prague",
+        "Slavia Praha"
+      ]
+    },
+    "79": {
+      "chosen": "Stuttgart",
+      "variants": [
+        "Stuttgart",
+        "VfB Stuttgart"
+      ]
+    },
+    "82": {
+      "chosen": "Wolfsburg",
+      "variants": [
+        "VfL Wolfsburg",
+        "Wolfsburg"
+      ]
+    },
+    "121": {
+      "chosen": "Dinamo Moscow",
+      "variants": [
+        "Dinamo Moscow",
+        "Dynamo Moscow"
+      ]
+    },
+    "167": {
+      "chosen": "Augsburg",
+      "variants": [
+        "Augsburg",
+        "FC Augsburg"
+      ]
+    },
+    "190": {
+      "chosen": "Copenhagen",
+      "variants": [
+        "Copenhagen",
+        "FC Copenhagen"
+      ]
+    },
+    "195": {
+      "chosen": "Rosenborg BK",
+      "variants": [
+        "Rosenborg",
+        "Rosenborg BK"
+      ]
+    },
+    "200": {
+      "chosen": "Utrecht",
+      "variants": [
+        "FC Utrecht",
+        "Utrecht"
+      ]
+    },
+    "239": {
+      "chosen": "Viking",
+      "variants": [
+        "Viking",
+        "Viking FK"
+      ]
+    },
+    "301": {
+      "chosen": "Steaua Bucharest",
+      "variants": [
+        "FCSB",
+        "Steaua Bucharest"
+      ]
+    },
+    "317": {
+      "chosen": "FC Twente",
+      "variants": [
+        "FC Twente",
+        "Twente FC"
+      ]
+    },
+    "336": {
+      "chosen": "Sporting",
+      "variants": [
+        "Sporting",
+        "Sporting CP"
+      ]
+    },
+    "349": {
+      "chosen": "Barnsley",
+      "variants": [
+        "Barnsley",
+        "Barnsley FC"
+      ]
+    },
+    "353": {
+      "chosen": "Lillestrøm",
+      "variants": [
+        "Lillestrøm",
+        "Lillestrøm SK"
+      ]
+    },
+    "383": {
+      "chosen": "PSV",
+      "variants": [
+        "PSV",
+        "PSV Eindhoven"
+      ]
+    },
+    "409": {
+      "chosen": "Salzburg",
+      "variants": [
+        "RB Salzburg",
+        "Salzburg"
+      ]
+    },
+    "410": {
+      "chosen": "Udinese Calcio",
+      "variants": [
+        "Udinese",
+        "Udinese Calcio"
+      ]
+    },
+    "417": {
+      "chosen": "Nice",
+      "variants": [
+        "Nice",
+        "OGC Nice"
+      ]
+    },
+    "452": {
+      "chosen": "Young Boys",
+      "variants": [
+        "BSC Young Boys",
+        "Young Boys"
+      ]
+    },
+    "458": {
+      "chosen": "US Palermo",
+      "variants": [
+        "Palermo",
+        "US Palermo"
+      ]
+    },
+    "496": {
+      "chosen": "Malmö",
+      "variants": [
+        "Malmö",
+        "Malmö FF"
+      ]
+    },
+    "533": {
+      "chosen": "Hoffenheim",
+      "variants": [
+        "Hoffenheim",
+        "TSG Hoffenheim"
+      ]
+    },
+    "583": {
+      "chosen": "PSG",
+      "variants": [
+        "PSG",
+        "Paris SG"
+      ]
+    },
+    "607": {
+      "chosen": "Unione Venezia",
+      "variants": [
+        "Unione Venezia",
+        "Venezia"
+      ]
+    },
+    "621": {
+      "chosen": "Athletic Club",
+      "variants": [
+        "Athletic",
+        "Athletic Club"
+      ]
+    },
+    "653": {
+      "chosen": "OFI Crete",
+      "variants": [
+        "OFI Crete",
+        "OFI Crete FC"
+      ]
+    },
+    "679": {
+      "chosen": "Atlético-PR",
+      "variants": [
+        "Athletico-PR",
+        "Atlético-PR"
+      ]
+    },
+    "703": {
+      "chosen": "Nottm Forest",
+      "variants": [
+        "Nott'm Forest",
+        "Nottm Forest"
+      ]
+    },
+    "720": {
+      "chosen": "Porto",
+      "variants": [
+        "FC Porto",
+        "Porto"
+      ]
+    },
+    "749": {
+      "chosen": "FC Empoli",
+      "variants": [
+        "Empoli",
+        "FC Empoli"
+      ]
+    },
+    "800": {
+      "chosen": "Atalanta",
+      "variants": [
+        "Atalanta",
+        "Atalanta BC"
+      ]
+    },
+    "813": {
+      "chosen": "Columbus Crew",
+      "variants": [
+        "Columbus",
+        "Columbus Crew"
+      ]
+    },
+    "865": {
+      "chosen": "FC Midtjylland",
+      "variants": [
+        "FC Midtjylland",
+        "Midtjylland"
+      ]
+    },
+    "1041": {
+      "chosen": "Lyon",
+      "variants": [
+        "Lyon",
+        "Olympique Lyon"
+      ]
+    },
+    "1061": {
+      "chosen": "LA Galaxy",
+      "variants": [
+        "LA Galaxy",
+        "Los Angeles"
+      ]
+    },
+    "1074": {
+      "chosen": "Tranmere",
+      "variants": [
+        "Tranmere",
+        "Tranmere Rovers"
+      ]
+    },
+    "1075": {
+      "chosen": "Braga",
+      "variants": [
+        "Braga",
+        "SC Braga"
+      ]
+    },
+    "1082": {
+      "chosen": "LOSC Lille",
+      "variants": [
+        "LOSC Lille",
+        "Lille"
+      ]
+    },
+    "1091": {
+      "chosen": "PAOK Salonika",
+      "variants": [
+        "PAOK",
+        "PAOK Salonika"
+      ]
+    },
+    "1100": {
+      "chosen": "SK Brann",
+      "variants": [
+        "Brann",
+        "SK Brann"
+      ]
+    },
+    "1103": {
+      "chosen": "Ternana",
+      "variants": [
+        "Ternana",
+        "Ternana U."
+      ]
+    },
+    "1184": {
+      "chosen": "Genk",
+      "variants": [
+        "Genk",
+        "KRC Genk"
+      ]
+    },
+    "1387": {
+      "chosen": "AC Siena",
+      "variants": [
+        "AC Siena",
+        "Robur Siena",
+        "Siena"
+      ]
+    },
+    "1390": {
+      "chosen": "Cagliari",
+      "variants": [
+        "Cagliari",
+        "Cagliari Calcio"
+      ]
+    },
+    "1465": {
+      "chosen": "Estoril",
+      "variants": [
+        "Estoril",
+        "Estoril Praia"
+      ]
+    },
+    "2331": {
+      "chosen": "AS Avellino",
+      "variants": [
+        "AS Avellino",
+        "Avellino"
+      ]
+    },
+    "2431": {
+      "chosen": "CF Estrela",
+      "variants": [
+        "CF Estrela",
+        "Estrela Amadora"
+      ]
+    },
+    "2655": {
+      "chosen": "Vicenza",
+      "variants": [
+        "LR Vicenza",
+        "Vicenza"
+      ]
+    },
+    "2715": {
+      "chosen": "Seraing United",
+      "variants": [
+        "RFC Seraing",
+        "Seraing United"
+      ]
+    },
+    "2944": {
+      "chosen": "Osmanlispor",
+      "variants": [
+        "Osmanlispor",
+        "Osmanlispor FK"
+      ]
+    },
+    "2972": {
+      "chosen": "Bourg-Péronnas",
+      "variants": [
+        "Bourg-Péronnas",
+        "Bourg-en-Bresse"
+      ]
+    },
+    "3229": {
+      "chosen": "Al-Rayyan",
+      "variants": [
+        "Al-Rayyan",
+        "Al-Rayyan SC"
+      ]
+    },
+    "3725": {
+      "chosen": "Terek Grozny",
+      "variants": [
+        "Akhmat Grozny",
+        "Terek Grozny"
+      ]
+    },
+    "4172": {
+      "chosen": "AC Pisa",
+      "variants": [
+        "AC Pisa",
+        "Pisa"
+      ]
+    },
+    "5817": {
+      "chosen": "SönderjyskE",
+      "variants": [
+        "SönderjyskE",
+        "Sönderjyske"
+      ]
+    },
+    "6195": {
+      "chosen": "Napoli",
+      "variants": [
+        "Napoli",
+        "SSC Napoli"
+      ]
+    },
+    "6676": {
+      "chosen": "Asteras Tripoli",
+      "variants": [
+        "Asteras Aktor",
+        "Asteras Tripoli"
+      ]
+    },
+    "7124": {
+      "chosen": "Quevilly Rouen",
+      "variants": [
+        "QRM",
+        "Quevilly Rouen"
+      ]
+    },
+    "11107": {
+      "chosen": "Fehérvár",
+      "variants": [
+        "Fehérvár",
+        "Videoton FC"
+      ]
+    },
+    "11596": {
+      "chosen": "AD Alcorcón",
+      "variants": [
+        "AD Alcorcón",
+        "Alcorcón"
+      ]
+    },
+    "14171": {
+      "chosen": "Évian",
+      "variants": [
+        "Thonon Évian",
+        "Évian"
+      ]
+    },
+    "21101": {
+      "chosen": "Kristiansund",
+      "variants": [
+        "Kristiansund",
+        "Kristiansund BK"
+      ]
+    },
+    "23826": {
+      "chosen": "Leipzig",
+      "variants": [
+        "Leipzig",
+        "RB Leipzig"
+      ]
+    },
+    "26091": {
+      "chosen": "Lekhwiya SC",
+      "variants": [
+        "Al-Duhail SC",
+        "Lekhwiya SC"
+      ]
+    },
+    "28643": {
+      "chosen": "Waasland-Beveren",
+      "variants": [
+        "SK Beveren",
+        "Waasland-Beveren"
+      ]
+    },
+    "29831": {
+      "chosen": "FC Viitorul",
+      "variants": [
+        "FC Viitorul",
+        "FCV Farul"
+      ]
+    },
+    "33304": {
+      "chosen": "DL Yifang",
+      "variants": [
+        "DL Pro",
+        "DL Yifang"
+      ]
+    },
+    "41274": {
+      "chosen": "Beerschot VA",
+      "variants": [
+        "Beerschot V.A.",
+        "Beerschot VA"
+      ]
+    },
+    "61431": {
+      "chosen": "Bastia-Borgo",
+      "variants": [
+        "Bastia-Borgo",
+        "Borgo"
+      ]
+    }
+  },
+  "method": "louvain",
+  "weighting": "eligible transfer records per directed route",
+  "shared_inputs_sha256": "5fcaa4aca80004746cea36bef29e4e8c02e8d475634ccc6162933cf13880c0a2",
+  "shared_files_sha256": {
+    "observed_routes.csv": "6a620e2a47fb5b0ca09a7a3085bb85451c7858b77fc5beff963842e842c3565b",
+    "shuffled_routes.csv": "c46df6888feacb8f2430840d8e85c06854195cc0af24399e0a5c5419fd86b771",
+    "layout.csv": "1520fb7c5f7f785f8e099c815ba345f161d655ea8678ab91c60663a5334bcf5b"
+  },
+  "settings": {
+    "initial_membership": "singleton",
+    "minimum_move_gain": "strictly positive",
+    "level_improvement_threshold": 1e-07,
+    "level_cap": null,
+    "stopping_rule": "level improvement <= threshold or no moves at the next level"
+  },
+  "tolerance": 1e-10,
+  "versions": {
+    "networkx": "3.6.1",
+    "matplotlib": "3.11.1",
+    "numpy": "2.4.6",
+    "scipy": "1.17.1",
+    "pandas": "3.0.5",
+    "pyvis": "0.3.2"
+  },
+  "runs": {
+    "observed": {
+      "final_q": 0.44563843950387344,
+      "community_count": 5,
+      "accepted_moves": 2145,
+      "candidate_evaluations": 44020,
+      "q_evaluations": 48317,
+      "accepted_move_verification_calls": 2145,
+      "node_visits": 9285,
+      "sweeps": 12,
+      "attempted_levels": 3,
+      "completed_levels": 2,
+      "max_accepted_gain_error": 3.122502256758253e-16,
+      "max_aggregation_error": 0.0,
+      "stopping_reason": "a higher level without accepted moves",
+      "networkx_public_partition_matches": true
+    },
+    "shuffled": {
+      "final_q": 0.21251547425286088,
+      "community_count": 16,
+      "accepted_moves": 1418,
+      "candidate_evaluations": 90037,
+      "q_evaluations": 92882,
+      "accepted_move_verification_calls": 1418,
+      "node_visits": 5852,
+      "sweeps": 15,
+      "attempted_levels": 4,
+      "completed_levels": 3,
+      "max_accepted_gain_error": 1.0408340855860843e-16,
+      "max_aggregation_error": 0.0,
+      "stopping_reason": "a higher level without accepted moves",
+      "networkx_public_partition_matches": true
+    }
+  },
+  "q_observed": 0.44563843950387344,
+  "q_shuffled": 0.21251547425286088,
+  "observed_community_sizes": [
+    344,
+    229,
+    214,
+    193,
+    177
+  ],
+  "verification": {
+    "all_states_partition_original_clubs": true,
+    "all_saved_q_checks_pass": true,
+    "shuffled_in_out_degrees_and_weight_multiset_preserved": true,
+    "representative_and_contribution_checks_pass": true
+  },
+  "delta_q": 0.23312296525101256
+}

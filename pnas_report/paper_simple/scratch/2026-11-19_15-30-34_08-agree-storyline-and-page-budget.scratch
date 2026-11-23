@@ -6,7 +6,7 @@
 
 ## Status
 
-Open
+Resolved
 
 ## Checkpoint workflow
 
@@ -28,7 +28,7 @@ The repository root is `C:\Users\victo\Codex\Go_Nuts_repos`. The current paper i
 
 Read [REPOSITORY_CONTEXT.md](REPOSITORY_CONTEXT.md) when starting this issue in a new session. It maps the code, data, saved findings, earlier draft, source caveats, and environment limitations. Recheck the current branch and linked planning files when resuming.
 
-The user requested a clean beginning in paper_simple and an agreed storyline before writing prose. paper_storyline.md currently records section-planning questions and open decisions. Available evidence includes a modest H1 comparison, an uncertain H2 change comparison, exploratory H2b level findings, and coverage differences. Their combined interpretation and academic contribution remain to be agreed after the evidence review. The PNAS/course limit is six pages including references.
+The user requested a clean beginning in paper_simple and an agreed storyline before writing prose. Issues 01–07 are Resolved. The approved evidence, literature roles and selected wording are recorded in the evidence inventory and storyline. This issue agrees the central argument, result sequence, section purposes and provisional six-page budget. Issue 09 will settle the figure layout and candidate backbone panel. Issue 15 retains the exploratory H2b explanation, figure and inclusion decision. When the user says “start Issue 08”, follow the [continuation prompt](#continuation-prompt).
 
 ## Related decisions and first interaction
 
@@ -43,6 +43,8 @@ The fresh paper needs an agreed narrative that answers the refined question with
 ## Paper context and supporting files
 
 [Storyline](../paper_storyline.md), [question](../final_research_question.md), [evidence inventory](../evidence_and_sources.md), [requirements](../project_requirements.md).
+
+For H1 and network claims, use the user-confirmed [restricted rerun evidence](../../reruns/h1_2012_13-2024_25/provenance/output_parity_report.md).
 
 ## Next action to discuss
 
@@ -66,3 +68,51 @@ The user agrees on the section argument, result order, and provisional page budg
 
 2026-11-19 15:38:00 Europe/Copenhagen — Added standalone repository context, specific evidence locations, related decisions, and the starting discussion for this issue.
 
+22 November 2026 — The user confirmed Issue 07 and requested a standalone prompt for starting Issue 08. The prompt below carries the approved question, findings, literature decisions, claim boundaries and outstanding figure/H2b dependencies into the storyline and page-budget discussion. Issue 08 remains Open and ready to start.
+
+22 November 2026 — The user invoked the continuation prompt. Reviewed the current checkpoint, question, storyline, evidence inventory, requirements, tone guide, repository context, Issue 07 resolution/literature review and Issue 15. The branch is `integrate-network-text`; existing working-tree changes were retained. The [Issue 08 proposal](../paper_storyline.md#agreed-storyline) records a central descriptive claim, Results order, section purposes, literature placement and provisional page budget for discussion, explicitly not agreement. The plan protects the approved sample wording, complete H1 sensitivity passage and validation table. Two core figures and the table use a 5.55-page allocation; conditional H2b explanation/third figure reserve 0.45 pages, giving 6.00 pages if used. Figure layout remains with Issue 09 and H2b inclusion with Issue 15. Omitting H2b also requires an explicit decision about its mention in the approved sample description. No manuscript drafting, new analysis, plot generation or script rerun occurred. Issue 08 remains Open. Next: discuss and revise the proposed claim, sequence, section purposes and budget with the user before recording agreement or resolution.
+
+## Resolution, 22 November 2026
+
+The user agreed with the storyline and page distribution. The [agreed storyline](../paper_storyline.md#agreed-storyline) records the central descriptive claim, Results order (network context, H1, Guardian measurement/validation, H2, conditional H2b, coverage volume), section purposes, literature roles and provisional six-page allocation. The protected two-figure core and validation table use 5.55 pages; conditional H2b text/third figure reserve 0.45 pages. The exact approved sample description and complete H1 sensitivity passage remain unchanged. Supporting evidence is the resolved Issues 01–07 and the linked saved results in [the evidence inventory](../evidence_and_sources.md), with requirements in [project_requirements.md](../project_requirements.md). No new analysis was needed.
+
+The user requested moving the former [Issue 15](2026-11-21_15-45-35_15-explain-h2b-model-and-figure.scratch) to **Issue 11.1**, after the Discussion planning and before section drafting. Its filename remains stable, and older references to Issue 15 identify the same issue. H2b inclusion is still open. Depending on that decision, the user may wish to explore another text subanalysis with a foundation in course theory; no particular analysis has been selected or run. Issue 11.1 must settle whether to pursue that option, with any selected follow-up and its effects on figures, Methods, Discussion and space agreed before Issue 12 begins.
+
+Updated the [paper checkpoint](../README.md#current-checkpoint), [tracker and work order](README.md#initial-paper-development-issues), [H2b issue](2026-11-21_15-45-35_15-explain-h2b-model-and-figure.scratch) and Issues [09](2026-11-19_15-30-34_09-select-figures-and-plan-cross-references.scratch), [10](2026-11-19_15-30-34_10-plan-reproducible-methods.scratch), [11](2026-11-19_15-30-34_11-agree-discussion-and-claim-boundaries.scratch) and [12](2026-11-19_15-30-34_12-draft-sections-and-confirm-author-details.scratch) to carry this dependency. No new scratch issue was needed for the still-conditional subanalysis. Issue 08 is Resolved. **Next action: Issue 09**, compare the two core figure candidates and the optional backbone pairing, checking source rows, units, uncertainty labels, caption content and readability within the agreed budget. Keep the optional text extension conditional until Issue 11.1.
+
+22 November 2026 handoff — The user explicitly confirmed closing Issue 08 and requested a continuation prompt for Issue 09 in a new context window. Issue 08 remains Resolved. The standalone [Issue 09 continuation prompt](2026-11-19_15-30-34_09-select-figures-and-plan-cross-references.scratch#continuation-prompt) now carries the approved storyline and space plan, fixed figure decisions, source paths, uncertainty/selection caveats and the Issue 11.1-before-drafting dependency. The README checkpoint points to that prompt. No figure selection, manuscript drafting or analysis was performed during this handoff.
+
+## Continuation prompt
+
+Use this prompt when the user asks to start Issue 08.
+
+```text
+Address Issue 08 — Agree the section argument and provisional page budget for the six-page PNAS course report.
+
+Work in C:\Users\victo\Codex\Go_Nuts_repos. The working paper is pnas_report/paper_simple. Start by reading README.md and this Issue 08 scratch file. Then read final_research_question.md, paper_storyline.md, evidence_and_sources.md, project_requirements.md, tone_of_voice.md and scratch/REPOSITORY_CONTEXT.md. Read Issue 07's resolution and scratch/issue07_literature_review.md for the final citation decisions. Issues 01–07 are Resolved. Use their agreed outcomes as the starting point.
+
+The agreed research question is “How does entry into the Premier League differ by player age, and how does the tone of Guardian coverage before and after Premier League signings differ by age?” Compare players aged 30+ and under 30 using completed-years age at transfer. H1 and Guardian analyses use separate event populations. Preserve the exact approved three-paragraph sample description and the complete H1 sensitivity passage in evidence_and_sources.md.
+
+Begin by proposing a central descriptive claim and a result sequence in plain academic English. Explain how each result answers the question and why the transition to the next result is useful. Give one recommended outline and identify only the choices that still need the user's judgement. The first response should make the proposed argument and tradeoffs reviewable before recording agreement.
+
+Use the following fixed evidence and decisions.
+
+- H1 uses the confirmed restricted 2012/13–2024/25 outputs, linked from pnas_report/reruns/h1_2012_13-2024_25/provenance/output_parity_report.md. It includes 16,636 events involving 4,602 players. Joining rates are 12.14% for 30+ and 14.56% for under 30, a gap of −2.42 percentage points. The mean within-origin-club/season shuffled gap is −1.31 points and the one-sided p-value is 0.098. Use the agreed interpretation of limited evidence against this conditional null. The one-transfer-per-player result is conditional on one fixed selection. Preserve its approved motivation, results and limitation.
+- The H1 all-eligible-transfers permutation plot is selected for Results. Carry the α = 0.20 whole-network backbone as a candidate context panel into Issue 09. Its colours use the saved Louvain partition. Keep the feeder analysis and primary seven-transfer figure in the repository. A brief feeder result is optional if space permits and requires the within-season route-null interpretation and unadjusted comparisons. Read the Issue 06 resolution if considering that prose.
+- Include the agreed brief exploratory Leiden comparison. Both methods found five communities with broadly similar memberships and modularity scores of 0.448 and 0.446. Attribute faster runtime to Traag et al.'s original evaluation. Our saved comparison cannot rank their runtimes.
+- Main Guardian tone analysis uses 820 sufficiently covered signings from a separate selection of 1,332 signings. RoBERTa measures how positive or negative selected published sentences read. The approved validation supports a useful but imperfect measure, with age-specific validity uncertain. H2's difference in changes is +0.0060 score units, p = 0.7558, with limited sensitivity to smaller differences. Preserve the approved wording and omit the historical between-age interval whose construction was unverified. Coverage volume includes all selected signings, including zero coverage, and shows greater attention for older signings in both periods. Retain the agreed four-instrument validation table in the space plan.
+- H2b is exploratory and its inclusion remains with scratch/2026-11-21_15-45-35_15-explain-h2b-model-and-figure.scratch. Read it before proposing space for H2b. Show how the provisional budget accommodates inclusion or omission, with the choice explicitly pending Issue 15. Its adjusted tone-level comparison answers a different question from H2's comparison of changes.
+- Use the approved CIES recruitment background and introduce our comparison independently. CIES's 10.6% older-recruit share and H1's 12.14% older-player joining rate measure different quantities. Use Dot Grau–Canter as a precedent for sentiment analysis across multiple newspaper sources including the Guardian. Use Monsees to motivate cultural, linguistic and source limits on generalisation. Ruijg–van Ophem is excluded. The exact selected passages are in the evidence inventory.
+- Methods references are selected in Issue 07. Cite Hemerik–Goeman as the main permutation reference, with Phipson–Smyth and Winkler et al. as support. Preserve the agreed wording about repeated player transfers and articles shared across signings challenging exchangeability. The source inventory distinguishes H1's origin-club-by-season shuffle from H2's season-only shuffle. Sentiment and network papers support their procedures, with Guardian performance supported by this study's validation.
+
+Work toward these deliverables through discussion.
+
+1. A central claim proportionate to the descriptive findings and uncertainty, supported by a compact claim-to-evidence outline. Preserve the separate samples and observational interpretation.
+2. The purpose and intended argument of Introduction, Results, Discussion and Methods, with the result order and transitions. Fit the agreed literature passages into that structure. Give the short answers to the question in Results and develop their meaning in Discussion.
+3. A provisional page-budget table summing to at most six pages, including the 150-word Abstract, two- or three-sentence Significance Statement, all main sections, two or three figure slots, the validation table, author contributions and references. Use page fractions and optional approximate word counts as planning estimates. Allow room for captions and references, and distinguish text space from figure/table space. The compiled template will determine the final fit in later issues.
+4. A clear handoff of pending decisions. Issue 09 settles figure selection and layout, Issue 10 develops reproducible Methods, Issue 11 develops the Discussion, and Issue 15 settles H2b. Link an existing issue when it already tracks a choice. Agree any new issue or change in work order with the user.
+
+This session is for the section argument, result sequence and space plan. Keep full manuscript drafting for the agreed drafting stage. Use the existing saved outputs for evidence. Discuss proposed new data analysis or computational checks with the user before running them. Any approved script rerun must go to a new agent with fork_turns="none". Preserve unrelated working-tree changes.
+
+Once the user agrees on choices, record them in paper_storyline.md and this scratch file, distinguishing agreed choices from proposals and unresolved dependencies. Resolve Issue 08 only after the user confirms satisfaction with the section argument, result order and provisional budget. Update the README checkpoint with the outcome and exact next action, and check that its status agrees with this issue.
+```

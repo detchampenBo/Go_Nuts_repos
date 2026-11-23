@@ -36,13 +36,17 @@ Review the current outcomes of issues [02](2026-11-19_15-30-34_02-reconcile-samp
 
 Discuss what the combined results support in answer to the agreed question, then identify the strongest alternative explanations and limitations.
 
+22 November 2026 scope update: the user selected the unadjusted four-model monthly H2 figure and explicitly omitted H2b. The [decision and stronger rationale](../paper_storyline.md#agreed-figure-2-and-h2b-omission-22-november-2026) state why its narrower, model-dependent contribution does not justify its explanatory and page cost. Do not use its adjusted level gap as a manuscript finding or interpret it in Discussion. Centre interpretation on H1, inconclusive H2 changes, human validation, measurement sensitivity and coverage volume, preserving their existing limitations. Issue 11.1 retains only the possible further text-subanalysis disposition before Issue 12; none is selected or authorised.
+
 ## Question or gap
 
 The Discussion must connect the network and text findings to the question with conclusions proportionate to the evidence. Different sample selections, exploratory analysis, and model limitations affect that interpretation.
 
 ## Paper context and supporting files
 
-[H1 summary](../../output/age_shuffle_outsideprem_toprem_summary.md), [text findings and limitations](../../notes/findings.md), [NLP decisions](../../data/dataset_nlp/decisions.md), [question](../final_research_question.md), [storyline](../paper_storyline.md).
+[H1 summary](../../reruns/h1_2012_13-2024_25/output/age_shuffle_outsideprem_toprem_summary.md), [Historical notes for Guardian context](../../notes/findings.md), [NLP decisions](../../data/dataset_nlp/decisions.md), [question](../final_research_question.md), [storyline](../paper_storyline.md).
+
+For H1 and network claims, use the user-confirmed [restricted rerun evidence](../../reruns/h1_2012_13-2024_25/provenance/output_parity_report.md).
 
 ## Next action to discuss
 
@@ -50,7 +54,7 @@ The Discussion must connect the network and text findings to the question with c
 
 2. Assess selection into the text sample, repeated players, season composition, one-newspaper coverage, and small older-player samples.
 
-3. Address uncertainty in H1 and H2, the exploratory status and control sensitivity of H2b, and sentiment-validation limits.
+3. Address uncertainty in H1 and H2 and sentiment-validation limits. H2b's exploratory evidence remains in the repository and is omitted from the manuscript.
 
 4. Connect the interpretation to the verified literature without assuming that club decisions and press tone influence each other.
 
@@ -65,4 +69,3 @@ The user agrees on the principal interpretation, alternative explanations, and l
 2026-11-19 15:30:34 Europe/Copenhagen — Issue recorded from the agreed planning context. Follow-up work awaits discussion.
 
 2026-11-19 15:38:00 Europe/Copenhagen — Added standalone repository context, specific evidence locations, related decisions, and the starting discussion for this issue.
-

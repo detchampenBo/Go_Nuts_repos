@@ -1,0 +1,229 @@
+--- original/louvain_transfer_backbone.py
+
++++ rerun/louvain_transfer_backbone.py
+
+@@ -26,14 +26,10 @@
+
+ PARITY_ALPHAS = (0.05, 0.10, 0.20, 0.30, 0.50)
+ SNAPSHOT_ALPHAS = (0.10, 0.20, 0.30)
+ SLIDER_ALPHAS = tuple(i / 100 for i in range(1, 101))
+-OBSERVED_Q = 0.43817694309007504
+-CHECKPOINTS = {
+-    "1": ("Inter", 365, 2385, 4699),
+-    "2": ("Lille", 293, 1557, 2397),
+-    "3": ("Atlético Madrid", 210, 1420, 2578),
+-    "4": ("Hoffenheim", 206, 1419, 2185),
+-    "5": ("Wolves", 180, 802, 1144),
+-}
++OBSERVED_Q = json.loads((LOUVAIN / "louvain_results.json").read_text())["q_observed"]
++COMMUNITY_SUMMARY = {row["community_id"]: row for row in csv.DictReader(
++    (LOUVAIN / "community_summary.csv").open(encoding="utf-8"))}
++
+ 
+ 
+ @dataclass(frozen=True)
+@@ -131,9 +127,9 @@
+
+         require(groups.setdefault(group, display) == display, f"Inconsistent display data for {group}")
+         if club.representative:
+             representatives[group] += 1
+-    require(set(groups) == CHECKPOINTS.keys(), "Unexpected display community IDs")
++    require(set(groups) == COMMUNITY_SUMMARY.keys(), "Display communities differ from saved summary")
+     require(representatives == {group: 1 for group in groups}, "Expected one representative per community")
+-    groups = {key: groups[key] for key in CHECKPOINTS}
++    groups = {key: groups[key] for key in COMMUNITY_SUMMARY}
+ 
+     saved_groups = defaultdict(set)
+     saved_clubs = set()
+@@ -161,19 +157,23 @@
+
+     graph.add_nodes_from(sorted(clubs))
+     graph.add_weighted_edges_from((u, v, weight) for (u, v), weight in sorted(edges.items()))
+     require(nx.get_edge_attributes(graph, "weight") == edges, "Directed routes changed during graph construction")
+-    require((len(clubs), len(edges), sum(edges.values())) == (1254, 12794, 19712), "Full checkpoint differs")
++    require((len(clubs), len(edges), sum(edges.values())) == (shared["counts"]["nodes"], shared["counts"]["edges"], shared["counts"]["records"]), "Full checkpoint differs")
+ 
+     graphs = {"whole": graph}
+-    for group, checkpoint in CHECKPOINTS.items():
++    for group, checkpoint in COMMUNITY_SUMMARY.items():
+         subgraph = graph.subgraph(display_groups[group]).copy()
+         actual = (groups[group]["name"], len(subgraph), subgraph.number_of_edges(), subgraph.size(weight="weight"))
+-        require(actual == checkpoint, f"Community {group} checkpoint differs: {actual}")
++        require(actual[0] == checkpoint["community_name"] and actual[1] == int(checkpoint["community_size"]),
++                f"Community {group} checkpoint differs: {actual}")
+         graphs[group] = subgraph
+     internal_routes = sum(g.number_of_edges() for key, g in graphs.items() if key != "whole")
+     internal_weight = sum(g.size(weight="weight") for key, g in graphs.items() if key != "whole")
+-    require((internal_routes, internal_weight) == (7583, 13003), "Internal checkpoint differs")
+-    require((len(edges) - internal_routes, sum(edges.values()) - internal_weight) == (5211, 6709),
+-            "Between-community checkpoint differs")
++    require(internal_routes == sum(clubs[u].community == clubs[v].community for u, v in edges),
++            "Internal route totals disagree")
++    require(internal_weight == sum(w for (u, v), w in edges.items() if clubs[u].community == clubs[v].community),
++            "Internal transfer totals disagree")
++    require(abs(nx.community.modularity(graph, list(display_groups.values()), weight="weight") - OBSERVED_Q) <= 1e-10,
++            "Observed partition Q differs from new saved optimizer result")
+     return clubs, groups, graphs, sum((v, u) in edges for u, v in edges) // 2
+ 
+ 
+@@ -214,7 +214,7 @@
+
+              "to_club_id": route.to_club_id, "transfer_count": route.transfer_count}
+             for scope, data in scopes.items() for route in data.routes
+         ), ["scope", "from_club_id", "to_club_id", "transfer_count"])
+-        subprocess.run(["Rscript", "--vanilla", str(REFERENCE), str(folder), ",".join(map(str, alphas))],
++        subprocess.run(["conda", "run", "-n", "network_analysis", "--no-capture-output", "Rscript", "--vanilla", str(REFERENCE), str(folder), ",".join(map(str, alphas))],
+                        check=True)
+         versions = dict(zip(("R", "R_igraph", "disparityfilter"),
+                             (folder / "versions.txt").read_text(encoding="utf-8").splitlines(), strict=True))
+@@ -233,16 +233,16 @@
+
+         for alpha in alphas:
+             statistical = {r.pair: r.transfer_count for r in scope.routes if r.passes(alpha)}
+             reference = package[name, alpha]
+-            require(reference == statistical,
+-                    f"Statistical parity failed at {name}/{alpha}: "
+-                    f"R-only {sorted(reference.items() - statistical.items())[:10]}, "
+-                    f"Python-only {sorted(statistical.items() - reference.items())[:10]}")
+             retained = {r.pair: r.transfer_count for r in scope.retained(alpha)}
+-            require(retained == (reference | exceptions), f"Paper-rule parity failed at {name}/{alpha}")
++            statistical_match = reference == statistical
++            paper_match = retained == (reference | exceptions)
+             diagnostics.append({
+                 "scope": name, "alpha": alpha, "r_raw_rows": raw_counts[name, alpha],
+                 "r_unique_routes": len(reference), "retained_transfer_count": sum(retained.values()),
+                 "structural_exceptions": len(exceptions), "paper_routes": len(retained),
++                "statistical_match": statistical_match, "paper_rule_match": paper_match,
++                "r_only": sorted(reference.items() - statistical.items()),
++                "python_only": sorted(statistical.items() - reference.items()),
+             })
+     return versions, diagnostics
+ 
+@@ -370,7 +370,8 @@
+
+     sizes = {row["club_id"]: row["node_size"] for row in layout}
+     frame_clubs = sorted({club for route in scope.retained(max(SNAPSHOT_ALPHAS)) for club in route.pair})
+     frame_x, frame_y = zip(*(positions[club] for club in frame_clubs))
+-    markers = dict(zip(groups, ("o", "s", "^", "D", "P"), strict=True))
++    from itertools import cycle
++    markers = dict(zip(groups, cycle(("o", "s", "^", "D", "P"))))
+ 
+     with mpl.rc_context({"font.family": "Arial", "font.size": 9.5, "text.color": "#333333",
+                          "pdf.fonttype": 42, "svg.fonttype": "none", "figure.facecolor": "white"}):
+@@ -413,7 +414,7 @@
+
+                    label=display["name"]) for group, display in groups.items()
+         ]
+         legend = figure.legend(handles=legend_marks, loc="lower center", bbox_to_anchor=(0.5, 0.025),
+-                               ncol=5, fontsize=8, facecolor="white", edgecolor="#BBBBBB", framealpha=1)
++                               ncol=min(5, len(groups)), fontsize=8, facecolor="white", edgecolor="#BBBBBB", framealpha=1)
+         legend.get_frame().set_linewidth(0.6)
+         for suffix in ("pdf", "png", "svg"):
+             figure.savefig(destination / f"louvain_backbone_alpha_comparison.{suffix}", dpi=600)
+@@ -427,7 +428,7 @@
+
+         "# Louvain transfer backbone", "",
+         f"The observed directed network contains {whole['original_clubs']:,} clubs, "
+         f"{whole['original_routes']:,} ordered routes and {whole['original_transfers']:,} recorded transfers. "
+-        f"The saved five-community Louvain partition has modularity Q = {OBSERVED_Q:.6f}.",
++        f"The saved {len(groups)}-community Louvain partition has modularity Q = {OBSERVED_Q:.6f}.",
+         "",
+         "## Whole network", "",
+         "| α | Routes | Transfers | Active clubs | Largest weak component | Between-community routes | Between-community transfers |",
+@@ -469,7 +470,6 @@
+
+     community_rows = [r for r in retention if r["scope"] in groups and r["alpha"] is not None]
+     first_isolate = max((r for r in community_rows if r["isolates"]), key=lambda r: r["alpha"])
+     first_split = max((r for r in community_rows if r["weak_components"] > 1), key=lambda r: r["alpha"])
+-    wolves = lookup["5", 0.10]
+     lines += [
+         "",
+         f"As the slider moves down from 1.00, {groups[first_isolate['scope']]['name']} loses club coverage first "
+@@ -482,14 +482,13 @@
+
+         f"({smallest_active['active_clubs']}/{smallest_active['original_clubs']}) and "
+         f"{groups[smallest_component['scope']]['name']} has the smallest largest weak component relative "
+         f"to its membership ({smallest_component['largest_weak_component']}/{smallest_component['original_clubs']}). "
+-        f"Wolves has {wolves['weak_components']} active weak components across {wolves['active_clubs']} active clubs "
+-        "at that cutoff. Its backbone is empty at α = 0.01.",
++        "The per-community retention table records the full slider grid without historical community assumptions.",
+         "",
+         "## Report cutoff", "",
+         f"Use α = 0.20 as the course-derived starting point and a readable report snapshot. The whole-network "
+         f"view shows {whole['retained_routes_fraction']:.1%} of routes and {whole['retained_transfers_fraction']:.1%} "
+-        f"of transfer volume, with all {whole['active_clubs']:,} active clubs in one weak component covering "
+-        f"{whole['largest_weak_component_fraction']:.1%} of observed clubs. "
++        f"of transfer volume, with {whole['active_clubs']:,} active clubs in {whole['weak_components']} weak components; "
++        f"the largest covers {whole['largest_weak_component_fraction']:.1%} of observed clubs. "
+         f"At 0.10, the sparser drawing retains {lookup['whole', 0.10]['retained_transfers_fraction']:.1%} "
+         f"of volume and has {lookup['whole', 0.10]['weak_components']} active weak components. "
+         f"At 0.30, coverage rises to {lookup['whole', 0.30]['retained_transfers_fraction']:.1%} of volume "
+@@ -510,10 +509,10 @@
+
+         "describes locally concentrated volume under the null. Explaining why a route exists requires "
+         "evidence beyond these transfer counts.",
+         "",
+-        "The [LaTeX subsection](../../paper/transfer_backbone.tex) cites Serrano, Boguñá and Vespignani "
++        "The [LaTeX subsection](../../../../paper/transfer_backbone.tex) cites Serrano, Boguñá and Vespignani "
+         "([2009](https://doi.org/10.1073/pnas.0808904106)) with the key "
+         r"`\cite{serrano2009multiscale}`. Include [the supplied BibTeX file]"
+-        "(../../paper/transfer_backbone_references.bib) in the Overleaf bibliography "
++        "(../../../../paper/transfer_backbone_references.bib) in the Overleaf bibliography "
+         r"and use `\ref{sec:louvain-transfer-backbone}` to refer to the subsection.",
+         "",
+     ]
+@@ -537,15 +536,15 @@
+
+         "",
+         "## Figure caption", "",
+         f"Directed transfer backbones of the same observed network at three local disparity cutoffs. {caption_counts} "
+-        "Panels use fixed positions and node sizes, with colours and symbols identifying the five saved Louvain "
++        f"Panels use fixed positions and node sizes, with colours and symbols identifying the {len(groups)} saved Louvain "
+         "communities. Arrows run from origin to destination and their shafts widen with transfer count.",
+         "",
+         "## Reproduce from the workspace root", "", "```powershell",
+         "conda activate network_analysis",
+-        "python pnas_report/notebooks/louvain_transfer_backbone.py",
++        "conda run -n machine-learning python pnas_report/reruns/h1_2012_13-2024_25/notebooks/louvain_transfer_backbone.py",
+         "python -m unittest discover -s pnas_report/notebooks -p test_louvain_transfer_backbone.py",
+         "```", "",
+-        "The analysis runs R package parity on all six views at five cutoffs before exporting. The retention table "
++        f"The analysis runs R package parity on all {len(scopes)} views at five cutoffs before exporting. The retention table "
+         "includes each slider value and the unfiltered baseline. Missing endpoint scores and unfiltered alpha are "
+         "blank in the CSV. The layout defines the contiguous one-based R vertex index within each scope.", "",
+     ]
+@@ -559,7 +558,9 @@
+
+     print("Verified saved checksums, membership, and all route totals.", flush=True)
+     scopes = {key: score_scope(graph) for key, graph in graphs.items()}
+     versions, parity = reference_check(scopes)
+-    print(f"Verified {len(parity)} directed R parity comparisons.", flush=True)
++    print(f"Completed {len(parity)} directed R parity comparisons; "
++          f"{sum(not row['paper_rule_match'] for row in parity)} paper-rule mismatches. "
++          "Failures remain explicit; scoring and strict cutoffs are unchanged.", flush=True)
+     retention = list(retention_table(scopes, clubs))
+     layouts = {key: list(fixed_layout(scope)) for key, scope in scopes.items()}
+     destination.mkdir(parents=True, exist_ok=True)
+@@ -573,6 +574,12 @@
+
+     save_explorable(destination, scopes, clubs, groups, layouts, retention)
+     save_publication(destination, scopes["whole"], clubs, groups, layouts["whole"])
+     save_docs(destination, scopes, clubs, groups, retention)
++    failed = [row for row in parity if not row["statistical_match"] or not row["paper_rule_match"]]
++    for document in ("README.md", "backbone_summary.md"):
++        with (destination / document).open("a", encoding="utf-8") as handle:
++            handle.write(f"\n\nR reference status: {len(parity)} actual scope/cutoff comparisons completed; {len(failed)} differ. "
++                         "Parity is NOT verified. Python retains the original integer-numerator precision and strict cutoff. "
++                         "See backbone_results.json parity diagnostics and ../../../provenance/backbone_boundary_diagnosis.json.\n")
+     require(input_checksums() == before, "A saved Louvain or shared input changed during analysis")
+     results = {
+         "input_sha256": before, "inputs_unchanged": True,
+@@ -598,6 +605,7 @@
+
+         },
+         "structural_exceptions": {key: sum(r.structural_exception for r in scope.routes) for key, scope in scopes.items()},
+         "parity": parity,
++        "r_parity_passed": all(row["statistical_match"] and row["paper_rule_match"] for row in parity),
+     }
+     (destination / "backbone_results.json").write_text(json.dumps(results, indent=2, ensure_ascii=False) + "\n",
+                                                        encoding="utf-8")

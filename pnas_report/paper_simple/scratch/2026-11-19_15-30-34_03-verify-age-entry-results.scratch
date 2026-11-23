@@ -6,7 +6,7 @@
 
 ## Status
 
-Open
+Resolved
 
 ## Checkpoint workflow
 
@@ -28,7 +28,7 @@ The repository root is `C:\Users\victo\Codex\Go_Nuts_repos`. The current paper i
 
 Read [REPOSITORY_CONTEXT.md](REPOSITORY_CONTEXT.md) when starting this issue in a new session. It maps the code, data, saved findings, earlier draft, source caveats, and environment limitations. Recheck the current branch and linked planning files when resuming.
 
-The saved H1 summary reports 2,735/18,398 under-30 transfers entering the PL (14.87%) and 147/1,314 older transfers (11.19%). It reports an observed gap of about -3.68 percentage points, a null mean around -2.41 points, and one-sided p = 0.045. The one-transfer-per-player check reports p = 0.044 from one fixed sample of 5,213 players. Those saved outcomes exist even though notes/findings.md and the earlier draft still leave H1 unfinished. Trace the JSON fields and code before finalising the numbers or interpretation.
+The restricted H1 summary reports 2,267/15,573 under-30 transfers entering the Premier League (14.56%) and 129/1,063 aged 30+ (12.14%). The older-minus-younger gap is −2.42 percentage points, with one-sided permutation p = 0.098. One fixed transfer per player (4,602 players) gives a gap of −1.94 points and p = 0.074.
 
 ## Related decisions and first interaction
 
@@ -42,9 +42,15 @@ The earlier draft leaves H1 as a placeholder even though saved results exist. Th
 
 ## Paper context and supporting files
 
-[Age summary](../../output/age_shuffle_outsideprem_toprem_summary.md), [results JSON](../../output/age_shuffle_outsideprem_toprem_results.json), [implementation](../../notebooks/age_shuffle_outsideprem_toprem.py), [sampling explanation](../../notes/one_transfer_per_player_sampling_methodology.md).
+[Age summary](../../reruns/h1_2012_13-2024_25/output/age_shuffle_outsideprem_toprem_summary.md), [results JSON](../../reruns/h1_2012_13-2024_25/output/age_shuffle_outsideprem_toprem_results.json), [independent permutation verification](../../reruns/h1_2012_13-2024_25/provenance/h1_verification.json), [original implementation used by the rerun](../../notebooks/age_shuffle_outsideprem_toprem.py), [sampling explanation](../../notes/one_transfer_per_player_sampling_methodology.md).
+
+For H1 and network claims, use the user-confirmed [restricted rerun evidence](../../reruns/h1_2012_13-2024_25/provenance/output_parity_report.md).
 
 ## Next action to discuss
+
+21 November 2026 resolution: the user confirmed satisfaction with Issue 03 and authorised closure. The [agreed wording](../evidence_and_sources.md#agreed-paper-wording-and-resolution) preserves the main interpretation and complete sensitivity motivation, result and fixed-selection limitation. No further Issue 03 action is pending. Begin Issue 04 in a fresh context with the measurement definition and saved validation/player-matching evidence. The original review checklist below is retained as history.
+
+The restricted computations and results are user-confirmed. Use the saved restricted JSON, summary, and verification for the paper evidence review below after issue 02. Agree the strength and wording of the H1 claim before closing this paper issue.
 
 1. Reconcile age-group totals, Premier League arrivals, joining rates, and gap against saved results and implementation.
 
@@ -62,7 +68,67 @@ The H1 claim, essential numbers, null interpretation, and sensitivity limitation
 
 ## Progress and resolution
 
+21 November 2026 — The resumed check matched all 14 restricted H1 artifact hashes. Use the already verified restricted [result](../../reruns/h1_2012_13-2024_25/output/age_shuffle_outsideprem_toprem_results.json) and [permutation verification](../../reruns/h1_2012_13-2024_25/provenance/h1_verification.json) for the paper evidence review. The main and fixed-player p values are 0.098 and 0.074. The H1 producer did not run again.
+
 2026-11-19 15:30:34 Europe/Copenhagen — Issue recorded from the agreed planning context. Follow-up work awaits discussion.
 
 2026-11-19 15:38:00 Europe/Copenhagen — Added standalone repository context, specific evidence locations, related decisions, and the starting discussion for this issue.
 
+20 November 2026 — Added dependency on the approved restricted-period H1/player-sensitivity rerun. New input is saved in the [rerun folder](../../reruns/h1_2012_13-2024_25/README.md); primary estimates/p values are pending rerun and verification. The original outputs are preserved as historical comparison evidence.
+
+### 21 November 2026 — Evidence reconciled; interpretation awaiting discussion
+
+Reviewed the accepted restricted parity report, results JSON, summary and h1_verification.json alongside the original H1 producer, sampling-method note and closed H1 rerun issue. No analysis, producer or verification script was rerun; no robustness check was added. Issue 02 is Resolved and its exact approved three-paragraph sample description is preserved. Existing unrelated working-tree changes are retained.
+
+- Main: under 30 has 2,267 arrivals / 15,573 eligible transfers (14.557246516%); 30+ has 129 / 1,063 (12.135465663%). Totals are 2,396 arrivals / 16,636 transfers involving 4,602 players. Other destinations remain in the denominators. Gap −2.421780853 percentage points; saved mean shuffled gap −1.314527914; observed gap about 1.11 points below that mean.
+- Fixed-player subset: 925 / 4,310 (21.461716937%) under 30 and 57 / 292 (19.520547945%) aged 30+. There are 982 arrivals / 4,602 selected events, one per player. Gap −1.941168992 points; saved mean shuffled gap +0.458181539; observed gap about 2.40 points below that mean.
+- Null: binary age labels are exchangeable within origin club and recorded season, conditional on fixed transfer records and joining outcomes. Stratum age counts and group denominators remain fixed. Different age-group mixes across strata with different PL arrival rates can produce a nonzero pooled null expectation. The differences from the shuffled means are descriptive null comparisons, not adjusted causal effects.
+- In 999 shuffles, main has 97 gaps at or below observed, including 15 ties; (97 + 1) / 1,000 = 0.098. Sensitivity has 73, including 27 ties; (73 + 1) / 1,000 = 0.074. The lower tail matches the directional alternative. Neither p is below 0.05; neither is a probability that the hypothesis is true.
+- Sensitivity: one event is uniformly sampled per player from the restricted input, once, then fixed for all permutations. It removes repeated contributions but changes weighting and age/club-season composition, does not average over alternative selections, does not prove exchangeability and is not an independent replication. Its sign persists in this particular draw. The sampling note's 5,213-player example is historical; 4,602 is current.
+- Earlier findings/draft mention a planned restriction to origin clubs with previous PL sales. No supporting result appears in the reviewed implementation and accepted H1 artifacts. Do not claim that check was executed. The earlier draft's “H1 supported” and “no age gap” alternatives both overstate what these results establish.
+
+Exact sources, field names, counts, null explanation and two proposed paper paragraphs are in [evidence_and_sources.md](../evidence_and_sources.md#issue-03-h1-evidence-review-21-november-2026). The [research-question planning file](../final_research_question.md) and [storyline](../paper_storyline.md) carry the proposed claim boundary without changing the agreed question. The [README checkpoint](../README.md) records the pending discussion and exact next action.
+
+Read-only preservation checks matched all 14 accepted H1 artifact hashes, confirmed the approved sample block is exactly unchanged, and matched the pre-edit hashes of all 16 unrelated modified tracked files. `git diff --check` passed for the five edited planning/issue files. These were file/content checks, not analysis reruns.
+
+Proposed interpretation: report the lower observed rate for older transfers, with limited evidence against the specified club-season null. Do not claim a demonstrated age-related disadvantage, no age gap, equivalence, a causal age effect, discrimination or complete explanation by club-season composition. The fixed-player result is a qualified sensitivity observation only. This recommendation awaits the user's wording decisions and satisfaction confirmation.
+
+Next action: discuss the proposed paragraphs and qualifications. Revise if requested, then resolve only after user confirmation and update the README. After resolution, Issue 04 defines Guardian tone and reviews saved sentiment validation and player-matching/focus checks. Additional analyses require prior discussion and any newly approved script rerun must use a new agent with `fork_turns="none"`. No additional analysis or new issue has been approved here.
+
+### 21 November 2026 — Main interpretation accepted; connection to research question under discussion
+
+The user stated agreement with the main-analysis interpretation and asked whether to connect H1 to the research question now or reserve that connection for Discussion. This is partial agreement, not confirmation of satisfaction with the whole issue or the sensitivity wording. Issue 03 remains Open.
+
+Recommendation for discussion: establish the connection now in planning. In the paper, Results should briefly orient H1 to the entry-by-age component of the question and provide the observed comparison with its conditional-null uncertainty. Discussion should develop explanations, implications, alternative mechanisms, generalisation and eventual synthesis with the separately reviewed Guardian results. The result answers the descriptive entry question within the eligible recorded-transfer sample; it does not establish that age itself restricts access.
+
+Recorded this partial agreement and presentation proposal in the evidence inventory, research-question planning file, storyline and README checkpoint. No analyses or new checks were run. Next action: agree this presentation, then confirm the fixed-player sensitivity wording and overall satisfaction before resolving Issue 03.
+
+### 21 November 2026 — Results/Discussion framing agreed; final sensitivity discussion
+
+The user accepted continuing after the proposed division between Results and Discussion. Record the main interpretation and that framing as agreed: Results briefly answers entry by age with the observed rates and uncertainty; Discussion develops broader meaning and explanations. Exact prose remains subject to drafting.
+
+The remaining [proposed sensitivity paragraph](../evidence_and_sources.md#agreed-paper-wording-and-resolution) now includes the 4,602-player draw, rates of 19.52% for 30+ versus 21.46% under 30, gap −1.94 points, one-sided p = 0.074, and the explicit limitation that one fixed selection does not assess variation across alternative selections. Recommendation: use it as a supporting result for the same descriptive direction in this subset, with selection details in Methods and changed weighting/exchangeability limitations in Methods/Discussion. Do not claim that it confirms H1 or establishes general robustness to repeat players. Its smaller p-value compares with a different null distribution and does not establish a stronger effect.
+
+No new analysis is needed for that qualified wording and none was run. Updated the evidence inventory, research-question planning, storyline and README next action. Issue 03 remains Open. Next: obtain the user's response to the sensitivity interpretation/paragraph and confirmation of overall satisfaction, then resolve and advance the checkpoint to Issue 04.
+
+### 21 November 2026 — Sensitivity motivation approved and incorporated
+
+The user requested context explaining why one transfer per player is fair and valuable, then approved this exact wording:
+
+> Players can make several transfers over their careers, so frequent movers contribute more observations to the main analysis and may disproportionately influence the comparison between age groups. As a sensitivity check, we selected one eligible transfer uniformly at random for each player and repeated the permutation analysis on this fixed sample. This gave every eligible player equal representation, allowing us to examine whether the observed age difference also appeared after removing repeated contributions.
+
+Incorporated those three sentences unchanged before the sensitivity result and fixed-selection limitation in the [evidence inventory](../evidence_and_sources.md#agreed-paper-wording-and-resolution). The rationale motivates complementary player weighting without assuming that event weighting necessarily biased the main estimate. Recorded the reader-context requirement in the storyline and consolidated the README checkpoint around the current agreements and remaining action. Issue 02's exact approved sample wording is untouched. No analysis was rerun and no robustness check was added.
+
+Next action: present the complete sensitivity passage for review and obtain confirmation of satisfaction with Issue 03 as a whole. This approval of the motivation is not itself overall confirmation; Issue 03 remains Open. After confirmation, record the resolution and advance the README to Issue 04's tone definition and sentiment/player-matching validation review.
+
+### 21 November 2026 — Resolved after explicit user confirmation
+
+The user stated: “I am satisfied with Issue03 and you can mark it as resolved.” All completion criteria are met; this issue is Resolved. The confirmation supersedes all earlier pending-discussion and Open-status entries in this history.
+
+Agreed outcome: the restricted main analysis describes lower observed PL entry rates for older transfers, with limited evidence against the within-origin-club/season permutation null. Preserve the distinction between the raw −2.42-point gap and the −1.31-point shuffled mean, and the inclusive lower-tail plus-one p = 0.098. The fixed-player result is a supporting sensitivity observation (gap −1.94 points; shuffled mean +0.46; p = 0.074), conditional on one selection. The approved complete sensitivity passage explains repeated career transfers, frequent movers' greater weight and equal player representation before giving the result and fixed-selection limitation. Neither result establishes causality, discrimination, equivalence or stability across alternative selections.
+
+Results briefly answers the entry-by-age clause of the research question with the comparison and uncertainty; Discussion develops explanations and broader meaning. No analysis or robustness check was added or rerun. The planned prior-PL-sales restriction is not an executed check. Issue 02's exact approved study-sample paragraphs are preserved.
+
+Supporting sources remain the accepted restricted [results JSON](../../reruns/h1_2012_13-2024_25/output/age_shuffle_outsideprem_toprem_results.json), [summary](../../reruns/h1_2012_13-2024_25/output/age_shuffle_outsideprem_toprem_summary.md), [independent verification](../../reruns/h1_2012_13-2024_25/provenance/h1_verification.json), [parity handoff](../../reruns/h1_2012_13-2024_25/provenance/output_parity_report.md) and [implementation](../../notebooks/age_shuffle_outsideprem_toprem.py).
+
+Updated [evidence and approved prose](../evidence_and_sources.md#agreed-paper-wording-and-resolution), [research-question planning](../final_research_question.md), [storyline](../paper_storyline.md), [README checkpoint](../README.md), [issue tracker](README.md), [repository context](REPOSITORY_CONTEXT.md) and [Issue 04 handoff](2026-11-19_15-30-34_04-review-sentiment-measurement-validation.scratch). No new issue was needed. Next action: initialise Issue 04 in a fresh context, discuss what Guardian tone measures, then trace sentence/signing aggregation and saved sentiment and player-matching/focus validation. Work interactively and close Issue 04 only after user satisfaction confirmation.

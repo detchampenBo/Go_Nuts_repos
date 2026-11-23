@@ -1,0 +1,47 @@
+# 09a Produce a Guardian period-comparison candidate
+
+## Created
+
+22 November 2026, 18:45:20 Europe/Copenhagen. Presentation follow-up to Issue 09, requested by the user.
+
+## Status
+
+Resolved
+
+## Checkpoint workflow
+
+Read the current checkpoint in [the paper README](../README.md) and the latest [Issue 09 decisions](2026-11-19_15-30-34_09-select-figures-and-plan-cross-references.scratch) when resuming. Record evidence and decisions here and in affected plans. Keep the README and tracker consistent. Resolve only after the user confirms satisfaction; otherwise record partial progress and the exact next discussion.
+
+## Starting context and authorisation
+
+Work in `C:\Users\victo\Codex\Go_Nuts_repos`, branch `integrate-network-text`, with the paper in `pnas_report/paper_simple`. Preserve unrelated changes and all historical figures. The user likes the existing monthly tone figure and prefers its relationship to the course's temporal-arc presentation. They also requested an additional plot of the proposed before/after comparison to judge alongside it. The monthly preference is recorded, but final Figure 2 selection remains open. The existing monthly PDF shows adjusted H2b tone; the new candidate shows the core H2 comparison. H2b inclusion remains with Issue 11.1.
+
+The user authorised producing this new presentation from saved rows. No new statistical analysis, model, permutation or bootstrap run is requested. Following the recorded fresh-context requirement, production was dispatched to a new agent with `fork_turns="none"`. Do not invoke the existing Guardian producer, which also overwrites earlier-draft compatibility PDFs.
+
+## Deliverable and sources
+
+Create [a new plotting script](../../notebooks/plot_guardian_period_comparison.py) and an isolated [output folder](../../output/guardian_period_comparison_findings/) containing combined and standalone tone/coverage PDF, 600 dpi PNG and editable-text SVG exports, plus a README with source selectors, reproduction command, caption and verification evidence.
+
+- Tone means: [a1_age30_levels.csv](../../data/dataset_nlp/results/a1_age30_levels.csv), RoBERTa before/after mean columns only. Main n, changes and test: [a1_age30_results.csv](../../data/dataset_nlp/results/a1_age30_results.csv), RoBERTa/main. Ignore the unverified historical between-age interval.
+- Coverage medians: [a1_coverage_age.csv](../../data/dataset_nlp/results/a1_coverage_age.csv), all article types, season only, before/after median columns. This is a descriptive count display; do not reuse the modelled ratios as arithmetic article ratios.
+- Style: [PLOTTING_STYLE.md](../../PLOTTING_STYLE.md), with 17.8 cm combined width from the supplied PNAS template. Older orange circles, younger dark-brown squares; readable labels; no uncertainty bars or signed-score percentage changes. Tone uses 67/753 signings; coverage uses 88/1,244 including zeros.
+
+## Course connection and pending selection
+
+The saved [Week 7 sentiment section](<../../../data/week7/Week 7 · From meaning to measurement · 02805.html#sentiment>) motivates measuring change over time and illustrates sentiment trajectories with smoothing across a narrative. That supports the user's preference for a temporal view. A signing-centred monthly arc is this project's adaptation; the course example does not validate the covariate adjustment in the existing H2b plot. Discuss which comparison the eventual paper figure needs to communicate, keeping monthly descriptive trajectories distinct from the tested signing-level period changes.
+
+## Verification and completion criteria
+
+Match plotted values and denominators to saved source rows. Check input hashes and unchanged historical PDF hashes. Inspect rendered combined and standalone PDFs at final physical size and in grayscale; verify embedded fonts, rotation, dimensions, vector output and absence of clipped or overlapping labels. Keep captions explicit about windows, sentence filtering, equal signing weight, separate samples and missing uncertainty intervals. Record produced/verified artifacts separately from the user's eventual figure choice.
+
+Resolve when the user confirms satisfaction with the produced comparison or explicitly declines it after inspection. Return the Figure 2 choice and any layout/caption consequences to Issue 09, the storyline and checkpoint. Issue 09 remains open meanwhile.
+
+## Progress
+
+22 November 2026 - Production authorised and dispatched to a fresh-context agent. Next: inspect and verify the new exports, then compare them with the preferred monthly figure. The existing figures remain preserved, and no manuscript section is being drafted.
+
+22 November 2026 - The fresh-context agent produced [the combined candidate](../../output/guardian_period_comparison_findings/combined.pdf), [tone alone](../../output/guardian_period_comparison_findings/mean_roberta_tone.pdf) and [coverage alone](../../output/guardian_period_comparison_findings/median_article_counts.pdf), each with PNG/SVG companions. The [output README](../../output/guardian_period_comparison_findings/README.md) supplies the source selectors and draft caption; [verification.json](../../output/guardian_period_comparison_findings/verification.json) records matched saved values/counts, dimensions, embedded Arial, zero rotation, vector PDF content, 600 dpi PNGs and editable SVG text. All 21 pre-existing PDFs checked under the historical paper/figures and output folders retain their hashes. The primary agent also inspected the combined PDF's colour/grayscale renders and standalone colour renders. This is a new presentation of saved results; no statistical analysis was rerun. It is ready for comparison, with user satisfaction and final Figure 2 selection pending. Final manuscript fit remains unverified.
+
+## Resolution, 22 November 2026
+
+After comparing presentations, the user explicitly selected Issue 09b's four-model unadjusted monthly H2 figure for the paper. This produced and verified two-period comparison is not selected; preserve it as a working alternative in the repository. The [agreed selection](../paper_storyline.md#agreed-figure-2-and-h2b-omission-22-november-2026) and paper checkpoint record this disposition. Issue 09a is Resolved with its requested comparison completed; core manuscript captions/layout remain with Issue 09.

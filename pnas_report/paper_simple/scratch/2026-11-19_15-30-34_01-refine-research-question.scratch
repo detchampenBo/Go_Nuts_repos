@@ -6,7 +6,7 @@
 
 ## Status
 
-Waiting for discussion
+Resolved
 
 ## Checkpoint workflow
 
@@ -44,6 +44,8 @@ The starting question joins Premier League entry with changes in Guardian tone. 
 
 [Current question](../final_research_question.md), [original question and hypothesis history](../../notes/question.md), [writing preferences](../tone_of_voice.md).
 
+For H1 and network claims, use the user-confirmed [restricted rerun evidence](../../reruns/h1_2012_13-2024_25/provenance/output_parity_report.md).
+
 ## Next action to discuss
 
 1. Discuss the academic motivation for connecting age, recruitment, and media coverage.
@@ -60,7 +62,14 @@ The user agrees on wording and scope. Record the agreed version and reasons in f
 
 ## Progress and resolution
 
+Outcome: the user confirmed option A's scope and phrasing 4, recorded in [final_research_question.md](../final_research_question.md). Issue 01 is Resolved. The next issue is [02 Reconcile transfer and text samples](2026-11-19_15-30-34_02-reconcile-samples-and-data-provenance.scratch); population and period qualifications remain provisional for that review.
+
 2026-11-19 15:30:34 Europe/Copenhagen — Issue recorded from the agreed planning context. Follow-up work awaits discussion.
 
 2026-11-19 15:38:00 Europe/Copenhagen — Added standalone repository context, specific evidence locations, related decisions, and the starting discussion for this issue.
 
+2026-11-20 15:45:00 Europe/Copenhagen — Reviewed the checkpoint, planning documents, original question and hypothesis history, saved H1 summary, H2 results, and H2b control table on branch `integrate-network-text`. Prepared three proposed questions in [final_research_question.md](../final_research_question.md): A connects entry with coverage tone, B retains the narrower change-in-tone question, and C also makes coverage volume central. Recommended A for discussion, with H1 and H2 retained, H2b an explicitly exploratory extension, and coverage volume supporting interpretation. No substantive choice is agreed. Recorded that the analyses do not yet establish one shared cohort, that a tone-level gap does not demonstrate a change caused by entry, and that network scope and literature context remain with issues 06 and 07. Numerical checks here locate saved evidence; the audits in issues 03-05 remain outstanding. Updated the README checkpoint to the same pending decision.
+
+2026-11-20 15:56:00 Europe/Copenhagen — The user selected option A and requested alternative phrasings with the same meaning. Recorded its agreed scope in [final_research_question.md](../final_research_question.md): entry and coverage tone, with H2b exploratory and coverage volume supporting. Exact wording remains pending. Updated this issue and the README checkpoint to identify sentence refinement as the next discussion.
+
+2026-11-20 16:00:00 Europe/Copenhagen — Resolved following the user's explicit instruction to lock in phrasing 4: "How does entry into the Premier League differ by player age, and how does the tone of Guardian coverage before and after Premier League signings differ by age?" The parallel clauses distinguish the recruitment and coverage comparisons and make coverage timing explicit. The agreed scope retains the 30+/under-30 comparison, H1 and H2 as central analyses, H2b as an exploratory extension concerning tone levels, and coverage volume as supporting context. Supporting material remains the saved H1 summary, H2 and H2b tables, and original hypothesis history linked in [final_research_question.md](../final_research_question.md); their full audits remain with issues 03-05. Recorded the final wording, rationale, and sample-dependent qualifications in that file and updated the [README checkpoint](../README.md). No new issues were needed. Next action in issue 02: compare sample eligibility, periods, units, age definitions, and matching keys before describing how the datasets relate.

@@ -1,0 +1,67 @@
+# 00 Reduce and record H1 data
+
+## Created
+
+2026-11-20 16:38:41 Europe/Copenhagen. Restricted-period rerun batch.
+
+## Status
+
+Resolved
+
+## Fresh-context requirement
+
+The user requires script reruns to be performed by a NEW agent in a FRESH context window. Dispatch with `fork_turns="none"`, providing this file's absolute path and the rerun README. The original planning agent must not execute statistical/structural reruns. New agents must read saved instructions/provenance instead of depending on inherited chat. If continuing in another context, hand off using the same saved records. Data reduction already happened before this requirement; verify it afresh.
+
+## Checkpoint workflow
+
+1. Read the [paper checkpoint](../../../paper_simple/README.md), [rerun index](../README.md), [original Issue 02](../../../paper_simple/scratch/2026-11-19_15-30-34_02-reconcile-samples-and-data-provenance.scratch) and [repository context](../../../paper_simple/scratch/REPOSITORY_CONTEXT.md); recap the next action.
+2. Verify dependencies and [reduction manifest](../provenance/reduction_manifest.json). The approved period supersedes older keep-H1-unchanged statements; do not ask for that decision again. Original Issue 02 remains Open pending its own criteria and user confirmation.
+3. Execute authorised work and checks. Discuss changes to methods, eligibility beyond season, ownership evidence or substantive presentation before implementing them. Necessary path/snapshot plumbing is authorised and must be logged.
+4. Preserve original data/results. Write new inputs/results/figures/executed notebooks/provenance inside `pnas_report/reruns/h1_2012_13-2024_25/`, reusing original relative output/ and figures/ names. Never mix old and new results.
+5. Append dated progress with actual commands, environment, checks and evidence. Update this issue, rerun index, paper checkpoint and evidence inventory with the exact next step. Mark Resolved only after criteria and user satisfaction confirmation; otherwise record execution status plainly.
+
+## Starting context and approved decision
+
+Repository: `C:/Users/victo/Codex/Go_Nuts_repos`; paper: `pnas_report/paper_simple`. The user approved H1 and dependent transfer/network reruns for recorded seasons **2012/13-2024/25**, retaining other eligibility/methods and identical output forms. H1/H2 are separate study samples; text analyses stay unchanged. Original broad-period outputs remain historical evidence. New input relative to this run: `data/outsideprem_toprem_eligible_transfers.csv.gz`, SHA-256 `48247e435eb0256405f778cafcfdba4eea39651a009fa61f88c41c907d36055a`. Use the original league lookup, whose hash is recorded. No hypothesis/structural reruns have yet been executed at issue creation.
+
+## Dependencies
+
+Approved period decision; no statistical prerequisite.
+
+## Paper context and supporting files
+
+- [reduce_h1_data.py](../reduce_h1_data.py)
+- [Paper evidence](../../../paper_simple/evidence_and_sources.md)
+- [Baseline filenames, hashes and schemas](../provenance/baseline_outputs_manifest.json)
+
+## Work and verification
+
+Run reduce_h1_data.py against the original prefiltered H1 CSV. Select ONLY recorded transfer_season labels 12/13 through 24/25 inclusive; preserve columns, every retained field and row order. No date cutoff, new club/loan/value/age filter or other eligibility change is approved. Save the restricted CSV, retained/excluded original row indices and event keys, season/age counts, and source/output/code/context hashes.
+
+This reduction was executed before the fresh-agent requirement was added. A new agent must independently verify the saved artifact and reproduce its deterministic compressed hash before downstream execution. Expected: 19,712 original = 16,636 retained + 3,076 removed; 4,602 players; 15,573 under 30 / 1,063 aged 30+; 1,157 clubs / 11,016 routes. Actual dates span 2012-07-01 to 2025-07-15 because the rule uses SOURCE SEASON. Do not remove July 2025 rows silently. Update evidence_and_sources.md with the saved dataset and manifest, not only prospective counts.
+
+## Required artifacts
+
+Paths are relative to this run root. Preserve filenames/formats and existing table schemas; data-dependent sizes and values change. Consult the baseline manifest for exact CSV columns and JSON contracts. Additional exports naturally produced by the same existing code must be logged; they cannot replace missing baseline outputs.
+
+- `data/outsideprem_toprem_eligible_transfers.csv.gz`
+- `provenance/reduction_manifest.json`
+- `provenance/retained_source_rows.csv`
+- `provenance/excluded_source_rows.csv`
+- `provenance/sample_by_season.csv`
+
+## Resolved when
+
+Every listed artifact is regenerated or, for issue 00, verified; specified method/data/dependency checks pass; new outputs trace to the restricted input; original baseline hashes remain unchanged; findings and handoff are recorded and the user confirms satisfaction. Do not claim skipped dependency/evidence checks are successful.
+
+## Progress and resolution
+
+2026-11-20 16:38:41 Europe/Copenhagen - Data reduction executed and verified before fresh-agent instruction; independent verification and satisfaction confirmation pending. No statistical rerun performed.
+
+
+20 November 2026 — Fresh-context agent /root/restricted_h1_reruns independently executed reduce_h1_data.py. Exact deterministic compressed SHA-256 reproduced (48247e435eb0256405f778cafcfdba4eea39651a009fa61f88c41c907d36055a), including retained/excluded rows, fields and order. Counts match the manifest; no July 2025 records removed.
+
+
+2026-11-20T17:02:02.605428+01:00 ? PAUSED at user request for shutdown. No further computation authorised until explicit resume. Saved execution state, partial artifacts, ownership coverage gap and backbone R-parity failure are recorded in [PAUSE_CHECKPOINT.md](../PAUSE_CHECKPOINT.md). Use a new fresh-context agent when resuming; do not repeat verified H1 automatically. This issue is not resolved by pause.
+
+21 November 2026 — The user verified and accepted the current computations and new results and confirmed closure of this rerun issue.

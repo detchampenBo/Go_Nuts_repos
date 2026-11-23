@@ -28,7 +28,7 @@ The repository root is `C:\Users\victo\Codex\Go_Nuts_repos`. The current paper i
 
 Read [REPOSITORY_CONTEXT.md](REPOSITORY_CONTEXT.md) when starting this issue in a new session. It maps the code, data, saved findings, earlier draft, source caveats, and environment limitations. Recheck the current branch and linked planning files when resuming.
 
-Network code lives in notebooks, while the Guardian pipeline and text analysis code live under data/dataset_nlp. The graph README is an incomplete scaffold. Full raw Guardian text and scoring caches are described as external to Git, while derived results are available locally. Reproduction documentation names different Conda environments, and an earlier test attempt in network_analysis failed on dependencies and an import. This issue plans the necessary Methods and evidence of reproducibility before any agreed rerun.
+Use the restricted execution log and its recorded input selection, environments, commands, and method checks for H1 and network Methods. Guardian code and derived tables live under data/dataset_nlp. Full raw Guardian text and scoring caches are described as external to Git.
 
 ## Related decisions and first interaction
 
@@ -36,13 +36,17 @@ Review the current outcomes of issues [02](2026-11-19_15-30-34_02-reconcile-samp
 
 Agree the minimum study-specific detail needed for reproduction, then map it to the actual implementation and available inputs. Discuss any proposed reruns or environment changes before undertaking them.
 
+22 November 2026 scope update: the user selected the unadjusted four-model monthly H2 figure and explicitly omitted H2b. Follow the [decision and stronger rationale](../paper_storyline.md#agreed-figure-2-and-h2b-omission-22-november-2026). Omit H2b regression, adjustment/quote-removal procedures and dedicated citations from the manuscript Methods. The current approved sample wording removes only the H2b sentence under that instruction, retaining all other wording. Explain H2's monthly aggregation/saved smoothing separately from signing-period means and the season-restricted permutation test. Issue 11.1 retains only the possible further text-subanalysis disposition; no new analysis is selected. Reconcile any later explicitly agreed follow-up before Issue 12.
+
 ## Question or gap
 
 The user wants accessible explanations and citations for technical theory. The course also requires enough study-specific information for a reader to reproduce the work.
 
 ## Paper context and supporting files
 
-[Tone guide](../tone_of_voice.md), [requirements](../project_requirements.md), [evidence inventory](../evidence_and_sources.md), [graph data](../../data/dataset_graph/), [NLP pipeline](../../data/dataset_nlp/pipeline/), [NLP analysis](../../data/dataset_nlp/sentiment/).
+[Tone guide](../tone_of_voice.md), [requirements](../project_requirements.md), [evidence inventory](../evidence_and_sources.md), [restricted transfer input](../../reruns/h1_2012_13-2024_25/data/outsideprem_toprem_eligible_transfers.csv.gz), [restricted execution log](../../reruns/h1_2012_13-2024_25/provenance/run_log.md), [NLP pipeline](../../data/dataset_nlp/pipeline/), [NLP analysis](../../data/dataset_nlp/sentiment/).
+
+For H1 and network claims, use the user-confirmed [restricted rerun evidence](../../reruns/h1_2012_13-2024_25/provenance/output_parity_report.md).
 
 ## Next action to discuss
 
@@ -52,7 +56,7 @@ The user wants accessible explanations and citations for technical theory. The c
 
 3. Check available inputs and saved outputs against the steps needed for reproduction. Document article text and caches held outside the repository.
 
-4. Reconcile environment instructions before any agreed rerun, given the earlier missing leidenalg, unavailable Rscript, and NetworkX import errors.
+4. Use the environments and versions in the execution log. Carry the documented backbone comparison and browser limits into Methods if the backbone is used.
 
 5. Record any unresolved statistical-method questions from issues 03 to 05 before drafting their interpretation.
 
@@ -62,7 +66,8 @@ paper_storyline.md contains an agreed Methods outline, and evidence_and_sources.
 
 ## Progress and resolution
 
+21 November 2026 — Use the [restricted execution log](../../reruns/h1_2012_13-2024_25/provenance/run_log.md), [reduction manifest](../../reruns/h1_2012_13-2024_25/provenance/reduction_manifest.json) and [additional ownership screen](../../reruns/h1_2012_13-2024_25/provenance/ownership_screen_28_routes.md) for the restricted transfer evidence. Record the source-season selection and distinguish the feeder count, H1 denominator and Guardian sample. If using the backbone, cite the [diagnosed R cutoff discrepancy](../../reruns/h1_2012_13-2024_25/provenance/backbone_boundary_diagnosis.json).
+
 2026-11-19 15:30:34 Europe/Copenhagen — Issue recorded from the agreed planning context. Follow-up work awaits discussion.
 
 2026-11-19 15:38:00 Europe/Copenhagen — Added standalone repository context, specific evidence locations, related decisions, and the starting discussion for this issue.
-

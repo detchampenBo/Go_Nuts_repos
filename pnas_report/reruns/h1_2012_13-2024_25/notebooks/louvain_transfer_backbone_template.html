@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:">
+<title>Louvain transfer backbone</title>
+<style>
+/* VIS_CSS */
+:root { color-scheme: light; font-family: Arial, sans-serif; color: #26231f; background: #f6f3ec; }
+* { box-sizing: border-box; }
+body { margin: 0; }
+main { max-width: 1540px; margin: auto; padding: 32px clamp(16px, 4vw, 64px); }
+h1 { font: 400 clamp(2.15rem, 4.5vw, 4.4rem)/1.02 Georgia, serif; letter-spacing: -.045em; margin: 4px 0 12px; }
+h2 { font-size: 1rem; margin: 0; }
+p { margin: 0; line-height: 1.45; }
+.intro { color: #554c41; max-width: 752px; }
+.controls { display: flex; flex-wrap: wrap; align-items: end; gap: 14px 28px; margin-top: 26px;
+  background: #ece5d8; border-block: 1px solid #d7cbbb; padding: 14px 18px; }
+.field { display: grid; gap: 7px; }
+.field label, .field > span { font-size: .82rem; font-weight: bold; }
+.slider { flex: 1 1 190px; max-width: 410px; }
+.slider label { display: flex; justify-content: space-between; gap: 16px; }
+output { color: #6f410d; font-variant-numeric: tabular-nums; }
+input[type=range] { margin: 3px 0; width: 100%; accent-color: #895211; }
+input[type=checkbox] { accent-color: #895211; }
+select, button { font: inherit; color: inherit; background: #fffdf7; border: 1px solid #9e8e79;
+  border-radius: 4px; padding: 6px 10px; }
+button { cursor: pointer; }
+:focus-visible { outline: 2px solid #895211; outline-offset: 3px; }
+.checks { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 22px; min-height: 32px; font-size: .88rem; }
+.checks label { display: flex; gap: 5px; align-items: center; }
+.views { display: grid; grid-template-columns: minmax(0, 1.9fr) minmax(265px, 1fr); gap: 22px; margin-top: 22px; }
+.network-panel, aside { border: 1px solid #d7cbbb; background: #fffdf8; min-width: 0; }
+.panel-head { display: flex; justify-content: space-between; align-items: center; padding: 12px 15px;
+  border-bottom: 1px solid #e9e0d3; }
+.panel-head button { font-size: .78rem; }
+.map { position: relative; }
+#network { height: clamp(450px, 59vh, 700px); overflow: hidden; background: #fffefa; }
+#representatives { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+.representative-label { position: absolute; transform: translateY(-50%); white-space: nowrap;
+  padding: 1px 4px; border-radius: 2px; background: #fffefae8; font-size: .75rem; font-weight: bold; }
+.representative-label.left { transform: translate(-100%, -50%); }
+.representative-label.isolated { color: #685c50; font-weight: normal; }
+#empty { position: absolute; z-index: 2; top: 14px; left: 14px; max-width: calc(100% - 28px);
+  padding: 8px 12px; background: #f3ecdc; border: 1px solid #d7cbbb; pointer-events: none; }
+.map-footer { display: grid; gap: 7px; border-top: 1px solid #e9e0d3; padding: 11px 15px; }
+.legend { display: flex; flex-wrap: wrap; gap: 7px 14px; padding: 0; margin: 0; list-style: none; }
+.legend li { display: flex; align-items: center; gap: 5px; font-size: .78rem; }
+.swatch { width: 10px; height: 10px; border: 1px solid #372107; border-radius: 50%; }
+.note { color: #5b5044; font-size: .78rem; }
+aside > section { padding: 14px 16px; border-bottom: 1px solid #e9e0d3; }
+aside > section:last-child { border: 0; }
+dl { margin: 8px 0 0; display: grid; grid-template-columns: 1fr auto; gap: 6px 12px; font-size: .84rem; }
+dd { margin: 0; text-align: right; font-variant-numeric: tabular-nums; }
+dt, dd { line-height: 1.3; }
+.detail { margin-top: 7px; font-size: .83rem; min-height: 4.4em; }
+.detail strong { display: block; margin-bottom: 3px; }
+#curve { display: block; width: 100%; height: auto; margin-top: 5px; overflow: visible; }
+.curve-legend { display: grid; grid-template-columns: 1fr 1fr; list-style: none; padding: 0; gap: 6px; margin: 1px 0 0; font-size: .75rem; }
+.curve-legend li { white-space: nowrap; }
+.curve-legend i { display: inline-block; vertical-align: middle; width: 17px; margin-right: 4px; border-top: 2px solid var(--key); }
+[hidden] { display: none !important; }
+@media (max-width: 850px) {
+  .views { grid-template-columns: 1fr; }
+  #network { height: 52vh; min-height: 330px; }
+}
+</style>
+</head>
+<body>
+<main>
+  <h1>Louvain transfer backbone</h1>
+  <p class="intro">Explore directed club-to-club routes that carry unusually large shares of local transfer volume. Smaller α is stricter. Each view uses its own routes to score the source’s outgoing share and the destination’s incoming share.</p>
+  <section class="controls" aria-label="Backbone controls">
+    <div class="field">
+      <label for="scope">Community</label>
+      <select id="scope"></select>
+    </div>
+    <div class="field slider">
+      <label for="alpha">Local cutoff α <output id="alpha-value" for="alpha">0.20</output></label>
+      <input type="range" id="alpha" min="0.01" max="1.00" step="0.01" value="0.20">
+    </div>
+    <div class="checks">
+      <label><input type="checkbox" id="unfiltered"> Unfiltered</label>
+      <label><input type="checkbox" id="dropped"> Show dropped routes faintly</label>
+    </div>
+  </section>
+  <div class="views">
+    <section class="network-panel" aria-labelledby="scope-title">
+      <div class="panel-head"><h2 id="scope-title">Whole network</h2><button id="reset" type="button">Reset view</button></div>
+      <div class="map">
+        <div id="network" aria-label="Directed transfer routes in fixed club positions"></div>
+        <div id="representatives" aria-label="Representative clubs"></div>
+        <p id="empty" role="status" hidden>No routes survive at this cutoff.</p>
+      </div>
+      <div class="map-footer">
+        <ul id="club-legend" class="legend" aria-label="Saved Louvain communities"></ul>
+        <p class="note">Arrows point from origin to destination. Width increases with transfers. Faded clubs have no retained routes.</p>
+        <p class="note" id="margin-note" hidden>Clubs with no retained routes at α = 0.50 occupy the bottom margin.</p>
+      </div>
+    </section>
+    <aside aria-label="Backbone metrics and details">
+      <section>
+        <h2>Retention and connectivity</h2>
+        <dl id="counts" aria-live="polite"></dl>
+        <dl id="between-counts"></dl>
+      </section>
+      <section>
+        <h2>Coverage over α</h2>
+        <svg id="curve" viewBox="0 0 320 179" role="img" aria-label="Route, transfer, active-club and largest weak component coverage versus alpha"></svg>
+        <ul class="curve-legend" id="curve-legend"></ul>
+      </section>
+      <section>
+        <h2>Club or route details</h2>
+        <div class="detail" id="details">Hover or click a club or route to inspect it.</div>
+      </section>
+    </aside>
+  </div>
+</main>
+<script>
+/* VIS_JS */
+</script>
+<script id="backbone-data" type="application/json">/* NETWORK_DATA */</script>
+<script>
+"use strict";
+const data = JSON.parse(document.getElementById("backbone-data").textContent);
+const byId = id => document.getElementById(id);
+const scopeSelect = byId("scope");
+const slider = byId("alpha");
+const unfiltered = byId("unfiltered");
+const dropped = byId("dropped");
+const details = byId("details");
+const curves = [
+  ["retained_routes_fraction", "Routes", "#895211", ""],
+  ["retained_transfers_fraction", "Transfers", "#17657b", ""],
+  ["active_clubs_fraction", "Active clubs", "#42734e", "5 2"],
+  ["largest_weak_component_fraction", "Largest weak component", "#783a6a", "2 2"]
+];
+const formats = new Intl.NumberFormat("en-US");
+let nodeInfo, routeInfo, retainedStats, currentScope, cutoff;
+let representativeLabels = [];
+const network = new vis.Network(byId("network"), {nodes: [], edges: []}, {
+  physics: {enabled: false},
+  layout: {improvedLayout: false},
+  interaction: {hover: true, hideEdgesOnDrag: true, hideEdgesOnZoom: true, zoomSpeed: 0.5},
+  nodes: {shape: "dot", fixed: {x: true, y: true}, borderWidth: 0.6, chosen: false},
+  edges: {chosen: false, arrowStrikethrough: false, smooth: false}
+});
+
+for (const key of ["whole", ...Object.keys(data.groups)]) {
+  scopeSelect.add(new Option(data.scopes[key].name, key));
+}
+scopeSelect.value = "whole";
+byId("curve-legend").innerHTML = curves.map(([, name, color, dash]) =>
+  `<li><i style="--key:${color};border-top-style:${dash ? "dashed" : "solid"}"></i>${name}</li>`).join("");
+
+function retentionReason(route) {
+  if (cutoff === null) return "Unfiltered view";
+  if (route.exception) return "Directed connectivity exception";
+  const source = route.out_score !== null && route.out_score < cutoff;
+  const destination = route.in_score !== null && route.in_score < cutoff;
+  if (source && destination) return "Both endpoints pass";
+  if (source) return "Source outgoing score passes";
+  if (destination) return "Destination incoming score passes";
+  if (route.out_score === null && route.in_score === null) return "Dropped: neither endpoint can be tested";
+  return "Dropped: no endpoint score is below α";
+}
+
+function showDetail(title, lines) {
+  const heading = document.createElement("strong");
+  heading.textContent = title;
+  details.replaceChildren(heading);
+  for (const line of lines) {
+    const row = document.createElement("div");
+    row.textContent = line;
+    details.appendChild(row);
+  }
+}
+
+function showClub(id) {
+  const node = nodeInfo.get(id);
+  const stats = retainedStats.get(id);
+  const community = data.groups[node.community].name;
+  const active = stats.in_routes + stats.out_routes > 0;
+  showDetail(node.name, [
+    `Club ID ${id} · ${community}${node.representative ? " · Representative" : ""}${active ? "" : " · Isolated"}`,
+    `Incoming: ${stats.in_routes}/${node.in_routes} routes · ${stats.in_transfers}/${node.in_transfers} transfers`,
+    `Outgoing: ${stats.out_routes}/${node.out_routes} routes · ${stats.out_transfers}/${node.out_transfers} transfers`
+  ]);
+}
+
+function showRoute(id) {
+  const route = routeInfo[id];
+  const score = value => value === null ? "Unavailable (degree one)" : value.toPrecision(7);
+  showDetail(`${nodeInfo.get(route.from).name} → ${nodeInfo.get(route.to).name}`, [
+    `${formats.format(route.weight)} recorded transfer${route.weight === 1 ? "" : "s"} · ${retentionReason(route)}`,
+    `Source outgoing score: ${score(route.out_score)}`,
+    `Destination incoming score: ${score(route.in_score)}`
+  ]);
+}
+
+function drawCurve(retention) {
+  const x = alpha => 34 + alpha * 274;
+  const y = fraction => 147 - fraction * 125;
+  const plot = [];
+  for (const fraction of [0, .25, .50, .75, 1]) {
+    plot.push(`<path d="M34 ${y(fraction)}H308" stroke="#e5dacb"/>`,
+      `<text x="29" y="${y(fraction) + 3}" text-anchor="end">${Math.round(fraction * 100)}%</text>`);
+  }
+  for (const alpha of [0, .25, .50, .75, 1]) {
+    plot.push(`<text x="${x(alpha)}" y="162" text-anchor="middle">${alpha.toFixed(2)}</text>`);
+  }
+  for (const [key, , color, dash] of curves) {
+    const paths = retention.filter(row => row.alpha !== null).map(row => `${x(row.alpha)},${y(row[key])}`);
+    plot.push(`<polyline points="${paths.join(" ")}" fill="none" stroke="${color}" stroke-width="1.7" stroke-dasharray="${dash}"/>`);
+  }
+  if (cutoff !== null) {
+    plot.push(`<path d="M${x(cutoff)} 18V147" stroke="#44392c" stroke-dasharray="3 3"/>`);
+  }
+  plot.push('<text x="171" y="177" text-anchor="middle">Local cutoff α</text>');
+  byId("curve").innerHTML = `<g font-size="10" fill="#51483f">${plot.join("")}</g>`;
+}
+
+function render() {
+  const changedScope = currentScope !== scopeSelect.value;
+  const view = network.getViewPosition();
+  const scale = network.getScale();
+  currentScope = scopeSelect.value;
+  const scope = data.scopes[currentScope];
+  cutoff = unfiltered.checked ? null : Number(slider.value);
+  slider.disabled = cutoff === null;
+  dropped.disabled = cutoff === null;
+  byId("alpha-value").textContent = cutoff === null ? "Unfiltered" : cutoff.toFixed(2);
+
+  nodeInfo = new Map(scope.nodes.map(node => [node.club_id, node]));
+  routeInfo = scope.routes;
+  retainedStats = new Map(scope.nodes.map(node => [node.club_id, {
+    in_routes: 0, out_routes: 0, in_transfers: 0, out_transfers: 0
+  }]));
+  const edges = [];
+  routeInfo.forEach((route, id) => {
+    const retained = cutoff === null || route.exception
+      || (route.out_score !== null && route.out_score < cutoff)
+      || (route.in_score !== null && route.in_score < cutoff);
+    if (retained) {
+      const source = retainedStats.get(route.from);
+      const destination = retainedStats.get(route.to);
+      source.out_routes++;
+      source.out_transfers += route.weight;
+      destination.in_routes++;
+      destination.in_transfers += route.weight;
+    }
+    if (!retained && !dropped.checked) return;
+    edges.push({id, from: route.from, to: route.to,
+      width: 0.34 + 0.35 * Math.sqrt(route.weight),
+      color: {color: retained ? "#74695b" : "#988879", opacity: retained ? 0.39 : 0.08, inherit: false},
+      arrows: {to: {enabled: true, scaleFactor: retained ? 0.46 : 0.32}},
+      smooth: route.reciprocal ? {enabled: true, type: "curvedCW", roundness: 0.12} : false});
+  });
+  const labelLayer = byId("representatives");
+  labelLayer.replaceChildren();
+  representativeLabels = [];
+  const nodes = scope.nodes.map(node => {
+    const stats = retainedStats.get(node.club_id);
+    const active = stats.in_routes + stats.out_routes > 0;
+    const color = data.groups[node.community].color;
+    const mark = {id: node.club_id, x: 780 * node.x, y: -780 * node.y, size: 1.9 * node.node_size,
+      color: {background: active ? color : color + "30", border: active ? "#44392c" : "#9a887448"}};
+    if (node.representative) {
+      const label = document.createElement("span");
+      label.classList.add("representative-label");
+      label.classList.toggle("left", mark.x < 0);
+      label.classList.toggle("isolated", !active);
+      label.textContent = node.name + (active ? "" : " (isolated)");
+      labelLayer.appendChild(label);
+      representativeLabels.push({label, mark});
+    }
+    return mark;
+  });
+  network.setData({nodes: new vis.DataSet(nodes), edges: new vis.DataSet(edges)});
+  if (changedScope) network.fit({animation: false});
+  else network.moveTo({position: view, scale, animation: false});
+
+  const row = scope.retention.find(entry => entry.alpha === cutoff);
+  const rows = entries => entries.map(([label, value]) => `<dt>${label}</dt><dd>${value}</dd>`).join("");
+  const fraction = (key, total) => `${formats.format(row[key])} / ${formats.format(row[total])}`;
+  byId("counts").innerHTML = rows([
+    ["Retained routes", fraction("retained_routes", "original_routes")],
+    ["Retained transfers", fraction("retained_transfers", "original_transfers")],
+    ["Active clubs / membership", fraction("active_clubs", "original_clubs")],
+    ["Largest weak component", fraction("largest_weak_component", "original_clubs")],
+    ["Active weak components", formats.format(row.weak_components)]
+  ]);
+  byId("between-counts").hidden = currentScope !== "whole";
+  byId("between-counts").innerHTML = rows([
+    ["Within communities", `${formats.format(row.within_routes)} routes · ${formats.format(row.within_transfers)} transfers`],
+    ["Between communities", `${formats.format(row.between_routes)} routes · ${formats.format(row.between_transfers)} transfers`]
+  ]);
+  byId("scope-title").textContent = scope.name;
+  byId("empty").hidden = row.retained_routes !== 0;
+  byId("margin-note").hidden = !scope.nodes.some(node => node.reference_isolate);
+  byId("club-legend").innerHTML = Object.entries(data.groups)
+    .filter(([key]) => currentScope === "whole" || currentScope === key)
+    .map(([, group]) => `<li><i class="swatch" style="background:${group.color}"></i>${group.name}</li>`).join("");
+  details.textContent = "Hover or click a club or route to inspect it. Ratios show retained / original counts.";
+  drawCurve(scope.retention);
+}
+
+// Use screen-sized labels above the network canvas so they stay readable as the view zooms.
+network.on("afterDrawing", () => {
+  const scale = network.getScale();
+  for (const {label, mark} of representativeLabels) {
+    const point = network.canvasToDOM(mark);
+    const offset = 6 + 0.72 * mark.size * scale;
+    label.style.left = `${point.x + (mark.x < 0 ? -offset : offset)}px`;
+    label.style.top = `${point.y + (mark.y < 0 ? -offset : offset)}px`;
+  }
+});
+network.on("hoverNode", event => showClub(event.node));
+network.on("hoverEdge", event => showRoute(event.edge));
+network.on("click", event => {
+  if (event.nodes.length) showClub(event.nodes[0]);
+  else if (event.edges.length) showRoute(event.edges[0]);
+});
+for (const control of [scopeSelect, unfiltered, dropped]) control.addEventListener("change", render);
+slider.addEventListener("input", render);
+byId("reset").addEventListener("click", () => network.fit({animation: false}));
+render();
+</script>
+</body>
+</html>

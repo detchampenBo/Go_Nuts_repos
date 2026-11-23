@@ -1,0 +1,272 @@
+{
+  "research_as_of": "2026-11-21",
+  "definition": "Documented common direct or indirect club-equity investor, including minority stakes; accounting common-control disclosure accepted with club ownership corroboration. Named strategic corporate minority stakes count, including Granada plc through SMG. This is a confirmed-minimum source screen, not an exhaustive beneficial-owner census.",
+  "interval_convention": "Start inclusive, exit exclusive; earliest/latest dates bracket source precision, not statistical confidence intervals. For Hearts/Liverpool these bound a documented overlap window from annual snapshots rather than a fully reconstructed legal ownership episode. Null exit means no terminating disposal identified through research_as_of, not a guarantee beyond the latest source.",
+  "manual_joint_ownership_pairs": [
+    {
+      "from_club_id": 499,
+      "to_club_id": 631,
+      "note": "Historical broad-period research note: User-directed inclusion of Vitesse-Chelsea in the joint-ownership analysis group on 2026-11-18. Include all eight pooled selected records; no verified common-equity interval is asserted. Restricted-run application retains the authorised manual inclusion of all 7 selected pooled records; no verified equity interval is asserted."
+    },
+    {
+      "from_club_id": 504,
+      "to_club_id": 543,
+      "note": "Historical broad-period research note: User-directed inclusion of Grasshoppers-Wolves in the joint-ownership analysis group on 2026-11-18. Include all ten pooled selected records; no verified common-equity interval is asserted. Restricted-run application retains the authorised manual inclusion of all 10 selected pooled records; no verified equity interval is asserted."
+    }
+  ],
+  "confirmed_pair_intervals": [
+    {
+      "from_club_id": 12321,
+      "to_club_id": 281,
+      "common_owner": "City Football Group",
+      "start_date_min": "2017-08-01",
+      "start_date_max": "2017-08-31",
+      "end_date_min": null,
+      "end_date_max": null,
+      "date_precision": "month",
+      "sources": [
+        "https://www.cityfootballgroup.com/post/girona-fc-acquired-by-new-investors",
+        "https://www.cityfootballgroup.com/clubs",
+        "https://www.uefa.com/news-media/news/028f-1b4ba6fcea09-078845f25cbf-1000/"
+      ],
+      "note": "Historical broad-period research note: Documented minority acquisition in August 2017; retain a month-wide start bracket rather than rely on conflicting publication-day metadata. Five selected transfers precede acquisition. The 2024/25 blind trust concerns influence/control; no selected route event falls in that period."
+    },
+    {
+      "from_club_id": 25580,
+      "to_club_id": 281,
+      "common_owner": "City Football Group",
+      "start_date_min": "2014-01-23",
+      "start_date_max": "2014-01-23",
+      "end_date_min": null,
+      "end_date_max": null,
+      "date_precision": "day",
+      "sources": [
+        "https://melbournecityfc.com.au/news/club-statement-0/",
+        "https://www.cityfootballgroup.com/clubs"
+      ],
+      "note": "Historical broad-period research note: Melbourne Heart (later Melbourne City) acquisition effective immediately on 23 January 2014; club IDs preserve identity across renaming."
+    },
+    {
+      "from_club_id": 40058,
+      "to_club_id": 281,
+      "common_owner": "City Football Group",
+      "start_date_min": "2013-05-21",
+      "start_date_max": "2013-05-21",
+      "end_date_min": null,
+      "end_date_max": null,
+      "date_precision": "day",
+      "sources": [
+        "https://www.newyorkcityfc.com/news/nycfc-celebrates-founding-day-anniversary",
+        "https://www.cityfootballgroup.com/clubs"
+      ],
+      "note": "Historical broad-period research note: NYCFC created under CFG and New York Yankees ownership on 21 May 2013. Distinct from New York Red Bulls (623)."
+    },
+    {
+      "from_club_id": 5026,
+      "to_club_id": 281,
+      "common_owner": "City Football Group",
+      "start_date_min": "2020-05-01",
+      "start_date_max": "2020-05-31",
+      "end_date_min": null,
+      "end_date_max": null,
+      "date_precision": "month",
+      "sources": [
+        "https://www.cityfootballgroup.com/post/city-football-group-expands-to-belgium-acquiring-lommel-sk",
+        "https://www.cityfootballgroup.com/clubs/lommel-sk"
+      ],
+      "note": "Historical broad-period research note: Club timeline documents joining CFG in May 2020; month-wide completion bracket avoids treating agreement-day metadata as exact closing."
+    },
+    {
+      "from_club_id": 1095,
+      "to_club_id": 281,
+      "common_owner": "City Football Group",
+      "start_date_min": "2020-09-01",
+      "start_date_max": "2020-09-30",
+      "end_date_min": null,
+      "end_date_max": null,
+      "date_precision": "month",
+      "sources": [
+        "https://www.cityfootballgroup.com/post/city-football-group-add-estac-troyes-as-tenth-club",
+        "https://www.cityfootballgroup.com/clubs/estac-troyes"
+      ],
+      "note": "Historical broad-period research note: Completed acquisition and September 2020 entry documented by CFG; month-wide start bracket avoids publication-day ambiguity."
+    },
+    {
+      "end_date_min": null,
+      "end_date_max": null,
+      "from_club_id": 667,
+      "to_club_id": 631,
+      "common_owner": "BlueCo / Clearlake-led ownership group",
+      "start_date_min": "2023-07-01",
+      "start_date_max": "2023-07-31",
+      "date_precision": "month",
+      "sources": [
+        "https://cdn-s-www.dna.fr/pdf/fabdc231-1a78-4f0a-9c91-c6ba1a8b61c1/document.pdf",
+        "https://find-and-update.company-information.service.gov.uk/company/13949552/filing-history",
+        "https://www.chelseafc.com/en/news/article/statement-from-board-of-directors-of-chelsea-football-club-limit"
+      ],
+      "note": "Historical broad-period research note: June 22 2023 was agreement announcement; BlueCo 2023 accounts report July closing. Chelsea acquisition completed May 30 2022. All selected records are June 2024 or later."
+    },
+    {
+      "from_club_id": 54189,
+      "to_club_id": 873,
+      "common_owner": "John Textor / Eagle Football",
+      "start_date_min": "2022-01-01",
+      "start_date_max": "2022-01-31",
+      "end_date_min": "2025-07-24",
+      "end_date_max": "2025-07-24",
+      "date_precision": "month acquisition; day exit",
+      "sources": [
+        "https://www.johntextor.org/press-molenbeek",
+        "https://www.eaglefootball.com/home",
+        "https://www.cpfc.co.uk/news/announcement/john-textor-joins-crystal-palace-football-club-board-of-directors/",
+        "https://www.cpfc.co.uk/news/announcement/crystal-palace-welcomes-woody-johnson/"
+      ],
+      "note": "Historical broad-period research note: RWDM investment dates to January 2022; operational control is separately dated January 2023. Textor Palace equity starts August 2021 and ends with completed sale July 24 2025. Both selected records fall inside."
+    },
+    {
+      "end_date_min": null,
+      "end_date_max": null,
+      "from_club_id": 3948,
+      "to_club_id": 1237,
+      "common_owner": "Tony Bloom",
+      "start_date_min": "2018-01-01",
+      "start_date_max": "2018-12-31",
+      "date_precision": "year",
+      "sources": [
+        "https://rusg.brussels/en/news/statement-president-and-owner-alex-muzio-0",
+        "https://www.brightonandhovealbion.com/media-article/tony-bloom-mbe"
+      ],
+      "note": "Historical broad-period research note: Union statement dates investment project to 2018, without exact acquisition day, and confirms Bloom retained minority equity after July 7 2023. All selected records precede that majority-to-minority change."
+    },
+    {
+      "end_date_min": null,
+      "end_date_max": null,
+      "from_club_id": 410,
+      "to_club_id": 1010,
+      "common_owner": "Pozzo ownership group (documented common control)",
+      "start_date_min": "2012-01-01",
+      "start_date_max": "2012-12-31",
+      "date_precision": "year; historic acquisition-day source gap",
+      "sources": [
+        "https://www.udinese.it/news/squadra/gerolin-lavoreremo-sodo-per-tornare-ad-alti-livelli",
+        "https://images.gc.watfordfcservices.co.uk/d30fc840-2d82-11ef-a0be-37a5b1f697a8.pdf",
+        "https://images.gc.watfordfcservices.co.uk/ae753480-2dc5-11f1-bc79-416e9c4833f1.pdf"
+      ],
+      "note": "Historical broad-period research note: Udinese's 2017 statement explicitly says same ownership; official Watford audited accounts disclose Udinese under common control. Historical Pozzo takeover is year-coded 2012; original exact-day primary completion document not recovered. Events in 2015-2022 use documented Pozzo-era continuity, rather than infer ownership from family ties."
+    },
+    {
+      "from_club_id": 16795,
+      "to_club_id": 1010,
+      "common_owner": "Gino Pozzo / Pozzo ownership group",
+      "start_date_min": "2012-01-01",
+      "start_date_max": "2012-12-31",
+      "end_date_min": "2016-06-14",
+      "end_date_max": "2016-06-16",
+      "date_precision": "year start; mid-June exit bracket",
+      "sources": [
+        "https://www.granadacf.es/noticias/jiang-lizhang-nuevo-maximo-accionista-del-granada-cf",
+        "https://www.granadacf.es/noticias/la-llegada-de-jiang-lizhang-situa-a-granada-en-el-foco-nacional-e-internacional",
+        "https://images.gc.watfordfcservices.co.uk/d30fc840-2d82-11ef-a0be-37a5b1f697a8.pdf"
+      ],
+      "note": "Historical broad-period research note: Official Granada statement identifies Gino Pozzo as seller and the Pozzo project as concluded; club's contemporary press digest reports completion June 14. Exit bracket records source precision. All four selected arrivals, from June 30 2016 onward, postdate disposal. Exact 2012 Watford closing-day source not recovered."
+    },
+    {
+      "end_date_min": null,
+      "end_date_max": null,
+      "from_club_id": 683,
+      "to_club_id": 703,
+      "common_owner": "Evangelos Marinakis",
+      "start_date_min": "2017-01-01",
+      "start_date_max": "2017-12-31",
+      "date_precision": "year",
+      "sources": [
+        "https://www.olympiacos.org/sites/default/files/book_en.pdf",
+        "https://livepreview.nottinghamforest.co.uk/news/2025/august/29/mr-marinakis---a-proud-day-for-everyone-/",
+        "https://find-and-update.company-information.service.gov.uk/company/10613412/persons-with-significant-control"
+      ],
+      "note": "Historical broad-period research note: Forest official retrospective dates ownership to 2017; Olympiacos majority acquisition predates it. Registered Forest control interruptions April 29-June 6 2025 and April 17-June 10 2026 contain no selected route event. Economic ownership versus trust control remains distinguished."
+    },
+    {
+      "end_date_min": null,
+      "end_date_max": null,
+      "from_club_id": 2425,
+      "to_club_id": 703,
+      "common_owner": "Evangelos Marinakis / RAH Sports Investments",
+      "start_date_min": "2024-06-15",
+      "start_date_max": "2024-06-15",
+      "date_precision": "day",
+      "sources": [
+        "https://rioavefc.pt/destaque/comunicado-rio-ave-futebol-clube-futebol-sad/",
+        "https://rioavefc.pt/destaque/maioria-expressiva-dos-socios-aprova-a-sad/",
+        "https://rioavefc.pt/sad/governo-da-sociedade/",
+        "https://find-and-update.company-information.service.gov.uk/company/10613412/persons-with-significant-control"
+      ],
+      "note": "Historical broad-period research note: Rio Ave 80% equity acquisition completed June 15 2024, later than November 2023 member approval. All four selected records also avoid Forest trust/control interruptions."
+    },
+    {
+      "end_date_min": null,
+      "end_date_max": null,
+      "from_club_id": 2727,
+      "to_club_id": 1003,
+      "common_owner": "King Power",
+      "start_date_min": "2017-06-06",
+      "start_date_max": "2017-06-06",
+      "date_precision": "day",
+      "sources": [
+        "https://s3-ap-southeast-1.amazonaws.com/story.kingpower.com/wp-content/uploads/2017/06/13152814/Press_Statement_120617KP_OHL_Takeover_ENG.pdf",
+        "https://www.lcfc.com/media-article/King-Power-To-Unite-Fans-Of-Leicester-City-and-OH-Leuven"
+      ],
+      "note": "Historical broad-period research note: Owner's contemporaneous release dates completion of 92% OHL acquisition to June 6 2017 and identifies Leicester in the same portfolio. All selected records occur 2019-2021."
+    },
+    {
+      "from_club_id": 865,
+      "to_club_id": 1148,
+      "common_owner": "Matthew Benham",
+      "start_date_min": "2014-07-02",
+      "start_date_max": "2014-07-02",
+      "end_date_min": "2023-08-15",
+      "end_date_max": "2023-12-31",
+      "date_precision": "day acquisition; announced disposal with 2023 closing bound",
+      "sources": [
+        "https://www.brentfordfc.com/en/news/matthew-benham-takes-majority-shareholding-in-fc-midtjylland_62788",
+        "https://www.brentfordfc.com/en/news/benham-gains-full-brentford-shareholding_61689",
+        "https://www.fcm.dk/nyheder/heartland-koeber-fc-midtjylland/",
+        "https://www.fcm.dk/klubben/"
+      ],
+      "note": "Historical broad-period research note: Brentford announcement establishes existing Brentford ownership and FCM majority July 2 2014. FCM August 15 2023 sale announcement subject to regulatory conditions; later club history confirms exit in 2023. No selected event near uncertain disposal boundary."
+    },
+    {
+      "end_date_min": null,
+      "end_date_max": null,
+      "from_club_id": 1247,
+      "to_club_id": 11,
+      "common_owner": "Stan Kroenke / Kroenke Sports & Entertainment",
+      "start_date_min": "2007-01-01",
+      "start_date_max": "2007-12-31",
+      "date_precision": "year",
+      "sources": [
+        "https://www.arsenal.com/the-arsenal-board",
+        "https://www.coloradorapids.com/club/stan-kroenke",
+        "https://www.coloradorapids.com/club/front-office"
+      ],
+      "note": "Historical broad-period research note: Arsenal biography dates first shareholding to 2007. Colorado official owner biography identifies both football clubs in KSE portfolio. Both recorded transfers involve Auston Trusty in 2022."
+    },
+    {
+      "end_date_min": null,
+      "end_date_max": null,
+      "from_club_id": 1158,
+      "to_club_id": 989,
+      "common_owner": "Black Knight Football group / Bill Foley",
+      "start_date_min": "2023-02-01",
+      "start_date_max": "2023-02-01",
+      "date_precision": "day",
+      "sources": [
+        "https://www.sec.gov/Archives/edgar/data/1704720/000170472023000025/R10.htm",
+        "https://images.gc.afcbournemouthservices.co.uk/4213e360-089e-11f0-96ca-3b5257f7e8db.pdf",
+        "https://www.fclorient.bzh/black-knight-football-club-devient-lactionnaire-unique-du-fc-lorient/"
+      ],
+      "note": "Historical broad-period research note: SEC filing distinguishes January 13 2023 agreement from February 1 minority-equity closing. Ouattara January 19 2023 predates closing; Faivre and two Kroupi records postdate closing. Subsequent January 2026 acquisition of remaining equity does not change the earlier minority start."
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+# 11 Verify outputs and register paper evidence
+
+## Created
+
+2026-11-20 16:38:41 Europe/Copenhagen. Restricted-period rerun batch.
+
+## Status
+
+Resolved
+
+## Fresh-context requirement
+
+The user requires script reruns to be performed by a NEW agent in a FRESH context window. Dispatch with `fork_turns="none"`, providing this file's absolute path and the rerun README. The original planning agent must not execute statistical/structural reruns. New agents must read saved instructions/provenance instead of depending on inherited chat. If continuing in another context, hand off using the same saved records. Data reduction already happened before this requirement; verify it afresh.
+
+## Checkpoint workflow
+
+1. Read the [paper checkpoint](../../../paper_simple/README.md), [rerun index](../README.md), [original Issue 02](../../../paper_simple/scratch/2026-11-19_15-30-34_02-reconcile-samples-and-data-provenance.scratch) and [repository context](../../../paper_simple/scratch/REPOSITORY_CONTEXT.md); recap the next action.
+2. Verify dependencies and [reduction manifest](../provenance/reduction_manifest.json). The approved period supersedes older keep-H1-unchanged statements; do not ask for that decision again. Original Issue 02 remains Open pending its own criteria and user confirmation.
+3. Execute authorised work and checks. Discuss changes to methods, eligibility beyond season, ownership evidence or substantive presentation before implementing them. Necessary path/snapshot plumbing is authorised and must be logged.
+4. Preserve original data/results. Write new inputs/results/figures/executed notebooks/provenance inside `pnas_report/reruns/h1_2012_13-2024_25/`, reusing original relative output/ and figures/ names. Never mix old and new results.
+5. Append dated progress with actual commands, environment, checks and evidence. Update this issue, rerun index, paper checkpoint and evidence inventory with the exact next step. Mark Resolved only after criteria and user satisfaction confirmation; otherwise record execution status plainly.
+
+## Starting context and approved decision
+
+Repository: `C:/Users/victo/Codex/Go_Nuts_repos`; paper: `pnas_report/paper_simple`. The user approved H1 and dependent transfer/network reruns for recorded seasons **2012/13-2024/25**, retaining other eligibility/methods and identical output forms. H1/H2 are separate study samples; text analyses stay unchanged. Original broad-period outputs remain historical evidence. New input relative to this run: `data/outsideprem_toprem_eligible_transfers.csv.gz`, SHA-256 `48247e435eb0256405f778cafcfdba4eea39651a009fa61f88c41c907d36055a`. Use the original league lookup, whose hash is recorded. No hypothesis/structural reruns have yet been executed at issue creation.
+
+## Dependencies
+
+[00](2026-11-20_16-38-41_00-reduce-and-record-h1-data.scratch), [01](2026-11-20_16-38-41_01-rerun-h1-entry-and-player-sensitivity.scratch), [02](2026-11-20_16-38-41_02-rerun-network-and-degree-results.scratch), [03](2026-11-20_16-38-41_03-rebuild-shared-community-inputs.scratch), [04](2026-11-20_16-38-41_04-rerun-louvain-communities.scratch), [05](2026-11-20_16-38-41_05-rerun-leiden-communities.scratch), [06](2026-11-20_16-38-41_06-rerun-community-comparison.scratch), [07](2026-11-20_16-38-41_07-rerun-feeder-route-analysis.scratch), [08](2026-11-20_16-38-41_08-rerun-feeder-ownership-audit.scratch), [09](2026-11-20_16-38-41_09-rerun-feeder-figures-and-captions.scratch), [10](2026-11-20_16-38-41_10-rerun-louvain-transfer-backbone.scratch)
+
+## Paper context and supporting files
+
+- [provenance/baseline_outputs_manifest.json](../provenance/baseline_outputs_manifest.json)
+- [provenance/reduction_manifest.json](../provenance/reduction_manifest.json)
+- [Paper evidence](../../../paper_simple/evidence_and_sources.md)
+- [Baseline filenames, hashes and schemas](../provenance/baseline_outputs_manifest.json)
+
+## Work and verification
+
+Check every baseline manifest path against its new counterpart: same basenames/formats, CSV column order and JSON field contracts, with data-dependent memberships/counts recalculated. Document extra provenance fields or natural producer exports. Parse tables/JSON, check hashes/paths/relative links, open HTML and visually inspect publication exports. Verify all captions/summaries against new machine-readable results. Historical snapshot-comparison fields must be labelled, never treated as restricted expectations.
+
+Verify EVERY original baseline file still exists at its frozen hash. Save final output hashes, executed commands/environments/versions, code adaptations, dependency/evidence gaps and parity results. No incomplete validation may be silently counted as complete. Register exact NEW sources in paper evidence/README and issues 02/03/06/09/10. Reconcile any provenance-only H1/text linkage counts before reuse; old 949/519 overlaps describe the broad sample. Do not rerun H2/H2b/coverage/validation. Preserve old broad-period results as historical comparison evidence, not restricted results. Resolve original Issue 02 only after its criteria and the user's satisfaction confirmation; do not silently resolve the remaining paper review issues.
+
+## Required artifacts
+
+Paths are relative to this run root. Preserve filenames/formats and existing table schemas; data-dependent sizes and values change. Consult the baseline manifest for exact CSV columns and JSON contracts. Additional exports naturally produced by the same existing code must be logged; they cannot replace missing baseline outputs.
+
+- `provenance/final_outputs_manifest.json`
+- `provenance/run_log.md`
+- `provenance/output_parity_report.md`
+
+## Resolved when
+
+Every listed artifact is regenerated or, for issue 00, verified; specified method/data/dependency checks pass; new outputs trace to the restricted input; original baseline hashes remain unchanged; findings and handoff are recorded and the user confirms satisfaction. Do not claim skipped dependency/evidence checks are successful.
+
+## Progress and resolution
+
+21 November 2026 — Verified 124 expected counterparts, 124 unchanged originals, recorded table schemas and generated Markdown links. Saved the [verification report](../provenance/output_parity_report.md) and [final hashes](../provenance/final_outputs_manifest.json), and linked the exact restricted evidence in the paper checkpoints. Raw R agreement stays 29/30. Live browser interaction remains unverified after the Windows browser tool stopped. User satisfaction confirmation pending.
+
+2026-11-20 16:38:41 Europe/Copenhagen - Issue created; rerun not yet executed.
+
+
+2026-11-20T17:02:02.605428+01:00 ? PAUSED at user request for shutdown. No further computation authorised until explicit resume. Saved execution state, partial artifacts, ownership coverage gap and backbone R-parity failure are recorded in [PAUSE_CHECKPOINT.md](../PAUSE_CHECKPOINT.md). Use a new fresh-context agent when resuming; do not repeat verified H1 automatically. This issue is not resolved by pause.
+
+21 November 2026 — The user verified and accepted the current computations and new results and confirmed closure of this rerun issue. The 124 expected artifacts and all frozen originals were checked. The documented 29/30 raw R agreement and outstanding live browser interaction carry into the paper handoff. [Verification report](../provenance/output_parity_report.md)

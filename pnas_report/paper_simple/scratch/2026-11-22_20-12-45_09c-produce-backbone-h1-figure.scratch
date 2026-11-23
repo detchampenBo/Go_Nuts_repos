@@ -1,0 +1,44 @@
+# 09c Produce combined backbone and H1 Figure 1
+
+## Created
+
+22 November 2026, 20:12:45 Europe/Copenhagen. User-authorised production within Issue 09.
+
+## Status
+
+Open
+
+## Checkpoint workflow
+
+Read the [paper checkpoint](../README.md), [Issue 09](2026-11-19_15-30-34_09-select-figures-and-plan-cross-references.scratch) and the [agreed Figure 1 pairing](../paper_storyline.md#agreed-figure-1-pairing-22-november-2026) before resuming. Preserve historical exports and unrelated changes. Record the produced artifact, verification and user decisions here and in the checkpoint. Resolve only after the user confirms satisfaction; keep final manuscript fit and caption decisions with Issue 09.
+
+## Authorised task
+
+The user requested creating the combined backbone-H1 figure. Produce Figure 1(a), the whole-network backbone at alpha = 0.20, beside Figure 1(b), the selected all-eligible-transfers H1 permutation plot. Use saved restricted-period evidence only, in a fresh-context agent. No new permutation, community detection, force layout, R parity run or statistical analysis is authorised. Do not overwrite the saved source figures. H2 Figure 2 is already selected and H2b is omitted from the manuscript.
+
+## Sources and definitions
+
+Both panels originate from the same 16,636 eligible transfer records involving 4,602 players in recorded source seasons 2012/13-2024/25. H1 uses every eligible event; the backbone is a filtered view of their club-pair aggregation.
+
+- Backbone: [route scores](../../reruns/h1_2012_13-2024_25/output/louvain_transfer_backbone_findings/backbone_route_scores.csv), [fixed layout](../../reruns/h1_2012_13-2024_25/output/louvain_transfer_backbone_findings/backbone_layout.csv), [retention](../../reruns/h1_2012_13-2024_25/output/louvain_transfer_backbone_findings/backbone_retention.csv) and [summary](../../reruns/h1_2012_13-2024_25/output/louvain_transfer_backbone_findings/backbone_summary.md), scope `whole`, strict endpoint score below 0.20. Preserve the original structural-exception rule (zero eligible exceptions in the whole network), positions and sizes, weighted directed arrows and [saved Louvain membership/colours](../../reruns/h1_2012_13-2024_25/output/louvain_transfer_communities_findings/communities.csv). Expected: 383 active clubs, 1,396 routes and 5,271 transfers (31.7% of sample volume). Communities pool ages and include non-PL destinations.
+- H1: [results JSON](../../reruns/h1_2012_13-2024_25/output/age_shuffle_outsideprem_toprem_results.json), `all_eligible_transfers`, including 999 saved simulated gaps, and [summary](../../reruns/h1_2012_13-2024_25/output/age_shuffle_outsideprem_toprem_summary.md). Preserve the [existing plot](../../reruns/h1_2012_13-2024_25/output/age_shuffle_outsideprem_toprem_findings/age_shuffle_outsideprem_toprem_all_eligible_transfers.pdf) conventions. Older rate 129/1,063 = 12.14%; younger 2,267/15,573 = 14.56%; older-minus-younger gap -2.42 percentage points. Mean shuffled gap -1.31, one SD 0.83, empirical lower-tail p = 0.098. Shuffles preserve origin-club/season age counts; the normal curve is illustrative. The fixed-player sensitivity remains Results prose.
+
+## Presentation and verification
+
+Follow [PLOTTING_STYLE.md](../../PLOTTING_STYLE.md), with PNAS full width 17.8 cm. Use embedded Arial and print-readable panel titles, labels and legends. Do not confuse backbone community colours with age or observed/null encodings. Export the combined two-panel figure and both standalone panels as PDF, 600 dpi PNG and editable-text SVG in a new [backbone-H1 folder](../../output/backbone_h1_findings/), using a new [producer](../../notebooks/plot_backbone_h1_figure.py). Include README sources/caption/reproduction and verification evidence. Proposed parent label remains `fig:entry-age`.
+
+Check source hashes, counts, retained weights and H1 values, preserving source/historical PDF hashes. Inspect the actual combined and standalone PDFs at final physical size in colour and grayscale, including arrows, legends and text. Verify dimensions, embedded fonts, vector graphics, zero rotation, PNG resolution and editable SVG text. Any final fit to the paper's 0.50-page placeholder must be established separately by caption-inclusive typesetting; no silent budget reallocation.
+
+## Progress and next action
+
+22 November 2026 - User authorised production and the task was dispatched to a fresh-context agent. Next: inspect the combined PDF, fix any print-readability issues, then present it for user review. Issue 09c remains Open pending satisfaction; Issue 09 still tracks final captions and manuscript layout.
+
+22 November 2026 - Produced the [combined Figure 1 PDF](../../output/backbone_h1_findings/combined.pdf), plus [backbone alone](../../output/backbone_h1_findings/transfer_backbone_alpha_020.pdf) and [H1 alone](../../output/backbone_h1_findings/h1_all_eligible_transfers.pdf), each with 600 dpi PNG and editable SVG companions. The combined export is 17.8 cm by 4 inches. The [output README](../../output/backbone_h1_findings/README.md) records the draft caption and exact sources; [verification](../../output/backbone_h1_findings/verification.json) checks the retained backbone, shared sample, H1 values, export properties and unchanged source/historical hashes. The primary agent inspected the actual combined colour/grayscale PDF renders; legends, labels and panel titles are clear. Original arrow geometry, node sizes/positions and H1 histogram/normal-fit conventions are preserved. The dense network supplies structural context rather than individual route tracing. No analysis, graph layout or permutations were rerun. Next: user review of the combined figure, then finalise caption/labels and assess manuscript fit with Issue 09.
+
+22 November 2026 - At the user's request, moved panel (a)'s community legend from the bottom to the upper-right corner and enlarged the network's linear display scale by 18.42% in the combined figure (18.15% in its standalone view). Saved club positions, alpha = 0.30 framing bounds, cutoff, node encodings and data remain fixed. Panel (b)'s geometry and the standalone H1 view are unchanged. The producing fresh-context agent refreshed the figure formats and verification, and the primary agent inspected the combined PDF render: the legend occupies a clear corner without covering the network or title. Final user satisfaction and manuscript caption/fit remain pending.
+
+22 November 2026 - The user requested less whitespace beneath the network, a further size increase, a small left shift and the title "Backbone disparity filter (alpha = 0.20)". Refreshed the combined export with panel title `(a) Backbone disparity filter (α = 0.20)` and a network drawing box `(0.0, 0.015, 0.51, 0.80)` in figure coordinates. This enlarges its linear display by a further 18.5% relative to the previous version, shifts its centre left by about 0.105 inches and uses more of the bottom area. The standalone backbone receives the matching space-filling treatment. The legend remains upper-right; frozen node positions, complete frame/route coverage and all H1 panel geometry are preserved. Fresh-context presentation production passed the source/export checks, and the primary agent inspected the combined PDF render. Final user review and manuscript caption/fit remain pending.
+
+22 November 2026 - During the marker-size revision, the user superseded the initial factor-two request with a final scale of 1.5 for network markers and explicitly requested preserving standard legend symbol size. Interpret 1.5 as width/height: node scatter areas are now `saved node_size * 0.9 * 1.5**2`, preserving relative activity sizes. Legend symbols are restored to standard 5.09 pt and original 0.35 row spacing, with 8 pt text. Node centres, frozen data sizes, network frame/axes, arrows, title and H1 remain unchanged. All combined/standalone formats and verification were refreshed; the producing agent inspected all six colour/grayscale PDF renders and the primary agent inspected the latest combined render. Source/export checks pass and the standalone H1 PNG is byte-identical. No analysis was rerun. Final review remains with Issue 09c and manuscript captions/fit with Issue 09.
+
+22 November 2026, 20:37 Europe/Copenhagen - End-of-day checkpoint saved at the user's request. No additional plot change is pending; retain the current 1.5 marker scale and standard legend symbols. Resume with Figure 1's caption through the [Issue 09 continuation prompt](2026-11-19_15-30-34_09-select-figures-and-plan-cross-references.scratch#continuation-prompt). Issue 09c stays Open for final user satisfaction, with captions and manuscript fit tracked by Issue 09.

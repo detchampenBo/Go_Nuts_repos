@@ -6,7 +6,7 @@
 
 ## Status
 
-Open
+Resolved
 
 ## Checkpoint workflow
 
@@ -32,7 +32,7 @@ The validation sample contains 200 labels, including four wrong-person cases exc
 
 ## Related decisions and first interaction
 
-Review the current outcomes of issues [02](2026-11-19_15-30-34_02-reconcile-samples-and-data-provenance.scratch). Use the latest agreed decisions when available and record any assumptions that remain provisional.
+Review the current outcomes of issues [02](2026-11-19_15-30-34_02-reconcile-samples-and-data-provenance.scratch) and [03](2026-11-19_15-30-34_03-verify-age-entry-results.scratch), both Resolved with user satisfaction confirmed. Preserve Issue 02's exact three-paragraph sample description and Issue 03's approved H1 interpretation and complete sensitivity passage. Use the latest agreed decisions and record any assumptions that remain provisional.
 
 Discuss what the paper means by tone and reception, then trace the validation and player-matching checks supporting that definition.
 
@@ -43,6 +43,8 @@ Interpretation of media tone depends on sentiment validity and player matching. 
 ## Paper context and supporting files
 
 [NLP decisions](../../data/dataset_nlp/decisions.md), [human-labelled sample](../../data/dataset_nlp/data/check_sentiment_sample_200_labelled.csv), [validation scores](../../data/dataset_nlp/results/b9_model_scores.csv), [confusion table](../../data/dataset_nlp/results/b9_confusion.csv), [focus-rule scores](../../data/dataset_nlp/results/b8_focus_rule_scores.csv).
+
+Guardian validation, coverage, and sentiment results use the existing Guardian tables linked here. For H1 and network claims, use the user-confirmed [restricted rerun evidence](../../reruns/h1_2012_13-2024_25/provenance/output_parity_report.md).
 
 ## Next action to discuss
 
@@ -56,6 +58,8 @@ Interpretation of media tone depends on sentiment validity and player matching. 
 
 5. Agree how to describe sentence sentiment as a measure of the selected writing and how to qualify broader interpretations of reception.
 
+The evidence review and wording discussion are complete. Start [Issue 05](2026-11-19_15-30-34_05-verify-text-results-and-exploratory-status.scratch) in a fresh context by distinguishing changes in tone, exploratory differences in tone levels, and coverage volume before reviewing their saved results.
+
 ## Resolved when
 
 The measurement definition, validation result, and consequential limitations are available for the Results, Methods, and Discussion, with source links.
@@ -66,3 +70,22 @@ The measurement definition, validation result, and consequential limitations are
 
 2026-11-19 15:38:00 Europe/Copenhagen — Added standalone repository context, specific evidence locations, related decisions, and the starting discussion for this issue.
 
+21 November 2026 — Issue 03 is Resolved after explicit user satisfaction confirmation. Issue 04 is the next paper task and remains Open; no Issue 04 evidence audit or interpretation agreement is claimed by this handoff. In a fresh context, read the paper README, repository context, this issue, research question, evidence inventory, storyline and tone guide. First discuss what Guardian sentence sentiment measures and its aggregation to signing-period tone, then trace the saved validation and player-matching/focus evidence and generating code. Treat the 14 older-player sentences and focus-rule performance as claims to verify against the relevant sample/metric, not blanket evidence of validity. Distinguish available labels/derived tables from missing full article, sentence and score caches. Leave H2/H2b result interpretation to Issue 05 except where needed to understand measurement. Explain each design choice for a new reader before its result or limitation. Present proposed measurement wording interactively, record evidence/decisions, and resolve only after the user's satisfaction confirmation. No new analysis or rerun is authorised; discuss the need first, and dispatch any approved script rerun to a new agent with `fork_turns="none"`.
+
+21 November 2026 — Reviewed the saved labels, joined scores, derived tables and code. The age comparison uses a mean of selected Guardian sentence scores for each signing and period. B9 joins four instruments for all 200 label rows and evaluates agreement on 196 after excluding four wrong-person labels. RoBERTa has the highest observed rank agreement (ρ = 0.5158, 95% bootstrap interval 0.3839–0.6314) and sign agreement on polar labels. The separate paired-bootstrap superiority claim is undocumented in the saved comparisons. The 14 scored older-player sentences (one positive, ten neutral, three negative) leave age-specific validity uncertain. The fresh focus check gives precision 0.480 and weighted recall 0.558 for the headline-or-three-mentions rule. The main measure excludes liveblogs, match reports and the signing-week period and requires five scored sentences on each side. It retains quoted speech and does not require the focus flag. Full article bodies, sentence inputs and score caches remain unavailable at the documented paths. Read the [evidence review and proposed wording](../evidence_and_sources.md#issue-04-guardian-tone-measurement-review-21-november-2026), [proposed storyline placement](../paper_storyline.md#guardian-tone-measurement-21-november-2026) and [updated checkpoint](../README.md#current-checkpoint). No analyses were rerun or checks added. Status remains Open pending discussion and user confirmation. Issue 05 will address substantive H2/H2b results.
+
+21 November 2026 — The user asked for a clearer lead-in through the article collection and research purpose, with fewer focus-rule statistics in the paper prose. The [revised wording](../evidence_and_sources.md#reproducibility-and-proposed-paper-wording) opens with 43,924 distinct articles published from July 2011 to June 2026 and explains the one-year search around selected signings. It draws on the previously verified [Issue 02 metadata audit](issue02_sample_audit.json). It introduces the sentence scores and validation in plain language and gives the focus-rule decision in one short Methods paragraph. The detailed metrics remain in the evidence review. The [storyline](../paper_storyline.md#guardian-tone-measurement-21-november-2026) and [checkpoint](../README.md#current-checkpoint) reflect this proposed revision. Issue 04 remains Open for user review.
+
+21 November 2026 — Removed the standalone focus-rule paragraph from the proposed paper text after the user challenged it. The check describes performance of a candidate filter. It cannot establish why the main analysis included passing mentions. The revised measurement paragraph states directly that the scored material includes brief mentions in articles about other subjects and describes how the class probabilities produce one tone score per sentence. The focus-rule evidence remains available in the [evidence inventory](../evidence_and_sources.md#focus-rule-and-main-exclusions). Updated the storyline and checkpoint for the revised proposal. Issue 04 remains Open.
+
+21 November 2026 — The user asked to bring the Week 7 framing of sentiment as a measurement of change into the draft. The [revised proposal](../evidence_and_sources.md#reproducibility-and-proposed-paper-wording) anchors time to the signing date and introduces repeated scoring before and after each move. It uses a football example to explain why producing a score is insufficient. Comparing four methods examines dependence on the scoring method, and the human labels show how scores track a reader's judgment of tone toward the player. The [storyline](../paper_storyline.md#guardian-tone-measurement-21-november-2026) and [checkpoint](../README.md#current-checkpoint) reflect the revision. Issue 04 remains Open for user review.
+
+21 November 2026 — The user supports retaining the sentiment scores as a useful but imperfect measure of how positive or negative the selected Guardian coverage reads, with a clear account of incorrect player links. The [revised wording](../evidence_and_sources.md#reproducibility-and-proposed-paper-wording) explains the corpus name-matching rules and the human review of a 200-sentence sample. The four wrong-person matches are excluded from the validation comparison. The uncertainty about age-specific validity remains part of the conclusion. Updated the storyline and checkpoint. Issue 04 remains Open pending the user's satisfaction confirmation.
+
+21 November 2026 — At the user's request, reviewed the earlier draft's [“Measuring tone in football writing”](../../paper/main.tex#L57), [validation table](../../paper/main.tex#L62), [measurement limitations](../../paper/main.tex#L114), and [sentiment Methods](../../paper/main.tex#L123). The [adapted Results prose, table and Methods wording](../evidence_and_sources.md#reproducibility-and-proposed-paper-wording) preserve the table's rounded values and metric definitions. The 151 signing IDs match the saved validation labels. The prose uses observed rank agreement in place of the earlier draft's unverified paired-bootstrap significance claim. It uses the verified unique-article count and retains the limitations on age comparability and corpus reproduction. Updated the [storyline](../paper_storyline.md#guardian-tone-measurement-21-november-2026) and [checkpoint](../README.md#current-checkpoint). No analyses were rerun. Issue 04 remains Open for the user's review.
+
+### Resolution, 21 November 2026
+
+The user authorised closure if the evidence was sufficient. The review supports retaining RoBERTa scores as a useful but imperfect measure of positivity or negativity in selected Guardian coverage. Signing dates anchor the before-and-after comparison and the same scoring method applies on both sides. The main corpus uses name-matching rules. Human review checked player identity and tone on 200 sampled sentences, with four wrong-person labels excluded from the validation comparison. Across the 196 remaining cases, RoBERTa had the highest observed rank agreement (Spearman ρ = 0.5158, 95% bootstrap interval 0.3839–0.6314). The 14 older-player cases leave age-specific validity uncertain. Passing mentions and quoted speech can contribute to the main scores. The focus rule was rejected as a main filter. Full article bodies, sentence inputs and score caches remain unavailable, which limits corpus reproducibility. [Validation results](../../data/dataset_nlp/results/b9_model_scores.csv) · [Evidence, wording and table](../evidence_and_sources.md#issue-04-guardian-tone-measurement-review-21-november-2026)
+
+Use the adapted measurement and validation wording from the earlier draft as the basis for the new paper and retain its four-instrument table. The focus-rule details are in the evidence inventory. No further analysis or rerun is required for this qualified measurement claim. [Issue 07](2026-11-19_15-30-34_07-research-literature-and-verify-citations.scratch#sentiment-citation-to-consider) records the user's suggested RoBERTa-BiLSTM related-work citation. The [storyline](../paper_storyline.md#guardian-tone-measurement-21-november-2026), [checkpoint](../README.md#current-checkpoint), [tracker](README.md) and [repository context](REPOSITORY_CONTEXT.md) record the handoff. Next is the interactive [Issue 05](2026-11-19_15-30-34_05-verify-text-results-and-exploratory-status.scratch) review of H2, exploratory H2b and coverage volume, beginning with what each outcome measures.

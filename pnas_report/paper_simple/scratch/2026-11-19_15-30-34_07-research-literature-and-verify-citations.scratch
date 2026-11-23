@@ -6,7 +6,7 @@
 
 ## Status
 
-Open
+Resolved
 
 ## Checkpoint workflow
 
@@ -34,7 +34,7 @@ The current argument is observational and still needs a precise literature-based
 
 Review the current outcomes of issues [01](2026-11-19_15-30-34_01-refine-research-question.scratch), [06](2026-11-19_15-30-34_06-choose-network-analysis-role.scratch). Use the latest agreed decisions when available and record any assumptions that remain provisional.
 
-Agree a small set of substantive literature questions for the chosen scope and which method references need verification. Record research results and unresolved citation needs separately.
+The user confirmed Issue 06 is resolved and asked for academic papers that support the methods actually used, alongside the literature on age, recruitment and media coverage. Start with the papers already supplied and the repository bibliographies. Give each source a defined role in the paper and record citation gaps separately.
 
 ## Question or gap
 
@@ -44,9 +44,13 @@ The new paper needs a scholarly motivation and contribution supported by verifie
 
 [Existing bibliography](../../paper/references.bib), [backbone bibliography](../../paper/transfer_backbone_references.bib), [question](../final_research_question.md), [source inventory](../evidence_and_sources.md), [tone guide](../tone_of_voice.md).
 
+The [Leiden plan](../../notes/leiden_transfer_communities_plan.md#overleaf-citation-and-section-reference) records the user-supplied Traag et al. paper. The [directed Louvain plan](../../notes/louvain_transfer_communities_plan.md#overleaf-references) records the original Louvain and directed adaptation references for the candidate backbone panel.
+
+For H1 and network claims, use the user-confirmed [restricted rerun evidence](../../reruns/h1_2012_13-2024_25/provenance/output_parity_report.md).
+
 ## Next action to discuss
 
-1. Agree a focused literature search around player age and recruitment, age-related media evaluation, and any structural topic retained after issue 06.
+1. Use the three categories in the [deep research agent prompt](#deep-research-agent-prompt): age and recruitment, age and media coverage, and academic support for the implemented methods.
 
 2. Find primary research supporting the motivation and identify the specific contribution of this study.
 
@@ -66,3 +70,71 @@ The source inventory links verified substantive and methodological references to
 
 2026-11-19 15:38:00 Europe/Copenhagen — Added standalone repository context, specific evidence locations, related decisions, and the starting discussion for this issue.
 
+21 November 2026 — The user confirmed that Issue 06 is resolved and requested a deep research prompt for Issue 07. The search should verify the academic basis for the methods as well as investigate the two substantive literature questions. The prompt starts from the user-supplied Rahman et al. sentiment paper and Traag et al. Leiden paper, then checks the existing bibliography and method notes. The next action is to run the prompt and review the resulting claim-to-source shortlist. Issue 07 remains Open.
+
+22 November 2026 — The [literature review](issue07_literature_review.md) is available with claim-to-source tables, a prioritised shortlist, methods tracing and BibTeX. In reviewing the three proposed Introduction points, the user requested “study populations” or a similarly explicit phrase for differences between recruitment studies and asked that the media point emphasise multiple newspaper sources, including the Guardian. The user agreed with the contribution of comparing Premier League entry rates and before–after Guardian tone across age groups using separate samples. The revised points are recorded in the review. Next, review the citation shortlist and its remaining conditional choices before updating the evidence inventory and confirming resolution. Issue 07 remains Open.
+
+22 November 2026 — The user rejected Ruijg and van Ophem as evidence and requested removal. Removed the paper from the literature review's evidence table, Introduction points, citation priorities, proposed wording and shortlisted BibTeX. The [exclusion decision](issue07_literature_review.md#citation-exclusion-22-november-2026) supersedes the earlier access and wording reviews below. The README checkpoint records the decision. Issue 07 remains Open.
+
+## Resolution, 22 November 2026
+
+The user confirmed Issue 07 satisfactorily completed and authorised resolution. The [literature review](issue07_literature_review.md) contains verified primary sources, claim-to-source tables, search records and copy-ready BibTeX. The [evidence inventory](../evidence_and_sources.md#issue-07-literature-framing-22-november-2026) records the selected roles and wording. Use CIES as recruitment background, Dot Grau–Canter for sentiment analysis across multiple newspapers including the Guardian, and Monsees for cultural, linguistic and source limitations. Ruijg–van Ophem is excluded. The main sentiment model references are Liu et al., TimeLMs, TweetNLP and the exact CardiffNLP card, with the user-supplied VADER and Bing documentation retained alongside their original academic sources. Use Hemerik–Goeman as the main permutation reference, with Phipson–Smyth and Winkler et al. as support and the agreed exchangeability limitation stated.
+
+The user approved Serrano et al., original Louvain and its directed adaptation/implementation for the candidate backbone, plus the brief exploratory Leiden passage using Traag et al. (2019). Attribute faster runtime to the original Leiden evaluation. Our saved comparison supports five broadly overlapping communities with similar modularity. Figure-dependent citations remain with Issue 09, optional feeder prose depends on space, and exploratory H2b references remain conditional on Issue 15. These pending inclusion choices are accounted for in the completed review.
+
+The [storyline](../paper_storyline.md) retains the agreed literature and Leiden roles. The [README checkpoint](../README.md#current-checkpoint) and [tracker](README.md#approved-restricted-period-rerun-batch) now point to [Issue 08's continuation prompt](2026-11-19_15-30-34_08-agree-storyline-and-page-budget.scratch#continuation-prompt). The earlier dated entries below are decision history. Research and read-only implementation tracing preserved the approved sample wording, existing results and unrelated working-tree changes. No analysis or producer script was rerun. Issue 08 remains Open and ready to start when requested.
+
+## Sentiment citation to consider
+
+22 November 2026 — The user confirmed the exploratory Leiden wording. The selected recruitment, media, sentiment and permutation references and candidate backbone methods are now recorded in the evidence inventory and literature review, with BibTeX available in the review. Remaining figure-dependent citations stay conditional on Issue 09, optional feeder prose on space, and H2b citations on Issue 15. Next, review the consolidated Issue 07 decisions and confirm satisfaction before resolving the issue and moving to Issue 08's storyline and page budget. Issue 07 remains Open.
+
+22 November 2026 — The user approved the backbone method references and requested the original Leiden paper with wording for an exploratory comparison. Verified Traag, Waltman and van Eck (2019), its 2018 preprint, and the saved restricted comparison. Recorded a short passage using the common five-community result, membership overlap and similar modularity, with faster runtime attributed to the original paper's evaluation. The saved project comparison cannot establish a runtime ranking. Updated the evidence inventory, literature review, storyline and README. No analysis or benchmark was run. Issue 07 remains Open.
+
+22 November 2026 — The user approved Hemerik and Goeman as the main permutation-method reference, with Phipson–Smyth supporting the plus-one calculation and Winkler et al. supporting the exchangeability and dependence discussion. Updated the evidence inventory, literature-review priorities and README checkpoint. The agreed limitation wording remains part of the proposed paper treatment. This decision supersedes the earlier pending citation choice. Issue 07 remains Open.
+
+22 November 2026 — The user requested a plain-language explanation of exchangeability and specified the limitation wording “Repeated observations of player transfers (multiple transfers per player) and articles shared across signings may challenge this assumption.” Saved the wording and its meaning in the [evidence inventory](../evidence_and_sources.md#permutation-test-assumption-and-limitation-wording). The proposal to use Hemerik–Goeman as the main permutation reference remains for confirmation. Issue 07 remains Open.
+
+22 November 2026 — The user approved the main sentiment model references for Methods, comprising Liu et al. (2019), Loureiro et al. (2022, TimeLMs), Camacho-Collados et al. (2022, TweetNLP) and the exact CardiffNLP checkpoint's model card. Recorded their selected roles in the [evidence inventory](../evidence_and_sources.md#main-sentiment-model-references-selected-on-22-november-2026) and literature review. The project validation supplies the evidence about Guardian performance. Next, review the statistical method references and remaining conditional citations. Issue 07 remains Open.
+
+22 November 2026 — The user clarified that the role of Dot Grau and Canter was already specified as sentiment analysis across multiple newspaper sources, including the Guardian. Recorded this as a selected citation role in the evidence inventory and literature review. The earlier suggestion to reconsider retaining this source is superseded. Issue 07 remains Open.
+
+22 November 2026 — The user confirmed the revised CIES Introduction passage and supplied VADER and textdata Bing documentation as references for sentiment analysis. Opened both documentation pages and saved their links, roles and BibTeX in the evidence inventory and literature review. The Bing page documents an R lexicon interface, while the project uses Python with local files or NLTK. Retain the original academic sources alongside these documentation references. Issue 07 remains Open for the remaining citation decisions.
+
+22 November 2026 — The user clarified that our study does not directly build on CIES. Replaced “Our study builds on this work” with “In this study, we compare” in the [Introduction passage](../evidence_and_sources.md#cies-recruitment-context). CIES supplies background context. Issue 07 remains Open.
+
+22 November 2026 — The user agreed that H1's 12.14% joining rate differs from CIES's age share among recruits, and supported the proposed use of CIES to introduce our recruitment question. The user requested removal of the “leaving open” clause. Updated the [Introduction passage](../evidence_and_sources.md#cies-recruitment-context) to move directly from the CIES finding to our comparison of joining rates. Issue 07 remains Open.
+
+22 November 2026 — The user selected the CIES report and requested comparison with the older-player joining rate. Confirmed 12.14% from the approved restricted H1 summary by reading the saved output. CIES's 10.6% concerns the age composition of externally recruited squad members. Recorded the source as recruitment context, with the limitation that these different proportions cannot corroborate each other numerically. The [evidence inventory](../evidence_and_sources.md#cies-recruitment-context) and literature review contain the comparison and proposed wording. No new calculation or analysis was run. Issue 07 remains Open.
+
+22 November 2026 — The user challenged the Ruijg–van Ophem stronger-club wording using the fee-result passage and questioned the league scope. Rechecked the source. Section 2, article p. 4, identifies the Premier League sample, Table 3 and article pp. 5–6 concern fees, and Table 4 and article p. 6 concern club-rank changes. At that stage, the proposed wording and citation role remained under review. The later [exclusion decision](issue07_literature_review.md#citation-exclusion-22-november-2026) supersedes this review.
+
+22 November 2026 — The user selected Monsees for the argument that cross-cultural differences in football-talent discourse motivate contextual interpretation of this paper's text analysis. Checked the Discussion and Conclusion and recorded a proposed passage in the [evidence inventory](../evidence_and_sources.md#issue-07-literature-framing-22-november-2026), with its Introduction and Discussion placement in the storyline and literature review. The passage expresses the user's concern about completeness as limited generalisability across sources, languages and cultures. The comparison leaves their separate contributions unresolved. Other citation choices and overall Issue 07 resolution remain open.
+
+22 November 2026 — The user reported that the Ruijg–van Ophem PDF URL failed. Updated the literature review to link to the university working-paper record and a readable third-party transcription, with the access limitation recorded in its search record. The journal citation retains its DOI. Issue 07 remains Open.
+
+21 November 2026 — User supplied Md. Mostafizer Rahman, Ariful Islam Shiplu, Yutaka Watanobe and Md. Ashad Alam, *RoBERTa-BiLSTM: A Context-Aware Hybrid Model for Sentiment Analysis*. The authors combine RoBERTa with a bidirectional LSTM and evaluate the hybrid on IMDb, Twitter US Airline and Sentiment140. Use it as a candidate citation for related work on RoBERTa-based sentiment methods. The Guardian analysis uses CardiffNLP's `cardiffnlp/twitter-roberta-base-sentiment-latest` checkpoint, so cite that implementation separately in Methods. [arXiv:2406.00367](https://arxiv.org/abs/2406.00367) · [Journal DOI](https://doi.org/10.1109/TETCI.2025.3572150) · [Guardian scoring code](../../data/dataset_nlp/sentiment/a1_sentiment.py#L48)
+
+## Deep research agent prompt
+
+```text
+Research Issue 07 for the six-page PNAS course report. Work in C:\Users\victo\Codex\Go_Nuts_repos. Start in pnas_report/paper_simple with README.md, scratch/2026-11-19_15-30-34_07-research-literature-and-verify-citations.scratch, final_research_question.md, paper_storyline.md, project_requirements.md and evidence_and_sources.md. Read the Issue 06 resolution and use the confirmed restricted transfer outputs linked in the evidence inventory. Research question: How does entry into the Premier League differ by player age, and how does the tone of Guardian coverage before and after Premier League signings differ by age?
+
+Investigate three categories.
+
+1. Player age and recruitment. Find empirical academic work on how age relates to joining the Premier League or other top-flight football leagues. Prioritise studies on observed transfers and recruitment decisions. Look for comparable denominators and age definitions. Where direct entry evidence is sparse, identify the closest evidence on transfer-market selection, fees or market value, squad composition or career performance, and name the different outcome each study measures. Include relevant results in either direction. Claims about resale value, risk or discrimination need direct evidence.
+
+2. Player age and media coverage. Find empirical studies that analyse age in sports journalism, preferably football coverage around transfers or other career events. Distinguish evaluation or framing, sentiment, and volume of attention. Note the outlet, language, population, and time window. If the closest evidence examines other sports or types of coverage, state how far the analogy goes. Check for closely related studies before proposing what this paper contributes.
+
+3. Methods actually used. Find original academic sources for the statistical and NLP methods and use official documentation or model cards for exact implementations and data provenance. Trace the sources to evidence_and_sources.md and the linked project code or saved methods by reading them.
+   - For H1 and H2, find sources on restricted label permutations, exchangeability and Monte Carlo p-values. Distinguish the origin-club-by-season H1 shuffle from the season-only H2 shuffle. Check Phipson and Smyth for the plus-one calculation and look for a source that addresses restricted exchangeability, including the relevance of repeated player records. Treat the one-transfer-per-player draw as this study's sensitivity design and state the scope of any supporting citation.
+   - For Guardian tone, verify the original RoBERTa paper, the paper or papers cited by the exact CardiffNLP checkpoint, and the primary VADER and Hu–Liu/Bing sources if used in the four-instrument validation table. Look for academic work relevant to validating sentence-level tone against human labels and to applying social-media-trained models to news text. Separate general method support from evidence of performance in this corpus. Cite the Guardian Open Platform and the transfer-data source as provenance where applicable.
+   - If a citation depends on figure or result selection, mark it conditional. For the candidate backbone panel, check Serrano et al., original Louvain, and the directed adaptation or implementation actually used. If the short feeder result survives, check the interpretation of its season-preserving route shuffle and the unadjusted comparison across routes. H2b is exploratory and its inclusion is still with Issue 15. Keep any citations for its regression and shuffle assumptions conditional on that decision.
+
+Start with the user's Rahman et al. RoBERTa-BiLSTM paper (arXiv:2406.00367, DOI 10.1109/TETCI.2025.3572150) and Traag et al. Leiden paper (arXiv:1810.08473, DOI 10.1038/s41598-019-41695-z). Assess Rahman et al. as related sentiment work and identify the separate source for the exact CardiffNLP model. Assess Traag et al. for the repository's Leiden analysis. The candidate backbone uses a saved Louvain partition. Inspect pnas_report/paper/references.bib, pnas_report/paper/transfer_backbone_references.bib, and the network method notes linked from Issue 07 before adding citations.
+
+Search academic indexes and follow citation trails to original articles, conference papers and preprints. Open the primary sources and verify author order, publication year, venue, DOI or stable URL, and where the supporting evidence appears. Record whether you could read the full text or only the abstract. For each source, give the exact claim it supports, how directly it applies, and the proposed placement in Introduction, Methods or Discussion. A general method paper supports the procedure it describes. This study's exchangeability assumptions, Guardian validity and causal limits must be assessed from the actual design and evidence.
+
+Write one Markdown report to pnas_report/paper_simple/scratch/issue07_literature_review.md. Include a concise claim-to-source table under the three categories, a prioritised citation shortlist for six pages, a cautious contribution statement, and specific gaps or unresolved citation needs. Provide copy-ready BibTeX for shortlisted academic papers in the report. Include a brief search record for gaps where direct evidence appeared sparse. Cite the primary sources with direct links.
+
+Use the approved sample wording and interpretations as fixed context. H1 and the Guardian work use separate event populations. The feeder figure stays in the repository and any brief feeder result is optional. The α = 0.20 whole-network backbone is a candidate context panel. Keep the approved H1 and Guardian wording, existing results, and working-tree changes intact. This task is literature research and read-only tracing of the implementations. Discuss any proposed new data analysis or computational check with the user before running it. Any approved script rerun requires a new agent with fork_turns="none". Save the research report and return its path, the strongest sources and the main gaps for discussion. Leave Issue 07 open for the user's review.
+```

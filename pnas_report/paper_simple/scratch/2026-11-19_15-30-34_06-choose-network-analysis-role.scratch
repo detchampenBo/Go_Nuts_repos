@@ -6,7 +6,7 @@
 
 ## Status
 
-Open
+Resolved
 
 ## Checkpoint workflow
 
@@ -28,7 +28,7 @@ The repository root is `C:\Users\victo\Codex\Go_Nuts_repos`. The current paper i
 
 Read [REPOSITORY_CONTEXT.md](REPOSITORY_CONTEXT.md) when starting this issue in a new session. It maps the code, data, saved findings, earlier draft, source caveats, and environment limitations. Recheck the current branch and linked planning files when resuming.
 
-Completed saved outputs include a directed transfer network of 1,254 clubs and 12,794 weighted routes. Louvain and Leiden each find five communities in their observed runs and compare with one shared randomized graph. The feeder output selects 239 recurring routes using at least two records and unadjusted p < 0.05. The backbone output examines local transfer-share concentration. Each measures a structural property whose contribution to the age question still needs agreement. Earlier proposal language can predate these outputs.
+The restricted network contains 1,157 clubs and 11,016 directed routes. The observed Louvain and Leiden results each find five communities using the same graph and degree-preserving null. The feeder analysis selects 217 recurring routes. The backbone uses the saved Louvain partition and has a documented R/Python cutoff discrepancy in one comparison. Decide which structural finding supports the paper's argument.
 
 ## Related decisions and first interaction
 
@@ -42,9 +42,13 @@ The repository contains degree, feeder-route, ownership, community, and backbone
 
 ## Paper context and supporting files
 
-[Course requirements](../project_requirements.md), [degree recap](../../output/degree_distribution_recap.md), [community comparison](../../output/transfer_community_comparison/method_comparison.md), [feeder summary](../../output/premier_league_feeder_summary.md), [ownership audit](../../notes/premier_league_feeder_ownership_audit.md), [backbone summary](../../output/louvain_transfer_backbone_findings/backbone_summary.md).
+[Course requirements](../project_requirements.md), [degree recap](../../reruns/h1_2012_13-2024_25/output/degree_distribution_recap.md), [community comparison](../../reruns/h1_2012_13-2024_25/output/transfer_community_comparison/method_comparison.md), [feeder summary](../../reruns/h1_2012_13-2024_25/output/premier_league_feeder_summary.md), [restricted ownership audit](../../reruns/h1_2012_13-2024_25/output/premier_league_feeder_ownership_audit.csv), [additional ownership screen](../../reruns/h1_2012_13-2024_25/provenance/ownership_screen_28_routes.md), [backbone summary](../../reruns/h1_2012_13-2024_25/output/louvain_transfer_backbone_findings/backbone_summary.md).
+
+For H1 and network claims, use the user-confirmed [restricted rerun evidence](../../reruns/h1_2012_13-2024_25/provenance/output_parity_report.md).
 
 ## Next action to discuss
+
+Review the confirmed restricted outputs below. Agree what network evidence belongs in the six-page paper and how it relates to H1. The backbone's raw agreement is 29/30 and live browser interaction remains unverified.
 
 1. For each candidate, state the specific part of the agreed research question it helps answer.
 
@@ -62,7 +66,48 @@ paper_storyline.md records the agreed role of each selected network result and t
 
 ## Progress and resolution
 
+21 November 2026 — The restricted [degree recap](../../reruns/h1_2012_13-2024_25/output/degree_distribution_recap.md), [community comparison](../../reruns/h1_2012_13-2024_25/output/transfer_community_comparison/method_comparison.md) and [feeder summary](../../reruns/h1_2012_13-2024_25/output/premier_league_feeder_summary.md) support the paper's network-role discussion. The additional source screen now covers the 28 routes outside the reused ownership audit. The [backbone diagnosis](../../reruns/h1_2012_13-2024_25/provenance/backbone_boundary_diagnosis.json) documents the single R disagreement and preserved strict cutoff. The paper's choice of network results remains open.
+
 2026-11-19 15:30:34 Europe/Copenhagen — Issue recorded from the agreed planning context. Follow-up work awaits discussion.
 
 2026-11-19 15:38:00 Europe/Copenhagen — Added standalone repository context, specific evidence locations, related decisions, and the starting discussion for this issue.
 
+20 November 2026 — Linked the restricted-period rerun batch. Degree/community/feeder/ownership/backbone evidence for the new paper must come from new verified artifacts; prior five-community/239-route counts cannot be assumed. All original outputs are preserved. Structural-result selection for the paper remains a separate discussion after reruns.
+
+21 November 2026 — Issue 05 is Resolved after explicit user confirmation. Start the network-evidence discussion using the [current checkpoint](../README.md#current-checkpoint) and the prompt below. Issue 06 remains Open.
+
+21 November 2026 — Reviewed the confirmed degree, Louvain and Leiden, feeder-route, ownership and backbone evidence for discussion. H1 compares entry rates by age across eligible transfers. The directed graph groups those same events by club pair, and the feeder analysis compares destinations among the 2,396 arrivals with a baseline that preserves sending and receiving totals within season. The proposed paper treatment is one sentence on graph size and degree, followed by one short feeder result alongside the agreed H1 treatment. The existing seven-transfer panel (a) is a candidate for Issue 09. Its ownership annotations need to distinguish verified transfer-date overlaps from the two manual inclusions. The proposal keeps the full ownership comparison, community and backbone results in the supporting repository evidence. The route screen is unadjusted across 11,448 comparisons, the community comparison uses one shuffled graph, the ownership screen gives a documented minimum, and the backbone's raw agreement remains 29/30 because of the exact cutoff tie. The feeder analysis pools age groups. The Guardian analyses use separate signing samples. [Restricted evidence handoff](../../reruns/h1_2012_13-2024_25/provenance/output_parity_report.md) · [Primary feeder figure](../../reruns/h1_2012_13-2024_25/output/premier_league_feeder_findings/combined.pdf) · [Standalone panel (a)](../../reruns/h1_2012_13-2024_25/output/premier_league_feeder_findings/frequent_transfer_routes.pdf)
+
+Next, discuss whether to retain the feeder result with panel (a) as a figure candidate or report it in prose only. Record the agreed scope in this issue and the storyline, then resolve after the user confirms satisfaction. No new analysis, verification check or script rerun was performed. Status remains Open.
+
+21 November 2026 — The user sees the feeder-route result as an interesting subanalysis beyond the intended question and values the backbone for helping readers understand the transfer data. Revised proposal for discussion: give H1 the main Results treatment, describe graph size and median degree briefly, retain the feeder analysis and its primary seven-transfer figure in the repository, and carry the α = 0.20 whole-network backbone into Issue 09 as a candidate context panel next to the age-entry result. The snapshot shows 383 clubs and 1,396 routes carrying 5,271 transfer records (31.7% of the observed volume). Its colours and shapes represent Louvain communities, and it pools ages and includes non-PL destinations. The caption would explain the local filtering rule and coverage. The full cutoff comparison and exact-tie diagnosis remain in the saved evidence. The next decision is whether to carry that contextual panel into the figure discussion and keep the feeder analysis as supporting material. Record only agreed roles in the storyline and resolve after the user confirms satisfaction. Status remains Open. [Backbone figure](../../reruns/h1_2012_13-2024_25/output/louvain_transfer_backbone_findings/louvain_backbone_alpha_comparison.pdf) · [Backbone summary](../../reruns/h1_2012_13-2024_25/output/louvain_transfer_backbone_findings/backbone_summary.md)
+
+21 November 2026 — The user agreed to the proposed backbone role. Carry one whole-network snapshot at α = 0.20 into Issue 09 as a candidate context panel alongside H1. The figure decision depends on how well the panel fits with the H1 and Guardian figures. The agreed role is recorded in the [storyline](../paper_storyline.md#transfer-network-context-21-november-2026).
+
+The user asked whether the template allows appendix material. The supplied PNAS research-report template describes a separate Supporting Information PDF with its own figure and table numbering. The course brief and checklist cap the paper at six pages and list three PDFs for submission. Whether the course accepts a separate Supporting Information PDF remains unconfirmed. Any appendix within the paper counts toward the six pages. Proposed treatment for this submission: retain the feeder analysis and primary seven-transfer figure in the repository. Next, confirm that treatment and satisfaction with the Issue 06 decisions. Status remains Open. [PNAS template guidance](https://www.overleaf.com/latex/templates/template-for-preparing-your-research-report-submission-to-pnas-using-overleaf/fzcbzjvpvnxn#source) · [Week 8 course brief](https://sunelehmann.com/socialgraphs2026-web/weeks/week8.html#project) · [Course checklist](https://sunelehmann.com/socialgraphs2026-web/index.html#checklist)
+
+## Resolution, 21 November 2026
+
+The user confirmed satisfaction with keeping the feeder analysis in the repository and suggested giving its result a few sentences in Results if space permits. Keep the primary seven-transfer figure in the repository. A short text mention may give the overall count and one example, keeping the 2,396-arrival denominator, the within-season sending and receiving totals, and the unadjusted screening across 11,448 pairs clear. The feeder results pool age groups. Retain the approved H1 comparison and complete sensitivity passage as the answer to entry by age. Graph size and degree can describe the transfer sample briefly. [Feeder results](../../reruns/h1_2012_13-2024_25/output/premier_league_feeder_summary.md) · [Primary feeder figure](../../reruns/h1_2012_13-2024_25/output/premier_league_feeder_findings/combined.pdf) · [Agreed H1 wording](../evidence_and_sources.md#agreed-paper-wording-and-resolution)
+
+Carry one whole-network backbone snapshot at α = 0.20 into Issue 09 as a candidate context panel alongside H1. If selected, explain the locally filtered routes, coverage and Louvain colours in the caption. Retain the full community analyses, ownership comparison and backbone cutoff comparisons in the repository. Their evidence retains the single shuffled community graph, the bounded ownership screen and two manual inclusions, and the exact backbone cutoff tie with raw R/Python agreement of 29/30. [Restricted evidence handoff](../../reruns/h1_2012_13-2024_25/provenance/output_parity_report.md) · [Backbone summary](../../reruns/h1_2012_13-2024_25/output/louvain_transfer_backbone_findings/backbone_summary.md)
+
+Issue 06 is Resolved. The [storyline](../paper_storyline.md#transfer-network-context-21-november-2026) and [README checkpoint](../README.md#current-checkpoint) record the agreed choices. No network analysis was added or rerun. Begin [Issue 07](2026-11-19_15-30-34_07-research-literature-and-verify-citations.scratch#next-action-to-discuss) by agreeing the literature questions on age and recruitment and age-related media evaluation, and identifying the method references to verify. Issue 15 remains open for the H2b decisions.
+
+## Continuation prompt
+
+```text
+Address Issue 06 — Agree which network findings belong in the paper.
+
+Repository: C:\Users\victo\Codex\Go_Nuts_repos
+
+Start with `pnas_report/paper_simple/README.md`, `pnas_report/paper_simple/scratch/REPOSITORY_CONTEXT.md` and `pnas_report/paper_simple/scratch/2026-11-19_15-30-34_06-choose-network-analysis-role.scratch`. Read `final_research_question.md`, `paper_storyline.md`, `project_requirements.md` and the relevant evidence in `evidence_and_sources.md`.
+
+Issues 01–05 are Resolved. Preserve the exact Issue 02 sample description, Issue 03’s H1 wording and complete sensitivity passage, and the agreed Guardian interpretation. H1 and the Guardian analyses use separate event populations. Issue 15 remains open for the H2b model explanation, candidate figure and final inclusion decision.
+
+First explain in plain language what the H1 comparison already shows about Premier League entry and what building the transfer network adds. Then use the verified 2012/13–2024/25 rerun to compare the saved evidence on degree, Louvain and Leiden communities, feeder routes, ownership and the backbone. For each candidate, explain what it measures, which part of the agreed question it helps answer, and how much space its explanation or figure would need. Assess whether H1 and a concise description of the network already demonstrate the required network science. Recommend the smallest set of results that strengthens the six-page paper and explain the tradeoffs.
+
+Use the confirmed restricted outputs and the primary feeder figure with the seven-transfer minimum. Preserve the single-realization community null, unadjusted feeder-route comparisons, limits of the ownership evidence, and the documented backbone cutoff tie (raw R/Python agreement 29 of 30). Keep any proposed link between network structure and age or Guardian tone tied to evidence that actually tests it. Discuss any new analysis or check with me first. An approved script rerun requires a fresh-context agent with `fork_turns="none"`.
+
+Present the evidence and recommendation before recording agreement. Then document the agreed choices in Issue 06 and the storyline, preserve unrelated working-tree changes, and mark Issue 06 Resolved only after I confirm satisfaction. Update the README checkpoint with the outcome and exact next action.
+```

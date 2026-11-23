@@ -1,0 +1,80 @@
+# 11.1 Explain exploratory H2b, decide inclusion and discuss a possible course-grounded text subanalysis
+
+## Created
+
+2026-11-21 15:45:35 Europe/Copenhagen. Follow-up requested during Issue 05.
+
+## Status
+
+Open
+
+## H2b decision completed, 22 November 2026
+
+The user explicitly agreed to omit H2b from the paper and use the new unadjusted four-model H2 monthly figure. The [agreed decision and stronger rationale](../paper_storyline.md#agreed-figure-2-and-h2b-omission-22-november-2026) settle H2b's inclusion, figure and paper treatment. Its narrower, model-dependent contribution does not justify the additional assumptions, sentence/sample changes, explanation and page cost. The same-sample market-value adjustment changes the post-signing RoBERTa p-value from 0.1048 to 0.0482; interpretation and input overlap need qualifications beyond the central comparison. This is a scope/value judgement, not a conclusion that regression is invalid or a rejection solely because it was not taught. Preserve the exploratory code, findings and figures in the repository.
+
+Omit H2b from manuscript Results, Methods, Discussion and sample wording. Under the explicit omission instruction, remove only its 793-signing sentence from the approved sample description, retaining the sentence as historical provenance and leaving all other sample wording and H1 passages unchanged. Remove its optional third figure and 0.15/0.30-page allocations; the released 0.45 pages are unallocated fit margin. No replacement analysis is selected or authorised. Earlier H2b walkthrough and plot proposals below are retained as history and are no longer required manuscript work.
+
+**Remaining scope of this issue:** decide whether the previously suggested course-grounded text subanalysis is declined, deferred outside this draft or pursued as separately agreed work. That disposition has not been explicitly decided, so Issue 11.1 remains Open for that question only. Do not reopen H2b inclusion or infer a new analysis from the released space. No additional model demonstration or H2b plot is needed to implement the omission.
+
+## Work order, 22 November 2026
+
+Formerly Issue 15. The user moved this review to **11.1**, after Issue 11 and before section drafting in Issue 12. The original filename is retained so existing links and historical references still work. The user accepted Issue 08's storyline and provisional page distribution while leaving H2b conditional. Depending on this review, the user may want to explore a further text subanalysis with a foundation in course theory. This is a possible direction for discussion, not a selected analysis.
+
+Issues 09–11 may plan the core figures, Methods and Discussion with the text extension conditional. Before Issue 12 begins, settle H2b and whether to pursue the possible subanalysis; complete and incorporate any agreed follow-up and reconcile the affected plans. The conditional 0.45-page allowance is not automatically assigned to another analysis.
+
+## Checkpoint workflow
+
+1. At the start, read the Current checkpoint in [paper_simple/README.md](../README.md). Compare it with this issue's status, latest progress, and related decisions.
+
+2. Remind the user where this issue fits in the recorded process and identify the next discussion or action. Reconcile any difference between the README and the issue with the user.
+
+3. Record agreed evidence and decisions in this issue and the affected planning files. Create linked scratch issues for new research, evidence, citation, or cross-reference needs.
+
+4. When the completion criteria are met and the user confirms satisfaction, set this issue to Resolved and append a dated resolution with the outcome, supporting evidence, and changed file links.
+
+5. Update the Current checkpoint in [paper_simple/README.md](../README.md) as part of resolving this issue. Include the update date, completed issue, agreed outcome, links to changed documents and new issues, and the next issue with its exact next discussion or action.
+
+6. Verify that this issue and the README agree, then tell the user that both were updated. If the session ends during the issue, record partial progress and the next step in both places while retaining the issue's current status.
+
+## Starting context
+
+The repository is `C:\Users\victo\Codex\Go_Nuts_repos` and the working paper is in `pnas_report/paper_simple`. Read the [paper checkpoint](../README.md#current-checkpoint), [repository context](REPOSITORY_CONTEXT.md), [Issue 05](2026-11-19_15-30-34_05-verify-text-results-and-exploratory-status.scratch) and the [proposed Results wording](../evidence_and_sources.md#proposed-paper-wording-and-placement). H2 tests how tone changes over time. Exploratory H2b compares the level of Guardian tone for players aged 30 and older with younger players in the year after signing. The before-signing estimate supplies context. H2b emerged while the team was investigating H2. The decision on retaining H2b in the paper remains open. [Historical question](../../notes/question.md#question)
+
+## Related decisions and first interaction
+
+Start by walking the user through one signing's row of data and a hypothetical pair of otherwise comparable signings, then agree what a figure needs to explain. The explanation is a deliverable for the user even if the paper carries a shorter version. If H2b stays, coordinate the figure and caption with [Issue 09](2026-11-19_15-30-34_09-select-figures-and-plan-cross-references.scratch) and the reproducible model description with [Issue 10](2026-11-19_15-30-34_10-plan-reproducible-methods.scratch). Use the [course requirements](../project_requirements.md) when assessing whether the plot earns space in the six-page paper.
+
+## What needs explaining
+
+1. **Why this model was tried.** The raw tone averages are lower for older signings in both periods. The exploratory question is whether the post-signing gap persists when the model accounts for differences in prior Guardian attention, recorded market value and season, and after the score adjustment for article type and removal of sentences containing double quotation marks. Each signing contributes one mean sentence score per period. The quote filter and the requirement of five sentences in each period leave 793 signings, including 65 aged 30+. The baseline rows use the 820-signing sample. [Saved specifications](../../data/dataset_nlp/results/a1_h2b_controls.csv) · [Model and preprocessing](../../data/dataset_nlp/sentiment/a1_h2b_controls.py#L24)
+2. **How to read the coefficient.** Start with a hypothetical pair from one season, both valued at EUR 10 million and both named in 20 Guardian articles before signing. Their season baseline, log market value and log(1 + prior count) are identical. In the fitted model the age indicator changes from 0 to 1, so their predicted after-signing scores differ by −0.0349. Two separate regressions estimate tone levels before and after. The direct change regression answers whether the two age gaps differ. Explain how the model learns a common age coefficient across all observed signings at once and why this model-based comparison depends on overlap in the observed inputs. [Model code](../../data/dataset_nlp/sentiment/a1_h2b_controls.py#L53)
+3. **What the evidence adds.** On the same 820 signings, adding logged market value to season and prior coverage changes the post-signing estimate from −0.0279 to −0.0344 and the permutation p-value from 0.1048 to 0.0482. The lower post-signing estimate persists and the nominal evidence depends on the model. Holding market value fixed narrows the question because age may also shape value. Explain why the p-value is exploratory. The shuffle holds the outcomes and covariates in place and reallocates the age labels within season, preserving seasonal age counts while allowing age to relate differently to the covariates. The 793-signing all-controls estimate is −0.0349 after (p = 0.0390), −0.0153 before (p = 0.3511) and −0.0196 for the direct difference in changes (p = 0.3455). The direction of the post-signing estimate supplies the exploratory observation. Whether signing widened the age gap and why the gap exists remain open. [Saved results](../../data/dataset_nlp/results/a1_h2b_controls.csv) · [Issue 05 evidence](../evidence_and_sources.md#exploratory-h2b-before--and-after-signing-tone-levels)
+4. **What could benefit from a further check.** Discuss whether a view of the joint distribution of prior coverage and recorded market value by age, within relevant seasons, would help assess where the model is making comparisons close to observed data. The [per-signing export](../../data/dataset_nlp/results/a1_h2b_signings.csv) comes from the 820-signing baseline and could support a baseline diagnostic. Exact overlap for the 793 signings requires their membership, which the export does not provide. The full article bodies, sentence inputs and score caches remain unavailable at their documented paths. Discuss any additional analysis or check with the user before running it. Dispatch an approved script rerun to a fresh-context agent with `fork_turns="none"`.
+
+## Figure to develop
+
+First explain the story the reader should get from the plot in one sentence. Proposed message: the estimated post-signing gap stays negative across the main RoBERTa specifications, and including market value changes the strength of the statistical evidence.
+
+- **Candidate.** Make a compact horizontal dot plot from the after-period RoBERTa rows in [a1_h2b_controls.csv](../../data/dataset_nlp/results/a1_h2b_controls.csv). Use four clearly labelled rows: raw age difference, season and prior coverage, season and prior coverage plus market value, and the full adjustment with quotes removed. Place a vertical reference at zero and label the axis “Tone score difference, 30+ minus under 30”. Mark the sample sizes alongside each row. The second-to-third comparison isolates adding market value on the same signings. The final row also changes sentence processing and the sample, so show it separately from the sequence of covariate additions. Keep nominal p-values secondary to the estimates. If using the existing bars, label them as each estimate ± 1.96 standard deviations of the within-season shuffle distribution. The caption should explain that the raw row uses a simple mean difference and season-restricted shuffling.
+- **Why existing plots are insufficient for this job.** The [current dot-figure implementation](../../notebooks/plot_guardian_text_findings.py#L173) displays only the raw and all-controls specifications for each instrument. That comparison combines several changes and skips the same-sample market-value step. The [historical dot-figure footer](../../data/dataset_nlp/sentiment/a1_h2b_figure.py#L105) assigns season adjustment to all models. The raw H2b estimate is a simple difference between means, with season restriction in its age-label shuffle. The [adjusted time arc](../../data/dataset_nlp/sentiment/a1_h2b_arc.py) displays smoothed monthly averages. Its printed age gaps come from period-level comparisons, so the vertical distance between the lines at any one month should be read as a monthly descriptive difference.
+- **For explaining the model to the user.** Consider a separate labelled illustration of the hypothetical matched inputs and the age coefficient if the numerical walkthrough needs visual support. Any plot that uses actual fitted slopes or shows observed overlap requires a discussion of the relevant inputs and the evidence available. An explanatory illustration can be useful during review even if the paper figure uses the saved estimates.
+
+## Next action to discuss
+
+H2b omission is settled. At the scheduled Issue 11.1 review, discuss only the disposition of the previously suggested further course-grounded text subanalysis. Do not produce the historical H2b figure or run its proposed overlap diagnostic for this paper.
+
+If further text analysis is wanted, read the relevant saved course material and distinguish the theory it actually teaches from extensions beyond it. Agree the research question, method, available inputs, validation/null comparison and intended contribution within six pages before running anything. Account for missing sentence text and score caches. Create a linked issue once a concrete analysis is selected. Return resulting decisions to Issues 09–11 and the storyline before drafting; H2b remains omitted.
+
+## Resolved when
+
+The user confirms the model explanation is clear and decides whether to retain H2b. If retained, produce and verify the agreed plot against the saved source rows and record its caption, uncertainty label and intended location. Record the agreed rationale and claim limits in the evidence and storyline. If the user decides to omit H2b or the figure, record the reason and the agreed paper treatment.
+
+Also record whether the possible course-grounded text subanalysis is declined, deferred outside this draft or selected as linked follow-up. If H2b is omitted, explicitly settle its reference in the exact approved sample description before editing that wording. Any selected follow-up must be completed and incorporated, with figures, Methods, Discussion and page budget reconciled, before section drafting in Issue 12.
+
+## Progress and resolution
+
+21 November 2026 — Created at the user's request. Reviewed the saved model and figure implementations to identify the same-sample market-value comparison and what a new plot could add. The [proposed Results wording](../evidence_and_sources.md#proposed-paper-wording-and-placement) is recorded in the evidence inventory. No plot was produced and no analysis or script was rerun. Status remains Open.
+
+21 November 2026 — Reviewed the local 02805 curriculum at the user's request. [Week 7, sentiment measurement and validation](<../../../data/week7/Week 7 · From meaning to measurement · 02805.html#sentiment>) teaches contextual and lexicon sentiment, validation on labelled text and the limits of comparing scores. That directly supports the Guardian measurement and validation. The logistic regression example in Week 7 classifies text. H2b instead uses multiple linear regression to explain a numerical signing-level score. [Week 2, null models](<../../../data/week2/Week 2 · Models & null models — 02805.html#a-null-model-in-action-the-friendship-paradox>) teaches the logic of preserving features while shuffling. H2b applies that logic to age labels within season. The saved curriculum pages reviewed here do not teach H2b's specific covariate-adjusted regression or establish the validity of its shuffle with covariates. The [Week 8 FAQ](<../../../data/week8/Week 8 · Putting it all together · 02805.html#faq>) explicitly permits methods beyond class and asks the paper to centre on the course's network science and NLP. Proposed paper treatment: keep H2b as an optional exploratory extension if its explanation and figure answer a distinct part of the tone question within six pages. Keep the course-taught sentiment validation and before-to-after comparison central. The user has yet to decide whether to retain H2b.
+
+22 November 2026 — The user agreed with Issue 08's storyline and page distribution and requested scheduling this issue as 11.1 before drafting. Updated the title, work order, next discussion and completion criteria while retaining the filename. Recorded the user's conditional interest in a course-grounded text subanalysis. H2b inclusion and the possible subanalysis remain undecided. No analysis, plot or script rerun was performed. Next, at Issue 11.1, explain H2b using the example pair, decide its treatment, then discuss whether further text analysis is wanted and how course theory could support it.

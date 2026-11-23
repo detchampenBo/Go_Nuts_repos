@@ -1,0 +1,26 @@
+{
+  "fresh_agent": "/root/restricted_h1_reruns",
+  "restricted_sha256": "48247e435eb0256405f778cafcfdba4eea39651a009fa61f88c41c907d36055a",
+  "independent_recomputation_matches_all_results_and_permutations": true,
+  "sensitivity_draw_rebuilt_from_restricted_sample": true,
+  "sensitivity_one_record_per_player": true,
+  "all_original_124_hashes_unchanged": true,
+  "h1_artifacts_present": 14,
+  "historical_snapshot_warning_expected": true,
+  "outputs_sha256": {
+    "output/age_shuffle_outsideprem_toprem_all_eligible_transfers.png": "916abb7ec839351c66abf0cc2cc28c17086926a69c8dc2cf994cfd01149e694f",
+    "output/age_shuffle_outsideprem_toprem_findings/age_shuffle_outsideprem_toprem_all_eligible_transfers.pdf": "938779f09e413ac564d2a97c4dc398d063dc619c43d1310aa76460813d0742d1",
+    "output/age_shuffle_outsideprem_toprem_findings/age_shuffle_outsideprem_toprem_all_eligible_transfers.png": "916abb7ec839351c66abf0cc2cc28c17086926a69c8dc2cf994cfd01149e694f",
+    "output/age_shuffle_outsideprem_toprem_findings/age_shuffle_outsideprem_toprem_all_eligible_transfers.svg": "15fe2a5f2a908786ecd809131a0a44d2f7b81846e59bbce79387f86f15365e2f",
+    "output/age_shuffle_outsideprem_toprem_findings/age_shuffle_outsideprem_toprem_comparison.pdf": "72841bf85b389372cf3f2d53ebe0ce773a3693cb0b42fcede52ec5e377c45a36",
+    "output/age_shuffle_outsideprem_toprem_findings/age_shuffle_outsideprem_toprem_comparison.png": "a03361614d97bd2a1b2e2277de5276a9f4ea898fd9e06538221903d10bf347a1",
+    "output/age_shuffle_outsideprem_toprem_findings/age_shuffle_outsideprem_toprem_comparison.svg": "da7f84371898aff4a22f2d56fa9c0b386b22a47c48f165f6be614ff06b3177fa",
+    "output/age_shuffle_outsideprem_toprem_findings/age_shuffle_outsideprem_toprem_one_transfer_per_player.pdf": "8c3932e7cb93d6dfbabb69930e7c59ad4b129698754daa3974b16a0bef5b7f78",
+    "output/age_shuffle_outsideprem_toprem_findings/age_shuffle_outsideprem_toprem_one_transfer_per_player.png": "30abe09b1c95fa48c3c2ab52ab8ac491fa20eb2a5c1913b2a15ce7efe9b63014",
+    "output/age_shuffle_outsideprem_toprem_findings/age_shuffle_outsideprem_toprem_one_transfer_per_player.svg": "98389ca6d850696310c7fc0ee65870b8e5ad4e6bcc7eae0d6b7cf457d57063f9",
+    "output/age_shuffle_outsideprem_toprem_findings/README.md": "ec4a1629ba88bb73337e747327d72eeda2b64f45c9259f30fa12319faeccca4e",
+    "output/age_shuffle_outsideprem_toprem_one_transfer_per_player.png": "30abe09b1c95fa48c3c2ab52ab8ac491fa20eb2a5c1913b2a15ce7efe9b63014",
+    "output/age_shuffle_outsideprem_toprem_results.json": "db6454bb97c8042529aead814e3836ecfd64ce56ea8f985a567251d762b4a754",
+    "output/age_shuffle_outsideprem_toprem_summary.md": "73b602a047d7bcec97074a4217ba11eeb8a9bd1f3d14cb78f6d9177091c45c3b"
+  }
+}

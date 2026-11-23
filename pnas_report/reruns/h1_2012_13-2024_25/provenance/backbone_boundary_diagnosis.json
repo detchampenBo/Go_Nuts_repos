@@ -1,0 +1,25 @@
+{
+  "checked_on": "2026-11-21",
+  "fresh_agent": "/root/h1_resume",
+  "scope": "1",
+  "scope_name": "Inter",
+  "alpha": 0.2,
+  "route": {"from_club_id": 210, "from": "Grêmio", "to_club_id": 6574, "to": "Sassuolo", "weight": 4},
+  "saved_comparisons": {"matched": 29, "tested": 30, "r_parity_passed": false},
+  "scope_alpha_result": {"r_unique_routes": 329, "python_unique_routes": 328, "structural_exceptions": 0},
+  "minimal_fixture": {"outbound_edges_from_210": {"6195": 1, "6574": 4}, "r_retained": 1, "python_retained": 0},
+  "source_out_degree": 2,
+  "source_out_strength": 5,
+  "destination_score_in_scope": 0.22906046619247,
+  "exact_source_score": "((5 - 4) / 5)^(2 - 1) = 1/5",
+  "python_score_and_cutoff_binary64": "0x1.999999999999ap-3",
+  "r_package_score_binary64": "0x1.9999999999998p-3",
+  "r_package_score_decimal": "0.19999999999999996",
+  "verification": [
+    "The original Python load_inputs, score_scope and reference_check paths reproduced the saved comparison from the restricted artifacts. The two-edge fixture reproduced the discrepancy, and dropping the companion edge caused neither implementation to retain the route.",
+    "R disparityfilter computes (1 - weight / strength)^(degree - 1) using normalized floating-point arithmetic. The first subtraction rounds the exact 1/5 two binary64 steps below the cutoff.",
+    "The package excludes the route at its own computed score, retains it at the next representable threshold and at 0.20, and agrees with Python at the next representable threshold above 0.20. Both comparisons are strict.",
+    "R 4.5.3, igraph 2.3.4, disparityfilter 2.2.3. The run-local R wrapper matches the original by SHA-256."
+  ],
+  "disposition": "The exact score equals the cutoff. Preserve the approved Python integer numerator and strict comparison, leaving the route excluded from this community view. Preserve the raw R parity flag and record this diagnosed discrepancy. This route's whole-network score is different and the saved whole-network comparison agrees."
+}

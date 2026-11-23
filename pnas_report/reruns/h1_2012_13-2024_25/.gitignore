@@ -1,0 +1,3 @@
+# Keep this run's new outputs available for version control despite the root output/ rule.
+!output/
+!output/**
