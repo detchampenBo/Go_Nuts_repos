@@ -1,0 +1,111 @@
+{
+  "scope": "ACTUAL corpus; explicit score-check omission retained",
+  "status": "all independent data checks passed",
+  "original_source_rows": 303530,
+  "selected_rows": 99976,
+  "signings": 820,
+  "older_signings": 67,
+  "sentence_period_counts": {
+    "before": 39542,
+    "after": 60434
+  },
+  "zero_signing_period_count_mismatches": true,
+  "all_tokens_independently_retokenized_in_original_row_order": true,
+  "score_alignment_and_finite_score_validity_checked": false,
+  "streams": {
+    "token_frequencies.csv": {
+      "n_tokens": 3870272,
+      "n_types": 42779,
+      "n_hapax": 13022,
+      "relative_frequency_sum": 1.0
+    },
+    "token_frequencies_no_stopwords.csv": {
+      "n_tokens": 2336122,
+      "n_types": 42469,
+      "n_hapax": 13017,
+      "relative_frequency_sum": 1.0
+    }
+  },
+  "linked_documents": 56158,
+  "document_totals_and_each_document_independently_verified": true,
+  "rank_reference_descriptive_comparisons": [
+    {
+      "rank": 1,
+      "token": "the",
+      "count": 150246,
+      "observed_relative_frequency": 0.038820527342781075,
+      "rank1_anchored_reference": 0.038820527342781075,
+      "observed_to_reference_ratio": 1.0
+    },
+    {
+      "rank": 2,
+      "token": "and",
+      "count": 86037,
+      "observed_relative_frequency": 0.02223022051163329,
+      "rank1_anchored_reference": 0.019410263671390537,
+      "observed_to_reference_ratio": 1.1452817379497624
+    },
+    {
+      "rank": 5,
+      "token": "in",
+      "count": 58569,
+      "observed_relative_frequency": 0.015133044912605626,
+      "rank1_anchored_reference": 0.007764105468556215,
+      "observed_to_reference_ratio": 1.9491034703086938
+    },
+    {
+      "rank": 10,
+      "token": "is",
+      "count": 29321,
+      "observed_relative_frequency": 0.0075759533180096905,
+      "rank1_anchored_reference": 0.0038820527342781075,
+      "observed_to_reference_ratio": 1.951532819509338
+    },
+    {
+      "rank": 100,
+      "token": "or",
+      "count": 4863,
+      "observed_relative_frequency": 0.0012565008350834256,
+      "rank1_anchored_reference": 0.00038820527342781075,
+      "observed_to_reference_ratio": 3.2366918254063335
+    },
+    {
+      "rank": 1000,
+      "token": "academy",
+      "count": 562,
+      "observed_relative_frequency": 0.0001452094323086336,
+      "rank1_anchored_reference": 3.8820527342781074e-05,
+      "observed_to_reference_ratio": 3.740532193868722
+    },
+    {
+      "rank": 10000,
+      "token": "imperative",
+      "count": 19,
+      "observed_relative_frequency": 4.909215683032097e-06,
+      "rank1_anchored_reference": 3.8820527342781075e-06,
+      "observed_to_reference_ratio": 1.2645927345819523
+    },
+    {
+      "rank": 42779,
+      "token": "\ud83d\udc4e",
+      "count": 1,
+      "observed_relative_frequency": 2.58379772791163e-07,
+      "rank1_anchored_reference": 9.074669193478359e-07,
+      "observed_to_reference_ratio": 0.2847263820667439
+    }
+  ],
+  "output_sha256": {
+    "tokens.json.gz": "9e2d7a0405c81779ca2f545ef7d6592b69c26c08551750bbd76dc746f3c8acf0",
+    "token_frequencies.csv": "20f3ced8de4c93c59951dc836a95e6145369848a83629a901a4e84f73f9732b5",
+    "token_frequencies_no_stopwords.csv": "44f3fa0f52efce4190e4a17205169958486b94c6b6aca83d6f2bf7fc80908983",
+    "top_five_words.csv": "3ff95702767a71dbd97c39da9db5e089e463699eb6b5078e34c0cd67063e8506",
+    "top_five_words.md": "be7ff32ba4fb5012787ea95f571900a20bc697dc68095c8f5c5e75a5656dd527",
+    "corpus_summary.json": "c86e70934fd3c345165429c5ab1f29184b37ba26c93d483c9ed10de436780b79",
+    "document_lengths.csv": "5e46dd997ace8f08831d18f571d49ca7364e84713d49763a915d4ac759ad91c5",
+    "rank_frequency.pdf": "4e7adbec4d36d31578e51e7f2bc0efde6a99317015eabaaec4896b3f2cb64e84",
+    "rank_frequency.png": "2448612f5e83ccfc343aba2fdcb42be204cf9e414d5d94ad68e63e06bedb9baf",
+    "rank_frequency.svg": "00acce274398739b8d8fe8e1ef3d397ac2de337f0fe2e7595d2165d8bf4e658b",
+    "README.md": "1db1f41f76a0e37c1c2cfed513cf8c86c85b4e9f3bb38a27d211d37f859ee2f7"
+  },
+  "verifier_sha256": "fc3bfa629f8f10248f24efaca97723e56f7231db74dd109197dd91ff83f19757"
+}

@@ -6,7 +6,47 @@
 
 ## Status
 
-Open
+Resolved
+
+## Resolution, 24 November 2026
+
+The user confirmed readiness to resolve the assembly milestone and asked to review the whole paper in Overleaf. [The assembled manuscript](../main.tex) compiles in the supplied PNAS template to the [inspected six-page PDF](../output/pdf/pnas_issue13.pdf). All 21 references and the figure/table links resolve. This completes the assembly and reference checks listed below.
+
+[Issue 14](2026-11-19_15-30-34_14-final-review-and-overleaf-zip.scratch#overleaf-review-package-24-november-2026) records the [uploadable review ZIP](../paper_output_zip/pnas_overleaf_review.zip) and its successful fresh-extraction build. The user's full-paper review and course-specific individual contributions carry forward there. The original template ZIP, approved source and plot PDFs are preserved.
+
+## Assembly and rendered review, 24 November 2026
+
+Assembled [main.tex](../main.tex) in `paper_simple` and compiled the [six-page PNAS draft](../output/pdf/pnas_issue13.pdf), including figures and references. Reviewed all six rendered pages. Figure 1 is on page 3 with its native side caption and the source PDF's 90-degree counterclockwise rotation. Figure 2 and Table 1 are on page 4, with the four-instrument panels, caption and validation values intact. Text and displays fit within the page bounds. The displayed texts, labels and footers are legible at the template's native size. Discussion starts below Figure 1 and continues around the displays on page 4.
+
+### Changed files
+
+- Added [main.tex](../main.tex), which inputs all ten approved fragments, uses the PNAS first-page layout and prints the required Introduction and References headings. It lists Victor Bohart (DTU Management, `s230654@dtu.dk`) and Philip Nukunu Fu (DTU Compute, `s260114@student.dtu.dk`) as corresponding authors in that order and uses the saved equal-contribution statement. For this course proof, used the Social Sciences classification and keywords for football transfers, network science and sentiment analysis. Turned off the draft watermark, disabled the sample line-number header and omitted the sample publication identifiers and the funding/competing-interest declarations.
+- Extracted these seven dependencies byte-for-byte from the supplied ZIP into `paper_simple`: `pnas-new.cls`, `pnasresearcharticle.sty`, `PNAS_Logo.pdf`, `pnas-new.bst`, `jabbrv.sty`, `jabbrv-ltwa-en.ldf` and `jabbrv-ltwa-all.ldf`. The ZIP and both plot PDFs retained their original SHA-256 hashes.
+- Applied typesetting-only edits in [abstract.tex](../abstract.tex), [results.tex](../results.tex), [methods.tex](../methods.tex), [figure_floats.tex](../figure_floats.tex) and [validation_table.tex](../validation_table.tex). Normalised dashes, apostrophes and math symbols for T1 fonts, allowed line breaking in the model identifier, used explicit paragraph breaks inside the Figure 2 caption, set top float placement and tightened table column padding. The two caption arrangements, both graphic sizes, validation rows, approved wording and claims were preserved. Panel references use the approved parent figure link with the printed (a) or (b) suffix.
+- Added [references.bib](../references.bib) with the 21 distinct keys actually cited, using [Issue 07's verified entries](issue07_literature_review.md#bibtex-for-the-shortlist). TweetEval, H2b-only sources and other historical candidates are outside the selected set. Kept the verified DOI and URL metadata, added clickable links for the model card, documentation and dataset, and used `n.d.` for the four online entries without a verified publication year. Formatted Liu et al. as an arXiv preprint and VADER as an article in the numbered AAAI proceedings to match the supplied style without BibTeX warnings.
+
+### Commands and checks
+
+- Starting and ending branch `integrate-network-text`. Checked with `git status --short --branch` and `git diff --check`. Existing modifications and untracked work were preserved. No analysis, figure production, staging, commit or push.
+- No standalone TeX or Poppler executables were on PATH. Used the official portable Tectonic 0.17.0 in `%TEMP%\pnas-issue13-tectonic`, with its standard package cache. From `paper_simple`, ran `& "$env:TEMP/pnas-issue13-tectonic/tectonic.exe" --keep-logs --keep-intermediates --outdir output/pdf/issue13_build main.tex`. Tectonic ran XeTeX, BibTeX and xdvipdfmx. The [TeX log](../output/pdf/issue13_build/main.log), [BibTeX log](../output/pdf/issue13_build/main.blg), auxiliary files and six PyMuPDF page PNGs are in the ignored build folder.
+- Checked the source citation set against the bibliography and emitted bibitems, and checked labels and links in the auxiliary file and PDF. All 21 entries resolve without duplicates or BibTeX warnings. Both figure links and the table link resolve, and the H1 equation is labelled. All assets are present. The final log has no overfull boxes, missing glyphs, font substitution or unresolved references. It retains underfull spacing notices and Tectonic startup warnings about Fontconfig and an unused comment's encoding in `algorithm.sty`. PDF inspection confirmed embedded fonts, no clipped or overlapping content, and both figures embedded as vectors.
+- Checked the rendered Abstract against its approved source after normalising the line-end break in “Older-player”. It has exactly 150 words by the agreed count. The Significance Statement has three sentences. Verified the required sections, both affiliations and email links, the equal-contribution wording, key H1/H2 and corpus numbers, and all four validation rows in the rendered PDF.
+
+### Open items and next action
+
+Review the six-page PDF and confirm satisfaction with Issue 13 before marking it Resolved. The course requires specific author contributions. The saved equal split is present, and individual tasks still need to be supplied by the authors. The approved 9.1 prose remains in place. Original sentence-score alignment was waived and remains unverified, and the proposed explanations for the Zipf departures remain untested. Historical dataset provenance and checkpoint revision limits carry forward. The approved spaCy/Zipf passage has no citation key, so its formal attribution can be considered during the final source review.
+
+In [Issue 14](2026-11-19_15-30-34_14-final-review-and-overleaf-zip.scratch), check the course requirements and contributions, package `main.tex`, its fragments, bibliography, PNAS dependencies and both plot PDFs with upload-local paths, and recompile from a fresh extraction. Recheck the six-page PDF from that build and verify the Overleaf ZIP. This local Tectonic proof verifies six pages without prose cuts or changes to the selected displays.
+
+## Handoff from resolved Issue 12, 24 November 2026
+
+**Ready after 9.1 resolution, 24 November 2026.** The user approved the final Results corpus introduction, matching Methods definitions and clarified Discussion explanation. [9.1 resolution](2026-11-24_09-13-45_09.1-describe-sentiment-corpus-and-rank-frequency.scratch#resolution-24-november-2026). Preserve these additions alongside all prior approved prose. Plots/top-ten remain repository artifacts; current manuscript figures/table/captions/labels stay selected. The input disposition is settled: original score alignment waived/unverified, no new fitted Zipf claim or tested cause. **Exact next action:** inspect/unpack supplied PNAS template, assemble approved fragments/assets, consolidate verified bibliography and check labels/citations; then compile/inspect against existing page targets. No fresh empirical execution needed. Final fit, bibliography and contribution-specificity checks remain open here/14; older pending-9.1 review wording below is history.
+
+**Subsequent Issue 9.1 addition, 24 November 2026:** user-requested descriptive Results paragraph, matching Methods definitions and one tentative Zipf-explanation Discussion sentence are now in the manuscript fragments for review. No extra figure/table is selected. Review/dispose of these additions through 9.1 before final assembly; previous prose/labels/assets are preserved. Maintain the existing allocation as the target and verify actual word/float/page fit during compilation. Older no-empirical-findings/no-selected-prose statements below are history.
+
+The user explicitly approved [Issue 12 as complete](2026-11-19_15-30-34_12-draft-sections-and-confirm-author-details.scratch#resolution-24-november-2026) as the drafting/metadata milestone. Bibliography consolidation/reference integration is carried here; the course-specific individual-task contribution check carries through this assembly and [Issue 14's final review](2026-11-19_15-30-34_14-final-review-and-overleaf-zip.scratch#carry-forward-from-issue-12-24-november-2026). The saved contribution statement is equal contributions (50/50); do not invent individual roles. Both authors are corresponding authors with the confirmed emails in Issue 12's latest table; omit funding/competing-interest declarations as instructed. All manuscript fragments/title/Abstract/Significance are approved. Do not restore superseded loan-return/fixture/month-bin explanations or the rejected availability paragraph; Methods closes with the approved course/agentic-code statement.
+
+The user's immediate next step is a fresh-context return to [Issue 9.1](2026-11-24_09-13-45_09.1-describe-sentiment-corpus-and-rank-frequency.scratch) to review possible descriptive support for introducing the text analysis. Reconcile its eventual inclusion/disposition before finalising assembly; no empirical 9.1 results or extra figure/table are selected yet. Preserve the approved draft and unchanged six-page budget. This handoff does not begin assembly or claim compilation/fit.
 
 ## Checkpoint workflow
 
@@ -37,6 +77,8 @@ Review the current outcomes of issues [09](2026-11-19_15-30-34_09-select-figures
 Agree the source-folder location and main LaTeX document name, then assemble the reviewed content with the supplied template and figure plan.
 
 ## Question or gap
+
+24 November 2026 figure-caption instruction: the user accepted the physical layout and explicitly required plot captions in LaTeX figure `\caption{...}` commands, outside the plot PDFs. [figure_floats.tex](../figure_floats.tex) contains the two approved captions, the rotated Figure 1 with its side caption, Figure 2 with its caption below and the parent figure labels. Use the plot-only source PDFs referenced there; do not include the layout-proof PDF as a manuscript figure. The paths assume a main file in `paper_simple`; adapt paths when assembling the upload package. Attach/verify the agreed panel references during assembly and compile the fragment in the actual PNAS template. It has not been compiled locally because no LaTeX compiler was found.
 
 The paper_simple directory has the requested template ZIP and planning foundation. The eventual LaTeX project needs the agreed text, bibliography, figures, and template dependencies connected and compiled.
 

@@ -8,6 +8,24 @@
 
 Open
 
+## Overleaf review package, 24 November 2026
+
+The user confirmed readiness to resolve [Issue 13](2026-11-19_15-30-34_13-assemble-pnas-template-and-check-references.scratch#resolution-24-november-2026) and requested the ZIP to read the full draft in Overleaf. The [review ZIP](../paper_output_zip/pnas_overleaf_review.zip) contains 21 files, with root-level `main.tex`, all approved fragments, the bibliography, the seven original PNAS dependencies and both selected plot PDFs. Only the two figure paths change in the packaged source. The original template ZIP and the plot PDFs are byte-identical to the Issue 13 inputs.
+
+Verified the ZIP's integrity and built from a fresh extraction in `output/pdf/issue14_verify/extracted` using `& "$env:TEMP/pnas-issue13-tectonic/tectonic.exe" --only-cached --keep-logs --keep-intermediates --outdir ../build main.tex`. Tectonic 0.17.0 ran XeTeX and BibTeX. The [build PDF](../output/pdf/issue14_verify/build/main.pdf) has six pages including figures and references. PyMuPDF compared the text, PDF links and rendered pixels of all six pages with the visually inspected Issue 13 PDF and found exact matches. All 21 references resolved, with no overfull boxes or missing glyphs.
+
+**Next:** the user uploads the ZIP as a new Overleaf project, selects XeLaTeX with `main.tex` as the main document, and reviews the complete draft there. The local extraction build is verified. The Overleaf build and full-paper review remain pending. The author statement still records equal contributions, and the authors need to supply individual tasks for the final course check. Any edits from the review should be followed by a fresh ZIP and a repeat of the six-page check.
+
+## Carry-forward from Issue 12, 24 November 2026
+
+**9.1 disposition approved, 24 November 2026:** final corpus/Zipf Results/Methods/Discussion prose is approved and Issue9.1 Resolved. No new manuscript plot/table selected; repository artifacts retained. Include the accepted prose when checking numerical claims, limitations and six-page fit. Score alignment remains waived/unverified; explanations remain untested. Existing page targets are unchanged, not a guarantee of fit. Next is13 assembly/reference integration before this final requirements/fit/fresh-extraction ZIP review. Older pending-9.1 approval text below is history.
+
+**Subsequent Issue 9.1 prose, 24 November 2026:** Results/Methods now include the requested descriptive corpus and Zipf-reference text, with one Discussion sentence giving explicitly untested size/tokenisation/text-selection explanations. Review these scoped additions through 9.1; no extra display selected. The existing six-page/section allocations remain targets, so final compilation must check fit after the added words. Prior approved prose, claims, metadata and assets remain intact. Earlier no-empirical-results/no-selected-prose wording below is history.
+
+The user explicitly approved [Issue 12 as the completed drafting/metadata milestone](2026-11-19_15-30-34_12-draft-sections-and-confirm-author-details.scratch#resolution-24-november-2026), carrying bibliography consolidation into Issue 13 and the course's specific individual-task contribution requirement into the assembly/final-review checks. [author_contributions.tex](../author_contributions.tex) records the supplied 50/50 split as equal contributions; individual tasks remain unspecified and must not be invented. Keep this requirement visible when checking final course compliance. Both authors/emails/joint corresponding status are confirmed; omit funding/competing-interest declarations as instructed.
+
+The user next intends to revisit [Issue 9.1](2026-11-24_09-13-45_09.1-describe-sentiment-corpus-and-rank-frequency.scratch) for potential text-introduction support. No empirical lexical findings or extra manuscript item have been selected. Any accepted addition must be reconciled with the approved prose/Methods/Discussion, captions/labels and six-page budget; no spare page margin is available. Final bibliography, reference resolution, physical fit and fresh-extraction ZIP compilation are still unverified.
+
 ## Checkpoint workflow
 
 1. At the start, read the Current checkpoint in [paper_simple/README.md](../README.md). Compare it with this issue's status, latest progress, and related decisions.

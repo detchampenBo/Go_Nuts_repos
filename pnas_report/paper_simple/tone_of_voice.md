@@ -4,6 +4,10 @@ Working writing guide based on the user's stated preferences. Revise it together
 
 ## Voice and clarity
 
+24 November 2026: the user preferred the revised Significance conclusion because it was more explicit and direct. State the concrete implication or limit, such as more articles not necessarily meaning more negative coverage, instead of compressing several ideas into abstract phrases such as "distinguishing recruitment, attention and tone". Keep the approved manuscript wording intact.
+
+24 November 2026: the user approved the "Transfer-network structure" subsection in [results.tex](results.tex) and explicitly endorsed its tone and level of explanation. Use it as the reference for subsequent sections: introduce the representation or comparison in plain language, give the essential findings, and attach the qualification needed to interpret them. Keep paragraphs focused and technical detail proportionate to the result.
+
 - Use simple, academic English, direct sentences, and precise verbs.
 - Define necessary technical terms when first introduced.
 - Give each paragraph one purpose and connect it to the research question or argument.
@@ -11,6 +15,8 @@ Working writing guide based on the user's stated preferences. Revise it together
 - Preserve the distinction between the original questions and findings that emerged during exploration.
 
 ## Numerical detail
+
+24 November 2026 H2 review: the user found generic phrases such as "scoring method" and "averaged scores" imprecise. When describing aggregation, identify the instruments and measured quantities explicitly: sentence sentiment scores, signing-level monthly means and age-group monthly means. Keep this precise wording readable; do not silently rewrite already approved prose.
 
 - Select numbers that establish a finding's size, comparison, uncertainty, or validation.
 - Give each reported number its unit and relevant denominator or sample.

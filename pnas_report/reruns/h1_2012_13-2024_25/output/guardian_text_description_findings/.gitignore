@@ -1,0 +1,2 @@
+# Ordered token strings stay local, including synthetic QA subfolders.
+tokens.json.gz

@@ -1,0 +1,31 @@
+{
+  "term": "unknown",
+  "source": {
+    "path": "C:\\Users\\victo\\Codex\\Go_Nuts_repos\\pnas_report\\data\\dataset_nlp\\data\\sentences.csv",
+    "bytes": 105735481,
+    "sha256": "9ca29b4f4641d852c6a871abea4988f28ba68a955efa690f6f249c6ab5366323",
+    "columns": [
+      "article_id",
+      "signing_id",
+      "player",
+      "period",
+      "days_from_transfer",
+      "age_at_article",
+      "age_group_at_transfer",
+      "article_type",
+      "match_kind",
+      "sentence"
+    ]
+  },
+  "method": "Direct CSV selection by saved H2 signing IDs, liveblog/matchreport exclusion and inclusive before/after day windows; case-insensitive regex whole-word unknown counts; linked-record multiplicity preserved. No tokenisation or score checks rerun.",
+  "selected_sentence_records": 99976,
+  "records_containing_term": 1186,
+  "whole_word_occurrences": 10439,
+  "matches_saved_base_and_no_stopword_token_count": true,
+  "local_context_inspection": {
+    "n_examples": 6,
+    "selection": "first six selected records containing the term; illustrative, not a representative sample",
+    "finding": "Inspected occurrences are in list-style injury/availability information with unknown return timings. This supports a possible article-format contribution, not a quantified claim about all occurrences.",
+    "original_sentence_text_saved": false
+  }
+}

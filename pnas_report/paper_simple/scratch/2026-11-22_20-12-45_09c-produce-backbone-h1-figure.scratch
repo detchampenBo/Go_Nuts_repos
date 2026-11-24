@@ -6,7 +6,7 @@
 
 ## Status
 
-Open
+Resolved
 
 ## Checkpoint workflow
 
@@ -30,6 +30,12 @@ Follow [PLOTTING_STYLE.md](../../PLOTTING_STYLE.md), with PNAS full width 17.8 c
 Check source hashes, counts, retained weights and H1 values, preserving source/historical PDF hashes. Inspect the actual combined and standalone PDFs at final physical size in colour and grayscale, including arrows, legends and text. Verify dimensions, embedded fonts, vector graphics, zero rotation, PNG resolution and editable SVG text. Any final fit to the paper's 0.50-page placeholder must be established separately by caption-inclusive typesetting; no silent budget reallocation.
 
 ## Progress and next action
+
+24 November 2026 resolution — The user accepted the layout and specified that manuscript captions must be native LaTeX figure captions, outside the plot PDFs. Figure 1's combined PDF is rotated 90 degrees counterclockwise as requested, with its original orientation preserved. Figure production/presentation is accepted and this issue is Resolved. Both approved plot captions are saved in [figure_floats.tex](../figure_floats.tex); source plot PDFs contain no manuscript captions. Caption-inclusive layout was visually reviewed via the separate proof. The numerical page-budget decision remains with Open Issue 09; final LaTeX compilation remains with Issues 13-14.
+
+24 November 2026 — The user specified the entire combined Figure 1 PDF and selected 90 degrees counterclockwise. Rotated `combined.pdf` using PDF page rotation only and preserved `combined_before_rotation_2026-11-24.pdf`. Current display size is 4.000 by 7.008 inches. Vector content streams and extracted text are unchanged; the [rotation record](../../output/backbone_h1_findings/pdf_rotation_verification.json) supplies hashes/checks, and the rotated preview was visually inspected. Companion formats and standalone views retain their previous orientation. No figure producer or analysis was rerun. The [layout review and proof](issue09_layout_review.md) now await user review of side-caption placement and proposed budget; Issues 09c/09 remain Open.
+
+24 November 2026 — The user approved Figure 1's caption and requested saving it; the exact text is now in the [storyline](../paper_storyline.md#approved-figure-1-caption-24-november-2026) and [output README](../../output/backbone_h1_findings/README.md). The user also requested remembering to rotate the plot. Retain rotation as a pending layout instruction; angle/orientation is unspecified and no export has been rotated. Issue 09c remains Open for the remaining presentation/layout review. Issue 09 next addresses Figure 2's caption.
 
 22 November 2026 - User authorised production and the task was dispatched to a fresh-context agent. Next: inspect the combined PDF, fix any print-readability issues, then present it for user review. Issue 09c remains Open pending satisfaction; Issue 09 still tracks final captions and manuscript layout.
 

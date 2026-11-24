@@ -1,0 +1,63 @@
+{
+  "date": "2026-11-24",
+  "status": "WAITING FOR ORIGINAL INPUTS",
+  "production_executed": false,
+  "production_token_outputs_created": false,
+  "missing_original_inputs": [
+    "sentences.csv",
+    "a1_roberta_scores.csv"
+  ],
+  "expected_from_saved_membership_only": {
+    "n_signings": 820,
+    "n_signings_age30plus": 67,
+    "n_sent_before": 39542,
+    "n_sent_after": 60434
+  },
+  "membership": {
+    "path": "C:\\Users\\victo\\Codex\\Go_Nuts_repos\\pnas_report\\data\\dataset_nlp\\results\\a1_roberta_per_signing.csv",
+    "bytes": 102691,
+    "sha256": "35c35b5aa04771978e0ddccc2efa140f867deed6580ae57a7dca79bcc0b54c89"
+  },
+  "script": {
+    "path": "C:\\Users\\victo\\Codex\\Go_Nuts_repos\\pnas_report\\reruns\\h1_2012_13-2024_25\\notebooks\\describe_guardian_h2_corpus.py",
+    "bytes": 19227,
+    "sha256": "287a698225643f8ffa851a2e1a31612759bc9bc8594f29e1dcbde4ec317e566e"
+  },
+  "tests": {
+    "path": "C:\\Users\\victo\\Codex\\Go_Nuts_repos\\pnas_report\\reruns\\h1_2012_13-2024_25\\notebooks\\tests\\test_describe_guardian_h2_corpus.py",
+    "bytes": 12430,
+    "sha256": "aec3f3918fed1519f96da03f143348dc109bdd486123ad1991d84cfdff2d9ed8"
+  },
+  "synthetic_qa_summary": {
+    "path": "C:\\Users\\victo\\Codex\\Go_Nuts_repos\\pnas_report\\reruns\\h1_2012_13-2024_25\\output\\guardian_text_description_findings\\qa\\synthetic_fixture\\corpus_summary.json",
+    "bytes": 3459,
+    "sha256": "f806475ee0a84f56ff2fad7b04f9c4661ee0ed49560997394863a2d41463b208"
+  },
+  "synthetic_qa_quality": {
+    "path": "C:\\Users\\victo\\Codex\\Go_Nuts_repos\\pnas_report\\reruns\\h1_2012_13-2024_25\\output\\guardian_text_description_findings\\qa\\synthetic_fixture\\qa_quality.json",
+    "bytes": 856,
+    "sha256": "9fb2d8df9f55aafc176585ba113b81032b68150949d801562fb2154ab2bdc9f7"
+  },
+  "verified_environment": {
+    "python": "C:/Users/victo/Anaconda3/envs/network_analysis/python.exe",
+    "python_version": "3.12.14",
+    "spacy_version": "3.8.16",
+    "matplotlib_version": "3.11.2"
+  },
+  "test_result": "13 passed using real spaCy/export environment; default Python: 12 passed, 1 explicitly skipped (spaCy absent)",
+  "test_command": "& 'C:\\Users\\victo\\Anaconda3\\envs\\network_analysis\\python.exe' -B -m unittest discover -s 'C:\\Users\\victo\\Codex\\Go_Nuts_repos\\pnas_report\\reruns\\h1_2012_13-2024_25\\notebooks\\tests' -v",
+  "privacy": "Nested .gitignore ignores ordered tokens.json.gz at any depth; other aggregates are not automatically ignored",
+  "manuscript_inclusion": "undecided",
+  "checked_nontext_candidate": {
+    "file": {
+      "path": "C:\\Users\\victo\\Codex\\Go_Nuts_repos\\pnas_report\\data\\dataset_nlp\\data\\article_player_notext.csv.gz",
+      "bytes": 4268576,
+      "sha256": "cbec0af95b30f1b9cda2506f9f1ab7b78a8bf97ce001b27e9e2760d515ec9b7c"
+    },
+    "rows": 125231,
+    "columns": 20,
+    "contains_sentence_text": false,
+    "reason": "Metadata/count/flag table; no sentence, player_sentences or body_text; numeric total_sentences is not recoverable text",
+    "used_as_production_input": false
+  }
+}

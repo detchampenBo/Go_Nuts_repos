@@ -1,0 +1,11 @@
+sentence,signing_id,article_id,period,article_type,days_from_transfer
+The Ada players scored 2 goals.,synthetic_A,shared,before,news,-365
+Live updates.,synthetic_A,live,before,liveblog,-30
+The Ada players scored 2 goals.,synthetic_A,shared,before,news,-8
+"Ada's players score, and win!",synthetic_A,a_after,after,features,8
+THE club won 3 games.,synthetic_A,a_after,after,features,365
+The Ada players scored 2 goals.,synthetic_B,shared,before,news,-8
+Zed joined the club.,synthetic_B,b_after,after,comment,8
+A match report.,synthetic_A,match,before,matchreport,-20
+Transfer day.,synthetic_A,around,around,news,0
+Outside saved membership.,synthetic_outside,other,after,news,12

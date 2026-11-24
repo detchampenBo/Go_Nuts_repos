@@ -1,5 +1,18 @@
 # Restricted-period H1 reruns
 
+## Separate Guardian corpus-description follow-up, 24 November 2026
+
+**Issue9.1 Resolved, 24 November 2026:** user approved the final corpus/Zipf prose
+in Results/Methods/Discussion. Verified data/plots/top-ten/provenance are retained;
+plots/table remain repository artifacts without new manuscript display selection.
+Original score alignment remains waived/unverified. Next13 assembly, then14
+final fit/requirements/ZIP; no transfer or Guardian rerun is needed. Older Open
+and awaiting-review wording below is history.
+
+**Real run verified:** supplied original sentence text yields 99,976 linked records matching all main H2 signing-period counts. The user explicitly authorised omission of the unavailable original sentence-score sanity check; row alignment/score validity remain unverified. The [outputs and provenance](output/guardian_text_description_findings/README.md) report 3,870,272 base tokens / 42,779 forms / 13,022 hapax and the separate no-stopword stream, with 17 passing tests and independent data/plot verification. [Issue 9.1](../../paper_simple/scratch/2026-11-24_09-13-45_09.1-describe-sentiment-corpus-and-rank-frequency.scratch) remains Open for findings/inclusion review. No manuscript addition or transfer/network rerun occurred. Earlier waiting-for-input wording below is history.
+
+The user requested storing the new [Issue 9.1](../../paper_simple/scratch/2026-11-24_09-13-45_09.1-describe-sentiment-corpus-and-rank-frequency.scratch) producer in [notebooks/describe_guardian_h2_corpus.py](notebooks/describe_guardian_h2_corpus.py) and its outputs in [output/guardian_text_description_findings](output/guardian_text_description_findings/). This is a separate **Guardian main H2** corpus description, not a transfer rerun or a common H1/H2 sample. The closed batch and frozen manifests below remain unchanged. Original sentence/score files await the user's locations; no empirical word results exist yet. Main H2 membership is available in `../../data/dataset_nlp/results/a1_roberta_per_signing.csv`. Use the issue and output README for exact selection, source hashes, tokenizer rules, tests and eventual reproduction command. Keep synthetic QA unmistakably separate from real paper evidence. Preserve the fresh-context execution requirement below.
+
 Created 2026-11-20 16:38:41 Europe/Copenhagen. Approved recorded seasons: **2012/13-2024/25**. All new artifacts live here; original data/output/figures remain unchanged. This keeps one transfer population across H1 and dependent network analyses without creating a common cohort with Guardian H2.
 
 ## Fresh-context execution

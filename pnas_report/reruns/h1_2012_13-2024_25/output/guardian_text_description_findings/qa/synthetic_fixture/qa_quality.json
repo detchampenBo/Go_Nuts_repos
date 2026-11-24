@@ -1,0 +1,33 @@
+{
+  "scope": "SYNTHETIC FIXTURE ONLY; actual corpus unavailable",
+  "renderer": "PyMuPDF fallback; Poppler unavailable",
+  "pymupdf_version": "1.28.2",
+  "pages": 1,
+  "rotation": 0,
+  "width_inches": 3.5800001356336804,
+  "height_inches": 3.1999999152289496,
+  "fonts": [
+    [
+      15,
+      "ttf",
+      "Type0",
+      "DOXZQT+ArialMT",
+      "F1",
+      "Identity-H",
+      0
+    ]
+  ],
+  "embedded_font_bytes": [
+    37044
+  ],
+  "raster_images": 0,
+  "vector_drawings": 39,
+  "minimum_text_fontsize": 8.0,
+  "png_dpi": [
+    599.9988,
+    599.9988
+  ],
+  "svg_editable_text": true,
+  "visual_review": "Colour and grayscale PDF renders inspected; no clipping; axes and legend readable; no embedded title/caption",
+  "reproducibility": "All 11 producer artifacts byte-identical across two real-spaCy synthetic runs"
+}

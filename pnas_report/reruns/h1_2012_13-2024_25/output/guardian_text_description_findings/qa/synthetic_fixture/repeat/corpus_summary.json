@@ -1,0 +1,107 @@
+{
+  "n_tokens": 33,
+  "n_types": 16,
+  "n_hapax": 9,
+  "n_tokens_no_stopwords": 26,
+  "n_types_no_stopwords": 13,
+  "n_hapax_no_stopwords": 7,
+  "metadata": {
+    "status": "SYNTHETIC FIXTURE ONLY",
+    "inputs": {
+      "sentences.csv": {
+        "path": "C:\\Users\\victo\\Codex\\Go_Nuts_repos\\pnas_report\\reruns\\h1_2012_13-2024_25\\output\\guardian_text_description_findings\\qa\\synthetic_fixture\\inputs\\sentences.csv",
+        "bytes": 687,
+        "sha256": "9450c41dbc091e2282465f5a2967b439f2d2b497a66af72372fed2023068fc9a"
+      },
+      "scores.csv": {
+        "path": "C:\\Users\\victo\\Codex\\Go_Nuts_repos\\pnas_report\\reruns\\h1_2012_13-2024_25\\output\\guardian_text_description_findings\\qa\\synthetic_fixture\\inputs\\scores.csv",
+        "bytes": 425,
+        "sha256": "123126bccf07ea7ee9abd5e0b02e8366958f067a425fbad3813af0bdb0d04ec9"
+      },
+      "members.csv": {
+        "path": "C:\\Users\\victo\\Codex\\Go_Nuts_repos\\pnas_report\\reruns\\h1_2012_13-2024_25\\output\\guardian_text_description_findings\\qa\\synthetic_fixture\\inputs\\members.csv",
+        "bytes": 95,
+        "sha256": "9b7b3575dbbcef580626fd433d4f2bb1b024b19879a6fb5a5284e29fa7c4a02f"
+      }
+    },
+    "script": {
+      "path": "C:\\Users\\victo\\Codex\\Go_Nuts_repos\\pnas_report\\reruns\\h1_2012_13-2024_25\\notebooks\\describe_guardian_h2_corpus.py",
+      "bytes": 22078,
+      "sha256": "d6b88977e7dbb5ae0709a24d87622291141a31bb105e802b7f42e538cb3b5d23"
+    },
+    "python_version": "3.12.14",
+    "tokenization": {
+      "spacy_version": "3.8.16",
+      "language": "en",
+      "pipeline": [],
+      "tokenizer": "spacy.blank('en').tokenizer",
+      "stopword_source": "spacy.lang.en.stop_words.STOP_WORDS",
+      "stopword_count": 326,
+      "stopword_sha256": "f1ed43383348cbfb9e5347cd2d79c36995c3045b16d9ff0fd09b6e69ee63b045",
+      "stopword_hash_encoding": "UTF-8, sorted entries joined by newline, no final newline"
+    },
+    "n_sentences": 6,
+    "n_signings": 2,
+    "n_signings_age30plus": 1,
+    "n_signings_under30": 1,
+    "sentence_counts_by_age30": {
+      "under30": 4,
+      "age30plus": 2
+    },
+    "sentence_counts_by_period": {
+      "after": 3,
+      "before": 3
+    },
+    "n_signing_article_period_documents": 4,
+    "sentence_order": "ascending original zero-based sentences.csv row",
+    "rank_ties": "descending count, then lexicographic lowercase token",
+    "reproduction_command": "& 'C:\\Users\\victo\\Anaconda3\\envs\\network_analysis\\python.exe' -B -m unittest discover -s 'C:\\Users\\victo\\Codex\\Go_Nuts_repos\\pnas_report\\reruns\\h1_2012_13-2024_25\\notebooks\\tests' -v",
+    "outputs": [
+      "tokens.json.gz",
+      "token_frequencies.csv",
+      "token_frequencies_no_stopwords.csv",
+      "top_five_words.csv",
+      "top_five_words.md",
+      "corpus_summary.json",
+      "document_lengths.csv",
+      "rank_frequency.pdf",
+      "rank_frequency.png",
+      "rank_frequency.svg",
+      "README.md"
+    ],
+    "score_check": {
+      "performed": true,
+      "selection": "original score row pointers",
+      "limitation": null
+    },
+    "selection_checks": {
+      "saved_signing_period_counts_exact": true,
+      "excluded_article_types": [
+        "liveblog",
+        "matchreport"
+      ],
+      "before_days_inclusive": [
+        -365,
+        -8
+      ],
+      "after_days_inclusive": [
+        8,
+        365
+      ],
+      "article_ids_and_sentence_text_nonempty": true
+    },
+    "plot": {
+      "matplotlib_version": "3.11.2",
+      "font": {
+        "path": "C:\\Windows\\Fonts\\arial.ttf",
+        "bytes": 1045956,
+        "sha256": "edfbd22a3d088fc2f5d7c79b8c9c732df6dc878a60f0a80be0f92a3c7a634404"
+      },
+      "width_inches": 3.58,
+      "height_inches": 3.2,
+      "png_dpi": 600,
+      "axes": "linear",
+      "reference": "observed rank-1 relative frequency / rank"
+    }
+  }
+}

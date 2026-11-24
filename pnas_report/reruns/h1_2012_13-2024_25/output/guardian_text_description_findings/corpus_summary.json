@@ -1,0 +1,132 @@
+{
+  "n_tokens": 3870272,
+  "n_types": 42779,
+  "n_hapax": 13022,
+  "n_tokens_no_stopwords": 2336122,
+  "n_types_no_stopwords": 42469,
+  "n_hapax_no_stopwords": 13017,
+  "metadata": {
+    "status": "actual main H2 corpus",
+    "inputs": {
+      "sentences": {
+        "path": "C:\\Users\\victo\\Codex\\Go_Nuts_repos\\pnas_report\\data\\dataset_nlp\\data\\sentences.csv",
+        "bytes": 105735481,
+        "sha256": "9ca29b4f4641d852c6a871abea4988f28ba68a955efa690f6f249c6ab5366323",
+        "columns": [
+          "article_id",
+          "signing_id",
+          "player",
+          "period",
+          "days_from_transfer",
+          "age_at_article",
+          "age_group_at_transfer",
+          "article_type",
+          "match_kind",
+          "sentence"
+        ]
+      },
+      "members": {
+        "path": "C:\\Users\\victo\\Codex\\Go_Nuts_repos\\pnas_report\\data\\dataset_nlp\\results\\a1_roberta_per_signing.csv",
+        "bytes": 102691,
+        "sha256": "35c35b5aa04771978e0ddccc2efa140f867deed6580ae57a7dca79bcc0b54c89",
+        "columns": [
+          "signing_id",
+          "mean_after",
+          "mean_before",
+          "n_sent_after",
+          "n_sent_before",
+          "n_art_after",
+          "n_art_before",
+          "diff",
+          "age_group",
+          "name",
+          "age_at_transfer",
+          "season",
+          "from_club_name",
+          "to_club_name",
+          "transfer_fee",
+          "market_value_in_eur"
+        ]
+      }
+    },
+    "script": {
+      "path": "C:\\Users\\victo\\Codex\\Go_Nuts_repos\\pnas_report\\reruns\\h1_2012_13-2024_25\\notebooks\\describe_guardian_h2_corpus.py",
+      "bytes": 22078,
+      "sha256": "d6b88977e7dbb5ae0709a24d87622291141a31bb105e802b7f42e538cb3b5d23"
+    },
+    "python_version": "3.12.14",
+    "tokenization": {
+      "spacy_version": "3.8.16",
+      "language": "en",
+      "pipeline": [],
+      "tokenizer": "spacy.blank('en').tokenizer",
+      "stopword_source": "spacy.lang.en.stop_words.STOP_WORDS",
+      "stopword_count": 326,
+      "stopword_sha256": "f1ed43383348cbfb9e5347cd2d79c36995c3045b16d9ff0fd09b6e69ee63b045",
+      "stopword_hash_encoding": "UTF-8, sorted entries joined by newline, no final newline"
+    },
+    "n_sentences": 99976,
+    "n_signings": 820,
+    "n_signings_age30plus": 67,
+    "n_signings_under30": 753,
+    "sentence_counts_by_age30": {
+      "under30": 92498,
+      "age30plus": 7478
+    },
+    "sentence_counts_by_period": {
+      "after": 60434,
+      "before": 39542
+    },
+    "n_signing_article_period_documents": 56158,
+    "sentence_order": "ascending original zero-based sentences.csv row",
+    "rank_ties": "descending count, then lexicographic lowercase token",
+    "reproduction_command": "& 'C:\\Users\\victo\\Anaconda3\\envs\\network_analysis\\python.exe' '-B' 'C:\\Users\\victo\\Codex\\Go_Nuts_repos\\pnas_report\\reruns\\h1_2012_13-2024_25\\notebooks\\describe_guardian_h2_corpus.py' '--sentences' 'C:\\Users\\victo\\Codex\\Go_Nuts_repos\\pnas_report\\data\\dataset_nlp\\data\\sentences.csv' '--without-score-check' '--members' 'C:\\Users\\victo\\Codex\\Go_Nuts_repos\\pnas_report\\data\\dataset_nlp\\results\\a1_roberta_per_signing.csv' '--output' 'C:\\Users\\victo\\Codex\\Go_Nuts_repos\\pnas_report\\reruns\\h1_2012_13-2024_25\\output\\guardian_text_description_findings'",
+    "outputs": [
+      "tokens.json.gz",
+      "token_frequencies.csv",
+      "token_frequencies_no_stopwords.csv",
+      "top_five_words.csv",
+      "top_five_words.md",
+      "corpus_summary.json",
+      "document_lengths.csv",
+      "rank_frequency.pdf",
+      "rank_frequency.png",
+      "rank_frequency.svg",
+      "README.md"
+    ],
+    "score_check": {
+      "performed": false,
+      "selection": "original sentence rows",
+      "limitation": "Original sentence-level scores unavailable; score-pointer identity/alignment and finite-score validity were not checked, at the user's explicit request. Saved membership and every signing-period count match, but this alone does not prove sentence-level identity with the scored corpus."
+    },
+    "selection_checks": {
+      "saved_signing_period_counts_exact": true,
+      "excluded_article_types": [
+        "liveblog",
+        "matchreport"
+      ],
+      "before_days_inclusive": [
+        -365,
+        -8
+      ],
+      "after_days_inclusive": [
+        8,
+        365
+      ],
+      "article_ids_and_sentence_text_nonempty": true
+    },
+    "plot": {
+      "matplotlib_version": "3.11.2",
+      "font": {
+        "path": "C:\\Windows\\Fonts\\arial.ttf",
+        "bytes": 1045956,
+        "sha256": "edfbd22a3d088fc2f5d7c79b8c9c732df6dc878a60f0a80be0f92a3c7a634404"
+      },
+      "width_inches": 3.58,
+      "height_inches": 3.2,
+      "png_dpi": 600,
+      "axes": "linear",
+      "reference": "observed rank-1 relative frequency / rank"
+    }
+  }
+}

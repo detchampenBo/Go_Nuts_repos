@@ -1,0 +1,42 @@
+{
+  "scope": "ACTUAL Guardian selected-corpus figure",
+  "renderer": "existing PyMuPDF fallback; Poppler unavailable; no installs",
+  "pymupdf_version": "1.28.2",
+  "pages": 1,
+  "rotation": 0,
+  "width_inches": 3.5800001356336804,
+  "height_inches": 3.1999999152289496,
+  "fonts": [
+    [
+      15,
+      "ttf",
+      "Type0",
+      "HBCJBN+ArialMT",
+      "F1",
+      "Identity-H",
+      0
+    ]
+  ],
+  "embedded_font_bytes": [
+    35336
+  ],
+  "raster_images": 0,
+  "vector_drawings": 37,
+  "minimum_text_fontsize": 8.0,
+  "all_text_within_page": true,
+  "png_dpi": [
+    599.9988,
+    599.9988
+  ],
+  "png_pixels": [
+    2148,
+    1920
+  ],
+  "svg_editable_text": true,
+  "svg_embedded_raster_images": 0,
+  "colour_and_grayscale_previews": [
+    "actual_pdf_preview.png",
+    "actual_pdf_preview_grayscale.png"
+  ],
+  "visual_review": "Colour and grayscale actual PDF previews inspected directly; readable linear axes and legend, no clipping or embedded title/caption; tail and most deviations compressed at full vocabulary scale"
+}

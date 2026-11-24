@@ -1,0 +1,52 @@
+% Issue 12 draft, 24 November 2026. Review/source map: Issue 12.
+% Issue 9.1: corpus-description addition approved; existing Results preserved.
+% Transfer-network structure: approved by the user, including tone/explanation.
+% Premier League entry by age: approved by the user.
+% Guardian coverage volume: approved, with the short zero-coverage clarification.
+% Measuring tone in football writing: approved, including revised averaging text.
+% Changes in Guardian tone by age: approved by the user.
+% All five Results subsections are approved; compiled fit remains for Issues 13--14.
+% Template assembly, bibliography integration and compilation: Issues 13--14.
+\section*{Results}
+
+\subsection*{Transfer-network structure}
+
+We first represented eligible transfers as a directed network, with clubs as nodes and origin--destination routes weighted by the number of transfers. The 16,636 transfers involving 4,602 players in recorded seasons 2012/13--2024/25 connected 1,157 clubs through 11,016 routes.
+
+Figure~\ref{fig:entry-age}(a) shows a filtered view of this network using a disparity cutoff of $\alpha = 0.20$ \cite{serrano2009multiscale}. The backbone retained 383 clubs and 1,396 routes carrying 5,271 transfers (31.7\% of the sample). Colours and shapes identify five communities found by directed Louvain on the full network \cite{blondel2008louvain,dugue2015directed}. This view pools both age groups and includes Premier League and other destinations. The entry-by-age comparison below uses the full transfer sample.
+
+We also explored Leiden, a refinement of the widely used Louvain method that addresses problems with community connectivity \cite{traag2019leiden}. Its original evaluation reported faster runtime than Louvain. In our transfer network, both methods identified five communities with broadly similar club memberships and comparable modularity scores (0.448 for Leiden and 0.446 for Louvain).
+
+\subsection*{Premier League entry by age}
+
+We compared the share of eligible transfers entering the Premier League for the two age groups (Figure~\ref{fig:entry-age}(b)). To assess the gap, we shuffled age labels among transfers from the same origin club and recorded season, keeping destinations fixed.
+
+Among eligible recorded transfers in source seasons 2012/13--2024/25, 12.14\% of transfers involving players aged 30+ entered the Premier League, compared with 14.56\% for players under 30 (gap $-2.42$ percentage points). The observed gap was more negative than the mean within-origin-club/season permutation gap ($-1.31$ points), but evidence against this null was limited (one-sided p = 0.098).
+
+Players can make several transfers over their careers, so frequent movers contribute more observations to the main analysis and may disproportionately influence the comparison between age groups. As a sensitivity check, we selected one eligible transfer uniformly at random for each player and repeated the permutation analysis on this fixed sample. This gave every eligible player equal representation, allowing us to examine whether the observed age difference also appeared after removing repeated contributions. In this sample of 4,602 players, joining rates remained lower for transfers involving players aged 30+ (19.52\% versus 21.46\%; gap $-1.94$ percentage points; one-sided p = 0.074). The result is conditional on this one selection and does not assess variation across alternative selections.
+
+\subsection*{Guardian coverage volume}
+
+We examined Guardian coverage in a separate sample of 1,332 selected Premier League signings. The collected coverage included 43,924 distinct articles before sentiment filters were applied. To describe attention around each signing, we counted distinct articles naming the player before and after the move, including all article types.
+
+Older signings received more Guardian coverage in both periods. The median number of distinct articles per signing was 27.5 for players aged 30+ versus 12 for those under 30 before signing, and 47.5 versus 35 after signing. Counts include signings with no recorded coverage.
+
+\subsection*{Measuring tone in football writing}
+
+For the tone comparison, a signing needed at least five scored sentences both before and after the move, after excluding liveblogs and match reports. This left 820 signings: 67 involving players aged 30+ and 753 involving younger players.
+
+The selected corpus comprised 99,976 linked sentence records, containing 3.87 million tokens and 42,779 token types, of which 13,022 were hapax tokens. After removing stopwords, frequent tokens included ``season'', club-name components such as ``city'' and ``united'', and ``form'', ``injured'' and ``unknown''. We examined a log--log plot with frequency rank on the x-axis and raw token frequency on the y-axis, using an ideal Zipf reference ($s = 1$) anchored to the most frequent token. Counts lay above this reference for many common tokens and below it for the rarest tokens. These counts describe the vocabulary of the selected coverage; the following analysis examines the tone of the sentences.
+
+We applied four scoring methods to player-linked sentences, including quotations: RoBERTa \cite{liu2019roberta,loureiro2022timelms,camachocollados2022tweetnlp,cardiffnlp2022checkpoint}, VADER \cite{hutto2014vader}, the Bing opinion lexicon \cite{hu2004mining}, and Bing excluding 21 football-related words. Higher scores indicate more positive language. For the overall before--after comparison, we averaged all available sentence scores for each signing separately before and after the move. The monthly curves in Figure~\ref{fig:h2-monthly-tone} were calculated separately, using sentence scores from each month. These scores describe how the selected published sentences read; they do not directly identify the journalist's attitude toward the player.
+
+To check the scores against human judgments, one author labelled 200 sentences. Four wrong-person matches were excluded, leaving 196 evaluable sentences.
+
+Table~\ref{tab:validation} checks three aspects of the sentence scores. Spearman's $\rho$ measures whether sentences judged more positive tend to receive higher scores. Correct sign measures whether scores are above zero for human-positive sentences and below zero for human-negative sentences, excluding human-neutral cases. Three-class accuracy measures exact agreement with positive, neutral or negative labels across all sentences. RoBERTa had the strongest observed rank agreement ($\rho = 0.52$, 95\% bootstrap interval 0.38--0.63) and the correct sign for 70 of 85 positive or negative sentences (82\%). Its three-class predictions matched 98 of 196 labels (50\%), showing the difficulty of distinguishing neutral language. These checks support using RoBERTa as a useful but imperfect measure; the 14 older-player sentences leave age-specific comparability uncertain. We therefore used RoBERTa as the main instrument and retained the other methods for comparison.
+
+\input{validation_table}
+
+\subsection*{Changes in Guardian tone by age}
+
+Figure~\ref{fig:h2-monthly-tone} shows monthly mean sentence sentiment for older and younger signings, separately for RoBERTa, VADER and the two Bing variants. For each signing, we first averaged the sentiment scores of the sentences published in a given month. We then averaged these monthly values separately for older and younger signings. Only signings with sentences in a month contributed to that month's average. The curves show these monthly group means smoothed with a centred three-month moving average, separately before and after signing.
+
+To test whether tone changed differently by age, we subtracted each signing's mean sentence sentiment before the move from its mean after the move. We then compared these changes between age groups, giving each signing equal weight. Under RoBERTa, mean tone fell by 0.0076 score units for older signings and 0.0137 for younger signings. The older-minus-younger difference in changes was +0.0060 score units. We assessed this difference using 5,000 age-label shuffles within signing season, obtaining a two-sided p-value of 0.7558. This provides no clear evidence of different changes by age, with limited sensitivity to smaller differences. VADER and both Bing variants also provided no clear evidence of different changes.

@@ -1,0 +1,44 @@
+{
+  "status": "sentence input verified; original sentence-score input still required",
+  "sentences": {
+    "path": "C:/Users/victo/Codex/Go_Nuts_repos/pnas_report/data/dataset_nlp/data/sentences.csv",
+    "bytes": 105735481,
+    "sha256": "9ca29b4f4641d852c6a871abea4988f28ba68a955efa690f6f249c6ab5366323",
+    "schema": ["article_id", "signing_id", "player", "period", "days_from_transfer", "age_at_article", "age_group_at_transfer", "article_type", "match_kind", "sentence"],
+    "n_original_sentence_records": 303530,
+    "article_types": {
+      "features": 58981,
+      "news": 43154,
+      "liveblog": 131216,
+      "matchreport": 48083,
+      "other": 5029,
+      "interview": 4679,
+      "comment": 9542,
+      "blog": 2846
+    }
+  },
+  "selection": {
+    "membership": "pnas_report/data/dataset_nlp/results/a1_roberta_per_signing.csv",
+    "n_signings": 820,
+    "excluded_article_types": ["liveblog", "matchreport"],
+    "before_days_inclusive": [-365, -8],
+    "after_days_inclusive": [8, 365],
+    "candidate_main_h2_counts_without_score_validation": {"before": 39542, "after": 60434},
+    "n_candidate_records": 99976,
+    "signing_period_count_mismatches": 0,
+    "candidate_rows_outside_period_day_limits": 0,
+    "candidate_missing_sentence_or_article_id": 0,
+    "multiplicity_preserved": true
+  },
+  "scores_validated": false,
+  "suggested_score_source": {
+    "path": "C:/Users/victo/Codex/Go_Nuts_repos/pnas_report/data/dataset_nlp/results/a1_roberta_results.csv",
+    "bytes": 2602,
+    "schema": ["sample", "group", "signings", "mean_before", "mean_after", "mean_diff", "ci_low", "ci_high", "median_diff", "share_more_positive", "p_perm"],
+    "usable_for_original_row_alignment": false,
+    "reason": "Aggregate results contain neither sentence_row nor individual sentence scores."
+  },
+  "lexical_producer_run": false,
+  "manuscript_changed": false,
+  "next_step": "Obtain the original a1_roberta_scores.csv path, then verify row alignment and run the prepared producer in a fresh-context execution agent."
+}

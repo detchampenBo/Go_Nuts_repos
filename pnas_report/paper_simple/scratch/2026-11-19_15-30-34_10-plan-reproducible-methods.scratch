@@ -1,12 +1,135 @@
 # 10 Specify concise and reproducible Methods
 
+## Initialization prompt for a new agent
+
+Historical initialization prompt, 24 November 2026. Issue 10 has since been Resolved; read the Current session checkpoint and resolution below, then the paper README for Issue 11. This block is retained as the starting-point history, not current instructions to reopen the Methods proposal.
+
+```text
+Continue Issue 10: agree concise, reproducible Methods for the PNAS course paper.
+
+Workspace: C:/Users/victo/Codex/Go_Nuts_repos
+Working paper: pnas_report/paper_simple
+Issue: pnas_report/paper_simple/scratch/2026-11-19_15-30-34_10-plan-reproducible-methods.scratch
+Last checked branch: integrate-network-text. Check git status and preserve the existing modified/untracked files.
+
+Start by reading:
+1. paper_simple/README.md Current checkpoint and this issue's Current session checkpoint.
+2. paper_simple/scratch/README.md and paper_simple/scratch/REPOSITORY_CONTEXT.md for workflow and source limitations.
+3. paper_simple/paper_storyline.md, evidence_and_sources.md, final_research_question.md, project_requirements.md and tone_of_voice.md. Use the latest decisions; older H2b/figure proposals are history.
+All paths in the list above are relative to pnas_report/.
+
+FIRST ACTION: present a concise proposed Methods outline for discussion, with each subsection's purpose, essential reproducibility details, source implementation/input/output and any unresolved limitation. Base the proposal on the accepted analyses and inspected source files. Keep it manageable for user review. This issue plans Methods; full section drafting belongs to Issue 12 after the preceding decisions are agreed.
+
+Current decisions:
+- Issues 01-09 and 09a/09b/09c are Resolved. Issue 10 is Open and is the next active task.
+- Issue 9.1 is Open but EXPLICITLY DEFERRED by the user. Original sentences.csv is on another computer; the user will retrieve it and return. Its prepared corpus-description producer and 13 synthetic tests are not empirical corpus results. It does not block Methods or other core-paper work. Read its scratch file only if resuming that analysis or considering its inclusion. The local article_player_notext.csv.gz has counts/metadata, not sentence text; the QA sentences.csv contains invented test text. Local searching has already been done.
+- Issue 11.1's remaining possible-subanalysis disposition is Resolved by selecting linked Issue 9.1. H2b remains omitted from the manuscript. The active core sequence is 10 -> 11 -> 12 -> 13 -> 14, with return to 9.1 when its inputs arrive.
+- The confirmed six-page budget assigns Methods 1.00 page within 4.30 text/front-matter/reference pages and 1.70 figure/table pages. See the current allocation table in paper_storyline.md. Preserve the approved sample description and complete H1 sensitivity passage in evidence_and_sources.md.
+- Figure 1 combines the transfer backbone and H1 histogram; its combined PDF is already rotated 90 degrees counterclockwise. Figure 2 is the unadjusted four-instrument monthly H2 display with period means. Table 1 is the approved four-instrument human validation table. Coverage volume stays a short descriptive Results subsection for reader context. All captions/notes, labels and Results references are agreed. Plot captions are native LaTeX commands in figure_floats.tex, outside plot PDFs. Final compilation/float placement/six-page compliance remains with Issues 13-14; the physical layout proof is not a compiled manuscript.
+
+Cover these methods in the proposed outline:
+1. Distinct samples and provenance. H1/network use 16,636 transfer events involving 4,602 players in recorded source seasons 2012/13-2024/25. Guardian coverage uses 1,332 selected signings; main H2 uses 820 with sufficient scored coverage (67 aged 30+). Explain their different units and eligibility; they are not a shared cohort. Preserve the exact approved sample wording.
+2. Transfer graph and selected backbone. Define directed club-pair routes/weights, saved Louvain communities and the endpoint disparity filter at alpha 0.20. Trace definitions to the restricted producer and provenance. Separate structural context from age inference.
+3. H1 and player sensitivity. Define the older-minus-younger Premier League joining-rate gap; 999 age-label shuffles within origin club and recorded season; empirical one-sided tail/plus-one calculation; and the fixed one-transfer-per-player selection. Explain the conditional null and exchangeability/dependence limits from the approved evidence. The illustrative normal curve and shuffle SD are not confidence intervals.
+4. Guardian measurement and validation. Trace article collection, player-sentence matching, the four scoring instruments, sentence-to-signing-period aggregation and human-label validation. Explain Spearman rank agreement, sign agreement on 85 polar labels and three-class accuracy on 196 labels, with the agreed thresholds/bootstrap definition and the small older-player subset. Coordinate Results explanation with Methods/table note rather than repeating it.
+5. H2 comparison and monthly display. Use days -365 to -8 and +8 to +365, excluding liveblogs/match reports and requiring five scored sentences in both periods. Distinguish equally weighted signing-period means and their change statistic from changing-membership monthly averages and separate three-month smoothing on each side. The main age test uses 5,000 within-season label shuffles and the saved two-sided absolute-statistic/plus-one rule. Mean-marker segments are display symbols, not intervals. Use only uncertainty definitions supported by the reviewed implementation.
+6. Descriptive coverage and reproducibility. Count distinct articles naming each player, with all article types and all 1,332 signings including zeros. Report the median-count construction; coverage regressions and H2b adjustment/quote-removal procedures are outside the accepted scope. Distinguish available derived data/code from missing raw article text, sentence files, scoring caches and acquisition provenance.
+
+Consult authoritative sources on demand (paths relative to pnas_report/):
+- Transfer selection/H1/network: read output_parity_report.md, run_log.md and reduction_manifest.json under reruns/h1_2012_13-2024_25/provenance/; the restricted output summaries/JSON/CSV files; notebooks/age_shuffle_outsideprem_toprem.py; reruns/h1_2012_13-2024_25/notebooks/louvain_transfer_backbone.py.
+- Guardian: read data/dataset_nlp/README.md. Relative to data/dataset_nlp/, inspect pipeline/get_guardian_articles.py, pipeline/pipeline_spec.yaml and sentiment/a1_sentiment.py, sentiment/a1_age30.py, sentiment/a1_age30_arc.py, sentiment/b9_score.py and sentiment/a1_coverage_age.py; saved results are in results/. The source/display definitions are in output/backbone_h1_findings/README.md and output/h2_monthly_period_means_findings/README.md, relative to pnas_report/.
+- Approved wording/citations: paper_simple/evidence_and_sources.md and paper_simple/scratch/issue07_literature_review.md. Read the selected reference entries when assigning method citations; separate documented project implementation from original method theory.
+
+Use the existing verified results to prepare the outline. New analysis, rescoring, producer runs or environment changes require a separate discussion; any newly approved producer execution follows the fresh-context requirement in the restricted rerun README. The user may introduce new evidence during drafting: record its issue and verified status, then reconcile affected Results/Methods/Discussion, figures and budget. Deferred work must remain identifiable without blocking the accepted core.
+
+Record the proposal in this scratch file. Once the user agrees, save the Methods outline in paper_storyline.md and its evidence/implementation/input/output/reproduction map in evidence_and_sources.md. Keep unresolved questions explicit. Resolve Issue 10 only when its completion criteria are met and the user confirms satisfaction; update this issue, the paper README and tracker together. The next core issue is 11, interpretation and limitations.
+```
+
 ## Created
 
 2026-11-19 15:30:34 Europe/Copenhagen. Created as part of the initial paper-development issue batch.
 
 ## Status
 
-Open
+Resolved
+
+## Current session checkpoint
+
+**Resolved, 24 November 2026.** The user agreed to the proposal with descriptive coverage moved before sentiment analysis. The agreed outline and reproduction map are saved in the storyline/evidence inventory, and the paper README/tracker are updated. Next is Issue 11's interpretation and limitations discussion. Issue 9.1 remains deferred. The earlier preparation notes below are history.
+
+**Explicit deferral recorded, 24 November 2026:** the original data for [Issue 9.1](2026-11-24_09-13-45_09.1-describe-sentiment-corpus-and-rank-frequency.scratch) is on another computer. The user will retrieve it and return to that issue; it remains Open but does not block this Methods outline or accepted core-paper work. Proceed with the verified H1/network and unadjusted H2/validation/coverage methods below. Do not include the pending corpus-description analysis as completed Methods. If the user later selects its results for the paper, reconcile Issue 09's figure/table/page plan and add the verified token/count/rank-frequency definitions here before finalising the manuscript.
+
+Ready after Issue 09 was resolved on 24 November 2026. The user confirmed the physical layout and numerical budget: Methods retains 1.00 page within a 4.30-page text and 1.70-page figures/table plan. Both selected figures, Table 1, captions/notes, labels/Results references, descriptive coverage subsection and Figure 1's 90-degree counterclockwise PDF rotation are settled. Plot captions remain native LaTeX captions outside the plot PDFs. Final manuscript compilation/fit belongs to Issues 13-14.
+
+**Historical next discussion before resolution:** agree a concise Methods outline covering the two distinct samples, transfer graph/backbone, H1 and fixed-player sensitivity, Guardian sentence scoring/validation, H2 signing-period comparison and monthly display, descriptive article counts, and reproduction limits. Map each item to the existing verified code/inputs/results. Preserve the exact approved sample description and full H1 sensitivity wording. H2b and coverage regression procedures are outside the manuscript scope. No new analysis or rerun is needed to begin this outline.
+
+## Proposed Methods outline for review, 24 November 2026
+
+**Historical proposal, subsequently agreed with reordered coverage; see resolution below.** Prepared from read-only inspection of the accepted evidence, provenance, saved results and implementing code. No producer, scoring, analysis or environment change was run. After agreement, save the outline in `paper_storyline.md` and its implementation/input/output/reproduction map in `evidence_and_sources.md`. Full section drafting remains with Issue 12.
+
+**Working assumption and space tradeoff:** use six short subsections within the agreed 1.00-page Methods allowance. Preserve the exact approved three-paragraph sample description and complete H1 sensitivity passage. The sample description belongs in Methods; the full sensitivity motivation/result/qualification remains in Results, with its procedure in Methods. Coordinate display and validation definitions with the approved captions/table note. Keep exact paths, commands, hashes, recorded versions and fuller caveats in the repository map; do not assume a separate submitted supplement. Actual fit awaits compilation in Issues 13–14.
+
+### 1. Study samples and provenance
+
+**Purpose/detail:** explain the distinct units and eligibility using the exact approved sample wording. H1/network use 16,636 transfer events involving 4,602 players in recorded seasons 2012/13–2024/25. Guardian coverage uses 1,332 selected signings; main H2 retains 820, including 67 aged 30+. Age is completed years at transfer, grouped at 30. Explain H1's inherited club exclusions, real-club/non-PL origins and top-five-endpoint rule. Guardian selection uses July–June seasons, PL destinations from games, ages 18–36 and market value at least EUR 2m; exclude same-club moves and reversal of the immediately preceding move within 730 days unless a positive fee is recorded.
+
+**Implementation/input/output:** [reduction manifest](../../reruns/h1_2012_13-2024_25/provenance/reduction_manifest.json) and source-row records identify the [restricted transfer input](../../reruns/h1_2012_13-2024_25/data/outsideprem_toprem_eligible_transfers.csv.gz). [`select()`](../../data/dataset_nlp/pipeline/get_guardian_articles.py) reads Transfermarkt transfers/players/games and writes [signings.csv](../../data/dataset_nlp/data/signings.csv). Use the [approved wording/audit](../evidence_and_sources.md#current-sample-description-for-review-21-november-2026).
+
+**Limits:** separate event populations, not a shared cohort; different season conventions; repeated players; unverified completeness and original acquisition/version manifests. Reported Guardian fetch dates remain documentation claims.
+
+### 2. Transfer network and selected backbone
+
+**Purpose/detail:** provide structural context for Figure 1(a). Nodes are clubs; directed origin–destination routes are weighted by transfer count, pooling ages/seasons. Use saved directed weighted Louvain communities (resolution 1, optimizer seed 2026). For a route of weight `w`, eligible endpoints have degree `k > 1`, strength `s` and disparity score `(1-w/s)^(k-1)`, using outgoing quantities at the source and incoming quantities at the destination. Keep a route if either eligible score is strictly below 0.20. Degree-one endpoints have no score; the producer's connectivity exception has zero cases in the selected whole-network view. H1 uses the full sample.
+
+**Implementation/input/output:** [restricted backbone producer](../../reruns/h1_2012_13-2024_25/notebooks/louvain_transfer_backbone.py), saved route graph and Louvain membership; `backbone_route_scores.csv`, `backbone_retention.csv`, `backbone_layout.csv` and `backbone_results.json` in restricted `output/louvain_transfer_backbone_findings/`. The [Figure 1 map](../../output/backbone_h1_findings/README.md) traces the frozen layout and selected view.
+
+**Limits:** exploratory local filter, not an age test. The selected whole-network R comparison agrees; retain the separate within-community floating-point discrepancy and unverified historical browser interaction in provenance. Use Issue 07's selected Louvain/directed-modularity and disparity references.
+
+### 3. H1 entry-rate test and fixed-player sensitivity
+
+**Purpose/detail:** define the older-minus-younger PL joining-rate gap in percentage points, using all eligible events in each age denominator. Shuffle age labels 999 times within origin club and recorded season, fixing outcomes and stratum age counts. Use `p=(1+count(shuffled gap <= observed gap))/1000`, including ties. Seed 2026 supplies separate streams for main shuffles, selection and sensitivity shuffles. Uniformly select one eligible event per player once without selecting on age/destination; hold the 4,602 selected events fixed for sensitivity permutations.
+
+**Implementation/input/output:** [H1 producer](../../notebooks/age_shuffle_outsideprem_toprem.py), restricted input and season-specific league lookup; [results JSON](../../reruns/h1_2012_13-2024_25/output/age_shuffle_outsideprem_toprem_results.json), summary, [independent verification](../../reruns/h1_2012_13-2024_25/provenance/h1_verification.json) and [fixed-player membership](../../reruns/h1_2012_13-2024_25/provenance/h1_sensitivity_selected_rows.csv).
+
+**Limits:** within-stratum exchangeability is assumed; the conditional null need not centre on zero. Repeated players threaten that assumption. The sensitivity changes weighting and conditions on one draw, without assessing alternative selections. The illustrative normal curve and shuffle SD are not confidence intervals. Use the agreed permutation/dependence references without implying that a multilevel dependence-preserving procedure was implemented.
+
+### 4. Guardian sentence measurement and validation
+
+**Purpose/detail:** explain the football API name-variant search over ±365 days, sentence/name matching and ambiguity screens, plus a following He/His sentence without its own player-name match. Same-player article links go to the nearest signing; different players can share articles. Score with CardiffNLP `twitter-roberta-base-sentiment-latest` as `P(positive)-P(negative)` (128-token truncation), VADER compound, Bing's positive-minus-negative lexicon balance divided by their total (zero when no matches), and Bing excluding the listed 21 football words. Main H2 retains quotes/passing mentions and applies no focus-only filter.
+
+One author labelled 200 sentences; exclude four wrong-person cases from validation. Define Spearman rank agreement on 196 ordered human labels, sign agreement on 85 polar labels, and three-class accuracy on all 196. Neutral thresholds are inclusive ±0.05 for RoBERTa/VADER and exactly zero for Bing. Rank-correlation intervals use 2,000 sentence bootstrap resamples, 2.5th/97.5th percentiles (seed 2805). Coordinate with Table 1's note rather than repeating its Results interpretation.
+
+**Implementation/input/output:** [collection/build code](../../data/dataset_nlp/pipeline/get_guardian_articles.py), [pipeline spec](../../data/dataset_nlp/pipeline/pipeline_spec.yaml), [scorers](../../data/dataset_nlp/sentiment/a1_sentiment.py) and [validation code](../../data/dataset_nlp/sentiment/b9_score.py); inputs are signings, articles, sentences, full scores and human labels. Saved validation outputs in NLP `results/` are `b9_labels_joined.csv`, `b9_model_scores.csv` and `b9_confusion.csv`.
+
+**Limits:** whole-sentence tone can concern another target or speaker. Only 14 evaluated sentences concern older players. Historical label sampling/blinding and annotator agreement are not independently established. Raw text/full scores/caches are missing; the model identifier alone does not establish a frozen historical revision. Use the selected API/instrument/checkpoint citations, separating theory from project implementation.
+
+### 5. H2 comparison and monthly display
+
+**Purpose/detail:** exclude liveblogs/match reports, use days −365 to −8 and +8 to +365, and require at least five scored sentences on each side. Average within each signing-period, calculate after-minus-before, then compare mean changes by age with equal signing weight. Shuffle age labels 5,000 times within signing season (seed 2805); use `p=(1+count(|shuffled gap| >= |observed gap|))/5001`.
+
+For the display, average within signing-month and then across contributing signings. Bins use `floor(days/30.44)`, clipped to −12…11. Smooth with a centred three-month moving average separately before/after, allowing two months at endpoints. Monthly membership varies. Period-mean dots are separate calculations; their short segments are fixed display markers. No uncertainty intervals are shown; omit the historical unverified H2 gap interval.
+
+**Implementation/input/output:** [`per_signing()`](../../data/dataset_nlp/sentiment/a1_sentiment.py), [H2 test](../../data/dataset_nlp/sentiment/a1_age30.py), [monthly producer](../../data/dataset_nlp/sentiment/a1_age30_arc.py); NLP `results/a1_age30_results.csv`, `a1_age30_levels.csv` and model-specific per-signing files; four-model `figures/plotting/data/a1_h2_arc_4models.csv`. The [Figure 2 map](../../output/h2_monthly_period_means_findings/README.md) records selectors/export provenance.
+
+**Limits:** within-season exchangeability remains an assumption; repeated signings/shared articles and unequal coverage retention limit inference. Bing curves have documented saved-export provenance without independent regeneration from original sentence caches. Curves and tone levels do not themselves test differences in changes.
+
+### 6. Descriptive coverage and reproducibility
+
+**Purpose/detail:** count distinct article IDs with at least one coded player-name mention per signing-period over the same day windows, with all article types and all 1,332 selected signings. Reindex to all signing IDs and fill missing counts with zero before calculating age-group medians separately before/after. Do not include historical coverage regressions or H2b adjustment/quote-removal procedures.
+
+**Implementation/input/output:** [`counts()` and median construction](../../data/dataset_nlp/sentiment/a1_coverage_age.py), [text-free metadata](../../data/dataset_nlp/data/article_player_notext.csv.gz) and signings; saved `a1_coverage_age.csv` all-article-types before/after median fields and `signing_tone.csv` counts. Link the [restricted execution log](../../reruns/h1_2012_13-2024_25/provenance/run_log.md), hashes and recorded versions/commands; do not imply one historical environment for all analyses.
+
+**Limits:** derived tables, code, labels and article metadata are available. Original acquisition manifests, article bodies, original sentences, full scores and caches are unavailable at documented paths, preventing complete historical Guardian reconstruction. Do not repeat the NLP README's unconditional rebuild claim. Issue 9.1 remains deferred and contributes no completed corpus analysis or Methods subsection.
+
+**Next review:** agree the six purposes and level of detail, then save the agreed outline/map in the planning files. Known source/dependence gaps stay explicit limitations. No new analysis or manuscript inclusion is proposed. The full source map above is planning material, not proposed one-page manuscript prose.
+
+## Resolution, 24 November 2026
+
+The user agreed to the proposed Methods outline, requesting descriptive coverage before sentiment analysis to ease readers into the text evidence. Applied that order in Methods and Results. The agreed six subsections are samples/provenance; transfer network/backbone; H1/fixed-player sensitivity; Guardian articles/descriptive coverage; sentence measurement/validation; H2/monthly display, followed by a short reproduction statement.
+
+Completion criteria are met: the [agreed outline](../paper_storyline.md#agreed-methods-outline-24-november-2026) is saved in the storyline, and the [implementation/input/output/reproduction map](../evidence_and_sources.md#agreed-methods-implementation-and-reproduction-map-24-november-2026) is saved in the evidence inventory. These retain the reviewed sources, conditional nulls, validation definitions, display distinctions and explicit source/dependence limitations. The exact approved sample and complete H1 passages are preserved. Methods retains 1.00 page; full section drafting and actual fit remain with Issues 12-14. No new analysis, producer run, environment change or evidence issue was needed.
+
+The [paper checkpoint](../README.md) and [tracker](README.md) now identify Issue 10 as Resolved. Next: [Issue 11](2026-11-19_15-30-34_11-agree-discussion-and-claim-boundaries.scratch), discuss the principal joint interpretation, alternative explanations and limitations of H1, Guardian coverage and H2. H2b remains omitted; Issue 9.1 remains Open and explicitly deferred until original inputs arrive. The proposal below/above is retained as decision history, with this agreed order taking precedence.
 
 ## Checkpoint workflow
 
@@ -40,6 +163,10 @@ Agree the minimum study-specific detail needed for reproduction, then map it to 
 
 ## Question or gap
 
+24 November 2026 coverage scope: the user retained a short descriptive coverage Results subsection for reader context. Methods should define distinct Guardian articles with a coded name mention per signing and period, all article types and all 1,332 selected signings including zeros, over days −365 to −8 and +8 to +365. Keep this denominator distinct from H2's 820. The [agreed presentation](../evidence_and_sources.md#agreed-coverage-results-subsection-24-november-2026) uses medians, so historical coverage regressions and their adjustment procedures are not needed for this subsection.
+
+24 November 2026 inclusion instruction: the user requested explaining the validation table in the paper. Use the [agreed definitions and paper wording](../evidence_and_sources.md#agreed-validation-table-explanation-for-the-paper-24-november-2026). Methods/table note must distinguish rank correlation against ordered human labels, correct sign on 85 polar labels, and exact three-class agreement on all 196 evaluable labels. Record neutral thresholds (±0.05 for RoBERTa/VADER; exactly zero for Bing variants) and 95% percentile intervals from 2,000 sentence bootstrap resamples. Validation uses original unadjusted sentence scores. The short interpretation belongs beside Table 1 in Results; do not duplicate it or add the omitted H2b procedures.
+
 The user wants accessible explanations and citations for technical theory. The course also requires enough study-specific information for a reader to reproduce the work.
 
 ## Paper context and supporting files
@@ -71,3 +198,5 @@ paper_storyline.md contains an agreed Methods outline, and evidence_and_sources.
 2026-11-19 15:30:34 Europe/Copenhagen — Issue recorded from the agreed planning context. Follow-up work awaits discussion.
 
 2026-11-19 15:38:00 Europe/Copenhagen — Added standalone repository context, specific evidence locations, related decisions, and the starting discussion for this issue.
+
+24 November 2026 — At the user's request, added the standalone initialization prompt at the top for a new agent. It records the accepted core scope/budget/figure decisions, explicit nonblocking deferral of Issue 9.1, source-reading order, first Methods-outline discussion, implementation pointers and completion/checkpoint workflow. No Methods outline or manuscript section was drafted by this handoff update; Issue 10 remains Open.

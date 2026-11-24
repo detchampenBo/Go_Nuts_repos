@@ -1,0 +1,5 @@
+signing_id,article_id,period,n_sentences,n_tokens,n_tokens_no_stopwords
+synthetic_A,a_after,after,2,11,8
+synthetic_A,shared,before,2,12,10
+synthetic_B,b_after,after,1,4,3
+synthetic_B,shared,before,1,6,5

@@ -1,0 +1,14 @@
+{
+  "pnas_report\\reruns\\h1_2012_13-2024_25\\output\\guardian_text_description_findings\\tokens.json.gz": "9e2d7a0405c81779ca2f545ef7d6592b69c26c08551750bbd76dc746f3c8acf0",
+  "pnas_report\\reruns\\h1_2012_13-2024_25\\output\\guardian_text_description_findings\\token_frequencies.csv": "20f3ced8de4c93c59951dc836a95e6145369848a83629a901a4e84f73f9732b5",
+  "pnas_report\\reruns\\h1_2012_13-2024_25\\output\\guardian_text_description_findings\\token_frequencies_no_stopwords.csv": "44f3fa0f52efce4190e4a17205169958486b94c6b6aca83d6f2bf7fc80908983",
+  "pnas_report\\reruns\\h1_2012_13-2024_25\\output\\guardian_text_description_findings\\corpus_summary.json": "c86e70934fd3c345165429c5ab1f29184b37ba26c93d483c9ed10de436780b79",
+  "pnas_report\\reruns\\h1_2012_13-2024_25\\output\\guardian_text_description_findings\\document_lengths.csv": "5e46dd997ace8f08831d18f571d49ca7364e84713d49763a915d4ac759ad91c5",
+  "pnas_report\\reruns\\h1_2012_13-2024_25\\output\\guardian_text_description_findings\\rank_frequency.pdf": "4e7adbec4d36d31578e51e7f2bc0efde6a99317015eabaaec4896b3f2cb64e84",
+  "pnas_report\\reruns\\h1_2012_13-2024_25\\output\\guardian_text_description_findings\\rank_frequency.png": "2448612f5e83ccfc343aba2fdcb42be204cf9e414d5d94ad68e63e06bedb9baf",
+  "pnas_report\\reruns\\h1_2012_13-2024_25\\output\\guardian_text_description_findings\\rank_frequency.svg": "00acce274398739b8d8fe8e1ef3d397ac2de337f0fe2e7595d2165d8bf4e658b",
+  "pnas_report\\reruns\\h1_2012_13-2024_25\\output\\guardian_text_description_findings\\top_five_words.csv": "3ff95702767a71dbd97c39da9db5e089e463699eb6b5078e34c0cd67063e8506",
+  "pnas_report\\reruns\\h1_2012_13-2024_25\\output\\guardian_text_description_findings\\qa\\actual_data_verification.json": "96654fde41854ca897d560fd22aeb51916b210752e748319847fc1ee4543ef85",
+  "pnas_report\\reruns\\h1_2012_13-2024_25\\output\\guardian_text_description_findings\\qa\\actual_plot_verification.json": "a6275f64abf681706b08a24f5c292c4aa01d603cd03c5288c7208fc5010f7f8a",
+  "pnas_report\\reruns\\h1_2012_13-2024_25\\notebooks\\describe_guardian_h2_corpus.py": "d6b88977e7dbb5ae0709a24d87622291141a31bb105e802b7f42e538cb3b5d23"
+}

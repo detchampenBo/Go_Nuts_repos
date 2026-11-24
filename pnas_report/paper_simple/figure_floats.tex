@@ -1,0 +1,26 @@
+% Include with \input{figure_floats} from a PNAS manuscript in paper_simple.
+% Plot PDFs contain no manuscript captions; all caption prose is typeset here.
+% Figure 1 already has the requested 90-degree counterclockwise PDF rotation.
+\begin{figure*}[!t]
+  \centering
+  \begin{minipage}[t]{4in}
+    \vspace{0pt}
+    \centering
+    \includegraphics[width=\linewidth]{../output/backbone_h1_findings/combined.pdf}
+  \end{minipage}%
+  \hspace{12pt}%
+  \begin{minipage}[t]{\dimexpr\textwidth-4in-12pt\relax}
+    \vspace{0pt}
+    \caption{\textbf{Transfer-network structure and Premier League entry by age, recorded seasons 2012/13--2024/25.} Both panels use the same sample of 16,636 eligible transfers involving 4,602 players. \textbf{(a)} The directed disparity backbone at $\alpha = 0.20$ retains 383 clubs and 1,396 routes carrying 5,271 transfers (31.7\% of the sample). Routes are retained when their disparity score is below $\alpha$ at either eligible endpoint. This is an exploratory local filter. Colours and shapes identify five Louvain communities. Arrows point from origin to destination, and line width increases with transfer count. Node area increases with the square root of each club's total incoming and outgoing transfer count before filtering. The network pools both age groups and includes Premier League and other destinations. \textbf{(b)} Using the full sample, Premier League joining rates were 12.14\% for transfers involving players aged 30+ (129/1,063) and 14.56\% for those under 30 (2,267/15,573), an older-minus-younger gap of $-2.42$ percentage points. The histogram shows 999 age-label shuffles within origin club and recorded season, with a mean gap of $-1.31$ points. The legend's $\pm0.83$ denotes one standard deviation of the shuffled gaps; the fitted normal curve is illustrative. The empirical one-sided p-value is 0.098, providing limited evidence against this conditional null.}
+    \label{fig:entry-age}
+  \end{minipage}
+\end{figure*}
+
+\begin{figure*}[!t]
+  \centering
+  \includegraphics[width=17.8cm]{../output/h2_monthly_period_means_findings/combined.pdf}
+  \caption{\textbf{Guardian sentiment before and after Premier League signings, by age and scoring method.} Panels show RoBERTa (main instrument), VADER, Bing, and Bing excluding 21 football-related words. Higher scores indicate more positive language. Orange identifies signings involving players aged 30+; dark brown identifies those under 30. The sample contains 820 signings (67 older, 753 younger), each with at least five scored sentences in both periods: days $-365$ to $-8$ before signing and +8 to +365 after signing. Liveblogs and match reports are excluded.\endgraf
+Curves show monthly sentence scores averaged first within each signing and then across contributing signings, smoothed with a centred three-month moving average separately before and after signing. Monthly membership varies with available coverage. The dashed line marks the signing date. Dots show age-group means of signing-level period means, giving each signing equal weight. Their positions at $-6$ and +6 months are for display; the short horizontal segments are fixed markers. No uncertainty intervals are shown. These period means are calculated separately from the smoothed curves.\endgraf
+The main RoBERTa comparison estimates an older-minus-younger difference in before-to-after changes of +0.0060 score units (two-sided p = 0.7558; 5,000 age-label shuffles within signing season). This provides no clear evidence of different changes by age, with limited sensitivity to smaller differences.}
+  \label{fig:h2-monthly-tone}
+\end{figure*}

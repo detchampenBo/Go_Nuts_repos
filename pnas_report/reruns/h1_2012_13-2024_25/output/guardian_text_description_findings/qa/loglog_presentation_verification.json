@@ -1,0 +1,74 @@
+{
+  "scope": "presentation only; saved corpus and linear exports unchanged",
+  "reproduction_command": "& 'C:\\Users\\victo\\Anaconda3\\python.exe' -B 'C:\\Users\\victo\\Codex\\Go_Nuts_repos\\pnas_report\\reruns\\h1_2012_13-2024_25\\notebooks\\plot_guardian_h2_loglog.py'",
+  "python_version": "3.12.7",
+  "interpreter": "C:\\Users\\victo\\Anaconda3\\python.exe",
+  "numpy_version": "1.26.4",
+  "matplotlib_version": "3.9.2",
+  "exporter_sha256": "6c3f4b1816f5e46dc3a14e4b0e76b4aa8e51957287573753a0e53a622700ddf3",
+  "source_and_core_hashes_unchanged": {
+    "pnas_report\\reruns\\h1_2012_13-2024_25\\output\\guardian_text_description_findings\\tokens.json.gz": "9e2d7a0405c81779ca2f545ef7d6592b69c26c08551750bbd76dc746f3c8acf0",
+    "pnas_report\\reruns\\h1_2012_13-2024_25\\output\\guardian_text_description_findings\\token_frequencies.csv": "20f3ced8de4c93c59951dc836a95e6145369848a83629a901a4e84f73f9732b5",
+    "pnas_report\\reruns\\h1_2012_13-2024_25\\output\\guardian_text_description_findings\\token_frequencies_no_stopwords.csv": "44f3fa0f52efce4190e4a17205169958486b94c6b6aca83d6f2bf7fc80908983",
+    "pnas_report\\reruns\\h1_2012_13-2024_25\\output\\guardian_text_description_findings\\corpus_summary.json": "c86e70934fd3c345165429c5ab1f29184b37ba26c93d483c9ed10de436780b79",
+    "pnas_report\\reruns\\h1_2012_13-2024_25\\output\\guardian_text_description_findings\\document_lengths.csv": "5e46dd997ace8f08831d18f571d49ca7364e84713d49763a915d4ac759ad91c5",
+    "pnas_report\\reruns\\h1_2012_13-2024_25\\output\\guardian_text_description_findings\\rank_frequency.pdf": "4e7adbec4d36d31578e51e7f2bc0efde6a99317015eabaaec4896b3f2cb64e84",
+    "pnas_report\\reruns\\h1_2012_13-2024_25\\output\\guardian_text_description_findings\\rank_frequency.png": "2448612f5e83ccfc343aba2fdcb42be204cf9e414d5d94ad68e63e06bedb9baf",
+    "pnas_report\\reruns\\h1_2012_13-2024_25\\output\\guardian_text_description_findings\\rank_frequency.svg": "00acce274398739b8d8fe8e1ef3d397ac2de337f0fe2e7595d2165d8bf4e658b",
+    "pnas_report\\reruns\\h1_2012_13-2024_25\\output\\guardian_text_description_findings\\top_five_words.csv": "3ff95702767a71dbd97c39da9db5e089e463699eb6b5078e34c0cd67063e8506",
+    "pnas_report\\reruns\\h1_2012_13-2024_25\\output\\guardian_text_description_findings\\qa\\actual_data_verification.json": "96654fde41854ca897d560fd22aeb51916b210752e748319847fc1ee4543ef85",
+    "pnas_report\\reruns\\h1_2012_13-2024_25\\output\\guardian_text_description_findings\\qa\\actual_plot_verification.json": "a6275f64abf681706b08a24f5c292c4aa01d603cd03c5288c7208fc5010f7f8a",
+    "pnas_report\\reruns\\h1_2012_13-2024_25\\notebooks\\describe_guardian_h2_corpus.py": "d6b88977e7dbb5ae0709a24d87622291141a31bb105e802b7f42e538cb3b5d23"
+  },
+  "top_ten_both_streams_match_saved_csvs": true,
+  "analysis_reference_comparisons_match_saved_counts": true,
+  "unknown_context_count_matches_saved_token_count": true,
+  "scale": "both axes log10; complete 42,779-type base vocabulary; positive coordinates",
+  "y_quantity": "raw token count, not relative frequency",
+  "legend": "upper right; ideal Zipf, s = 1",
+  "reference": "150246 / rank; no fitting or inference",
+  "pdf_inches": [
+    3.5800001356336804,
+    3.4000000423855252
+  ],
+  "pdf_rotation": 0,
+  "pdf_fonts": [
+    [
+      15,
+      "ttf",
+      "Type0",
+      "HIQOUK+ArialMT",
+      "F1",
+      "Identity-H",
+      0
+    ]
+  ],
+  "pdf_fonts_embedded": true,
+  "pdf_vector_drawings": 31,
+  "pdf_raster_images": 0,
+  "minimum_fontsize": 8.0,
+  "all_text_within_page": true,
+  "png_dpi": [
+    599.9988,
+    599.9988
+  ],
+  "png_pixels": [
+    2148,
+    2040
+  ],
+  "svg_editable_text": true,
+  "visual_review": "Actual final PDF colour/grayscale renders inspected at publication width: raw-count ticks, complete y-label, Frequency rank, exact ideal Zipf, s = 1 legend upper right clear of curves; no clipping.",
+  "environment_note": "network_analysis NumPy matrix multiply failed with native exception 0xc06d007f; existing default Python passed matrix multiplication and PDF export; no environment modifications",
+  "historical_verification_note": "actual_data_verification.json preserves hashes from original five-row Markdown/README state; this report covers their later presentation update",
+  "output_sha256": {
+    "rank_frequency_loglog.pdf": "299f908e3aca79010def686a22dd7f229b8898b2a0e8cea484f0a74e6483f1f7",
+    "rank_frequency_loglog.png": "4951de85bae44c1e5c3cfa3bbd924d4159858e7cf9530e269e4c1ad5d3eb8800",
+    "rank_frequency_loglog.svg": "5d41839e8faa2dbc2825e5c7c3b4e538272cadacf15f956cff009b3676e3c476",
+    "top_ten_words.md": "18ec5ed47139f195fbfef6bcf92976bfeab8e63bbe32f665a9cd019e0825c95a",
+    "top_five_words.md": "18ec5ed47139f195fbfef6bcf92976bfeab8e63bbe32f665a9cd019e0825c95a",
+    "README.md": "e91cb400e14841abc16015430aa8328eddf8ebd3ab5e12c5281fe48cc43e45a1",
+    "analysis_summary.md": "37a42b3323cd428fedc8fd6828629ad8dc544c3e2d58e146f712a9dd60573294",
+    "qa/word_context_check.json": "39231f939923e9a0f8de7be7f543369996c9e2a033ed1a260ab3271ccd43ead2"
+  },
+  "paper_disposition": "Issue9.1 Resolved with final user prose approval,24November2026; plot/table remain repository artifacts; final fit unverified."
+}
