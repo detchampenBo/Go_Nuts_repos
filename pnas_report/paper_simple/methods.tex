@@ -23,7 +23,7 @@ Transfer and signing metadata were derived from Transfermarkt \cite{transfermark
 
 \subsection*{Transfer network and backbone}
 
-We pooled eligible transfers across seasons and age groups into a directed weighted network. Clubs were nodes, and each sending--receiving route was weighted by its transfer count. Communities were identified with directed weighted Louvain at resolution 1 and random seed 2026 \cite{blondel2008louvain,dugue2015directed}. We also explored Leiden on the same graph with the same modularity objective and seed \cite{traag2019leiden}.
+We pooled eligible transfers across seasons and age groups into a directed weighted network. Clubs were nodes, and each sending--receiving route was weighted by its transfer count. Communities were identified with directed weighted Louvain at resolution 1 and random seed 2026 \cite{blondel2008louvain,dugue2015directed}. We also explored Leiden on the same graph with the same modularity objective and seed \cite{traag2019leiden}. We generated one randomized network by rewiring routes while preserving each club's number of incoming and outgoing routes, then randomly reassigning the original route weights. We ran both methods on this same network.
 
 For Figure~\ref{fig:entry-age}(a), we applied the directed disparity filter \cite{serrano2009multiscale}. For each route, we examined its share of the sending club's outgoing transfers and the receiving club's incoming transfers. These shares were compared with a uniform random allocation of transfer weight among the corresponding routes. We retained a route if its disparity score was strictly below 0.20 at either club. An outgoing score required more than one outgoing route; an incoming score required more than one incoming route. Community labels were assigned before filtering, and H1 used the full transfer sample.
 
@@ -40,6 +40,10 @@ p_{\mathrm{emp}} =
 \end{equation}
 
 For the player sensitivity check, we selected one eligible transfer uniformly at random for each player, without using age or destination to choose it. We held this subset fixed and applied the same within-origin-club/season procedure, again using 999 age-label shuffles. This gave each player equal representation while changing the weighting and composition of transfers. The analysis did not assess variation across alternative selections. Seed 2026 generated separate random streams for the main shuffles, transfer selection and sensitivity shuffles.
+
+\subsection*{Recurring routes into the Premier League}
+
+We counted 2,396 Premier League arrivals from the 16,636 eligible transfers in recorded seasons 2012/13--2024/25 by directed club pair. We shuffled destinations 999 times within each season (seed 2026), preserving each origin and destination total. We retained routes with at least two recorded transfers and an unadjusted upper-tail permutation $p < 0.05$. The joint-ownership group included transfer pairs whose clubs shared an equity investor, plus two pairs included on the basis of family or financial ties.
 
 \subsection*{Guardian articles and coverage volume}
 

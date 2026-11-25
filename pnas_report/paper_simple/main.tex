@@ -6,6 +6,12 @@
 % The figures and text should remain readable at the template's native size.
 \setboolean{displaywatermark}{false}
 
+% Keep the four figure floats within the six-page layout.
+\setlength{\dbltextfloatsep}{8pt plus 2pt minus 2pt}
+
+% Let lastpage write the sole page-count label.
+\patchcmd{\endthebibliography}{\label{LastPage}}{}{}{}
+
 % The course report has no assigned journal issue or article number.
 \fancyhead{}
 \fancypagestyle{firststyle}{%
@@ -45,16 +51,18 @@
 \setlength{\columnwidth}{.3\textwidth}
 \Endparasplit
 
+% Tighten leading after the first page while retaining the template's type sizes.
+\linespread{0.92}\selectfont
 \input{figure_floats}
 \input{results}
 \input{discussion}
 \matmethods{\input{methods}}
 \showmatmethods
 
-\begin{strip}
 \section*{References}
-\end{strip}
-\setcounter{BalanceAtReference}{11}
-\bibliography{references}
+{%
+  \renewcommand{\familydefault}{\sfdefault}
+  \bibliography{references}
+}
 
 \end{document}

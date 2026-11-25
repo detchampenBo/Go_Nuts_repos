@@ -8,6 +8,216 @@
 
 Open
 
+## Implemented and verified, 25 November 2026
+
+The current working draft includes all twelve approved revisions and the four approved feeder passages. The feeder Discussion cites both UEFA sources with their approved bibliography entries. The feeder Results, Methods and Figure 4 use the saved 2012/13–2024/25 analysis. [LaTeX source](../main.tex) · [Bibliography](../references.bib)
+
+- The Abstract is 150 whitespace-delimited words after LaTeX normalization. Both approved sentences are verbatim in the rendered text. The three-word trim changes “model that shuffled” to “model shuffling,” drops “selected” from the Guardian sample description, and changes “These findings describe” to “We describe.”
+- Reviewed the Guardian corpus prose before compiling. It introduces Figure 2 as a log–log comparison of rank and raw token counts with stopwords and Table 1 as the two ten-token rankings. All 20 tokens and counts match the saved rankings. Percentages match the one-decimal calculations for denominators of 3,870,272 and 2,336,122. The validation text links to Table 2. The Abstract and Figure 3 caption report the saved RoBERTa p-value of 0.7558.
+- The ZIP passes its integrity check and contains 23 files, including root-level `main.tex`, the manuscript and PNAS dependencies, and four figure PDFs that match the working assets byte for byte. Built from a fresh extraction with the documented cached Tectonic 0.17.0 command, using XeTeX and BibTeX. Select XeLaTeX and `main.tex` in Overleaf.
+- The PDF fits six pages including references. To fit the approved text, reduced leading after page 1, set Figure 3 and Figure 4 to 83% and 80% of text width, respectively, and scheduled Figure 3 with the tone Results. The template's type sizes carry through the build. Removed the redundant bibliography `LastPage` label so the page counter uses the `lastpage` package's label.
+- Inspected all six rendered pages. Figure 1 is upright on page 2. Figure 2 and both tables share page 3 with the corpus and validation text. Figure 3 is on page 4, and Figure 4 is on page 5 immediately after the feeder Results on page 4. All four figures, both tables, and their captions are readable. All display links and 23 citations resolve, including UEFA citations 14 and 15 and their bibliography links. The local build reports Fontconfig, package and underfull-box warnings. The final TeX log shows zero overfull boxes, missing glyphs, or undefined or multiply defined labels. [Build log](../output/pdf/issue14-final-klc96yns/build/main.log)
+
+[Compiled PDF](../output/pdf/pnas_issue14.pdf) · [Overleaf ZIP](../paper_output_zip/pnas_overleaf_issue14.zip)
+
+**Issue 14 stays Open for the user's final review.** The draft records equal author contributions. The specific individual tasks are pending author input.
+
+## Final revision decisions for implementation
+
+The user has approved the twelve decisions below and the four feeder passages under [Transfer-network sub-analysis](#transfer-network-sub-analysis-25-november-2026), including the Discussion paragraph and its two sources. Start from the current working files under `pnas_report/paper_simple` and preserve the existing local changes. The earlier ZIPs are review snapshots. Use the approved wording below and the [implementation and build checks](#implementation-and-build-checks) for the new build.
+
+### 1. Abstract entry-rate wording
+
+**Confirmed.** In [abstract.tex](../abstract.tex), replace the sentence beginning “We analysed 16,636 eligible transfers” with:
+
+> We analysed 16,636 eligible transfers in recorded seasons 2012/13–2024/25 as a directed network and compared Premier League entry rates (ages 30+ and under 30).
+
+Use the manuscript's LaTeX season-range formatting. The comparison uses the share of all eligible transfers in each age group that ended at a Premier League club. This edit preserves the abstract word count.
+
+### 2. Abstract sentiment model types
+
+**User-supplied wording.** In [abstract.tex](../abstract.tex), replace the sentence beginning “Sentiment analysis retained 820” with:
+
+> Sentiment analysis retained 820 sufficiently covered signings and evaluated four models (contextual and lexicon-based) against 196 human-labelled sentences.
+
+Keep “Sentiment analysis” explicit. RoBERTa is the contextual model. VADER and the two Bing variants are lexicon-based. This adds three words. Allow for a three-word reduction elsewhere in the final 150-word abstract while preserving the two agreed sentences.
+
+### 3. Introduction before-and-after tone comparison and validation
+
+**Confirmed.** In [introduction.tex](../introduction.tex), keep the research question and transfer-network sentence. Replace the sentence beginning “In a separate sample” with:
+
+> In a separate sample of selected Premier League signings, we compare Guardian sentence sentiment before and after each move to ask whether coverage tone changes differently for older and younger players.
+
+Follow it with the confirmed validation wording:
+
+> To assess the performance of the sentiment models, we compared their scores with manual labels for the same Guardian sentences. One author judged each sentence in the comparison as positive, negative or neutral, providing a human reference for the evaluation.
+
+### 4. Introduction corpus and token analysis
+
+**Confirmed.** In [introduction.tex](../introduction.tex), replace the final two sentences beginning “Article counts provide context” with:
+
+> The selected sentences from these articles form the corpus for the sentiment analysis. To describe its vocabulary, we tokenize the sentences and examine which tokens occur most often and how their frequencies vary by rank.
+
+### 5. Transfer-network modularity comparison
+
+**Confirmed.** In [results.tex](../results.tex), replace the last sentence of the Leiden paragraph under “Transfer-network structure” with:
+
+> Both methods identified five communities in the observed network, with broadly similar club memberships. Modularity was higher in the observed network than in the same randomized network for both Leiden (0.448 versus 0.215) and Louvain (0.446 versus 0.213). By this measure, transfer activity was more strongly concentrated within communities in the observed network.
+
+Add the following after the Louvain and Leiden setup under “Transfer network and backbone” in [methods.tex](../methods.tex):
+
+> We generated one randomized network by rewiring routes while preserving each club’s number of incoming and outgoing routes, then randomly reassigning the original route weights. We ran both methods on this same network.
+
+This is a descriptive comparison against one randomized network. It uses directed, transfer-count-weighted modularity. [Saved restricted comparison](../../reruns/h1_2012_13-2024_25/output/transfer_community_comparison/method_comparison.md)
+
+### 6. Vocabulary paragraph corpus terminology
+
+**User-supplied wording.** In [results.tex](../results.tex), replace the final sentence of the vocabulary paragraph under “Measuring tone in football writing” with:
+
+> These counts partly describe the vocabulary of the selected corpus. The following analysis examines the tone of the sentences.
+
+### 7. Spearman’s rank correlation in the validation Results
+
+**Confirmed.** In [results.tex](../results.tex), replace the sentence beginning “Spearman’s ρ measures” in the validation paragraph with:
+
+> The human labels were ordered from negative to neutral to positive, with all sentences in each category sharing a rank. Spearman’s ρ compares those category ranks with the ranks of each model’s numerical scores. A positive ρ indicates that the model’s ranking tended to agree with the order of the three categories.
+
+Typeset the coefficient as `$\rho$`. The human labels were categorical and the rank comparison uses their order. A read-only check of the 196 saved paired labels and scores reproduced RoBERTa’s coefficient (0.5158) and 95% percentile bootstrap interval (0.3839–0.6314), along with VADER (0.3322) and the two Bing variants (0.3562 and 0.3638). Retain the reference to the human-validation table (Table 2 in the current draft) and the reported RoBERTa values. [Validation code](../../data/dataset_nlp/sentiment/b9_score.py#L57) · [Saved scores](../../data/dataset_nlp/results/b9_model_scores.csv) · [SciPy definition](https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.spearmanr.html)
+
+### 8. Closing RoBERTa sentence in the validation Results
+
+**Confirmed.** Delete the final sentence of the validation paragraph in [results.tex](../results.tex), without replacement:
+
+> We therefore used RoBERTa as the main instrument and retained the other methods for comparison.
+
+The preceding discussion of age-specific comparability remains the closing sentence. The following Results subsection reports the RoBERTa age comparison and summarizes VADER and the two Bing variants.
+
+### 9. Tone-change calculation and age-label permutation
+
+**Confirmed.** In [results.tex](../results.tex) under “Changes in Guardian tone by age,” replace the passage from “To test whether tone changed differently by age” through its RoBERTa interpretation with:
+
+> First, we calculated one tone change per signing by subtracting its mean sentiment score before the move from its mean score after the move. We averaged these changes within each age group, giving every signing equal weight. With RoBERTa, the mean change was −0.0076 for the 30+ group and −0.0137 for the under-30 group. Subtracting the younger group’s mean change from the older group’s, using unrounded values, gave a gap of +0.0060 score units.
+>
+> We kept each signing’s tone change fixed and shuffled the age-group labels within each season 5,000 times, recalculating the gap after each shuffle. We found no clear evidence that sentiment changed differently for older and younger signings.
+
+Keep the following sentence about VADER and both Bing variants. Omit the numerical p-value from this Results passage. Keep it in the Abstract and Figure 3 caption. The full test specification remains in Methods. [Permutation code](../../data/dataset_nlp/sentiment/a1_age30.py#L41) · [Saved results](../../data/dataset_nlp/results/a1_age30_results.csv)
+
+### 10. Discussion of coverage, prominence and quoted people
+
+**Confirmed.** In [discussion.tex](../discussion.tex), replace the sentence beginning “Player prominence and the mix” with:
+
+> Player prominence may influence which signings receive coverage and which performances or topics get attention. Sentiment scores may also reflect praise or criticism from people quoted in the articles, such as players, coaches or commentators. The contribution of each of these factors remains uncertain.
+
+### 11. Discussion of currency tokens and sentiment
+
+**Confirmed.** In [discussion.tex](../discussion.tex), add the following after the frequency-pattern and Zipf discussion, before the sentence beginning “RoBERTa scores the whole sentence”:
+
+> The pound sign (£) was the second most frequent token after stopword removal (Table 1). The language around currency amounts may influence sentiment scores, for example when a transfer fee is described as a bargain or as excessive. The influence of currency symbols and the surrounding language on the scores remains untested.
+
+Use the native LaTeX pound symbol command and `Table~\ref{tab:guardian-tokens}`. The rank refers to the stopword-filtered column. [Token table source](../../reruns/h1_2012_13-2024_25/output/guardian_text_description_findings/top_ten_words.md)
+
+### 12. Figure 1 community names
+
+**Confirmed.** In [figure_floats.tex](../figure_floats.tex), insert this sentence in Figure 1(a)'s caption immediately after “Colours and shapes identify five Louvain communities”:
+
+> Each community is named after its member club with the highest total degree before disparity filtering.
+
+A check of the saved memberships reproduced all five labels by maximizing unweighted in-degree plus out-degree among members on the full graph. The selection code breaks ties by smaller club ID. The disparity filter at $\alpha = 0.20$ selects the routes displayed in the figure. [Representative selection](../../reruns/h1_2012_13-2024_25/notebooks/transfer_community_outputs.py#L51) · [Saved summary](../../reruns/h1_2012_13-2024_25/output/louvain_transfer_communities_findings/community_summary.csv)
+
+### Implementation and build checks
+
+1. Apply the twelve agreed edits and the four approved feeder passages to the LaTeX draft. Copy the two new Discussion citations and matching BibTeX entries. Keep the two approved Abstract sentences verbatim and trim three words elsewhere while retaining the estimates and claim boundaries. Verify 150 whitespace-delimited words after normalizing LaTeX percentages and math notation, with hyphenated compounds counted as one.
+2. Before final compilation, reread the Guardian corpus prose and check that it introduces and explains Figure 2 and Table 1. Use the labels `fig:guardian-rank-frequency` and `tab:guardian-tokens`. Check Table 1's two ten-entry rankings and one-decimal percentages using each column group's own denominator, the validation-table reference to Table 2, and the exact RoBERTa p-value in the Abstract and Figure 3 caption. Verify the upright Figure 1 and the placement of Figure 4 near the feeder Results.
+3. Build a new Overleaf ZIP from the edited source, with root-level `main.tex`. Use the [temporary preview ZIP](../paper_output_zip/pnas_overleaf_issue14_preview.zip) as the inventory of LaTeX fragments and PNAS support files. Copy all four current PDF assets into `figures/` and rewrite their paths in the packaged fragments according to the table below. Verify the archive and all source dependencies before compiling from a fresh extraction. The Overleaf settings are XeLaTeX and `main.tex`. The prior local build used Tectonic's XeTeX engine and the cached bundle. From the extracted folder, with a sibling `build` folder created, the command was `& "$env:TEMP/pnas-issue13-tectonic/tectonic.exe" --only-cached --keep-logs --keep-intermediates --outdir ../build main.tex`.
+4. Verify the compiled PDF has at most six pages including references, that the four figures and two tables are legible, and that all cross-references and both new UEFA citations resolve. Use layout adjustments first if the approved prose needs more room. Save and report the PDF and new ZIP paths. Record the checks in this issue and the [paper checkpoint](../README.md). Keep Issue 14 open for final review. Use the existing equal-contributions statement until the authors supply their specific individual tasks.
+
+| Display | LaTeX source containing the asset reference | Package destination for the currently referenced PDF |
+| --- | --- | --- |
+| Figure 1, upright transfer network and entry | `figure_floats.tex` | `figures/transfer_network_and_entry.pdf` |
+| Figure 2, Guardian log–log rank–frequency | `figure_floats.tex` | `figures/guardian_rank_frequency.pdf` |
+| Figure 3, Guardian monthly sentiment | `figure_floats.tex` | `figures/guardian_sentiment.pdf` |
+| Figure 4, 2012/13–2024/25 feeder rerun | `results.tex` | `figures/feeder_routes.pdf` |
+
+## Transfer-network sub-analysis, 25 November 2026
+
+The user corrected the figure and summary links to the 2012/13–2024/25 rerun. Figure 4 uses the linked [feeder PDF](../../reruns/h1_2012_13-2024_25/output/premier_league_feeder_findings_three_panel.pdf). [Results](../results.tex#L54) describes the 217 screened routes among 2,396 Premier League arrivals, the Girona to Manchester City example (15 observed transfers and 1.8 expected), and the median transfer counts of four and two for the joint-ownership and remaining routes. [Methods](../methods.tex#L44) describes the 16,636-transfer source sample, the destination shuffle, the unadjusted screen over 11,448 pairs and the ownership grouping. The Figure 4 caption distinguishes the two manually included routes from the documented transfer-date overlaps. [Restricted feeder analysis summary](../../reruns/h1_2012_13-2024_25/output/premier_league_feeder_summary.md)
+
+The [local draft](../output/pdf/issue14_feeder_layout/main.pdf) fits six pages after tightening plot margins and placing references in the last text column. The new Results paragraph is on page 4, Figure 4 is on page 5 and the new Methods subsection is on page 6. The final Overleaf package must include the feeder PDF and use a project-local figure path in `results.tex`. The Guardian corpus prose review below remains pending before final compilation.
+
+### Feeder wording review for the implementation handoff
+
+**Results approved.** Keep the heading “Sub-analysis of the transfer network.” Replace its prose in [results.tex](../results.tex#L54) with the user's draft and the three accepted edits:
+
+> During the network analysis, we also examined which club pairs accounted for unusually many transfers among the 2,396 Premier League arrivals. The exploratory screen selected 217 recurring routes, each with at least two recorded transfers, accounting for 626 transfers (Figure 4). Girona to Manchester City was the busiest transfer pair, with 15 recorded transfers over the study period. We calculated an expected count for that route in each season, keeping fixed how many transfers each origin club sent to the Premier League and how many each destination club received. Adding those seasonal expectations gave an expected total of 1.8 transfers across the full 2012/13–2024/25 period.
+>
+> We found that some high-volume transfer pairs shared a common equity investor. The 17 transfer pairs in the joint-ownership group had a median of four transfers. In comparison, the remaining 200 transfer pairs had a median of two (Figure 4b).
+
+Use the existing `fig:feeder-routes` reference for Figure 4 and append panel (b) to the second reference. The 1.8 expected transfers are a pooled count, calculated by summing seasonal expectations. [Restricted feeder summary](../../reruns/h1_2012_13-2024_25/output/premier_league_feeder_summary.md)
+
+**Figure 4 caption.** The user directed removal of the separate sentence about the Grasshoppers and Vitesse fractions and confirmed that these pairs had a joint ownership interest. The caption uses the prior draft with that deletion:
+
+> **Recurring transfer routes into the Premier League.** **(a)** The six screened transfer pairs with at least seven recorded transfers among 2,396 arrivals in recorded seasons 2012/13–2024/25. Bars show observed counts and diamonds show expectations under the seasonal destination shuffle. For Girona and Udinese, the red fractions show how many of each route’s transfers occurred during documented joint ownership. **(b)** The exceedance curves show the percentage of routes in each group with at least a given number of recorded transfers.
+
+Use this text in the Figure 4 caption in [results.tex](../results.tex#L61). The explanation of transfer-date fractions applies to Girona and Udinese. Keep the exceedance threshold inclusive.
+
+**Methods approved.** Keep the heading “Recurring routes into the Premier League.” Replace its paragraph in [methods.tex](../methods.tex#L44) with:
+
+> We counted 2,396 Premier League arrivals from the 16,636 eligible transfers in recorded seasons 2012/13–2024/25 by directed club pair. We shuffled destinations 999 times within each season (seed 2026), preserving each origin and destination total. We retained routes with at least two recorded transfers and an unadjusted upper-tail permutation p < 0.05. The joint-ownership group included transfer pairs whose clubs shared an equity investor, plus two pairs included on the basis of family or financial ties.
+
+Use the manuscript's LaTeX notation for the season range and p-value threshold. The wording describes the grouping in the restricted analysis. [Ownership audit](../../notes/premier_league_feeder_ownership_audit.md#unresolved-and-excluded-network-relationships)
+
+### Feeder financial context in the Discussion
+
+**Confirmed.** Insert the following after the discussion of Premier League entry and before the Guardian limitations in [discussion.tex](../discussion.tex). The user explicitly requested LaTeX citations.
+
+```latex
+Transfer fees between related clubs can move funds within an ownership group. A fee above market value could increase the selling club's reported profit before regulatory adjustments, and UEFA's financial rules limit the proceeds clubs can count from permanent sales to related clubs \cite{uefa2024financialsustainability}. In UEFA's separate review of eligibility for the 2024/25 Champions League, Girona and Manchester City, the clubs on our busiest route, agreed to temporary restrictions on transfers between them \cite{uefa2024multiclubownership}. The route counts give a starting point for testing whether fees differ from those for comparable players moving between independently owned clubs.
+```
+
+Add the matching entries to [references.bib](../references.bib).
+
+```bibtex
+@misc{uefa2024financialsustainability,
+  author       = {{UEFA}},
+  title        = {{UEFA} club licensing and financial sustainability regulations},
+  year         = {2024},
+  howpublished = {2024 edition, Annex G.3.7},
+  url          = {https://www.fsf.fo/wp-content/uploads/2024/10/20240601_Regulations_CLFS_2024_EN_22-10-2024.pdf},
+  note         = {\href{https://www.fsf.fo/wp-content/uploads/2024/10/20240601_Regulations_CLFS_2024_EN_22-10-2024.pdf}{Regulations}}
+}
+
+@misc{uefa2024multiclubownership,
+  author = {{UEFA}},
+  title  = {The {CFCB} decides on multi-club ownership cases for the 2024/25 {UEFA} club competitions},
+  year   = {2024},
+  month  = jul,
+  url    = {https://www.uefa.com/news-media/news/028f-1b4ba6fcea09-078845f25cbf-1000--/},
+  note   = {\href{https://www.uefa.com/news-media/news/028f-1b4ba6fcea09-078845f25cbf-1000--/}{5 July decision}}
+}
+```
+
+Annex G.3.7 addresses accounting for permanent related-party transfers. The eligibility decision documents the clubs' commitments to demonstrate independence and includes an exception for pre-existing agreements. The feeder analysis measured route counts and leaves fee levels and accounting effects untested. [Research notes](issue14_feeder_financial_context.md)
+
+**Next:** Implement the approved feeder passages and their citations with the other final revisions in the new context. Keep Issue 14 open for verification and final review.
+
+## Temporary Overleaf preview, 25 November 2026
+
+The user requested a temporary build to show someone and asked to keep Issue 14 open for further revisions. Figure 1 is rotated 90° clockwise from the previous draft. It uses the upright source export at full width, with its LaTeX caption beneath it on page 2. Page 3 places the Guardian log–log rank–frequency plot (Figure 2) beside the two top-ten token rankings (Table 1), directly above the related Results. Page 4 contains monthly sentiment (Figure 3) and human validation (Table 2).
+
+The [temporary Overleaf ZIP](../paper_output_zip/pnas_overleaf_issue14_preview.zip) contains 22 files with root-level `main.tex`. A fresh extraction compiled locally using Tectonic's XeTeX engine and BibTeX. The [preview PDF](../output/pdf/issue14_preview/pnas_issue14_preview.pdf) has six pages including references. All six pages were visually inspected. The checks verified the clockwise rotation, all 20 tokens and rounded percentages, numbering, cross-references and 21 bibliography entries. Overleaf settings for this package are XeLaTeX and `main.tex`.
+
+**Next:** collect the user's remaining review changes in Issue 14 before the final manuscript and ZIP review.
+
+**Before final compilation:** reread the Guardian corpus paragraphs in [Results](../results.tex) alongside the new displays. Check that the prose explicitly introduces Figure 2 (the log–log rank–frequency plot) and Table 1 (the token rankings with and without stopwords), explains what each shows, and uses the correct LaTeX cross-references. Make any needed prose edits before compiling the final draft, then verify the references in the PDF.
+
+## Guardian corpus display revision queued, 25 November 2026
+
+The user selected the following additions, now implemented in the temporary preview above.
+
+1. Insert the [Guardian rank–frequency plot](../../reruns/h1_2012_13-2024_25/output/guardian_text_description_findings/rank_frequency_loglog.pdf) as Figure 2. Preserve the logarithmic axes for frequency rank and raw token count and the existing ideal Zipf reference. The current Figure 2, the four-instrument monthly Guardian sentiment plot, becomes Figure 3.
+2. Add one ten-row token table from the [saved top-ten rankings](../../reruns/h1_2012_13-2024_25/output/guardian_text_description_findings/top_ten_words.md). Use a shared rank column and two side-by-side groups of columns, one for the corpus with stopwords and one for the corpus without stopwords. Show the token, count and relative frequency in each group. Display relative frequency as a percentage to one decimal place using that group's token total (3,870,272 with stopwords and 2,336,122 without stopwords).
+3. Introduce and cite both displays from the corpus-description paragraph under “Measuring tone in football writing” in [Results](../results.tex), before the sentiment scoring and validation discussion. Place the plot and table near that passage where the PNAS floats allow. Use native LaTeX captions and references. Verify the numbering, caption readability, six-page limit including references, and compilation from a fresh Overleaf ZIP extraction once the revision is implemented.
+
 ## Overleaf review package, 24 November 2026
 
 The user confirmed readiness to resolve [Issue 13](2026-11-19_15-30-34_13-assemble-pnas-template-and-check-references.scratch#resolution-24-november-2026) and requested the ZIP to read the full draft in Overleaf. The [review ZIP](../paper_output_zip/pnas_overleaf_review.zip) contains 21 files, with root-level `main.tex`, all approved fragments, the bibliography, the seven original PNAS dependencies and both selected plot PDFs. Only the two figure paths change in the packaged source. The original template ZIP and the plot PDFs are byte-identical to the Issue 13 inputs.
