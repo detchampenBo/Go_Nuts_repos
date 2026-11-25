@@ -1,0 +1,290 @@
+# 16 Plan the three-slide presentation with frontend-slides
+
+## Created
+
+2026-11-25 14:13:12 Europe/Copenhagen. User-requested presentation issue, separate from the paper's Issue 14 final review. Number 15 is already used by the H2b file now tracked as Issue 11.1, so this issue is 16.
+
+## Status
+
+Open. Full three-slide draft under active user review. Session paused 25 November 2026 ~16:50; continue tomorrow from the handoff below. Slides are **not** yet approved.
+
+## Current state for a new context (updated 25 November 2026, ~16:50)
+
+Read this section first. Where it disagrees with an older entry under Progress, this section wins.
+
+**Deliverables (all in [presentation/](../presentation/)):**
+
+- [bohart_fu_slides.pdf](../presentation/bohart_fu_slides.pdf) is the submission candidate. It has 3 pages, each 1440 × 810 pt (16:9). Last exported ~16:45 on 25 November 2026.
+- [bohart_fu_slides.html](../presentation/bohart_fu_slides.html) is the single source for all three slides. Press E in a browser for inline editing; Ctrl+S saves a copy.
+- [build_assets.py](../presentation/build_assets.py) checks the zip hash, rasterises Figures 1–3 from the final zip at 450 dpi with the paper's trims, and downloads the fonts locally into `bohart_fu_slides-assets/`.
+- [export_pdf.py](../presentation/export_pdf.py) re-exports the PDF with headless Chrome. The skill's bash exporter can't run on this machine. It also writes page renders to `qa/pdf_page1-3.png` and prints the page count, page size and fonts.
+- **Workflow after editing the HTML:** run `python export_pdf.py` in `presentation/`, then inspect `qa/pdf_page*.png`.
+- **Live view:** start `python -m http.server 8765 --bind 127.0.0.1` in `presentation/` and open `http://127.0.0.1:8765/bohart_fu_slides.html`. Cursor's side browser rejects `file://` URLs. Append `#2` or `#3` to the URL to jump to a slide. Changing only the hash may not switch slides; use arrow keys or reload with a cache-busting query.
+
+**Slide contents now:**
+
+- **Slide 1 — conceptual question and data:**
+  - Title: "Does age matter in football?" (changed from "Does age matter?" at ~16:45). Framed tag at top right: "The question and its data / Two data sources, two separate samples ↓". Research question in italic on one line at 26 px.
+  - Left panel, "Football transfers as a directed network": invented five-club illustration drawn by `drawNetwork()`. A and B are Premier League (dark brown); C, D and E are Leagues B, C and D. Edges: C→A 4, A→C 3 (parallel), D→A 2, E→B 3, A→E 1, C→D 2, D→E 1. Plain coloured circular nodes (R = 44), not footballs. Caption: 16,636 eligible transfers of 4,602 players, 2012/13–2024/25.
+  - Right panel, "Guardian sentences linked to signings": typed "The Guardian" wordmark (not the real logo), API → filter (PL player 1…N) → sentences with before/after bars. Pipeline vertically centred. Caption: 820 signings, 67 aged 30+ and 753 under 30. **No corpus strip on this slide.**
+  - Chrome: "Bohart & Fu" bottom left, "1 / 3" bottom right.
+- **Slide 2 — H1 result and corpus facts:**
+  - Headline: "Older transfers (30+) entered the Premier League less often (12.14% vs 14.56%), with limited statistical evidence (p = 0.098)".
+  - Left: Figure 1 (backbone + H1 permutation). Below it, a two-cell strip: (1) Observed gap Δ_obs = r_30+ − r_<30 = 12.14 − 14.56 = −2.42 pp, with "r = share of transfers entering the Premier League"; (2) "How to read it: A lower (more negative) gap means older players enter the Premier League less often than younger players." Footnotes: (a) backbone α = 0.20, five Louvain communities; (b) one-sided p from 999 age-label shuffles within origin club and recorded season.
+  - Right: Table 1 (top tokens) then "The sentence corpus" 2×2 grid: 99,976 linked sentence records, 3.87 M tokens, 42,779 token types, 13,022 hapax tokens.
+- **Slide 3 — tone result, Zipf, validation:**
+  - Headline: "No clear age difference in how Guardian tone changed after signing (+0.006, p = 0.76)".
+  - Left: Figure 2 (rank–frequency) under "Guardian corpus: token frequency by rank", then Table 2 (validation, RoBERTa row highlighted) with its note. No large ρ callout and no "Checked against human judgement" heading.
+  - Right: Figure 3 (monthly four-model tone) with the two-sided p / limited-sensitivity note.
+
+**Decisions that supersede older entries:**
+
+- The feeder finding is off the slides and kept for questions. This supersedes conclusion 4.
+- Slide 1 no longer has the paper subtitle or author names in the header. This supersedes Q13 for slide 1.
+- Corpus strip lives on slide 2, not slide 1. Slide 1 is visual/conceptual only. This supersedes the earlier "Slide 1 numbers also include the four corpus figures" decision.
+- Figure 2 lives on slide 3 (upper left), not slide 2. Table 1 stays on slide 2.
+- Pitch background and football-shaped nodes were tried and rejected. Don't reintroduce them. Keep plain coloured nodes and the heading "Football transfers as a directed network".
+- Underlining to link the question to the panels was rejected. Don't reintroduce it.
+- Pixel-glitch decoration was removed with the old slide 1.
+- Null-model / one-sided-p formula cells on slide 2 were removed; only the observed-gap formula and the reading sentence remain. Footnote (b) still covers the shuffle test.
+- Slide 3 validation lead (large ρ + sentence) was removed as clutter; ρ = 0.52 remains in Table 2.
+
+**Still open:**
+
+1. Further review rounds from the user on any slide. The user may later want more on-slide text (Q5). Possible soft spots noted in session: Guardian pipeline empty space on slide 1; Table 2 has no heading of its own; Guardian logo still a typed wordmark.
+2. After the slides are approved, write the speaker notes. Keep them in a separate file, not the PDF, with about one minute per slide, split into network (slide 1 left, slide 2 Figure 1) and language (slide 1 right, slide 2 Table 1 + corpus, slide 3).
+3. After that, write the likely-questions sheet, with answers traced to the final paper, including the feeder analysis and H2b.
+4. Then resolve this issue: append the resolution here, update the README checkpoint and the issue tracker.
+5. Open item to confirm with the user: whether to use the real Guardian logo. It's currently a typed wordmark, because Q12 ruled out logos.
+
+**How the user likes to work:**
+
+- Ask questions **one at a time**, each with a plain-language explanation. Avoid A/B/C option lists without context.
+- Keep the paper's careful wording ("limited statistical evidence", "no clear difference"). p-values in brackets or as a note.
+- Design: Cobalt Grid recoloured with the `PLOTTING_STYLE.md` palette (dark brown ink on cream); fonts Newsreader / Hanken Grotesk / DM Mono.
+- After any HTML edit, re-export the PDF and check `qa/pdf_page*.png` visually.
+- Do **not** start speaker notes or the likely-questions sheet until the user approves the slides.
+
+**Dates:** slides due 27 November 2026 at 23:59; presented 2 December 2026.
+
+## Checkpoint workflow
+
+1. At the start, read the Current checkpoint in [paper_simple/README.md](../README.md). Compare it with this issue's status, latest progress, and related decisions.
+
+2. Remind the user where this issue fits in the recorded process and identify the next discussion or action. Reconcile any difference between the README and the issue with the user.
+
+3. Record agreed evidence and decisions in this issue and the affected planning files. Create linked scratch issues for new research, evidence, citation, or cross-reference needs.
+
+4. When the completion criteria are met and the user confirms satisfaction, set this issue to Resolved and append a dated resolution with the outcome, supporting evidence, and changed file links.
+
+5. Update the Current checkpoint in [paper_simple/README.md](../README.md) as part of resolving this issue. Include the update date, completed issue, agreed outcome, links to changed documents and new issues, and the next issue with its exact next discussion or action.
+
+6. Verify that this issue and the README agree, then tell the user that both were updated. If the session ends during the issue, record partial progress and the next step in both places while retaining the issue's current status.
+
+## Starting context
+
+Repository: `C:/Users/victo/Codex/Go_Nuts_repos`. Working paper: `pnas_report/paper_simple`. See [REPOSITORY_CONTEXT.md](REPOSITORY_CONTEXT.md) and the [first-draft goal and workflow](README.md). The paper is drafted and compiles to six pages ([Issue 14 PDF](../output/pdf/pnas_issue14.pdf)); Issue 14 remains open for the user's final review.
+
+**Final paper (content source).** The submitted version is [social_graphs_paper.zip](../paper_output_zip/social_graphs_paper.zip): 391,386 bytes, SHA-256 `8648D74BCC73474E54C76F6E9CC85AB68631FA84307CF8C7E74B494B49941754`, saved 25 November 2026 at 14:21. Slides must draw their conclusions from this zip only. It is newer than the `.tex` files in `paper_simple/` and the Issue 14 ZIP, which are not authoritative for the presentation. The user may additionally paste Overleaf Markdown in the fresh context; if it disagrees with the zip, ask which is final. This issue defines what the agent must ask and collect before generating anything.
+
+Differences from the Issue 14 ZIP, checked 25 November 2026 (matters for slide wording):
+
+- **Rounded tone result.** The Abstract and the Figure 3 caption now report the RoBERTa older-minus-younger difference as **+0.006 (two-sided p = 0.76)**, not +0.0060 / 0.7558. The Abstract gives the validation agreement as **ρ = 0.52 against 196 human-labelled sentences**. Use the final paper's rounding on slides.
+- **Three new citations.** `dendir2016peak` (player performance peaks in the mid-to-late twenties, so 30+ recruits are past that peak) and `merullo2019commentator` (a player-linked commentary corpus showing systematic differences by race; "we follow a similar player-linked design, applied to age") are in the Introduction. `liu2016transfer` (the global transfer market modelled as a directed club network) is in Results. These are useful for the "why this question" and "what was known" framing.
+- **Figures bundled in `figures/`**, with display order:
+  - Figure 1, `transfer_network_and_entry.pdf` (`fig:entry-age`): the backbone plus the H1 permutation panel.
+  - Figure 2, `guardian_rank_frequency.pdf` (`fig:guardian-rank-frequency`), beside Table 1, the top-token table (`tab:guardian-tokens`).
+  - Figure 3, `guardian_sentiment.pdf` (`fig:h2-monthly-tone`): monthly four-model H2.
+  - Figure 4, `feeder_routes.pdf` (`fig:feeder-routes`): recurring routes and joint ownership.
+  - Table 2 (`tab:validation`) is the four-instrument human validation.
+- The feeder caption now marks joint-ownership fractions in red for all routes, not only Girona and Udinese. Philip's email is `s260114@dtu.dk`.
+- Methods, Discussion, Significance, title and the validation table are byte-identical to the working copies.
+
+The deck is built with the `frontend-slides` skill at [.agents/skills/frontend-slides/SKILL.md](../../../.agents/skills/frontend-slides/SKILL.md), installed from `zarazhangrui/frontend-slides` on 25 November 2026. It produces a single self-contained HTML file on a fixed 1920×1080 stage. Its supporting files are `STYLE_PRESETS.md` (12 safe presets), `bold-template-pack/selection-index.json` (34 bold templates), `viewport-base.css`, `html-template.md`, `animation-patterns.md` and `scripts/export-pdf.sh`.
+
+Terms used below:
+
+- **H1**: entry into the Premier League by age group (30+ versus under 30), tested with age-label shuffles within origin club and season.
+- **H2**: the before-to-after change in Guardian tone around Premier League signings, compared by age group.
+- **Backbone**: the disparity-filtered view of the transfer network (α = 0.20) shown in Figure 1(a).
+- **Safe preset / bold template / wildcard**: the skill's three kinds of style preview. It shows one of each by default.
+
+## Course constraints (non-negotiable)
+
+From the [Week 8 brief](<../project_requirements/Week 8 · Putting it all together · 02805.html>) and [project_requirements.md](../project_requirements.md):
+
+- **Three slides, three minutes**, presented on Wednesday 2 December 2026 to the lecturers and TAs, followed by questions.
+- **A plain three-page PDF, no animations.** It is handed in with the paper by Friday 27 November 2026 at 23:59. The organisers stitch every group's PDF into one deck, so nobody plugs anything in.
+- **The point is to check that we know our stuff.** We pitch the project, then answer technical questions. "We will ask whoever we like, so everyone in the group must be able to explain everything in the paper."
+- The brief's suggested structure is one slide for the question and data, one for the main figure, and one for what it means and what we checked.
+- The grading category is "Three slides that pitch the project in three minutes, and a group that holds up under questioning". The project is scored as one number on the 0–3 scale, covering the paper and presentation together.
+
+Consequences for `frontend-slides`:
+
+- The HTML is a working file. The deliverable is the PDF export (skill Phase 6B). Animations only affect the HTML preview, and each slide must read correctly in its final static state.
+- Exactly three `.slide` elements: no title slide, no "thank you" slide and no appendix slides in the handed-in PDF. Any backup slides for questions live in a separate file.
+- The stitched deck will sit among other groups' slides, so the PDF should be 16:9. Check whether the organisers expect any particular page size.
+- `scripts/export-pdf.sh` is a bash and Playwright script. On 25 November 2026, `bash` was not found on this machine's PATH. Before relying on it, plan an alternative such as Git Bash, WSL, or a direct Playwright or Chrome print-to-PDF of the fixed stage.
+
+## Interview: questions to ask the user
+
+Ask these together, using the structured question UI where available. The skill asks all Phase 1 questions at once. Record each answer in Progress below. Proposed defaults are in brackets and need confirmation.
+
+### A. Story and emphasis
+
+1. **One-sentence pitch.** In a single sentence, what should the examiners remember? [Default: from the paper's Significance Statement.]
+2. **Lead finding.** Which result opens the main-figure slide: H1 (lower observed entry for 30+, gap −2.42 pp, p = 0.098), H2 (no clear tone-change difference, +0.006, p = 0.76), or both side by side? [Default: Figure 1 with H1, H2 as the "so what" on slide 3.]
+3. **Framing of weak or null results.** How should the slides phrase limited evidence and a null result, so the claims under questioning match the paper exactly? [Default: the paper's wording, "limited evidence against the null" and "no clear age difference, limited sensitivity".]
+4. **Network × language balance.** The course grades both halves. How should the three slides divide attention between the transfer network (backbone, Leiden/Louvain) and the Guardian NLP (RoBERTa, validation, corpus)?
+5. **What to leave out.** Which approved paper content is deliberately not on the slides but must be ready for questions? Candidates: the feeder sub-analysis, the Zipf/corpus description, the coverage-volume medians, the fixed-player sensitivity check, and the omission of H2b.
+
+### B. Slide-by-slide content
+
+6. **Slide 1, question and data.** Should it show the exact research question text, the two separate samples (16,636 transfers / 4,602 players for H1; 820 signings, 67 older and 753 younger, for H2), and data sources? Text, a small diagram, or both?
+7. **Slide 2, main figure.** Reuse a paper figure as is, crop one panel, or redraw in HTML/SVG in the deck's style? Options from the final zip's `figures/`: Figure 1 combined (network backbone plus H1 permutation), Figure 1(b) H1 panel only, Figure 3 monthly H2 tone, Figure 2 rank–frequency, or Figure 4 feeder routes. Higher-resolution PNG/SVG versions of Figures 1 and 3 exist under [pnas_report/output](../../output/backbone_h1_findings/README.md). Before using them, confirm they match the zip's PDFs. Redrawing must use the paper's numbers only, with no new analysis.
+8. **Slide 3, meaning and checks.** Which checks to show: the shuffle null for H1, the human validation (196 usable labels, RoBERTa ρ = 0.52; the paper's Table 2 gives the interval), the four-instrument comparison, and the main limitations. Which one limitation is most important to admit up front?
+9. **Numbers on slides.** Which exact numbers must appear? Every one must trace to the paper Markdown or the [evidence inventory](../evidence_and_sources.md).
+10. **Authors and chrome.** Names on slide 1 (Victor Bohart, Philip Nukunu Fu), course code 02805, DTU, date, page numbers? Paper title as a header?
+
+### C. Delivery and questioning
+
+11. **Who speaks.** Do both authors present, and how is the three minutes split? Should speaker notes be embedded as HTML comments?
+12. **Reading versus speaking density.** The skill asks for low density (speaker-led) or high density (reading-first). Because the PDF is also leafed through without us speaking, should slides be readable on their own? [Default: low to medium density, readable without narration.]
+13. **Question preparation.** Separately from the three slides, should the agent produce a likely-questions sheet with answers traced to the paper? For example: why permute within origin club and season, what the plus-one p-value means, why RoBERTa and not VADER, what the backbone filter removes, why H2b was dropped, and what "eligible transfer" means. Each author must be able to answer any of them.
+14. **Backup material.** Should a separate, non-submitted HTML hold backup slides (Methods equation, validation table, feeder result) for answering questions on screen, if that is allowed on the day?
+
+### D. Visual direction
+
+15. **Mood.** Which feeling fits a technical examination pitch: authoritative and calm, editorial and confident, or bold and energetic?
+16. **Template shortlist.** The skill generates three previews: one safe preset, at least one bold template, and one wildcard. Suggested candidates, based on high formality and their suitability for data-heavy slides:
+    - Safe presets: **Swiss Modern**, **Paper & Ink**, **Notebook Tabs**.
+    - Bold templates: **signal** (navy, bone paper, muted gold; institutional, high density), **cobalt-grid** (cobalt serifs on graph paper; suits plots), **monochrome** (ivory ledger, black type, no colour), **vellum** (dark navy, scholarly serif), **blue-professional** (cream with cobalt accents), **emerald-editorial** (magazine-cover business deck).
+    - Wildcard: a custom football-data look, for example a pitch-line grid or a transfer-ledger motif, kept restrained.
+    The user may name a favourite, veto any, or let the agent choose.
+17. **Colour constraints.** Must the deck match the paper's figure palette ([PLOTTING_STYLE.md](../../PLOTTING_STYLE.md)) so reused plots don't clash? Light or dark background? Note that dark slides may print and stitch poorly next to other groups' slides.
+18. **Fonts.** Any preference, or accept the template's fonts? The skill bans Inter, Roboto, Arial and system fonts on slides. Embedded plot PDFs keep their Arial.
+19. **Imagery.** Club crests, player photos and Guardian logos raise copyright issues and are off by default. Should the deck use only our own figures and CSS-generated graphics?
+
+## What the agent needs before generating
+
+1. **The final paper**: [social_graphs_paper.zip](../paper_output_zip/social_graphs_paper.zip). Extract it to a temporary folder (not into `paper_simple/`), check the hash above, and read `main.tex` plus every `\input` file, `validation_table.tex` and `references.bib`. This is the only content source; slides must not state anything the final paper does not. Optional Overleaf Markdown from the user is a convenience copy, not a substitute.
+2. **Answers to the interview above**, or explicit acceptance of the defaults.
+3. **Figure files** to embed: the vector PDFs in the zip's `figures/`, rasterised at 1920×1080 or larger, or the matching PNG/SVG exports in `pnas_report/output/`. Check sharpness at full stage size and on a projector.
+4. **Confirmation of the submission format**: a three-page 16:9 PDF, and any file name the course requires.
+5. **A working PDF export route** on Windows (see Course constraints).
+
+## Generation and verification plan
+
+1. Phase 2 of the skill: write three single-slide previews to `.frontend-slides/slide-previews/` with real deck content (slide 1), and no template names or workflow text on the slides. The user picks one.
+2. Phase 3: generate the full three-slide HTML in `pnas_report/paper_simple/presentation/` (proposed location; confirm), including the full `viewport-base.css`.
+3. Check every number on the slides against the paper Markdown and record each one's source in this issue.
+4. Render each slide at 1280×720 and 1920×1080. Check that nothing overflows or overlaps, that text stays readable when the stitched deck is shown on a projector, and that the static final state reads correctly with animations off.
+5. Export a three-page PDF and inspect every page. Confirm the page count is 3 and the aspect ratio is 16:9.
+6. If requested, produce the separate question-preparation sheet, with each answer linked to the paper section or evidence file.
+
+## Paper context and supporting files
+
+- [Research question](../final_research_question.md) · [Storyline](../paper_storyline.md) · [Evidence and sources](../evidence_and_sources.md) · [Tone of voice](../tone_of_voice.md) · [Presentation prep notes on H2b](../presentation_prep.md)
+- For H1 and network claims, use the [confirmed restricted rerun evidence](../../reruns/h1_2012_13-2024_25/provenance/output_parity_report.md). Guardian evidence uses the separate saved tables under [dataset_nlp/results](../../data/dataset_nlp/results/).
+
+## Next action to discuss
+
+Updated 25 November 2026, ~16:50: see "Current state for a new context" above. Session paused for the day. Tomorrow: continue the user's review round on the three-slide deck, then follow the "Still open" list. Do not start speaker notes or the Q sheet until the slides are approved.
+
+## Resolved when
+
+A three-page 16:9 PDF of the three slides exists, agreed by the user, with every number traced to the paper. Its HTML source and export command are recorded here. Any agreed question-preparation sheet is saved and linked. The paper README checkpoint and the issue tracker record the outcome.
+
+## Progress and resolution
+
+25 November 2026, 14:13:12 Europe/Copenhagen — Created at the user's request to define the interview and inputs for a `frontend-slides` presentation before the user supplies the paper Markdown in a fresh context. Recorded the course's three-slide, three-minute, static-PDF and questioning constraints from the Week 8 brief, the installed skill's resources and a formal-template shortlist. No slides, previews or analyses were produced. The paper's Issue 14 status is unchanged.
+
+25 November 2026, 14:22 Europe/Copenhagen — The user identified [social_graphs_paper.zip](../paper_output_zip/social_graphs_paper.zip) as the final paper from which to draw conclusions and present. Recorded its size and hash, and compared it read-only against the working `.tex` files and the Issue 14 ZIP. It carries Overleaf edits: rounded H2 values (+0.006, p = 0.76), three new citations (Dendir, Merullo et al., Liu et al.), bundled `figures/` with Figure 4 for feeder routes, a feeder-caption change and Philip's updated email. Updated the starting context, interview questions 2, 7 and 8, the inputs list and the next action to use the zip as the sole content source. The working `.tex` files in `paper_simple/` were not changed and now lag the final paper. Whether to sync them back is a separate decision for the user.
+
+25 November 2026, afternoon Europe/Copenhagen — Fresh context opened Issue 16. Verified [social_graphs_paper.zip](../paper_output_zip/social_graphs_paper.zip) size 391,386 bytes and SHA-256 `8648D74BCC73474E54C76F6E9CC85AB68631FA84307CF8C7E74B494B49941754`; extracted read-only to a temp folder and read `main.tex`, Abstract, Significance, Introduction, Results, Discussion, Methods inputs, `validation_table.tex` and figure inventory. Proposed a four-sentence conclusions summary for slide 3 (awaiting user confirmation). Next: user confirms the summary, then answers interview sections A–D; no style previews until those answers are recorded.
+
+25 November 2026, ~14:36 Europe/Copenhagen — User confirmed the slide-3 conclusions basis with two edits. Agreed summary for the deck:
+
+1. Older transfers entered the Premier League less often (12.14% vs 14.56%, gap −2.42 pp), with limited evidence against the within-origin-club/season age shuffle (one-sided p = 0.098).
+2. In a separate Guardian sample, older signings got more coverage, but RoBERTa found no clear age difference in before→after tone change (+0.006, two-sided p = 0.76; limited sensitivity).
+3. Emphasise human validation: one author hand-labelled sentences (196 usable after excluding four wrong-person matches) to check model scores against human perception; RoBERTa had the strongest observed rank agreement (ρ = 0.52). Frame this as confirming validity relative to human judgement, not only as “useful but imperfect”.
+4. Include the feeder-analysis finding: among recurring Premier League arrival routes, some high-volume pairs shared a common equity investor; the 17 joint-ownership pairs had a median of four transfers versus two for the remaining 200 pairs (Girona→Manchester City busiest, 15 observed vs 1.8 expected). Keep paper wording: exploratory / starting point, not a causal claim.
+
+Next: user answers interview sections A–D (or accepts defaults). No style previews until those answers are recorded.
+
+Interview answers (asked one at a time at the user's request, with plain explanations):
+
+- **Q1 Pitch:** "Older transfers entered the Premier League less often (limited statistical evidence); in a separate Guardian sample, older signings got more coverage but no clear difference in tone change." (The causal caveat is dropped from the pitch sentence; it stays in the slide-3 conclusions.)
+- **Q2 Figures:** Slide 2 shows Figure 1 (network backbone + H1 entry panel), Figure 2 (Guardian rank–frequency) and Table 1 (top-ten tokens). Slide 3 uses Figure 3 (monthly four-model tone). Figure 4 (feeder routes) is not shown as a figure. Note: slide 2 carries three displays, so readability at stitched-deck size must be checked during generation.
+- **Q3 Feeder and validation placement:** The feeder finding is removed from the slides entirely; this supersedes point 4 of the agreed conclusions (keep it for questions only). Slide 3 = Figure 3 (tone by age) + Table 2 (four-instrument human validation), carrying the hand-labelled validation emphasis.
+- **Slide 1 (proposed, not objected to):** exact research question; the two separate samples (16,636 transfers / 4,602 players / 1,157 clubs / 11,016 routes, 2012/13–2024/25; 1,332 Guardian signings / 43,924 articles, 820 analysed = 67 older + 753 younger); 30+ vs under-30 split; title, Victor Bohart and Philip Nukunu Fu, DTU, 02805.
+
+- **Q4 Wording of weak/null results:** Use the paper's careful meaning in natural, readable language (e.g. "Older transfers entered less often, with limited evidence against the null"; "No clear age difference in tone change; smaller differences remain possible"). Show p-values from the null model either in brackets after the claim or as a note at the bottom of the slide; pick whichever reads better in the previews.
+- **Q5 Density:** Start with the middle option: one headline sentence per slide stating the finding, plus the figures/tables, no bullet lists. The user may want more on-slide text in a later iteration as a guideline while presenting.
+- **Q6 Presenters and notes:** Split by topic. Presenter A: slide 1 and the network half of slide 2 (Figure 1). Presenter B: the Guardian text half of slide 2 (Figure 2, Table 1) and slide 3. Who takes which half does not matter; only the split matters (tentatively Victor network, Philip language). Write speaker notes later, after the slides exist, as a separate file (not in the submitted PDF): about one minute per slide, with the key numbers.
+- **Q7 Question-preparation sheet:** Yes. Create it after the slides are done: likely examiner questions with answers traced to the final paper, including the feeder analysis (off the slides but in the paper). Not submitted; for rehearsal.
+- **Q8 Backup slides:** Skip. No separate backup HTML.
+- **Q9 Visual direction:** Clean and modern. Base the deck on the bold template **Cobalt Grid** (`.agents/skills/frontend-slides/bold-template-pack/templates/cobalt-grid/design.md`; source [beautiful-html-templates/cobalt-grid](https://github.com/zarazhangrui/beautiful-html-templates/tree/main/templates/cobalt-grid/)): cream paper, graph-paper grid, hairline frame, serif headlines, mono chrome. Replace the cobalt ink with the [PLOTTING_STYLE.md](../../PLOTTING_STYLE.md) palette (`#372107`, `#895211`, `#DC831B`, `#F9AB50`, `#FBC382`) so the deck matches the paper's figures. Light background.
+- **Q10 Colour mapping:** One ink only: dark brown `#372107` replaces cobalt for all text, hairlines and the graph-paper grid (grid at low opacity). No orange accent in the slide chrome, because orange already means "aged 30+" in the figures.
+- **Q11 Fonts:** Keep the template's fonts: Newsreader (headlines), Hanken Grotesk (sentences and labels), DM Mono (page numbers, sources). Figures keep their internal Arial.
+- **Q12 Imagery:** Own material only: the paper's figures and tables plus Cobalt Grid's decorative elements (graph-paper grid, frame lines, optionally the small striped pixel pattern in a corner). No crests, photos or logos.
+- **Q13 Chrome:** Slide 1 carries the paper title ("Does age matter? Premier League entry and changes in Guardian coverage around football signings") and both names (Victor Bohart, Philip Nukunu Fu). Slides 2 and 3 carry only the running label "Bohart & Fu". No DTU, course code or date. Add a page number on every slide (template position, bottom right); drop the template's nav hint.
+- **Q14 Numbers on slides (recommendation accepted):**
+  - Slide 1: 16,636 transfers, 4,602 players, 2012/13–2024/25; 820 Guardian signings (67 aged 30+, 753 under 30). Sources: Abstract; Results "Transfer-network structure" and "Measuring tone".
+  - Slide 2: 12.14% (30+) vs 14.56% (under 30), p = 0.098. Source: Abstract; Figure 1 caption. No extra numbers for Figure 2 / Table 1.
+  - Slide 3: +0.006, p = 0.76; 196 hand-labelled sentences; RoBERTa ρ = 0.52. Sources: Abstract; Figure 3 caption; Table 2.
+  - Left off (for questions only): 1,157 clubs, 11,016 routes, 1,332 signings, 43,924 articles.
+- **Q15 Files and format:** 16:9 PDF (the brief gives no file name or page size). Folder `pnas_report/paper_simple/presentation/`; submitted PDF `bohart_fu_slides.pdf`; working source `bohart_fu_slides.html`.
+- **Q16 Figure presentation:** White panels with a thin dark-brown frame line for every figure and table, sitting on the cream grid; figures unaltered.
+- **Q17 Tables:** Rebuild Table 1 (top-ten tokens) and Table 2 (validation) as real HTML tables in the deck's fonts and brown ink, with the paper's exact values; each value checked against the zip's `figure_floats.tex` and `validation_table.tex`. Figures 1–3 remain the original plots (rasterised from the zip's PDFs), not redrawn.
+
+- **Q18 Build order (recommendation accepted):** Skip the three style previews (style already chosen) and build the whole deck at once.
+
+25 November 2026, ~15:40 Europe/Copenhagen — First full draft built and exported; awaiting the user's review. Issue stays Open.
+
+- **Files:** [bohart_fu_slides.pdf](../presentation/bohart_fu_slides.pdf) (submission candidate) · [bohart_fu_slides.html](../presentation/bohart_fu_slides.html) (source; inline editing with E, Ctrl+S saves a copy) · [build_assets.py](../presentation/build_assets.py) · [export_pdf.py](../presentation/export_pdf.py) · page renders in `presentation/qa/`.
+- **Build commands** (from `pnas_report/paper_simple/presentation/`): `python build_assets.py` checks the zip hash, rasterises Figures 1–3 at 450 dpi with the paper's trim values, and downloads local copies of the fonts. `python export_pdf.py` runs headless Chrome print-to-PDF (the skill's bash exporter cannot run here) and reports the page count, page size and embedded fonts.
+- **Export checks:** 3 pages, each 1440 × 810 pt (ratio 1.7778, i.e. 16:9), rotation 0. Fonts embedded: Newsreader, Hanken Grotesk, DM Mono. The Greek letters ρ and α fall back to Georgia, Arial and Consolas because the template fonts lack them. All three pages were inspected visually with no overflow or overlap, and the HTML scales correctly at 1280×720.
+- **Number trace (all from the final zip):** 16,636 / 4,602 / 2012/13–2024/25 (Abstract, Results) · 820 = 67 + 753 (Results, Fig. 3 caption) · 12.14% vs 14.56%, one-sided p = 0.098, 999 shuffles within origin club and recorded season (Abstract, Fig. 1 caption) · α = 0.20, five Louvain communities (Fig. 1 caption) · Table 1 values (`figure_floats.tex`) · +0.006, two-sided p = 0.76, 5,000 shuffles within signing season (Abstract, Fig. 3 caption) · ρ = 0.52 and all Table 2 values, 196 sentences, 85 signed sentences, 14 older-player sentences (`validation_table.tex`).
+- **Wording notes:** Slide 3's headline uses the paper's "no clear difference" plus "Smaller differences remain possible" in the footnote. The validation lead says RoBERTa "had the strongest rank agreement", following the paper's "strongest observed rank agreement".
+- **Still to do after the user approves the slides:** speaker notes (separate file, about one minute per slide, split network and language) and the likely-questions sheet with answers traced to the paper, including the feeder analysis.
+
+25 November 2026, ~15:45 Europe/Copenhagen — The user wants to rework slide 1: less space on the title, and two explanatory diagrams instead. (1) A five-club directed, weighted transfer network as an illustration, with two Premier League clubs in the same colour and the other clubs in different league colours. (2) A Guardian pipeline: Guardian → Guardian API → a "PL player 1 … PL player N" list acting as the sentence filter. Built [slide1_draft.html](../presentation/slide1_draft.html) as a separate draft (the main deck is unchanged) and opened it in Cursor's side browser via a local server (`python -m http.server 8765` in `presentation/`). The Guardian logo is a typed wordmark placeholder, because Q12 ruled out logos; swap in the real logo only if the user confirms. The illustration uses invented clubs A–E and weights. Its captions reuse only agreed numbers (16,636 / 4,602 / 2012/13–2024/25; 820 = 67 + 753). Iterating with the user.
+
+25 November 2026, ~15:50 Europe/Copenhagen — Slide 1 draft, iteration 2: removed the subtitle from the header; added an arrow A → C with 3 transfers, drawn parallel to C → A (4); shortened the filter list to PL player 1, PL player 2, ⋮, PL player N; cut the placeholder sentence bars to two per period. Added a corpus strip headed "The sentence corpus": 99,976 linked sentence records, 3.87 million tokens, 42,779 token types and 13,022 hapax tokens (all from Results, "Measuring tone in football writing").
+
+25 November 2026, ~15:55 Europe/Copenhagen — Slide 1 draft, iteration 3: removed the "Question" label. To link the question to the data, the user chose underlines: the first half of the research question (entry by age) has a solid underline, and a solid line sample precedes the network panel heading. The second half (Guardian tone by age) has a dotted underline, matched by a dotted line before the Guardian panel heading. Iteration 4: the user removed the underlines and line samples because they caused confusion. The question now stands alone under the title, with no label. Iteration 5: the question is split onto two lines after "by player age," and enlarged from 26 to 29 px (about +2 pt). Iteration 6: the user removed the two names from the top right, overriding the Q13 chrome decision for slide 1. That corner now holds a framed tag reading "The question and its data", with the line "Two data sources, two separate samples ↓". To keep slide 1 identifiable in the merged deck, slide 1 now carries the "Bohart & Fu" running label bottom left, like slides 2–3. Iteration 7: the question is back on one line, at 26 px (the largest size that fits the 1,776 px frame on one line).
+
+25 November 2026, ~16:00 Europe/Copenhagen — At the user's request, the reworked slide 1 replaced the original slide 1 in [bohart_fu_slides.html](../presentation/bohart_fu_slides.html). Its styles are scoped under `.s1`, the network script is `drawNetwork()`, and the old title layout and pixel-glitch decoration were removed. The PDF was re-exported: 3 pages, 1440 × 810 pt each, rotation 0. Page 1 matches the approved draft, and page 2 was checked and is unchanged. Embedded fonts are DM Mono, Newsreader and Hanken Grotesk. Fallbacks appear for ρ and α (Georgia, Arial, Consolas) and for ⋮ and ↓ (Cambria Math). Deleted `slide1_draft.html` because it is now merged. The side browser shows the full deck through the local server. Added the "Current state for a new context" handoff section near the top of this issue.
+
+25 November 2026, ~16:05 Europe/Copenhagen — Slide 1 review round: the network panel and the Guardian panel now share subgrid rows, so both white boxes are exactly 860 × 616 px even though the left caption runs one line longer. The network drawing area is now 860 × 640 (`viewBox`), and nodes A–E are spread over nearly the full height (A y 105, B y 85, C y 495, D y 560, E y 470). Edges and weights are unchanged. PDF re-exported: 3 pages, 1440 × 810 pt; page 1 checked visually.
+
+25 November 2026, ~16:10 Europe/Copenhagen — At the user's request, the network panel on slide 1 now has a football pitch as its background: a to-scale 105 × 68 m pitch with touchlines, halfway line, centre circle, penalty and goal areas, penalty spots and arcs, corner arcs, and ten faint mowing stripes. It is drawn in `drawNetwork()` before the edges, all in the single brown ink at low opacity (lines 22 %, stripes 3.5 %), so no new colour is introduced. The legend got a panel-coloured background so the pitch lines don't run through its text. PDF re-exported.
+
+25 November 2026, ~16:12 Europe/Copenhagen — The user removed the pitch background again, and the legend background went with it. Slide 1 is back to the ~16:05 state. Next: brainstorm how to make the network read as football-related; the user's own idea is footballs as nodes, coloured by league.
+
+25 November 2026, ~16:15 Europe/Copenhagen — At the user's request (the recommended option from a brainstorm), the network nodes are now footballs. Each is a white ball whose pentagons are filled in the club's league colour, with the club letter in the centre patch. They are drawn by `drawBall()` in the script, with node radius raised from 44 to 50. Legend swatches are now mini footballs. The panel heading reads "Football transfers as a directed network". The caption now begins "Each ball is a club (A–E invented); arrows run from selling to buying club, weighted by number of transfers", shortened so it stays on three lines. Numbers are unchanged. PDF re-exported.
+
+25 November 2026, ~16:18 Europe/Copenhagen — The user reverted the football nodes because they caused confusion. Nodes are again plain league-coloured circles (R = 44) with the letter in the middle, the legend uses coloured dots again, `drawBall()` was removed, and the caption is back to "Clubs are nodes; each arrow runs from the selling to the buying club, …". The heading change was kept: "Football transfers as a directed network". Don't reintroduce a pitch background or ball-shaped nodes. PDF re-exported.
+
+25 November 2026, ~16:20 Europe/Copenhagen — At the user's request, Figure 2 (rank–frequency) moved from slide 2 to slide 3. Slide 3's columns are swapped: the validation block (ρ, lead text, Table 2, note) now sits on the left, compacted, with Figure 2 below it, and Figure 3 is on the right. Slide 2's right column now holds only Table 1, enlarged slightly, which leaves empty space below it. All values are unchanged. PDF re-exported (3 pages, 16:9); all pages checked with no overflow.
+
+25 November 2026, ~16:25 Europe/Copenhagen — At the user's request, the corpus strip (99,976 / 3.87 M / 42,779 / 13,022) moved from slide 1 to slide 2, below Table 1 in a 2 × 2 grid with 60 px numbers. This makes slide 1 purely visual and conceptual, and puts the actual corpus information on slide 2. Slide 1's Guardian pipeline is now vertically centred in its box. Numbers are unchanged. PDF re-exported and pages 1–2 checked.
+
+25 November 2026, ~16:30 Europe/Copenhagen — The user found slide 3 cluttered. Removed the "Checked against human judgement" heading, the large "ρ = 0.52" and the sentence "RoBERTa had the strongest rank agreement with 196 Guardian sentences…". The left column is now Figure 2 on top (which takes the freed height) and Table 2 with its note below. Table 2 has no heading of its own; its note explains Spearman ρ and the 196 sentences. PDF re-exported and page 3 checked.
+
+25 November 2026, ~16:35 Europe/Copenhagen — The user asked for a formula on slide 2 to help explain the null model. Added a three-step strip under Figure 1, written in MathML:
+
+1. Observed gap: Δ_obs = r_30+ − r_<30 = −2.42 pp, where r is the share of transfers entering the Premier League.
+2. Null model: Δ*_b, b = 1, …, 999, with "Shuffle age labels within origin club and season; mean gap −1.31".
+3. One-sided p: p = (1 + #{Δ*_b ≤ Δ_obs}) / (1 + 999) = 0.098.
+
+Sources, all from the final zip: Methods "Entry-rate comparison…" (within origin club and recorded season, 999 shuffles, plus-one formula, Eq. `eq:h1-empirical-p`, "at or below the observed gap"); Results (12.14 / 14.56, gap −2.42, mean permutation gap −1.31, p = 0.098). The Δ/r notation is the deck's own; the paper states the same formula in words. The footnote line "(b) One-sided p from 999 age-label shuffles…" was removed because the strip replaces it; line (a) stays. PDF re-exported.
+
+25 November 2026, ~16:45 Europe/Copenhagen — The user kept only the observed-gap formula on slide 2 and asked for a sentence on how to read it. The strip under Figure 1 is now two cells: (1) Δ_obs = r_30+ − r_<30 = 12.14 − 14.56 = −2.42 pp, with "r = share of transfers entering the Premier League"; (2) "How to read it: A lower (more negative) gap means older players enter the Premier League less often than younger players." The null-model and one-sided-p formula cells were removed. Footnote (b) on the 999 shuffles remains under the strip. PDF re-exported.
+
+25 November 2026, ~16:45 Europe/Copenhagen — Slide 1 title changed to "Does age matter in football?". PDF re-exported.
+
+25 November 2026, ~16:50 Europe/Copenhagen — Session paused at the user's request. Updated this handoff ("Current state for a new context"), the Next action, and the [paper_simple/README.md](../README.md) Current checkpoint. Temp handoff also written to `%TEMP%/handoff_issue16_presentation.md` for opening tomorrow. Issue stays Open; slides not yet approved. Speaker notes and likely-questions sheet still wait for approval.
+
+Agreed deck outline (current): Slide 1 conceptual (network illustration + Guardian pipeline) · Slide 2 Figure 1 + observed-gap formula/read note + Table 1 + corpus figures · Slide 3 Figure 2 above Table 2 (left) and Figure 3 (right).

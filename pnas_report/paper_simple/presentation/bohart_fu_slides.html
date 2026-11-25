@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Does age matter in football? Bohart &amp; Fu</title>
+
+    <!-- Fonts: Newsreader (headlines), Hanken Grotesk (sentences, labels), DM Mono (chrome).
+         Local Google Fonts copies from build_assets.py, so the deck and PDF export work offline. -->
+    <link href="bohart_fu_slides-assets/fonts.css" rel="stylesheet">
+
+    <style>
+        /* ===========================================
+           THEME
+           Cobalt Grid layout with the paper's plotting palette:
+           dark brown #372107 is the only ink on cream paper.
+           Orange is left to the figures, where it means "aged 30+".
+           =========================================== */
+        :root {
+            --paper: #F0EBDE;
+            --paper-2: #E6E0CE;
+            --panel: #FFFFFF;
+            --ink: #372107;
+            --ink-soft: #895211;
+            --grid: rgba(55, 33, 7, 0.08);
+            --ink-faint: rgba(55, 33, 7, 0.18);
+
+            /* League colours in the slide 1 network illustration */
+            --league-pl: #372107;
+            --league-b: #895211;
+            --league-c: #DC831B;
+            --league-d: #F9AB50;
+
+            --font-display: "Newsreader", Georgia, serif;
+            --font-body: "Hanken Grotesk", sans-serif;
+            --font-mono: "DM Mono", ui-monospace, monospace;
+
+            --edge: 72px;
+            --frame-top: 64px;
+            --frame-bottom: 92px;
+
+            --stage-bg: #1b1206;
+            --slide-bg: var(--paper);
+
+            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        /* ===========================================
+           FIXED 16:9 STAGE: MANDATORY BASE STYLES
+           (full contents of frontend-slides viewport-base.css)
+           =========================================== */
+
+        /* 1. Lock the browser viewport */
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+            background: var(--stage-bg, #000);
+        }
+
+        /* 2. Full-window deck viewport */
+        .deck-viewport {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            background: var(--stage-bg, #000);
+        }
+
+        /* 3. Fixed 16:9 design canvas.
+           JavaScript sets transform: translate(...) scale(...). */
+        .deck-stage {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 1920px;
+            height: 1080px;
+            overflow: hidden;
+            transform-origin: 0 0;
+            background: var(--slide-bg, #fff);
+        }
+
+        /* 4. Slides stack inside the fixed stage.
+           Content must be laid out at 1920×1080, not reflowed per device. */
+        .slide {
+            position: absolute;
+            inset: 0;
+            width: 1920px;
+            height: 1080px;
+            overflow: hidden;
+            display: block;
+            visibility: hidden;
+            opacity: 0;
+            pointer-events: none;
+            background: var(--slide-bg, #fff);
+        }
+
+        .slide.active,
+        .slide.visible {
+            visibility: visible;
+            opacity: 1;
+            pointer-events: auto;
+            z-index: 1;
+        }
+
+        /* 5. Keep media inside authored slide bounds */
+        img,
+        video,
+        canvas,
+        svg {
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        /* 6. Presentation chrome stays outside the slide design system */
+        .deck-controls {
+            position: fixed;
+            left: 50%;
+            bottom: 22px;
+            transform: translateX(-50%);
+            z-index: 1000;
+        }
+
+        /* 7. Print one fixed-size slide per page */
+        @media print {
+            html,
+            body {
+                width: 1920px;
+                height: auto;
+                overflow: visible;
+                background: #fff;
+            }
+
+            .deck-viewport {
+                position: static;
+                overflow: visible;
+                background: #fff;
+            }
+
+            .deck-stage {
+                position: static;
+                width: auto;
+                height: auto;
+                transform: none !important;
+                background: none;
+            }
+
+            .slide {
+                position: relative;
+                display: block !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                pointer-events: auto !important;
+                width: 1920px;
+                height: 1080px;
+                break-after: page;
+                page-break-after: always;
+            }
+
+            .slide:last-child {
+                break-after: auto;
+                page-break-after: auto;
+            }
+
+            .deck-controls {
+                display: none !important;
+            }
+        }
+
+        /* 8. Reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.2s !important;
+            }
+        }
+
+        /* ===========================================
+           PRINT / PDF EXPORT
+           One 1920×1080 page per slide, every element in its final state.
+           =========================================== */
+        @page { size: 1920px 1080px; margin: 0; }
+
+        @media print {
+            html, body { background: var(--paper); }
+            .slide { background: var(--paper); }
+            .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
+            .edit-hotzone, .edit-toggle { display: none !important; }
+            * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        }
+
+        /* ===========================================
+           SLIDE CANVAS: graph paper and hairline frame
+           Every slide carries the grid, a top and bottom hairline,
+           the running label (bottom left) and the page number (bottom right).
+           =========================================== */
+        .slide {
+            color: var(--ink);
+            font-family: var(--font-body);
+        }
+
+        .slide::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(to right, var(--grid) 1px, transparent 1px),
+                linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
+            background-size: 40px 40px;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .hairline {
+            position: absolute;
+            left: var(--edge);
+            right: var(--edge);
+            height: 1.5px;
+            background: var(--ink);
+            z-index: 2;
+        }
+        .hairline.top { top: 28px; }
+        .hairline.bottom { bottom: 22px; }
+
+        .chrome {
+            position: absolute;
+            bottom: 40px;
+            font-family: var(--font-mono);
+            font-size: 17px;
+            letter-spacing: 0.06em;
+            color: var(--ink);
+            z-index: 2;
+        }
+        .chrome.label { left: var(--edge); }
+        .chrome.pagenum { right: var(--edge); }
+
+        /* Content rectangle inside the chrome */
+        .frame {
+            position: absolute;
+            top: var(--frame-top);
+            left: var(--edge);
+            right: var(--edge);
+            bottom: var(--frame-bottom);
+            z-index: 3;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ===========================================
+           TYPOGRAPHY
+           Newsreader 400 for statements, Hanken caps for labels,
+           DM Mono for notes and chrome.
+           =========================================== */
+        .kicker {
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: 17px;
+            letter-spacing: 0.17em;
+            text-transform: uppercase;
+            color: var(--ink);
+        }
+
+        .headline {
+            font-family: var(--font-display);
+            font-weight: 400;
+            font-size: 50px;
+            line-height: 1.08;
+            letter-spacing: -0.005em;
+        }
+
+        .note {
+            font-family: var(--font-mono);
+            font-size: 17px;
+            line-height: 1.45;
+            letter-spacing: 0.03em;
+            color: var(--ink);
+        }
+
+        .nowrap { white-space: nowrap; }
+        .greek { text-transform: none; letter-spacing: 0; font-size: 1.25em; }
+
+        /* Topbar: headline above a 1.5px rule */
+        .topbar {
+            border-bottom: 1.5px solid var(--ink);
+            padding-bottom: 18px;
+        }
+
+        /* ===========================================
+           FIGURE AND TABLE PANELS
+           White panels with a thin brown frame keep the paper's
+           white-background plots readable on cream.
+           =========================================== */
+        .panel {
+            background: var(--panel);
+            border: 1.5px solid var(--ink);
+            padding: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .panel img { display: block; width: 100%; height: auto; }
+
+        .panel-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 10px;
+        }
+
+        table.data {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: var(--font-body);
+            color: var(--ink);
+            font-variant-numeric: tabular-nums;
+        }
+        table.data th {
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            text-align: left;
+        }
+        table.data td.num, table.data th.num { text-align: right; }
+        table.data td.tok { font-family: var(--font-mono); letter-spacing: 0.02em; }
+
+        /* ===========================================
+           SLIDE 1: QUESTION AND DATA
+           Compact header, then two explainer panels: an illustrative
+           transfer network (left) and the Guardian sentence pipeline (right).
+           =========================================== */
+        .s1 .frame { bottom: 84px; }
+
+        /* --- Header: title, intro tag, research question --- */
+        .s1 .header {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            column-gap: 48px;
+            align-items: end;
+            border-bottom: 1.5px solid var(--ink);
+            padding-bottom: 20px;
+        }
+        .s1 .title {
+            font-family: var(--font-display); font-weight: 400;
+            font-size: 66px; line-height: 1; letter-spacing: -0.01em;
+        }
+        .s1 .intro-tag {
+            text-align: right;
+            border: 1.5px solid var(--ink);
+            background: var(--paper);
+            padding: 14px 20px;
+            align-self: start;
+            margin-top: 6px;
+        }
+        .s1 .intro-tag .kicker { font-size: 19px; }
+        .s1 .intro-tag .note { margin-top: 8px; }
+        .s1 .question {
+            grid-column: 1 / -1;
+            margin-top: 18px;
+            font-family: var(--font-display); font-style: italic;
+            font-size: 26px; line-height: 1.3;
+            white-space: nowrap;
+        }
+
+        /* --- Two explainer panels --- */
+        .s1 .panels {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: auto 1fr auto;
+            column-gap: 56px;
+            margin-top: 26px;
+            min-height: 0;
+        }
+        /* Subgrid rows keep both canvases the same height when captions differ in length. */
+        .s1 .panel-col { display: grid; grid-row: 1 / -1; grid-template-rows: subgrid; min-height: 0; }
+        .s1 .panel-col > .kicker { margin-bottom: 12px; }
+        .s1 .canvas {
+            background: var(--panel);
+            border: 1.5px solid var(--ink);
+            position: relative;
+            min-height: 0;
+        }
+        .s1 .caption { margin-top: 14px; }
+        .s1 .caption strong { font-weight: 500; }
+
+        /* --- Network illustration (drawn by the script at the end) --- */
+        .s1 #network { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; max-height: none; }
+        .s1 .legend {
+            position: absolute; right: 18px; top: 16px;
+            font-size: 18px; line-height: 1.6;
+        }
+        .s1 .legend span.sw {
+            display: inline-block; width: 16px; height: 16px; border-radius: 50%;
+            margin-right: 10px; vertical-align: -2px;
+        }
+        .s1 .legend .edge-key { margin-top: 6px; font-family: var(--font-mono); font-size: 16px; }
+
+        /* --- Guardian pipeline --- */
+        .s1 .pipeline {
+            position: absolute; inset: 0;
+            padding: 30px 28px;
+            display: grid;
+            grid-template-columns: 1fr 52px 1fr 52px 1.15fr;
+            grid-template-rows: auto 56px auto;
+            align-content: center;
+            align-items: center;
+        }
+        .s1 .box {
+            border: 1.5px solid var(--ink);
+            background: var(--paper);
+            padding: 18px 16px;
+            text-align: center;
+        }
+        .s1 .wordmark {
+            font-family: var(--font-display);
+            font-size: 40px; line-height: 1;
+            font-weight: 500;
+            letter-spacing: -0.02em;
+            padding: 28px 12px;
+            background: var(--panel);
+        }
+        .s1 .wordmark small {
+            display: block; font-family: var(--font-body); font-size: 13px; font-weight: 600;
+            letter-spacing: 0.16em; text-transform: uppercase; margin-top: 12px;
+        }
+        .s1 .api { font-family: var(--font-mono); font-size: 24px; padding: 34px 12px; }
+        .s1 .api small {
+            display: block; font-family: var(--font-body); font-size: 15px;
+            margin-top: 10px; line-height: 1.35;
+        }
+        .s1 .arrow { width: 52px; height: 24px; }
+        .s1 .players { text-align: left; padding: 14px 18px; }
+        .s1 .players .kicker { font-size: 13px; margin-bottom: 8px; display: block; }
+        .s1 .players ul { list-style: none; font-family: var(--font-mono); font-size: 21px; line-height: 1.55; }
+        .s1 .players li.dots { padding-left: 4px; letter-spacing: 0.2em; }
+        .s1 .down {
+            grid-column: 5; grid-row: 2;
+            justify-self: center;
+            width: 24px; height: 56px;
+        }
+        .s1 .sentences {
+            grid-column: 1 / -1; grid-row: 3;
+            text-align: left;
+            background: var(--panel);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px 28px;
+            padding: 18px 22px;
+        }
+        .s1 .sentences .kicker { grid-column: 1 / -1; font-size: 14px; }
+        .s1 .period { border-top: 1.5px solid var(--ink); padding-top: 10px; }
+        .s1 .period .label { font-family: var(--font-mono); font-size: 16px; margin-bottom: 10px; }
+        .s1 .line { height: 12px; background: var(--ink-faint); margin: 9px 0; }
+        .s1 .line b { display: inline-block; height: 12px; background: var(--ink); vertical-align: top; }
+
+
+        /* ===========================================
+           SLIDE 2: NETWORK AND GUARDIAN CORPUS
+           =========================================== */
+        .s2 .body {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1090px 1fr;
+            gap: 48px;
+            margin-top: 24px;
+            min-height: 0;
+        }
+        .s2 .col { display: flex; flex-direction: column; min-height: 0; }
+        .s2 .fig1 { flex: 0 0 auto; }
+        .s2 .col-right .panel.tbl { padding: 10px 16px; display: block; }
+        .s2 .foot { margin-top: auto; padding-top: 8px; }
+
+        /* --- H1 observed gap and how to read it, under Figure 1 --- */
+        .s2 .nullmodel {
+            margin-top: 10px;
+            display: grid;
+            grid-template-columns: auto 1fr;
+            border: 1.5px solid var(--ink);
+            background: var(--panel);
+        }
+        .s2 .nullmodel .step { padding: 6px 18px; }
+        .s2 .nullmodel .step + .step { border-left: 1px solid var(--ink-faint); }
+        .s2 .nullmodel .step-label {
+            font-family: var(--font-body); font-weight: 600; font-size: 13px;
+            letter-spacing: 0.14em; text-transform: uppercase;
+        }
+        .s2 .nullmodel math { font-size: 25px; color: var(--ink); }
+        .s2 .nullmodel .step-label { margin-bottom: 4px; }
+        .s2 .nullmodel .step-note { font-size: 15px; line-height: 1.3; margin-top: 6px; }
+        .s2 .nullmodel .reading-text { font-size: 18px; line-height: 1.3; }
+
+        /* --- Corpus summary under Table 1 --- */
+        .s2 .corpus {
+            margin-top: 28px;
+            border-top: 1.5px solid var(--ink);
+            padding-top: 16px;
+        }
+        .s2 .corpus .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 22px 28px;
+            margin-top: 14px;
+        }
+        .s2 .corpus .num {
+            font-family: var(--font-display);
+            font-size: 60px; line-height: 1; letter-spacing: -0.01em;
+        }
+        .s2 .corpus .what { font-size: 19px; line-height: 1.3; margin-top: 6px; }
+
+        .s2 table.data { font-size: 19px; }
+        .s2 table.data th { font-size: 12px; padding: 5px 6px; }
+        .s2 table.data td { padding: 6px 6px; border-bottom: 1px solid var(--ink-faint); }
+        .s2 table.data tr:last-child td { border-bottom: none; }
+        .s2 table.data thead tr.group th { border-bottom: 1px solid var(--ink-faint); text-align: center; }
+        .s2 table.data thead tr.cols th { border-bottom: 1.5px solid var(--ink); }
+        .s2 table.data .split { border-left: 1px solid var(--ink-faint); padding-left: 14px; }
+
+        /* ===========================================
+           SLIDE 3: TONE BY AGE AND HUMAN VALIDATION
+           =========================================== */
+        .s3 .body {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 1040px;
+            gap: 56px;
+            margin-top: 24px;
+            min-height: 0;
+        }
+        .s3 .col { display: flex; flex-direction: column; min-height: 0; }
+        .s3 .panel.fig3 { flex: 1; min-height: 0; }
+        .s3 .panel.fig3 img { width: auto; height: 100%; max-width: 100%; }
+
+        .s3 .panel.tbl { display: block; padding: 6px 16px; margin-top: 20px; }
+        .s3 table.data { font-size: 18px; }
+        .s3 table.data th { font-size: 12px; padding: 6px 6px; border-bottom: 1.5px solid var(--ink); }
+        .s3 table.data td { padding: 5px 6px; border-bottom: 1px solid var(--ink-faint); }
+        .s3 table.data tr:last-child td { border-bottom: none; }
+        .s3 table.data tr.main td { background: var(--paper); font-weight: 600; }
+        .s3 .table-note { margin-top: 8px; font-size: 15px; }
+        .s3 .panel.fig2 { flex: 1; min-height: 0; padding: 8px; }
+        .s3 .panel.fig2 img { width: auto; height: 100%; max-width: 100%; }
+        .s3 .foot { margin-top: 16px; }
+
+        /* ===========================================
+           ANIMATIONS (HTML preview only; the PDF shows the final state)
+           =========================================== */
+        .reveal {
+            opacity: 0;
+            transform: translateY(18px);
+            transition: opacity 0.6s var(--ease-out-expo), transform 0.6s var(--ease-out-expo);
+        }
+        .slide.visible .reveal { opacity: 1; transform: none; }
+        .slide.visible .reveal.d1 { transition-delay: 0.08s; }
+        .slide.visible .reveal.d2 { transition-delay: 0.18s; }
+        .slide.visible .reveal.d3 { transition-delay: 0.28s; }
+
+        /* ===========================================
+           INLINE EDITING (press E, or hover the top-left corner)
+           =========================================== */
+        .edit-hotzone {
+            position: fixed; top: 0; left: 0;
+            width: 80px; height: 80px;
+            z-index: 10000;
+            cursor: pointer;
+        }
+        .edit-toggle {
+            position: fixed; top: 16px; left: 16px;
+            z-index: 10001;
+            font-family: var(--font-mono);
+            font-size: 13px;
+            letter-spacing: 0.06em;
+            padding: 8px 12px;
+            background: var(--paper);
+            color: var(--ink);
+            border: 1.5px solid var(--ink);
+            cursor: pointer;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .edit-toggle.show,
+        .edit-toggle.active { opacity: 1; pointer-events: auto; }
+        [contenteditable="true"] { outline: 1px dashed var(--ink-soft); outline-offset: 3px; }
+    </style>
+</head>
+<body>
+    <div class="edit-hotzone"></div>
+    <button class="edit-toggle" id="editToggle" title="Edit mode (E)">EDIT</button>
+
+    <div class="deck-viewport">
+        <main class="deck-stage" id="deckStage">
+
+            <!-- ===================================================
+                 SLIDE 1: research question, illustrative transfer network
+                 and the Guardian sentence pipeline with corpus summary
+                 Speakers: network half (left panel), language half (right panel).
+                 =================================================== -->
+            <section class="slide s1 active" aria-label="Slide 1: question and data">
+                <div class="hairline top"></div>
+                <div class="hairline bottom"></div>
+
+                <div class="frame">
+                    <div class="header reveal">
+                        <h1 class="title">Does age matter in football?</h1>
+                        <div class="intro-tag">
+                            <p class="kicker">The question and its data</p>
+                            <p class="note">Two data sources, two separate samples ↓</p>
+                        </div>
+                        <p class="question">How does entry into the Premier League differ by player age, and how does the tone of Guardian coverage before and after Premier League signings differ by age?</p>
+                    </div>
+
+                    <div class="panels">
+                        <!-- Left: how the transfer network is built (invented clubs A–E) -->
+                        <div class="panel-col reveal d1">
+                            <span class="kicker">Football transfers as a directed network</span>
+                            <div class="canvas">
+                                <svg id="network" viewBox="0 0 860 640" preserveAspectRatio="xMidYMid meet" aria-label="Five football clubs connected by weighted, directed transfer arrows"></svg>
+                                <div class="legend">
+                                    <div><span class="sw" style="background:var(--league-pl)"></span>Premier League</div>
+                                    <div><span class="sw" style="background:var(--league-b)"></span>League B</div>
+                                    <div><span class="sw" style="background:var(--league-c)"></span>League C</div>
+                                    <div><span class="sw" style="background:var(--league-d)"></span>League D</div>
+                                    <div class="edge-key">→ 4 = four transfers</div>
+                                </div>
+                            </div>
+                            <p class="note caption">Clubs are nodes; each arrow runs from the selling to the buying club, weighted by the number of transfers. Arrows into Premier League clubs are entries. Our data: <strong>16,636 eligible transfers of 4,602 players, 2012/13–2024/25.</strong></p>
+                        </div>
+
+                        <!-- Right: how Guardian sentences are collected -->
+                        <div class="panel-col reveal d2">
+                            <span class="kicker">Guardian sentences linked to signings</span>
+                            <div class="canvas">
+                                <div class="pipeline">
+                                    <div class="box wordmark">The Guardian<small>Articles</small></div>
+                                    <svg class="arrow" viewBox="0 0 52 24" aria-hidden="true"><line x1="6" y1="12" x2="40" y2="12" stroke="#372107" stroke-width="3"/><path d="M38 4 L50 12 L38 20 Z" fill="#372107"/></svg>
+                                    <div class="box api">Guardian API<small>search by player name</small></div>
+                                    <svg class="arrow" viewBox="0 0 52 24" aria-hidden="true"><line x1="6" y1="12" x2="40" y2="12" stroke="#372107" stroke-width="3"/><path d="M38 4 L50 12 L38 20 Z" fill="#372107"/></svg>
+                                    <div class="box players">
+                                        <span class="kicker">Filter</span>
+                                        <ul>
+                                            <li>PL player 1</li>
+                                            <li>PL player 2</li>
+                                            <li class="dots">⋮</li>
+                                            <li>PL player N</li>
+                                        </ul>
+                                    </div>
+
+                                    <svg class="down" viewBox="0 0 24 64" aria-hidden="true"><line x1="12" y1="4" x2="12" y2="50" stroke="#372107" stroke-width="3"/><path d="M4 48 L12 60 L20 48 Z" fill="#372107"/></svg>
+
+                                    <div class="box sentences">
+                                        <span class="kicker">Sentences naming each player</span>
+                                        <div class="period">
+                                            <p class="label">Up to a year before signing</p>
+                                            <div class="line"><b style="width:30%"></b></div>
+                                            <div class="line"><b style="width:55%"></b></div>
+                                        </div>
+                                        <div class="period">
+                                            <p class="label">Up to a year after signing</p>
+                                            <div class="line"><b style="width:42%"></b></div>
+                                            <div class="line"><b style="width:24%"></b></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="note caption">Each sentence is scored for tone and compared before and after the move. Our data: <strong>820 Premier League signings with enough text: 67 aged 30+, 753 under 30.</strong></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chrome label">Bohart &amp; Fu</div>
+                <div class="chrome pagenum">1 / 3</div>
+            </section>
+
+            <!-- ===================================================
+                 SLIDE 2: Figure 1 (network and entry by age),
+                 Table 1 (Guardian corpus)
+                 Speakers: network half (Figure 1), language half (Table 1).
+                 =================================================== -->
+            <section class="slide s2" aria-label="Slide 2: network and corpus">
+                <div class="hairline top"></div>
+                <div class="hairline bottom"></div>
+
+                <div class="frame">
+                    <div class="topbar reveal">
+                        <h2 class="headline">Older transfers <span class="nowrap">(30+)</span> entered the Premier League less often <span class="nowrap">(12.14% vs 14.56%),</span> with limited statistical evidence <span class="nowrap">(p = 0.098)</span></h2>
+                    </div>
+
+                    <div class="body">
+                        <div class="col col-left reveal d1">
+                            <div class="panel-label">
+                                <span class="kicker">Transfer network and entry by age</span>
+                            </div>
+                            <div class="panel fig1">
+                                <img src="bohart_fu_slides-assets/transfer_network_and_entry.png"
+                                     alt="Figure 1: (a) disparity backbone of the transfer network with five communities; (b) histogram of 999 shuffled entry-rate gaps with the observed gap of -2.42 points">
+                            </div>
+                            <div class="nullmodel">
+                                <div class="step">
+                                    <p class="step-label">Observed gap</p>
+                                    <math displaystyle="true"><msub><mi>Δ</mi><mtext>obs</mtext></msub><mo>=</mo><msub><mi>r</mi><mtext>30+</mtext></msub><mo>−</mo><msub><mi>r</mi><mtext>&lt;30</mtext></msub><mo>=</mo><mn>12.14</mn><mo>−</mo><mn>14.56</mn><mo>=</mo><mn>−2.42</mn><mtext>&#x2009;pp</mtext></math>
+                                    <p class="step-note">r = share of transfers entering the Premier League</p>
+                                </div>
+                                <div class="step reading">
+                                    <p class="step-label">How to read it</p>
+                                    <p class="reading-text">A lower (more negative) gap means older players enter the Premier League less often than younger players.</p>
+                                </div>
+                            </div>
+                            <p class="note foot">(a) Network backbone, disparity filter α = 0.20, five Louvain communities.<br>(b) One-sided p from 999 age-label shuffles within origin club and recorded season.</p>
+                        </div>
+
+                        <div class="col col-right reveal d2">
+                            <div class="panel-label">
+                                <span class="kicker">Guardian corpus: most frequent tokens</span>
+                            </div>
+                            <div class="panel tbl">
+                                <table class="data">
+                                    <thead>
+                                        <tr class="group">
+                                            <th></th>
+                                            <th colspan="3">With stopwords</th>
+                                            <th colspan="3" class="split">Without stopwords</th>
+                                        </tr>
+                                        <tr class="cols">
+                                            <th class="num">#</th>
+                                            <th>Token</th><th class="num">Count</th><th class="num">%</th>
+                                            <th class="split">Token</th><th class="num">Count</th><th class="num">%</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td class="num">1</td><td class="tok">the</td><td class="num">150,246</td><td class="num">3.9</td><td class="tok split">season</td><td class="num">17,521</td><td class="num">0.8</td></tr>
+                                        <tr><td class="num">2</td><td class="tok">and</td><td class="num">86,037</td><td class="num">2.2</td><td class="tok split">£</td><td class="num">15,740</td><td class="num">0.7</td></tr>
+                                        <tr><td class="num">3</td><td class="tok">to</td><td class="num">85,471</td><td class="num">2.2</td><td class="tok split">m</td><td class="num">14,903</td><td class="num">0.6</td></tr>
+                                        <tr><td class="num">4</td><td class="tok">a</td><td class="num">74,360</td><td class="num">1.9</td><td class="tok split">city</td><td class="num">11,627</td><td class="num">0.5</td></tr>
+                                        <tr><td class="num">5</td><td class="tok">in</td><td class="num">58,569</td><td class="num">1.5</td><td class="tok split">united</td><td class="num">11,265</td><td class="num">0.5</td></tr>
+                                        <tr><td class="num">6</td><td class="tok">of</td><td class="num">58,167</td><td class="num">1.5</td><td class="tok split">chelsea</td><td class="num">10,557</td><td class="num">0.5</td></tr>
+                                        <tr><td class="num">7</td><td class="tok">’s</td><td class="num">42,517</td><td class="num">1.1</td><td class="tok split">unknown</td><td class="num">10,439</td><td class="num">0.4</td></tr>
+                                        <tr><td class="num">8</td><td class="tok">for</td><td class="num">39,181</td><td class="num">1.0</td><td class="tok split">manchester</td><td class="num">10,280</td><td class="num">0.4</td></tr>
+                                        <tr><td class="num">9</td><td class="tok">his</td><td class="num">29,501</td><td class="num">0.8</td><td class="tok split">form</td><td class="num">10,093</td><td class="num">0.4</td></tr>
+                                        <tr><td class="num">10</td><td class="tok">is</td><td class="num">29,321</td><td class="num">0.8</td><td class="tok split">injured</td><td class="num">9,960</td><td class="num">0.4</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="corpus">
+                                <span class="kicker">The sentence corpus</span>
+                                <div class="stats">
+                                    <div><p class="num">99,976</p><p class="what">linked sentence records</p></div>
+                                    <div><p class="num">3.87 M</p><p class="what">tokens</p></div>
+                                    <div><p class="num">42,779</p><p class="what">token types</p></div>
+                                    <div><p class="num">13,022</p><p class="what">hapax tokens (appear once)</p></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chrome label">Bohart &amp; Fu</div>
+                <div class="chrome pagenum">2 / 3</div>
+            </section>
+
+            <!-- ===================================================
+                 SLIDE 3: Figure 2 (rank–frequency) above Table 2
+                 (agreement with hand-labelled sentences), and Figure 3
+                 (monthly tone by age, four models)
+                 Speaker: language half.
+                 =================================================== -->
+            <section class="slide s3" aria-label="Slide 3: tone by age and validation">
+                <div class="hairline top"></div>
+                <div class="hairline bottom"></div>
+
+                <div class="frame">
+                    <div class="topbar reveal">
+                        <h2 class="headline">No clear age difference in how Guardian tone changed after signing <span class="nowrap">(+0.006, p = 0.76)</span></h2>
+                    </div>
+
+                    <div class="body">
+                        <div class="col col-left reveal d1">
+                            <div class="panel-label">
+                                <span class="kicker">Guardian corpus: token frequency by rank</span>
+                            </div>
+                            <div class="panel fig2">
+                                <img src="bohart_fu_slides-assets/guardian_rank_frequency.png"
+                                     alt="Figure 2: token frequency against frequency rank on log-log axes, with an ideal Zipf reference line">
+                            </div>
+
+                            <div class="panel tbl">
+                                <table class="data">
+                                    <thead>
+                                        <tr>
+                                            <th>Model</th>
+                                            <th class="num"><span class="greek">ρ</span> (95% CI)</th>
+                                            <th class="num">Sign right</th>
+                                            <th class="num">3-class</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="main"><td>RoBERTa</td><td class="num">0.52 (0.38, 0.63)</td><td class="num">82%</td><td class="num">50%</td></tr>
+                                        <tr><td>VADER</td><td class="num">0.33 (0.21, 0.45)</td><td class="num">68%</td><td class="num">42%</td></tr>
+                                        <tr><td>Bing</td><td class="num">0.36 (0.22, 0.47)</td><td class="num">59%</td><td class="num">51%</td></tr>
+                                        <tr><td>Bing, no football words</td><td class="num">0.36 (0.23, 0.49)</td><td class="num">58%</td><td class="num">53%</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <p class="note table-note">Spearman ρ: rank agreement with the human labels. Sign right: 85 positive or negative sentences. 3-class: all 196 sentences. Only 14 sentences concern players aged 30+.</p>
+                        </div>
+
+                        <div class="col reveal d2">
+                            <div class="panel-label">
+                                <span class="kicker">Monthly sentence tone before and after signing</span>
+                            </div>
+                            <div class="panel fig3">
+                                <img src="bohart_fu_slides-assets/guardian_sentiment.png"
+                                     alt="Figure 3: monthly mean sentence sentiment before and after signing for players aged 30+ and under 30, for RoBERTa, VADER, Bing and Bing without football words">
+                            </div>
+                            <p class="note foot">RoBERTa older-minus-younger change: two-sided p from 5,000 age-label shuffles within signing season. Smaller differences remain possible.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chrome label">Bohart &amp; Fu</div>
+                <div class="chrome pagenum">3 / 3</div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        /* ===========================================
+           SLIDE PRESENTATION CONTROLLER
+           Arrow keys, Space, Page Up/Down, Home/End, wheel and swipe.
+           A URL hash such as #2 opens that slide directly.
+           =========================================== */
+        class SlidePresentation {
+            constructor() {
+                this.slides = document.querySelectorAll('.slide');
+                this.stage = document.getElementById('deckStage');
+                this.currentSlide = 0;
+                this.wheelLock = false;
+                this.setupStageScale();
+                this.setupKeyboardNav();
+                this.setupTouchNav();
+                this.setupWheelNav();
+                const fromHash = parseInt(window.location.hash.replace('#', ''), 10);
+                this.showSlide(Number.isFinite(fromHash) ? fromHash - 1 : 0);
+            }
+
+            setupStageScale() {
+                const scale = () => {
+                    const factor = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+                    const x = (window.innerWidth - 1920 * factor) / 2;
+                    const y = (window.innerHeight - 1080 * factor) / 2;
+                    this.stage.style.transform = `translate(${x}px, ${y}px) scale(${factor})`;
+                };
+                scale();
+                window.addEventListener('resize', scale);
+            }
+
+            setupKeyboardNav() {
+                document.addEventListener('keydown', (e) => {
+                    if (e.target.getAttribute && e.target.getAttribute('contenteditable') === 'true') return;
+                    if (['ArrowRight', 'ArrowDown', 'PageDown', ' '].includes(e.key)) {
+                        e.preventDefault();
+                        this.showSlide(this.currentSlide + 1);
+                    } else if (['ArrowLeft', 'ArrowUp', 'PageUp'].includes(e.key)) {
+                        e.preventDefault();
+                        this.showSlide(this.currentSlide - 1);
+                    } else if (e.key === 'Home') {
+                        this.showSlide(0);
+                    } else if (e.key === 'End') {
+                        this.showSlide(this.slides.length - 1);
+                    }
+                });
+            }
+
+            setupTouchNav() {
+                let startX = null;
+                document.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; }, { passive: true });
+                document.addEventListener('touchend', (e) => {
+                    if (startX === null) return;
+                    const dx = e.changedTouches[0].clientX - startX;
+                    if (Math.abs(dx) > 50) this.showSlide(this.currentSlide + (dx < 0 ? 1 : -1));
+                    startX = null;
+                });
+            }
+
+            setupWheelNav() {
+                document.addEventListener('wheel', (e) => {
+                    if (this.wheelLock || Math.abs(e.deltaY) < 20) return;
+                    this.wheelLock = true;
+                    this.showSlide(this.currentSlide + (e.deltaY > 0 ? 1 : -1));
+                    setTimeout(() => { this.wheelLock = false; }, 700);
+                }, { passive: true });
+            }
+
+            showSlide(index) {
+                this.currentSlide = Math.max(0, Math.min(index, this.slides.length - 1));
+                this.slides.forEach((slide, i) => {
+                    slide.classList.toggle('active', i === this.currentSlide);
+                    slide.classList.toggle('visible', i === this.currentSlide);
+                });
+            }
+        }
+
+        /* ===========================================
+           INLINE EDITOR
+           E or the top-left corner toggles edit mode; Ctrl+S saves a copy.
+           Edits are kept in localStorage until saved.
+           =========================================== */
+        class InlineEditor {
+            constructor() {
+                this.isActive = false;
+                this.key = 'bohart_fu_slides_edits';
+                this.targets = () => document.querySelectorAll('.slide h1, .slide h2, .slide p, .slide td, .slide th, .slide .kicker');
+                this.restore();
+            }
+
+            toggleEditMode() {
+                this.isActive = !this.isActive;
+                this.targets().forEach((el) => el.setAttribute('contenteditable', this.isActive ? 'true' : 'false'));
+                document.getElementById('editToggle').classList.toggle('active', this.isActive);
+                if (!this.isActive) this.persist();
+            }
+
+            persist() {
+                const texts = Array.from(this.targets()).map((el) => el.innerHTML);
+                localStorage.setItem(this.key, JSON.stringify(texts));
+            }
+
+            restore() {
+                const saved = localStorage.getItem(this.key);
+                if (!saved) return;
+                const texts = JSON.parse(saved);
+                const els = this.targets();
+                if (texts.length !== els.length) return;
+                els.forEach((el, i) => { el.innerHTML = texts[i]; });
+            }
+
+            save() {
+                this.targets().forEach((el) => el.removeAttribute('contenteditable'));
+                const html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+                const blob = new Blob([html], { type: 'text/html' });
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = 'bohart_fu_slides.html';
+                a.click();
+                if (this.isActive) this.targets().forEach((el) => el.setAttribute('contenteditable', 'true'));
+            }
+        }
+
+        /* ===========================================
+           SLIDE 1 NETWORK ILLUSTRATION
+           Invented clubs A–E. Edit nodes (position, league) and
+           edges (from, to, transfers) here.
+           =========================================== */
+        function drawNetwork() {
+            const COLORS = { pl: '#372107', b: '#895211', c: '#DC831B', d: '#F9AB50' };
+            const nodes = {
+                A: { x: 250, y: 105, league: 'pl' },
+                B: { x: 530, y: 85, league: 'pl' },
+                C: { x: 105, y: 495, league: 'b' },
+                D: { x: 430, y: 560, league: 'c' },
+                E: { x: 720, y: 470, league: 'd' },
+            };
+            const edges = [
+                ['C', 'A', 4],
+                ['A', 'C', 3],
+                ['D', 'A', 2],
+                ['E', 'B', 3],
+                ['A', 'E', 1],
+                ['C', 'D', 2],
+                ['D', 'E', 1],
+            ];
+            const R = 44;
+            const svg = document.getElementById('network');
+            const NS = 'http://www.w3.org/2000/svg';
+            const el = (tag, attrs, text) => {
+                const e = document.createElementNS(NS, tag);
+                Object.entries(attrs).forEach(([k, v]) => e.setAttribute(k, v));
+                if (text !== undefined) e.textContent = text;
+                svg.appendChild(e);
+                return e;
+            };
+
+            edges.forEach(([from, to, w]) => {
+                const a = nodes[from], b = nodes[to];
+                const dx = b.x - a.x, dy = b.y - a.y, len = Math.hypot(dx, dy);
+                const ux = dx / len, uy = dy / len;
+                const px = -uy, py = ux;
+                // Opposite arrows between the same two clubs sit side by side.
+                const paired = edges.some(([f, t]) => f === to && t === from);
+                const off = paired ? 16 : 0;
+                const head = 20, width = 1.5 + 1.6 * w, hw = 7 + width;
+                const x1 = a.x + ux * R + px * off, y1 = a.y + uy * R + py * off;
+                const tipX = b.x - ux * (R + 4) + px * off, tipY = b.y - uy * (R + 4) + py * off;
+                const baseX = tipX - ux * head, baseY = tipY - uy * head;
+                el('line', { x1, y1, x2: baseX, y2: baseY, stroke: '#372107', 'stroke-width': width, 'stroke-opacity': 0.75 });
+                el('path', {
+                    d: `M${tipX},${tipY} L${baseX + px * hw},${baseY + py * hw} L${baseX - px * hw},${baseY - py * hw} Z`,
+                    fill: '#372107', 'fill-opacity': 0.75,
+                });
+                const mx = (x1 + baseX) / 2 + px * off * 1.4, my = (y1 + baseY) / 2 + py * off * 1.4;
+                el('rect', { x: mx - 17, y: my - 17, width: 34, height: 34, fill: '#FFFFFF', stroke: '#372107', 'stroke-width': 1.5 });
+                el('text', { x: mx, y: my + 7, 'text-anchor': 'middle', 'font-family': 'DM Mono, monospace', 'font-size': 20, fill: '#372107' }, w);
+            });
+
+            Object.entries(nodes).forEach(([name, n]) => {
+                el('circle', { cx: n.x, cy: n.y, r: R, fill: COLORS[n.league] });
+                const light = n.league === 'c' || n.league === 'd';
+                el('text', {
+                    x: n.x, y: n.y + 9, 'text-anchor': 'middle',
+                    'font-family': 'Newsreader, Georgia, serif', 'font-size': 26,
+                    fill: light ? '#372107' : '#FFFFFF',
+                }, name);
+            });
+        }
+        drawNetwork();
+
+        const deck = new SlidePresentation();
+        const editor = new InlineEditor();
+
+        const editToggle = document.getElementById('editToggle');
+        const hotzone = document.querySelector('.edit-hotzone');
+        let hideTimeout = null;
+
+        editToggle.addEventListener('click', () => editor.toggleEditMode());
+        hotzone.addEventListener('click', () => editor.toggleEditMode());
+        hotzone.addEventListener('mouseenter', () => { clearTimeout(hideTimeout); editToggle.classList.add('show'); });
+        hotzone.addEventListener('mouseleave', () => {
+            hideTimeout = setTimeout(() => { if (!editor.isActive) editToggle.classList.remove('show'); }, 400);
+        });
+        editToggle.addEventListener('mouseenter', () => clearTimeout(hideTimeout));
+        editToggle.addEventListener('mouseleave', () => {
+            hideTimeout = setTimeout(() => { if (!editor.isActive) editToggle.classList.remove('show'); }, 400);
+        });
+
+        document.addEventListener('keydown', (e) => {
+            const editing = e.target.getAttribute && e.target.getAttribute('contenteditable') === 'true';
+            if ((e.key === 'e' || e.key === 'E') && !editing && !e.ctrlKey && !e.metaKey) {
+                editor.toggleEditMode();
+            }
+            if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {
+                e.preventDefault();
+                editor.persist();
+                editor.save();
+            }
+        });
+    </script>
+</body>
+</html>

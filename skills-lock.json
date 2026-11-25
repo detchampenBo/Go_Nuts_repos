@@ -19,6 +19,12 @@
       "skillPath": "skills/taste-skill-v1/SKILL.md",
       "computedHash": "d704ab912c4d0ca954ffa858983da755ae4cd5cad9ba22554db5557382f5bd34"
     },
+    "frontend-slides": {
+      "source": "zarazhangrui/frontend-slides",
+      "sourceType": "github",
+      "skillPath": "plugins/frontend-slides/skills/frontend-slides/SKILL.md",
+      "computedHash": "491b333f92e31f97395d6ca54f1a6e390f223db4174935f024be6ba9a0ba1a8f"
+    },
     "full-output-enforcement": {
       "source": "Leonxlnx/taste-skill",
       "sourceType": "github",

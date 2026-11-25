@@ -167,6 +167,8 @@ Use these issues to agree on follow-up work together. Once resolved, record the 
 
 ## Follow-up issues
 
+**16.** [Plan the three-slide presentation with frontend-slides](2026-11-25_14-13-12_16-plan-three-slide-presentation.scratch). Open, created 25 November 2026. Defines the interview, inputs and course constraints (three slides, three minutes, static three-page PDF, questions to any author) before generating the deck from the user's Overleaf Markdown in a fresh context. Independent of Issue 14's paper review.
+
 **09c.** [Produce combined backbone-H1 Figure 1](2026-11-22_20-12-45_09c-produce-backbone-h1-figure.scratch). Resolved: the user accepted Figure 1's presentation and layout. The [combined PDF](../../output/backbone_h1_findings/combined.pdf) is rotated 90 degrees counterclockwise, with its original preserved; companion formats retain their prior orientation. Captions are native LaTeX commands outside plot PDFs. Saved restricted-period results are preserved; no analytical producer was rerun. Issue 09's caption/label/layout and budget decisions are also complete. Final compilation/fit remains with Issues 13-14.
 
 **09b.** [Produce unadjusted monthly H2 curves with period means](2026-11-22_18-56-56_09b-produce-unadjusted-h2-monthly-means.scratch). Resolved: user accepted the produced figure for the paper, with numeric-only age-coloured means and a uniform darker fine grid. Final manuscript captions/fit remain with Issue 09.
