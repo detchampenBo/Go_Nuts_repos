@@ -1,0 +1,69 @@
+% Issue 12 draft, 24 November 2026. Complete Methods drafting pass approved.
+% Issue 9.1: descriptive token/Zipf methods approved; prior prose preserved.
+% The three sample paragraphs are the exact previously approved wording.
+% Study samples/provenance: approved following the requested detail removals.
+% Transfer network/backbone: approved by the user.
+% H1 null explanation, assumption, empirical equation and sensitivity: approved.
+% Guardian article retrieval/coverage: approved by the user.
+% Sentence-selection paragraph: approved with the requested He/His wording.
+% Sentiment instruments and validation paragraphs: approved by the user.
+% H2 comparison/monthly display: approved with averaging/smoothing/markers preserved.
+% Closing code-development statement: approved by the user.
+% Template assembly: include inside \matmethods{\input{methods}}.
+% Total Methods allowance: 1.00 page; compiled fit remains for Issues 13--14.
+\subsection*{Study samples and provenance}
+The data sample used in the study was accuired through two different sources. We used transfer records from Transfermarkt and football articles from the Guardian \cite{transfermarkt_kaggle, guardian_api}. Both analyses cover the 2012/13--2024/25 seasons. For the coverage analysis, we used player names and signing dates to link Guardian articles to selected Premier League signings derived from Transfermarkt. 
+
+ The transfer analysis included 16,636 eligible transfer records involving 4,602 players in recorded source seasons 2012/13--2024/25. Transfers originated outside the Premier League under season-specific membership and had at least one endpoint in the top division of England, Spain, Germany, Italy or France. We excluded routes involving non-club records (without a club, retired, or on a career break) or club IDs flagged by name rules for youth, academy, junior, reserve or secondary sides. Of these records, 15,573 involved players under 30 and 1,063 involved players aged 30 or older. Premier League joining rates use all eligible transfers within each age group as their denominators. Network analyses aggregate the same transfer records.
+
+For the Guardian analysis, we used the Transfermarkt source data that supplied the network records to identify Premier League signings. We used player names and signing dates to search for Guardian articles for 1,332 signings involving 980 players in seasons 2012/13--2024/25. Players had to be aged 18--36 at signing and have a recorded market value of at least EUR 2 million. We excluded same-club moves and reversals of the preceding transfer within 730 days, retaining reversals with a positive fee. The coverage-volume analysis included all selected signings, including those for which we found no articles. Main sentiment analysis retained 820 signings with at least five scored sentences in both the before and after periods, after excluding liveblogs and match reports. Both samples classify age in completed years at the transfer date and compare players aged 30+ with those under 30.
+
+These analyses address age differences in Premier League entry and coverage using separate event populations. The Guardian sample includes signings from within the league. Its signing metadata is Transfermarkt-derived, while its measured text is from the Guardian. The samples do not follow an entirely shared cohort from recruitment into media coverage. Of the 1,332 signings in the Guardian coverage analysis, 944 (71\%) were also included in the comparison of Premier League entry rates. Of the 820 signings retained for sentiment analysis, 516 (63\%) remained.
+
+\subsection*{Transfer network and backbone}
+
+We pooled eligible transfers across seasons and age groups into a directed weighted network. Clubs were nodes, and each sending--receiving route was weighted by its transfer count. Communities were identified with directed weighted Louvain at resolution 1 and random seed 2026 \cite{blondel2008louvain,dugue2015directed}. We also explored Leiden on the same graph with the same modularity objective and seed \cite{traag2019leiden}. We generated one randomized network by rewiring routes while preserving each club's number of incoming and outgoing routes, then randomly reassigning the original route weights. We ran both methods on this same network.
+
+For Figure~\ref{fig:entry-age}(a), we applied the directed disparity filter \cite{serrano2009multiscale}. For each route, we examined its share of the sending club's outgoing transfers and the receiving club's incoming transfers. These shares were compared with a uniform random allocation of transfer weight among the corresponding routes. We retained a route if its disparity score was strictly below 0.20 at either club. An outgoing score required more than one outgoing route; an incoming score required more than one incoming route. Community labels were assigned before filtering, and H1 used the full transfer sample.
+
+\subsection*{Entry-rate comparison and player sensitivity}
+We asked whether transfers involving players aged 30+ entered the Premier League less often than expected, given where and when they moved. We compared transfers from the same origin club and season because clubs differ in how often they send players to the Premier League, and those opportunities can change from season to season.
+The H1 null distribution was generated from the full eligible transfer sample, including Premier League and other destinations. We shuffled the 30+/under-30 labels 999 times within origin club and recorded season, keeping destinations and the numbers of older and younger transfers in each club--season group fixed. For each shuffle, we recalculated the older-minus-younger difference in Premier League joining rates, in percentage points, using all eligible transfers in each age group as denominators. The age groups therefore retained their original mix of clubs and seasons, allowing their overall joining rates to remain different after shuffling. The test assumes that age labels are interchangeable among transfers from the same origin club and season under the null.
+
+The empirical one-sided p-value was the fraction of shuffled gaps at or below the observed gap, with one added to both the numerator and denominator \cite{hemerik2018exact,phipson2010permutation}:
+\begin{equation}
+p_{\mathrm{emp}} =
+\frac{1+\text{number of shuffles at least as extreme}}
+     {1+\text{number of shuffles}}.
+\label{eq:h1-empirical-p}
+\end{equation}
+
+For the player sensitivity check, we independently drew one eligible transfer uniformly at random for each of the same 4,602 players in each of 999 draws. We classified each player's age group using their age at the selected transfer. Within each draw, we held the selected transfers and their destinations fixed and shuffled age labels 999 times within origin club and recorded season, preserving the age-group counts in each group. We calculated a one-sided permutation p-value for each draw using the same lower-tail test and plus-one adjustment as in the main analysis. A NumPy master seed of 20261126 generated separate random streams for transfer selection and age-label shuffling within each draw.
+
+\subsection*{Guardian articles and coverage volume}
+
+We searched the Guardian Open Platform's football section using player-name variants over the 365 days before and after each signing \cite{guardian_api}. Duplicate article--signing links were removed. When an article was linked to several signings of the same player, we retained the link to the nearest signing date, choosing the earlier signing in a tie. An article could still contribute to signings involving different players.
+
+For coverage volume, we counted distinct article IDs with at least one coded player-name mention for each signing, separately over days $-365$ to $-8$ before signing and $+8$ to $+365$ after signing. We included all article types and all 1,332 selected signings, assigning zero where no qualifying article was recorded. We then calculated median article counts separately for each age group and period. These descriptive counts preceded the sentence-coverage and article-type filters used for sentiment analysis.
+
+\subsection*{Sentence sentiment and validation}
+
+We matched whole-word player-name variants, including surnames and aliases. We blocked matches inside another known person's full name and suppressed bare one-word matches when a known namesake was detected in the article. After a named mention, we also kept the next sentence if it began with ``He'' or ``His'' and had no player-name match. Quotations and brief mentions were retained.
+
+For the corpus description, we counted lowercase surface tokens with spaCy's English tokenizer after removing punctuation and whitespace, retaining names, numbers, inflections and repeated linked records, and repeated the ranking after excluding English stopwords. We compared ranked counts with $c_1/r$, where $c_1$ is the most frequent token count and $r$ is frequency rank; no exponent was fitted.
+
+Our main instrument was CardiffNLP's \nolinkurl{twitter-roberta-base-sentiment-latest} \cite{liu2019roberta,loureiro2022timelms,camachocollados2022tweetnlp,cardiffnlp2022checkpoint}. It scored each whole sentence as $P(\mathrm{positive})-P(\mathrm{negative})$, truncating inputs at 128 tokens, without a separately specified player target. We also used VADER's compound score \cite{hutto2014vader,vader_documentation} and the Bing opinion lexicon \cite{hu2004mining,textdata_bing_documentation}. Bing scores were positive minus negative word counts divided by their sum, or zero if no lexicon words matched. We tested a reduced Bing lexicon using a list of 21 football-related terms, of which 17 were in the lexicon. We recalculated both Bing variants on the reconstructed corpus, verified agreement with the saved signing-period means to their reported precision, and counted linked records whose score changed. Higher scores indicated more positive language.
+
+One author labelled 200 sentences as positive, neutral, negative or wrong-person matches. Excluding four wrong-person cases left 196 evaluable sentences. We compared scores with ordered human labels using Spearman's $\rho$, checked score signs on the 85 human-positive or human-negative sentences, and assessed exact three-class agreement on all 196 sentences using the neutral thresholds in Table~\ref{tab:validation}. Rank-correlation intervals used the 2.5th and 97.5th percentiles of 2,000 sentence bootstrap resamples (seed 2805). Only 14 evaluated sentences concerned older players, limiting age-specific validation.
+
+\subsection*{Tone changes and monthly display}
+
+For H2, we used the before and after windows defined above, excluded liveblogs and match reports, and required at least five scored sentences in each period. For each instrument, we averaged sentence sentiment scores separately before and after each signing and calculated the after-minus-before change. We then compared mean changes between players aged 30+ and under 30, giving each signing equal weight.
+
+We shuffled age labels 5,000 times within signing season (seed 2805), keeping each signing's tone change fixed. The two-sided empirical p-value was the fraction of shuffled gaps whose absolute value was at least that of the observed older-minus-younger gap, with one added to both the numerator and denominator \cite{hemerik2018exact,phipson2010permutation}. The test assumes that age labels are interchangeable among signings in the same season under the null. For RoBERTa, we also drew 10,000 bootstrap samples of 613 players with replacement, keeping all signings for each sampled player. The 95\% percentile interval uses the 2.5th and 97.5th percentiles of the resampled gaps (seed 2805). 
+
+For Figure~\ref{fig:h2-monthly-tone}, we averaged sentence sentiment first within each signing and month, then across contributing signings in each age group. Monthly membership varied with available coverage. We smoothed these group means with a centred three-month moving average separately before and after signing, using two months at the endpoints. Period-mean markers were calculated separately from the curves, using the signing-level period means. Their short horizontal segments are fixed display markers; no uncertainty intervals are shown.
+
+\subsection*{Code development}
+
+The analysis code was developed partly with support from coding agents operating in a terminal, reflecting the course's emphasis on this approach to computational work.

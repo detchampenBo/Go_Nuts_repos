@@ -494,17 +494,25 @@
         .s2 .nullmodel .step-note { font-size: 15px; line-height: 1.3; margin-top: 6px; }
         .s2 .nullmodel .reading-text { font-size: 18px; line-height: 1.3; }
 
-        /* --- Corpus summary under Table 1 --- */
+        /* --- Corpus summary under Table 1 ---
+           The block sits low enough that "token types" shares a line
+           with the figure note's second sentence. */
         .s2 .corpus {
             margin-top: 28px;
             border-top: 1.5px solid var(--ink);
-            padding-top: 16px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
         }
         .s2 .corpus .stats {
+            flex: 1;
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 22px 28px;
-            margin-top: 14px;
+            align-content: end;
+            column-gap: 28px;
+            row-gap: 22px;
+            padding-bottom: 2px;
         }
         .s2 .corpus .num {
             font-family: var(--font-display);
@@ -535,16 +543,23 @@
         .s3 .panel.fig3 { flex: 1; min-height: 0; }
         .s3 .panel.fig3 img { width: auto; height: 100%; max-width: 100%; }
 
-        .s3 .panel.tbl { display: block; padding: 6px 16px; margin-top: 20px; }
+        /* Sit the table on the bottom edge shared with the right panel.
+           Matching caption heights keeps the two white panel bottoms flush. */
+        .s3 .panel.tbl { display: block; padding: 6px 16px; margin-top: auto; }
         .s3 table.data { font-size: 18px; }
         .s3 table.data th { font-size: 12px; padding: 6px 6px; border-bottom: 1.5px solid var(--ink); }
         .s3 table.data td { padding: 5px 6px; border-bottom: 1px solid var(--ink-faint); }
         .s3 table.data tr:last-child td { border-bottom: none; }
         .s3 table.data tr.main td { background: var(--paper); font-weight: 600; }
-        .s3 .table-note { margin-top: 8px; font-size: 15px; }
-        .s3 .panel.fig2 { flex: 1; min-height: 0; padding: 8px; }
+        .s3 .table-note,
+        .s3 .foot {
+            margin-top: 8px;
+            font-size: 15px;
+            line-height: 1.35;
+            height: 44px;
+        }
+        .s3 .panel.fig2 { flex: 1; min-height: 0; padding: 8px; margin-bottom: 20px; }
         .s3 .panel.fig2 img { width: auto; height: 100%; max-width: 100%; }
-        .s3 .foot { margin-top: 16px; }
 
         /* ===========================================
            ANIMATIONS (HTML preview only; the PDF shows the final state)
@@ -609,9 +624,9 @@
                         <h1 class="title">Does age matter in football?</h1>
                         <div class="intro-tag">
                             <p class="kicker">The question and its data</p>
-                            <p class="note">Two data sources, two separate samples ↓</p>
+                            <p class="note">Two data sources, merged partly on players</p>
                         </div>
-                        <p class="question">How does entry into the Premier League differ by player age, and how does the tone of Guardian coverage before and after Premier League signings differ by age?</p>
+                        <p class="question">How does entry into the Premier League differ by player age, and how do the volume and tone of Guardian coverage around Premier League signings vary by age?</p>
                     </div>
 
                     <div class="panels">
@@ -747,7 +762,6 @@
                             </div>
 
                             <div class="corpus">
-                                <span class="kicker">The sentence corpus</span>
                                 <div class="stats">
                                     <div><p class="num">99,976</p><p class="what">linked sentence records</p></div>
                                     <div><p class="num">3.87 M</p><p class="what">tokens</p></div>
@@ -793,7 +807,7 @@
                                     <thead>
                                         <tr>
                                             <th>Model</th>
-                                            <th class="num"><span class="greek">ρ</span> (95% CI)</th>
+                                            <th class="num">Spearman <span class="greek">ρ</span> (95% CI)</th>
                                             <th class="num">Sign right</th>
                                             <th class="num">3-class</th>
                                         </tr>

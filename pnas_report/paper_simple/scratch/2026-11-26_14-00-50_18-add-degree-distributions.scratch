@@ -1,0 +1,20 @@
+# 18 Introduce the transfer network with degree distributions
+
+## Created
+
+26 November 2026, 14:00:50 Europe/Copenhagen.
+
+## Status
+
+Open. Figure and draft paragraph for the next manuscript revision.
+
+## Figure
+
+![In-degree, out-degree and reciprocal-degree distributions for 1,157 clubs](../../reruns/h1_2012_13-2024_25/figures/degree_distributions.png)
+
+- Use the [matching vector PDF](../../reruns/h1_2012_13-2024_25/output/club_transfer_network_findings/club_transfer_degree_distributions.pdf) in a working copy of the [reviewed ZIP](../paper_output_zip/paper_overleaf_final_no_feeder.zip). Replace the backbone in Figure 1a and retain the full-sample entry permutation histogram in Figure 1b.
+- Put the paragraph at the start of Results under “Transfer-network structure.” Update the Figure 1 caption and cross-references for the new panel. Use the [degree recap](../../reruns/h1_2012_13-2024_25/output/degree_distribution_recap.md) to check the values and axis definitions. Verify legibility and the six-page limit in the compiled working copy.
+
+## Draft Results paragraph
+
+Across the 1,157 clubs in the eligible transfer network, the median club had two distinct sending partners, two distinct receiving partners and one partner with transfers in both directions (Figure 1a). Mean in-degree and out-degree were both 9.52, reflecting the presence of clubs with many more partners than the median. This variation describes the transfer routes observed across both age groups and all recorded seasons. It gives context for the next comparison, which tests whether transfers involving players aged 30 or older entered the Premier League less often than expected when age labels are shuffled within the same origin club and season.

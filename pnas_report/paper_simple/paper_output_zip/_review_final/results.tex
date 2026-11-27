@@ -1,0 +1,62 @@
+% Issue 12 draft, 24 November 2026. Review/source map: Issue 12.
+% Issue 9.1: corpus-description addition approved; existing Results preserved.
+% Transfer-network structure: approved by the user, including tone/explanation.
+% Premier League entry by age: approved by the user.
+% Guardian coverage volume: approved, with the short zero-coverage clarification.
+% Measuring tone in football writing: approved, including revised averaging text.
+% Changes in Guardian tone by age: approved by the user.
+% All five Results subsections are approved; compiled fit remains for Issues 13--14.
+% Template assembly, bibliography integration and compilation: Issues 13--14.
+\section*{Results}
+
+\subsection*{Transfer-network structure}
+
+We first represented eligible transfers as a directed network, with clubs as nodes and origin--destination routes weighted by the number of transfers, following earlier work that modelled the global transfer market as a directed network of clubs \cite{liu2016transfer}. The 16,636 transfers involving 4,602 players in recorded seasons 2012/13--2024/25 connected 1,157 clubs through 11,016 routes.
+
+The full degree distributions show how unevenly transfer partners were spread across the 1,157 clubs (Figure~\ref{fig:club-degree}). The median club received players from two distinct clubs and sent players to two, with a median of one partner in both directions. The mean was 9.52 in each direction, and the most connected clubs received players from as many as 128 clubs or sent players to as many as 136. Looking at the distributions first makes clear how much variation a single average can hide. 
+
+Figure~\ref{fig:entry-age}(a) serves as a visual reprensetation of the network, with the goal of providing the reader an understanding of the underlying data in a simplified manner while preserving its multiscale structure. It shows a filtered view of this network using a disparity cutoff of $\alpha = 0.20$ \cite{serrano2009multiscale}. The backbone retained 383 clubs and 1,396 routes carrying 5,271 transfers (31.7\% of the sample). Colours and shapes identify five communities found by directed Louvain on the full network \cite{blondel2008louvain,dugue2015directed}. The backbone pools both ages and shows routes that account for an unusually large share of transfers at either endpoint. These routes carry 670 of the 2,396 recorded Premier League entries (28\%), so the age comparison in Figure~\ref{fig:entry-age}(b) uses all eligible transfers.
+
+We also explored Leiden, a refinement of the widely used Louvain method that addresses problems with community connectivity \cite{traag2019leiden}. Both methods identified five communities in the observed network, with broadly similar club memberships. Modularity was higher in the observed network than in the same randomized network for both Leiden (0.448 versus 0.215) and Louvain (0.446 versus 0.213). By this measure, transfer activity was more strongly concentrated within communities in the observed network.
+
+\subsection*{Premier League entry by age}
+
+We compared the share of eligible transfers entering the Premier League for the two age groups (Figure~\ref{fig:entry-age}(b)). Because clubs differ in where they send players, we shuffled age labels within each origin club and recorded season while keeping destinations fixed. Only 312 of the 4,563 origin club--season groups included players from both age groups, at least one transfer into the Premier League, and at least one transfer elsewhere, so only those groups could change the gap under shuffling.
+
+Among eligible recorded transfers in source seasons 2012/13--2024/25, 12.14\% of transfers involving players aged 30+ entered the Premier League, compared with 14.56\% for players under 30 (gap $-2.42$ percentage points). The observed gap was more negative than the mean within-origin-club/season permutation gap ($-1.31$ points), but evidence against this null was limited (one-sided p = 0.098).
+
+Frequent transfers by the same player contribute more observations to the transfer-level analysis. To give each player equal representation, we drew one eligible transfer at random for each of the 4,602 players and recalculated the age-group gap in Premier League entry rates. We repeated this procedure 999 times. Across the 999 draws, the mean Premier League entry-rate gap (age 30+ minus under 30) was -3.15 percentage points. The 2.5th and 97.5th percentiles of the gaps were -5.72 and -0.61 points. The size of the gap dependeded on which transfers were selected, while the older group had a lower entry rate in nearly every draw.
+
+The one-sided permutation $p$-values had a median of 0.119, with 2.5th and 97.5th percentiles of 0.004 and 0.597. Each $p$-value was conditional on the transfers selected in that draw.
+
+\subsection*{Guardian coverage volume}
+
+We examined Guardian coverage in a separate sample of 1,332 selected Premier League signings. The collected coverage included 43,924 distinct articles before sentiment filters were applied. To describe attention around each signing, we counted distinct articles naming the player before and after the move, including all article types.
+
+Older signings received more Guardian coverage in both periods. The median number of distinct articles per signing was 27.5 for players aged 30+ versus 12 for those under 30 before signing, and 47.5 versus 35 after signing. Counts include signings with no recorded coverage.
+
+\subsection*{Measuring tone in football writing}
+
+
+The tone comparison retained 820 signings (67 aged 30+ and 753 under 30) with at least five scored sentences in each period after excluding liveblogs and match reports. To characterise the text used in the tone analysis, we examine how token frequencies are distributed and which tokens occur most often. Figure~\ref{fig:guardian-rank-frequency} compares the rank--frequency distribution pooled across age groups and periods with an ideal Zipf reference. The selected corpus contains 99,976 linked sentence records and 3.87 million tokens across 42,779 token types, of which 13,022 occurred once. The log--log curve lies above the reference for many common tokens and below it in the rare tail. Table~\ref{tab:guardian-tokens} lists the most frequent tokens with and without stopwords.
+
+For example, ``penalty'' occurred 1,330 times (rank 395). Bing assigns it negative polarity, although in football it can simply name a match event. The reduced Bing lexicon checks whether the estimated age difference in tone change depends on terms like this.
+
+We applied four scoring methods to player-linked sentences, including quotations: RoBERTa \cite{liu2019roberta,loureiro2022timelms,camachocollados2022tweetnlp,cardiffnlp2022checkpoint}, VADER \cite{hutto2014vader}, the Bing opinion lexicon \cite{hu2004mining}, and Bing with selected football-related terms removed. Higher scores indicate more positive language. For the overall before--after comparison, we averaged all available sentence scores for each signing separately before and after the move. The monthly curves in Figure~\ref{fig:h2-monthly-tone} were calculated separately, using sentence scores from each month. These scores describe how the selected published sentences read; they do not directly identify the journalist's attitude toward the player.
+
+To check the scores against human judgments, one author labelled 200 sentences. Four wrong-person matches were excluded, leaving 196 evaluable sentences.
+
+Table~\ref{tab:validation} checks three aspects of the sentence scores. The human labels were ordered from negative to neutral to positive, with all sentences in each category sharing a rank. Spearman's $\rho$ compares those category ranks with the ranks of each model's numerical scores. A positive $\rho$ indicates that the model's ranking tended to agree with the order of the three categories. Correct sign measures whether scores are above zero for human-positive sentences and below zero for human-negative sentences, excluding human-neutral cases. Three-class accuracy measures exact agreement with positive, neutral or negative labels across all sentences. RoBERTa had the strongest observed rank agreement ($\rho = 0.52$, 95\% bootstrap interval 0.38--0.63) and the correct sign for 70 of 85 positive or negative sentences (82\%). Its three-class predictions matched 98 of 196 labels (50\%). Always predicting neutral would match 111 of 196 labels (57\%). We used RoBERTa for its observed rank and sign agreement, with age-specific validity uncertain given only 14 older-player sentences.
+
+\input{validation_table}
+
+\guardianSentimentFigure
+\subsection*{Changes in Guardian tone by age}
+
+Figure~\ref{fig:h2-monthly-tone} shows monthly mean sentence sentiment for older and younger signings, separately for RoBERTa, VADER and the two Bing variants. For each signing, we first averaged the sentiment scores of the sentences published in a given month. We then averaged these monthly values separately for older and younger signings. Only signings with sentences in a month contributed to that month's average. The curves show these monthly group means smoothed with a centred three-month moving average, separately before and after signing.
+
+To test whether tone changed differently by age, we subtracted each signing's mean sentiment before the move from its mean after the move and averaged these changes within each age group. Under RoBERTa, tone fell by 0.008 score units for the 30+ group and by 0.014 for the under-30 group, a gap of +0.006.
+
+To check whether a gap this size could arise by chance, we kept each signing's tone change fixed and shuffled the age-group labels within each season 5,000 times, recalculating the gap after each shuffle. About three in four shuffled gaps were further from zero than the observed sentiment difference (two-sided p = 0.76), indicating that the observed difference was small relative to variation under the shuffle model.
+
+The difference between the two age groups in mean before-to-after tone change (30+ minus under 30) was $+0.019$ score units with the original Bing lexicon and $+0.023$ with the reduced lexicon, that removes football related words such as "penalty" (permutation $p = 0.55$ and $0.47$, respectively). Both comparisons remained inconclusive.

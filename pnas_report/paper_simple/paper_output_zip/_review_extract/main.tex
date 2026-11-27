@@ -1,0 +1,68 @@
+\documentclass[9pt,twocolumn,twoside]{pnas-new}
+\usepackage[T1]{fontenc}
+\templatetype{pnasresearcharticle}
+\articletype{Social Sciences}
+
+% The figures and text should remain readable at the template's native size.
+\setboolean{displaywatermark}{false}
+
+% Keep the figure floats within the six-page layout.
+\setlength{\dbltextfloatsep}{8pt plus 2pt minus 2pt}
+
+% Let lastpage write the sole page-count label.
+\patchcmd{\endthebibliography}{\label{LastPage}}{}{}{}
+
+% The course report has no assigned journal issue or article number.
+\fancyhead{}
+\fancypagestyle{firststyle}{%
+  \fancyhead{}
+  \fancyfoot[L]{\footerfont\textbf{PNAS}}
+  \fancyfoot[R]{\footerfont\textbf{\thepage\ of \pageref*{LastPage}}}
+}
+\fancyfoot[LO]{\footerfont\textbf{PNAS}}
+
+\begin{document}
+
+\title{\input{title}}
+\author[a,1]{Victor Bohart}
+\author[b,1]{Philip Nukunu Fu}
+\affil[a]{DTU Management}
+\affil[b]{DTU Compute}
+\leadauthor{Bohart}
+\authorcontributions{\input{author_contributions}}
+\correspondingauthor{{\raggedright
+  \textsuperscript{1}Corresponding authors\par
+  Victor Bohart, \href{mailto:s230654@dtu.dk}{s230654@dtu.dk}\par
+  Philip Nukunu Fu, \href{mailto:s260114@dtu.dk}{s260114@dtu.dk}\par
+}}
+\keywords{football transfers $|$ network science $|$ sentiment analysis}
+\significancestatement{\input{significance}}
+
+\begin{abstract}
+\input{abstract}
+\end{abstract}
+
+\maketitle
+\thispagestyle{firststyle}
+{\setlength{\hsize}{1.35\linewidth}\abscontent\par}
+
+\Firstpage
+\input{introduction}
+\setlength{\columnwidth}{.3\textwidth}
+\Endparasplit
+
+% Tighten leading after the first page while retaining the template's type sizes.
+\linespread{0.92}\selectfont
+\input{figure_floats}
+\input{results}
+\input{discussion}
+\matmethods{\input{methods}}
+\showmatmethods
+
+\section*{References}
+{%
+  \renewcommand{\familydefault}{\sfdefault}
+  \bibliography{references}
+}
+
+\end{document}

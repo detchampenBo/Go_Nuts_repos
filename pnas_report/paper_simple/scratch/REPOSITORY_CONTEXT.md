@@ -1,5 +1,13 @@
 # Repository context for paper issues
 
+## Approved final Introduction paragraph
+
+The user approved this exact wording for the next manuscript revision on 26 November 2026.
+
+```latex
+We ask: \textit{How does entry into the Premier League differ by player age, and how do the volume and tone of Guardian coverage around Premier League signings vary by age?} First, we compare the share of eligible transfers that end in the Premier League for players aged 30 or older and those under 30. For the text analysis we link the same transfers of Premier League players to articles describing them. We use player names to find articles and select relevant sentences, and signing dates to define the 12-month windows before and after each move. We then compare how much coverage each age group receives. For signings with enough qualifying text in both periods, we describe the vocabulary of the selected sentences and test whether the change in tone differs between the same two age groups.
+```
+
 **Current handoff: 9.1 Resolved; next13, 24 November 2026.** User approved the final corpus/Zipf prose addition in Results, Methods and Discussion. Plots/topten remain repository artifacts; no new display selected. [Resolution](2026-11-24_09-13-45_09.1-describe-sentiment-corpus-and-rank-frequency.scratch#resolution-24-november-2026). Preserve approved wording and current metadata/assets/page targets. Original score alignment remains waived/unverified; explanations remain untested. Next inspect/unpack PNAS template and assemble/check bibliography/labels in13; final fit/requirements/ZIP in14. No empirical rerun needed. Earlier 9.1 Open/review checkpoints below are history.
 
 **Latest 9.1 presentation, 24 November 2026:** user-authorised log–log rank-frequency PDF/PNG/SVG and ten-row Markdown comparison are ready, following `PLOTTING_STYLE.md`; saved frequency/corpus data and linear plots remain unchanged. [Current outputs](../../reruns/h1_2012_13-2024_25/output/guardian_text_description_findings/README.md) · [presentation verification](../../reruns/h1_2012_13-2024_25/output/guardian_text_description_findings/qa/loglog_presentation_verification.json). Use the existing default Python for the new saved-frequency exporter; `network_analysis` currently fails NumPy matrix multiplication natively, and no environment changes were made. Earlier linear-only/top-five scope is superseded by the explicit user request. Next is user findings/inclusion review and any page/Methods reconciliation, then 13 -> 14. Issue 9.1 remains Open; approved manuscript unchanged.

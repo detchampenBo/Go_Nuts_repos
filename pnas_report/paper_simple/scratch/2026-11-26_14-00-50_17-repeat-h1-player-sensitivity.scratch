@@ -1,0 +1,45 @@
+# 17 Repeat the one-transfer-per-player sensitivity check
+
+## Created
+
+26 November 2026, 14:00:50 Europe/Copenhagen.
+
+## Status
+
+Completed and verified on 26 November 2026. The rerun used 999 transfer selections, as requested, with 999 age-label shuffles per selection.
+
+## Question
+
+How much does the estimated Premier League entry-rate gap change when we vary which eligible transfer represents each player? The [reviewed paper](../paper_output_zip/paper_overleaf_final_no_feeder.zip) reports one draw of 4,602 players, with entry rates of 19.52% for ages 30+ and 21.46% for under 30, a gap of −1.94 percentage points and a one-sided permutation p-value of 0.074. That draw gives a reference point for the repeated analysis.
+
+## Run the check
+
+1. Use the [restricted transfer input](../../reruns/h1_2012_13-2024_25/data/outsideprem_toprem_eligible_transfers.csv.gz) for recorded seasons 2012/13–2024/25 and the [league lookup](../../data/top_five_league_clubs.csv). Reuse the sample builder and permutation procedure in [the H1 producer](../../notebooks/age_shuffle_outsideprem_toprem.py). Verify the input hash against the [manifest](../../reruns/h1_2012_13-2024_25/provenance/reduction_manifest.json), confirm 16,636 eligible transfers from 4,602 players, and reproduce the published fixed-draw result using the original seed and stream ordering. The [saved results](../../reruns/h1_2012_13-2024_25/output/age_shuffle_outsideprem_toprem_results.json) and [prior verification](../../reruns/h1_2012_13-2024_25/provenance/h1_verification.json) give the exact comparison values.
+2. Run 999 independently seeded draws. In each draw, sample one eligible transfer uniformly per player, without weighting by age or destination, and derive age group from the selected transfer. Verify each draw contains exactly 4,602 distinct players and both age groups. Hold that set of transfers fixed for 999 age-label shuffles within origin club and recorded season. Keep the older-minus-younger rate gap, lower-tail alternative and plus-one p-value rule from the paper. Record a master seed and use separate random streams for row selection and shuffling.
+3. Save a reproducible script, a per-draw CSV and a short summary as new files in the [restricted rerun](../../reruns/h1_2012_13-2024_25/README.md). For each draw, record the two age-group counts and entry rates, the observed gap, the mean shuffled gap and the conditional p-value. Summarise the median and 2.5th–97.5th percentiles of the observed gaps, the fraction of gaps below zero, and how far the observed gap typically falls below or above its own shuffled mean. Compare the original draw with these distributions.
+
+## Completion check
+
+Confirm the original result reproduces, the saved run contains 999 valid draws and the summary regenerates from the CSV. Describe the spread as sensitivity to transfer selection within this fixed set of players. The draws reuse the same players, so report their p-values as conditional diagnostics and give no combined p-value. Keep the saved original outputs and reviewed ZIP intact. Return a short, result-dependent draft for Results and state the draw count and seed for Methods.
+
+## Saved rerun
+
+- [Reproducible script](../../reruns/h1_2012_13-2024_25/notebooks/repeat_h1_player_sensitivity.py)
+- [Per-draw CSV](../../reruns/h1_2012_13-2024_25/output/repeat_h1_player_sensitivity_draws.csv)
+- [Summary and rerun command](../../reruns/h1_2012_13-2024_25/output/repeat_h1_player_sensitivity_summary.md)
+
+## Verification and findings
+
+- The restricted input and league lookup matched the reduction manifest SHA-256 hashes. The original seed 2026 and stream ordering reproduced the selected rows and all 999 ordered shuffle gaps exactly. Among 16,636 eligible transfers and 4,602 players, the original selection gave entry rates of 19.52% (57/292) at age 30+ and 21.46% (925/4,310) under 30. The exact gap was −1.9411689921495086 percentage points. There were 73 shuffled gaps at or below it, giving p = 0.074.
+- Master seed 20261126 generated one child seed per draw and separate selection and permutation streams within each draw. All 999 draws contained the same 4,602 distinct players with both age groups represented. The producer checked the age-group counts in every club–season stratum of all 998,001 repeated-run shuffles. Independent replay matched the observed results for all draws and the shuffle means and lower-tail counts for draws 1, 500 and 999. The summary regenerated from the saved CSV.
+- The median older-minus-younger gap was −3.11 percentage points, with central 95% from −5.72 to −0.61. It was negative in 987 of 999 draws (98.8%) and positive in 12. The original gap was at the 81.38th percentile, with 813 draws below it. The size of the gap depended on transfer selection within the fixed set of players, while its direction held in nearly all draws.
+- The median observed gap was 1.99 percentage points below its own shuffle mean. The central 95% of observed-minus-shuffle-mean gaps was −4.12 to +0.16 percentage points. The original draw was 2.40 points below its shuffle mean, at the 34.73rd percentile on this scale. The conditional p-values had a median of 0.119 and central 95% from 0.004 to 0.597. The original p-value of 0.074 was at or above 354 of the 999 conditional p-values (35.44%).
+- The reviewed manuscript ZIP and the saved H1 outputs matched their pre-run hashes. All 124 files in the original analysis baseline manifest matched their recorded hashes.
+
+## Draft Results
+
+Across 999 repeated selections of one eligible transfer per player, the median older-minus-younger Premier League entry-rate gap was −3.11 percentage points (2.5th–97.5th percentiles, −5.72 to −0.61). The gap was negative in 987 of 999 selections (98.8%), and the original gap of −1.94 percentage points fell at the 81st percentile. The observed gap was typically 1.99 percentage points below its selection-specific shuffle mean.
+
+## Draft Methods
+
+We made 999 independent selections, drawing one eligible transfer uniformly for each of the same 4,602 players and classifying age at the selected transfer. For each selection, we shuffled age labels 999 times within origin club and recorded season, holding destinations and the age-group counts in each stratum fixed. We calculated each conditional lower-tail p-value using the fraction of shuffled gaps at or below the observed older-minus-younger gap, with a plus-one adjustment to the numerator and denominator. A NumPy master seed of 20261126 generated separate random streams for transfer selection and shuffling in each draw.

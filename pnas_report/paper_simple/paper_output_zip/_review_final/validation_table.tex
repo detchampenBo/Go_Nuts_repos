@@ -1,0 +1,20 @@
+% Approved Table 1 values, caption and note, 24 November 2026.
+% Native LaTeX transcription for Issue 12; compiled layout checked in Issues 13--14.
+\begin{table}[tbhp]
+\centering
+\small
+\setlength{\tabcolsep}{4.5pt}
+\caption{Agreement of four sentiment instruments with human judgments of Guardian sentences.}
+\label{tab:validation}
+\begin{tabular}{lccc}
+\toprule
+Instrument & $\rho$ (95\% CI) & Sign right & 3-class accuracy \\
+\midrule
+RoBERTa & 0.52 (0.38, 0.63) & 82\% & 50\% \\
+VADER & 0.33 (0.21, 0.45) & 68\% & 42\% \\
+Bing & 0.36 (0.22, 0.47) & 59\% & 51\% \\
+Bing, reduced lexicon & 0.36 (0.23, 0.49) & 58\% & 53\% \\
+\bottomrule
+\end{tabular}
+\addtabletext{Results use 196 hand-labelled sentences after excluding four wrong-person matches. Spearman's $\rho$ measures whether sentences judged more positive receive higher scores; 95\% confidence intervals use 2,000 sentence bootstrap resamples. Correct sign is the percentage of the 85 human-positive or human-negative sentences whose score has the corresponding sign. Three-class accuracy is the percentage of all 196 sentences classified correctly as positive, neutral or negative. Neutral scores fall within $\pm0.05$ for RoBERTa and VADER and equal zero for both Bing variants. Only 14 sentences concern players aged 30+, leaving age-specific validity uncertain.}
+\end{table}

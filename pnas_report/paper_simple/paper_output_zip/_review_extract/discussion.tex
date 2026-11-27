@@ -1,0 +1,15 @@
+% Issue 12 draft, 24 November 2026. All four Discussion paragraphs approved.
+% Issue 9.1: Zipf explanation approved after wording clarification.
+% Includes the approved, explicitly labelled invented sentiment illustration.
+% Total Discussion allowance: 0.55 pages; compiled fit remains for Issues 13--14.
+\section*{Discussion}
+
+Transfers involving players aged 30 or older had a lower observed Premier League entry rate, and in the Guardian sample older signings drew more coverage, with no clear difference in how the tone changed from before to after signing across age groups.
+
+The entry-rate comparison provided limited evidence against the null model that shuffled age labels within origin club and season. Because the data record completed moves, the observed gap could reflect differences in player characteristics or preferences as well as club decisions, but these explanations were not tested. 
+
+The sentiment comparison also depends on which signings had sufficient qualifying text. The filters retained 67 of 88 older signings and 753 of 1,244 younger signings, limiting generalisation to all selected signings. Player prominence may influence which signings receive coverage and which performances or topics get attention. Sentiment scores may also reflect praise or criticism from people quoted in the articles, such as players, coaches or commentators. The contribution of each of these factors remains uncertain. The Bing comparison shows that specific football vocabulary can change individual sentence scores while leaving the age comparison inconclusive. RoBERTa scores the whole sentence without being told which player to evaluate. Its score may therefore reflect praise or criticism of another person mentioned in the same sentence \cite{hamborg2021news}. For an \textit{invented illustration}, consider ``Smith watched as Jones delivered an outstanding performance.'' This sentence names Smith but praises Jones, so a positive sentence score could enter Smith's coverage average without expressing praise for Smith. Validation by one annotator, including only 14 older-player sentences, leaves age-specific validity uncertain. Age-balanced annotation of tone toward the named player would address this gap. Smaller differences in tone change remain possible; the inconclusive comparison does not establish equal changes.
+
+Some players appear more than once, and the same article can contribute to several signings. The tone interval accounts for repeated signings by the same player. Shared articles can still link different players, and the age-label shuffles may leave dependence in both samples. This limits how confidently we can interpret the uncertainty estimates \cite{hemerik2018exact,winkler2015multilevel}. 
+
+Furthermore, the coverage of the players, in terms of the magnitude of articles, is a fragment of the entire football media coverage, and the articles derived from The Guardian might not represent the full picture. Monsees’s comparison of German and Swedish newspapers motivates caution about generalising our Guardian findings across editorial, linguistic and cultural contexts \cite{monsees2024talent}.
